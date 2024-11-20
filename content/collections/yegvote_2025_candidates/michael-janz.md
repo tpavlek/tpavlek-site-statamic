@@ -6,10 +6,13 @@ name: 'Michael Janz'
 website: 'https://www.michaeljanz.ca/about'
 twitter: michaeljanz
 bluesky_handle: michaeljanz.bsky.social
-description: 'Councillor since 2021'
+description: 'One-term councillor, since 2021.'
 confirmed: false
 ward: papastew
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732062906
+updated_at: 1732122316
+facebook: MichaelJanzyeg
+instagram: michaeljanzyeg
+photo: papastew-councillor_800x494-modified.png
 ---

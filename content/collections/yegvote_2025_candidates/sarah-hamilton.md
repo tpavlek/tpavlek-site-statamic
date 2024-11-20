@@ -7,5 +7,11 @@ confirmed: false
 ward: sipiwiyiniwak
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732062750
+updated_at: 1732122193
+website: 'https://www.sarahhamilton.ca/'
+twitter: sjlhamilton
+facebook: SarahHamiltonYEG
+instagram: sarah_hamilton_yeg
+description: 'Two-term councillor, since 2017.'
+photo: 260707017_328189429118888_2156462798507373397_n-modified.png
 ---

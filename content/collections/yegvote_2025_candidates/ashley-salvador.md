@@ -11,5 +11,8 @@ confirmed: false
 ward: metis
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732062578
+updated_at: 1732121756
+facebook: ashleyinyeg
+instagram: ashleyasalvador
+photo: bafkreicfcn3mfx523z2euqh6w2gxoc4tuqphtxeth2pznaxqm3iledmlu4-modified.png
 ---

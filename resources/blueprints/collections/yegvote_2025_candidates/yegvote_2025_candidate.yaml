@@ -37,6 +37,16 @@ tabs:
               type: text
               display: 'BlueSky Handle'
           -
+            handle: facebook
+            field:
+              type: text
+              display: Facebook
+          -
+            handle: instagram
+            field:
+              type: text
+              display: Instagram
+          -
             handle: description
             field:
               type: text

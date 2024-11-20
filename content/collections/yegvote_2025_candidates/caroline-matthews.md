@@ -9,5 +9,8 @@ confirmed: true
 ward: metis
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732062681
+updated_at: 1732121931
+facebook: CarolineMatthewsWardMetis
+instagram: carolinematthewswardmetis
+photo: 272497017_307427464740979_2475022708934424814_n-modified.png
 ---
