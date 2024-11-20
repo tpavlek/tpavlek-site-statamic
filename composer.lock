@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72208732fd7fcbe7d79f6ba5546f169a",
+    "content-hash": "45b962168fb5e65534d05ed48ca62d46",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -4666,6 +4666,121 @@
                 "source": "https://github.com/statamic/Stringy"
             },
             "time": "2022-05-04T18:41:52+00:00"
+        },
+        {
+            "name": "stillat/statamic-attribute-renderer",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Stillat/statamic-attribute-renderer.git",
+                "reference": "8e2c038e4e338b1690ee9580401a690a4bab4862"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Stillat/statamic-attribute-renderer/zipball/8e2c038e4e338b1690ee9580401a690a4bab4862",
+                "reference": "8e2c038e4e338b1690ee9580401a690a4bab4862",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "statamic/cms": "^4 || ^5"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.14",
+                "pestphp/pest": "^2.24",
+                "pestphp/pest-plugin-laravel": "^2.2"
+            },
+            "type": "library",
+            "extra": {
+                "statamic": {
+                    "name": "Attribute Renderer for Statamic",
+                    "description": "A simple utility addon for Statamic that provides a simple way to render HTML attributes, with advanced variable handling features."
+                },
+                "laravel": {
+                    "providers": [
+                        "Stillat\\StatamicAttributeRenderer\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Stillat\\StatamicAttributeRenderer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/Stillat/statamic-attribute-renderer/issues",
+                "source": "https://github.com/Stillat/statamic-attribute-renderer/tree/v1.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/JohnathonKoster",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-05-11T20:02:16+00:00"
+        },
+        {
+            "name": "stillat/statamic-site-essentials",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Stillat/statamic-site-essentials.git",
+                "reference": "2e693a2ba0c1a9c042efb6886d237bb727339e93"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Stillat/statamic-site-essentials/zipball/2e693a2ba0c1a9c042efb6886d237bb727339e93",
+                "reference": "2e693a2ba0c1a9c042efb6886d237bb727339e93",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": "^8.1",
+                "statamic/cms": "^4 || ^5",
+                "stillat/statamic-attribute-renderer": "^1.1"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "orchestra/testbench": "^8.14 || ^9",
+                "pestphp/pest": "^2.24",
+                "pestphp/pest-plugin-laravel": "^2.2"
+            },
+            "type": "library",
+            "extra": {
+                "statamic": {
+                    "name": "Site Essentials for Statamic",
+                    "description": "A collection of features to rapidly build and deploy Statamic sites."
+                },
+                "laravel": {
+                    "providers": [
+                        "Stillat\\StatamicSiteEssentials\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stillat\\StatamicSiteEssentials\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "support": {
+                "issues": "https://github.com/Stillat/statamic-site-essentials/issues",
+                "source": "https://github.com/Stillat/statamic-site-essentials/tree/v1.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/JohnathonKoster",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-05-11T20:57:02+00:00"
         },
         {
             "name": "symfony/console",
