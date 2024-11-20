@@ -1,0 +1,46 @@
+<div class="pt-16 pb-8 max-w-2xl mx-auto text-lg content">
+    {{ content | widont }}
+</div>
+
+<div class="max-w-2xl mx-auto mb-32">
+    <h1 class="text-3xl mb-4 text-teal">Mayor</h1>
+
+    <div class="py-4 px-8 bg-yellow-100 rounded-lg mb-4">
+        Mayor Amarjeet Sohi, the incumbent, has not declared his electoral intentions yet
+    </div>
+
+    {{ collection:yegvote_2025_candidates ward:is="mayor" as="candidates" }}
+        {{ if no_results }}
+            <h2 class="text-3xl italic tracking-tight">No one has declared for this yet!</h2>
+        {{ /if }}
+
+        {{ candidates }}
+            {{ partial:yegvote-2025/candidate }}
+        {{ /candidates }}
+    {{ /collection:yegvote_2025_candidates }}
+
+{{ collection:yegvote_2025_wards type:is="councillor" as="wards" }}
+
+    {{ wards }}
+
+    <h1 class="text-3xl mb-4 text-teal">Councillor — {{ name }}</h1>
+
+    {{ if commentary }}
+        <div class="py-4 px-8 bg-yellow-100 rounded-lg mb-4">
+            {{ commentary }}
+        </div>
+    {{ /if }}
+
+    {{ collection:yegvote_2025_candidates :ward:is="slug" as="candidates" }}
+    {{ if no_results }}
+        <h3 class="italic tracking-tight mb-4">No one has declared for this ward yet!</h3>
+    {{ /if }}
+
+    {{ candidates }}
+        {{ partial:yegvote-2025/candidate }}
+    {{ /candidates }}
+    {{ /collection:yegvote_2025_candidates }}
+    {{ /wards }}
+
+{{ /collection:yegvote_2025_wards }}
+</div>

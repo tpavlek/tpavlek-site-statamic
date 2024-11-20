@@ -1,0 +1,48 @@
+<div class="mb-6 flex items-center">
+    {{ if photo }}
+    <div class="p-4">
+        {{ photo }}
+        <img src="{{ photo:url }}" class="w-16 h-16"/>
+        {{ /photo }}
+    </div>
+    {{ /if }}
+    <div class="">
+        <h2 class="mb-1">
+            <span class="text-2xl tracking-tight leading-tight font-bold">
+                {{ name }}
+            </span>
+        </h2>
+        {{ if incumbent }}
+        <div>
+            <span class="text-red-600 italic text-sm">Incumbent</span>
+        </div>
+        {{ /if }}
+        {{ if !confirmed }}
+            <div>
+                <span class="text-grey-600 italic text-sm">Presumed to be running — not confirmed</span>
+            </div>
+        {{ /if }}
+        <div class="flex space-x-2 divide-x divide-teal items-center">
+            {{ if website }}
+            <div class="pl-2 first:pl-0"><a class="hover:text-teal" href="{{ website }}">Website</a></div>
+            {{ /if }}
+            {{ if twitter }}
+            <div class="pl-2 first:pl-0">
+                <a href="https://x.com/{{ twitter }}" class="hover:text-teal flex items-center">
+                    <span class="inline-block">{{ svg src="assets/site/social-icons/twitter.svg" }}</span> {{ twitter }}
+                </a>
+            </div>
+            {{ /if }}
+            {{ if bluesky_handle }}
+            <div class="pl-2 first:pl-0">
+                <a href="https://bsky.app/profile/{{ bluesky_handle }}" class="hover:text-teal flex items-center">
+                    <span class="inline-block">{{ svg src="assets/site/social-icons/bluesky.svg" class="h-5 w-5 text-black" }}</span> {{ bluesky_handle }}
+                </a>
+            </div>
+            {{ /if }}
+        </div>
+        <p class="text-gray-600">
+            {{ description }}
+        </p>
+    </div>
+</div>

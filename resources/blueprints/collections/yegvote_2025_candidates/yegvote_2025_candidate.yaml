@@ -1,0 +1,126 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: name
+            field:
+              type: text
+              validate:
+                - required
+              display: Name
+              instructions: "The Candidate's full name"
+              placeholder: 'Don Iveson'
+          -
+            handle: website
+            field:
+              type: text
+              display: Website
+              instructions: "Provide a URL to the Candidate's website"
+          -
+            handle: twitter
+            field:
+              type: text
+              display: 'Twitter Handle'
+          -
+            handle: bluesky_handle
+            field:
+              type: text
+              display: 'BlueSky Handle'
+          -
+            handle: description
+            field:
+              type: text
+              display: 'One-Liner Description'
+          -
+            handle: photo
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: Photo
+          -
+            handle: confirmed
+            field:
+              inline_label: 'Candidate presumed to be running'
+              inline_label_when_true: 'Candidate confirmed to be running'
+              default: true
+              type: toggle
+              display: Confirmed
+          -
+            handle: ward
+            field:
+              options:
+                -
+                  key: mayor
+                  value: Mayor
+                -
+                  key: nakota-isga
+                  value: 'Councillor - Nakota Isga'
+                -
+                  key: anirniq
+                  value: 'Councillor - Anirniq'
+                -
+                  key: tastawiyiniwak
+                  value: 'Councillor - tastawiyiniwak'
+                -
+                  key: dene
+                  value: 'Councillor - Dene'
+                -
+                  key: odaymin
+                  value: 'Councillor - O-day’min'
+                -
+                  key: metis
+                  value: 'Councillor - Métis'
+                -
+                  key: sipiwiyiniwak
+                  value: 'Councillor - sipiwiyiniwak'
+                -
+                  key: papastew
+                  value: 'Councillor - papastew'
+                -
+                  key: pihesiwin
+                  value: 'Councillor - pihêsiwin'
+                -
+                  key: ipiihkoohkanipiaohtsi
+                  value: 'Councillor - Ipiihkoohkanipiaohtsi'
+                -
+                  key: karhiio
+                  value: 'Councillor - Karhiio'
+                -
+                  key: sspomitapi
+                  value: 'Councillor - Sspomitapi'
+                -
+                  key: undeclared
+                  value: 'Councillor - Undeclared'
+              type: select
+              display: Ward
+              instructions: 'Choose the ward this candidate is running for'
+          -
+            handle: incumbent
+            field:
+              inline_label: Challenger
+              inline_label_when_true: Incumbent
+              type: toggle
+              display: Incumbent
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Candidate

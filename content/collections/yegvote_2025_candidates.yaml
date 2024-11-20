@@ -1,0 +1,5 @@
+title: 'YEGVote 2025 Candidates'
+revisions: false
+date_behavior:
+  past: public
+  future: private

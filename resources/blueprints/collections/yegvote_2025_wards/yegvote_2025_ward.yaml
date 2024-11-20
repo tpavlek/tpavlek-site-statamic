@@ -1,0 +1,61 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: name
+            field:
+              type: text
+              validate:
+                - required
+              display: Name
+          -
+            handle: type
+            field:
+              options:
+                -
+                  key: mayor
+                  value: Mayor
+                -
+                  key: councillor
+                  value: Councillor
+                -
+                  key: school_board
+                  value: 'School Board'
+              type: select
+              display: Type
+          -
+            handle: commentary
+            field:
+              type: markdown
+              display: commentary
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: parent
+            field:
+              type: entries
+              collections:
+                - yegvote_2025_wards
+              max_items: 1
+              listable: false
+              localizable: true
+title: 'YEGVote 2025 Ward'

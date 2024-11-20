@@ -1,8 +1,9 @@
 ---
-title: Home
 id: home
-template: home
 blueprint: home
-subtitle: I see pride. I see power.
+title: Home
+template: home
+updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
+updated_at: 1732055233
 ---
-I see a bad-ass mother who don't take no crap off of nobody.
+I follow City Council so you don't have to
