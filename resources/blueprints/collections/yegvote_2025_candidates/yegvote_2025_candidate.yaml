@@ -112,6 +112,27 @@ tabs:
                 -
                   key: undeclared
                   value: 'Councillor - Undeclared'
+                -
+                  key: ecsd-71
+                  value: 'Catholic - Ward 71'
+                -
+                  key: ecsd-72
+                  value: 'Catholic - Ward 72'
+                -
+                  key: ecsd-73
+                  value: 'Catholic - Ward 73'
+                -
+                  key: ecsd-74
+                  value: 'Catholic - Ward 74'
+                -
+                  key: ecsd-75
+                  value: 'Catholic - Ward 75'
+                -
+                  key: ecsd-76
+                  value: 'Catholic - Ward 76'
+                -
+                  key: ecsd-77
+                  value: 'Catholic - Ward 77'
               type: select
               display: Ward
               instructions: 'Choose the ward this candidate is running for'
