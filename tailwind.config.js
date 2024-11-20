@@ -1,3 +1,4 @@
+const colors = require('tailwindcss/colors');
 export default {
   content: [
         './resources/**/*.antlers.html',
@@ -12,7 +13,8 @@ export default {
         extend: {
             colors: {
                 'teal': '#008483',
-                'teal-light': '#a6d0cf'
+                'teal-light': '#a6d0cf',
+                'grey': colors.gray,
             }
         }
     },

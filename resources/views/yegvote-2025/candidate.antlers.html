@@ -1,12 +1,12 @@
 <div class="mb-6 flex items-center">
     {{ if photo }}
-    <div class="p-4 min-w-[6rem]">
+    <div class="p-4 min-w-[7rem]">
         {{ photo }}
-        <img src="{{ photo:url }}" class="w-16 h-16"/>
+        <img src="{{ photo:url }}" class="w-20 h-20"/>
         {{ /photo }}
     </div>
     {{ /if }}
-    <div class="">
+    <div class="leading-loose">
         <h2 class="mb-1 flex items-center">
             <span class="text-2xl tracking-tight leading-tight font-bold">
                 {{ name }}
@@ -27,28 +27,28 @@
             {{ if twitter }}
             <div class="md:pl-2 first:pl-0">
                 <a href="https://x.com/{{ twitter }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block">{{ svg src="assets/site/social-icons/twitter.svg" }}</span> {{ twitter }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-twitter text-grey-700 text-sm"></i></span> {{ twitter }}
                 </a>
             </div>
             {{ /if }}
             {{ if bluesky_handle }}
             <div class="md:pl-2 first:pl-0">
                 <a href="https://bsky.app/profile/{{ bluesky_handle }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block">{{ svg src="assets/site/social-icons/bluesky.svg" class="h-5 w-5 text-black" }}</span> {{ bluesky_handle }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-bluesky text-grey-700 text-sm"></i></span> {{ bluesky_handle }}
                 </a>
             </div>
             {{ /if }}
             {{ if facebook }}
             <div class="md:pl-2 first:pl-0">
                 <a href="https://facebook.com/{{ facebook }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block">{{ svg src="assets/site/social-icons/facebook.svg" class="h-4 w-4 text-black" }}</span> {{ facebook }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-facebook text-grey-700 text-sm"></i></span> {{ facebook }}
                 </a>
             </div>
             {{ /if }}
             {{ if instagram }}
             <div class="md:pl-2 first:pl-0">
                 <a href="https://instagram.com/{{ instagram }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block">{{ svg src="assets/site/social-icons/instagram.svg" class="h-4 w-4 text-black" }}</span> {{ instagram }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-instagram text-grey-700 text-sm"></i></span> {{ instagram }}
                 </a>
             </div>
             {{ /if }}
