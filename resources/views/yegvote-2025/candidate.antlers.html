@@ -1,60 +1,70 @@
 <div class="mb-6 flex items-center">
     {{ if photo }}
-    <div class="p-4 min-w-[7rem]">
+    <div class="p-4 min-w-[8rem]">
         {{ photo }}
-        <img src="{{ photo:url }}" class="w-20 h-20"/>
+        <img src="{{ photo:url }}" class="w-24 h-24"/>
         {{ /photo }}
     </div>
     {{ /if }}
     <div class="leading-loose">
-        <h2 class="mb-1 flex items-center">
+        <h2 class="mb- flex items-center">
             <span class="text-2xl tracking-tight leading-tight font-bold">
                 {{ name }}
             </span>
-            {{ if incumbent }}
-                <span class="tracking-tight leading-tight pt-1 text-red-600 italic text-sm pl-2">*Incumbent</span>
-            {{ /if }}
         </h2>
+        <div class="one-liner divide-x divide-grey-300">
+            {{ if incumbent }}
+                <span class="text-red-600 font-bold pr-2">Incumbent</span>
+            {{ /if }}
+            {{ if description }}
+                <span class="text-gray-800 first:pl-0 pl-2">
+                    {{ description }}
+                </span>
+            {{ /if }}
+        </div>
+
         {{ if !confirmed }}
             <div>
-                <span class="text-grey-600 italic text-sm">Presumed to be running — not confirmed</span>
+                <span class="text-grey-500 italic text-sm">Presumed to be running — not confirmed</span>
             </div>
         {{ /if }}
-        <div class="flex flex-col items-left space-x-0 md:space-x-2 divide-x-0 md:divide-x divide-teal md:items-center md:flex-row">
+        <hr class="my-2" />
+        <div class="text-sm flex flex-col items-left gap-x-4 md:flex-row flex-wrap">
             {{ if website }}
-            <div class="md:pl-2 first:pl-0"><a class="hover:text-teal" href="{{ website }}">Website</a></div>
+                <div class="pb-2">
+                    <a class="hover:text-teal" href="{{ website }}">
+                        <span class="inline-block pr-1"><i class="fa-solid fa-globe text-teal text-xs"></i></span> {{ website | remove_left('https://') | remove_left('www.') | remove_right('/') }}
+                    </a>
+                </div>
             {{ /if }}
             {{ if twitter }}
-            <div class="md:pl-2 first:pl-0">
+            <div class="pb-2">
                 <a href="https://x.com/{{ twitter }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block pr-1"><i class="fa-brands fa-twitter text-grey-700 text-sm"></i></span> {{ twitter }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-twitter text-teal text-xs"></i></span> {{ twitter }}
                 </a>
             </div>
             {{ /if }}
             {{ if bluesky_handle }}
-            <div class="md:pl-2 first:pl-0">
+            <div class="pb-2">
                 <a href="https://bsky.app/profile/{{ bluesky_handle }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block pr-1"><i class="fa-brands fa-bluesky text-grey-700 text-sm"></i></span> {{ bluesky_handle }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-bluesky text-teal text-xs"></i></span> {{ bluesky_handle }}
                 </a>
             </div>
             {{ /if }}
             {{ if facebook }}
-            <div class="md:pl-2 first:pl-0">
+            <div class="pb-2">
                 <a href="https://facebook.com/{{ facebook }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block pr-1"><i class="fa-brands fa-facebook text-grey-700 text-sm"></i></span> {{ facebook }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-facebook text-teal text-xs"></i></span> {{ facebook }}
                 </a>
             </div>
             {{ /if }}
             {{ if instagram }}
-            <div class="md:pl-2 first:pl-0">
+            <div class="pb-2">
                 <a href="https://instagram.com/{{ instagram }}" class="hover:text-teal flex items-center">
-                    <span class="inline-block pr-1"><i class="fa-brands fa-instagram text-grey-700 text-sm"></i></span> {{ instagram }}
+                    <span class="inline-block pr-1"><i class="fa-brands fa-instagram text-teal text-xs"></i></span> {{ instagram }}
                 </a>
             </div>
             {{ /if }}
         </div>
-        <p class="text-gray-600">
-            {{ description }}
-        </p>
     </div>
 </div>
