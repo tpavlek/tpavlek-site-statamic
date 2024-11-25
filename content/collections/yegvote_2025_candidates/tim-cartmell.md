@@ -7,9 +7,9 @@ link_website: 'https://www.timcartmell.ca/'
 twitter: _TimCartmell
 description: 'Current councillor of two terms, starting in 2017.'
 photo: tim-cartmell.png
-confirmed: false
+confirmed: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732125559
+updated_at: 1732200881
 ward: mayor
 incumbent: false
 website: 'https://timcartmell.ca'
