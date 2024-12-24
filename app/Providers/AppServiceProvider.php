@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Statamic\Statamic;
+use Stillat\Relationships\Support\Facades\Relate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,9 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Statamic::vite('app', [
-        //     'resources/js/cp.js',
-        //     'resources/css/cp.css',
-        // ]);
+        Relate::oneToMany(
+            'yegvote_2025_candidates.party',
+            'municipal_parties.candidates'
+        );
     }
 }

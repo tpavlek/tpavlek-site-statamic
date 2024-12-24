@@ -1,26 +1,23 @@
 <div class="mb-6 flex items-center">
-    {{ if photo }}
+
     <div class="p-4 min-w-[8rem]">
-        {{ photo }}
-        <img src="{{ photo:url }}" class="w-24 h-24"/>
-        {{ /photo }}
+        {{ if logo }}
+            {{ logo }}
+                <img src="{{ logo:url }}" class="w-24 h-24"/>
+            {{ /logo }}
+        {{ /if }}
     </div>
-    {{ /if }}
+
     <div class="leading-loose">
-        <h2 class="mb- flex items-center">
+        <h2 class="mb-2 flex items-center">
             <span class="text-2xl tracking-tight leading-tight font-bold">
-                {{ name }}
+                {{ title }}
             </span>
-            {{ if party }}
-                <span class="ml-2 py-1 px-2 rounded-full text-xs font-bold tracking-widest" style="background-color: {{ party.tag_colour }}; color: {{ party.tag_text_colour }}">
-                    {{ party.short_name }}
-                </span>
-            {{ /if }}
         </h2>
+        <div class="">
+            {{ partial:municipal_parties/_party-tag }}
+        </div>
         <div class="one-liner divide-x divide-grey-300">
-            {{ if incumbent }}
-                <span class="text-red-600 font-bold pr-2">Incumbent</span>
-            {{ /if }}
             {{ if description }}
                 <span class="text-gray-800 first:pl-0 pl-2">
                     {{ description }}
@@ -28,11 +25,10 @@
             {{ /if }}
         </div>
 
-        {{ if !confirmed }}
-            <div>
-                <span class="text-grey-500 italic text-sm">Presumed to be running — not confirmed</span>
-            </div>
-        {{ /if }}
+        <div class="text-teal font-medium">
+            {{ candidates | count }} candidates
+        </div>
+
         <hr class="my-2" />
         <div class="text-sm flex flex-col items-left gap-x-4 md:flex-row flex-wrap">
             {{ if website }}

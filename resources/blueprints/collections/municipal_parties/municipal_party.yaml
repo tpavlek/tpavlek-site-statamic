@@ -1,0 +1,81 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: short_name
+            field:
+              type: text
+              display: 'Short Name'
+              instructions: 'A short name to appear next to the candidate.'
+              validate:
+                - required
+          -
+            handle: tag_colour
+            field:
+              type: color
+              display: 'Tag Colour'
+              instructions: "Select a colour to be used as this party's tag colour, next to candidates."
+          -
+            handle: tag_text_colour
+            field:
+              swatches:
+                - '#FFFFFF'
+              default: '#1d2633'
+              type: color
+              display: 'Tag Text Colour'
+          -
+            handle: description
+            field:
+              type: text
+              display: description
+          -
+            handle: website
+            field:
+              type: text
+              display: Website
+          -
+            handle: logo
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: Logo
+          -
+            handle: candidates
+            field:
+              collections:
+                - yegvote_2025_candidates
+              type: entries
+              display: Candidates
+              instructions: 'Candidates that a running for this party'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: parent
+            field:
+              type: entries
+              collections:
+                - municipal_parties
+              max_items: 1
+              listable: false
+              localizable: true
+title: 'Municipal Party'

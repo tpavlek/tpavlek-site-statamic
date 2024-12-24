@@ -143,6 +143,17 @@ tabs:
               inline_label_when_true: Incumbent
               type: toggle
               display: Incumbent
+          -
+            handle: party
+            field:
+              max_items: 1
+              mode: select
+              create: false
+              collections:
+                - municipal_parties
+              type: entries
+              display: Party
+              instructions: 'Select the party this candidate is running with. Leave blank for unknown, select Independent if the candidate is known to be running independently.'
   sidebar:
     display: Sidebar
     sections:

@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.9",
         "statamic/cms": "^5.0",
         "statamic/ssg": "^3.0",
+        "stillat/relationships": "^2.2",
         "stillat/statamic-site-essentials": "^1.3"
     },
     "require-dev": {
