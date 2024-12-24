@@ -11,5 +11,6 @@ confirmed: true
 ward: ipiihkoohkanipiaohtsi
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1733070772
+updated_at: 1735065028
+linkedin: funke-olokude-4877b91b8
 ---

@@ -10,5 +10,6 @@ confirmed: true
 ward: mayor
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732060482
+updated_at: 1735065545
+linkedin: tony-caterina-997874285
 ---

@@ -9,10 +9,11 @@ description: 'Two-term councillor since 2017.'
 confirmed: false
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732121210
+updated_at: 1735064559
 ward: dene
 bluesky_handle: apaquette.bsky.social
 facebook: AaronWardDene
 instagram: aaronpaquette.yeg
 photo: 401433708_754468069827836_7733203545427114657_n-modified.png
+linkedin: aaron-p-41745621
 ---

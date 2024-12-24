@@ -27,26 +27,6 @@ tabs:
               display: Website
               instructions: "Provide a URL to the Candidate's website"
           -
-            handle: twitter
-            field:
-              type: text
-              display: 'Twitter Handle'
-          -
-            handle: bluesky_handle
-            field:
-              type: text
-              display: 'BlueSky Handle'
-          -
-            handle: facebook
-            field:
-              type: text
-              display: Facebook
-          -
-            handle: instagram
-            field:
-              type: text
-              display: Instagram
-          -
             handle: description
             field:
               type: text
@@ -154,6 +134,36 @@ tabs:
               type: entries
               display: Party
               instructions: 'Select the party this candidate is running with. Leave blank for unknown, select Independent if the candidate is known to be running independently.'
+      -
+        display: 'Social Media'
+        instructions: "All fields are optional - link to the candidate's social media"
+        fields:
+          -
+            handle: twitter
+            field:
+              type: text
+              display: 'Twitter Handle'
+          -
+            handle: bluesky_handle
+            field:
+              type: text
+              display: 'BlueSky Handle'
+          -
+            handle: facebook
+            field:
+              type: text
+              display: Facebook
+          -
+            handle: instagram
+            field:
+              type: text
+              display: Instagram
+          -
+            handle: linkedin
+            field:
+              type: text
+              display: LinkedIn
+              instructions: 'Include everything after `linkedin.com/in/`'
   sidebar:
     display: Sidebar
     sections:
