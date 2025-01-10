@@ -10,22 +10,42 @@
 
         <!-- HTML Meta Tags -->
         <title>Who's running in the 2025 Edmonton election?</title>
-        <meta name="description" content="Learn about who's running and find links to their websites and social media.">
+        {{ if og_description }}
+            <meta name="description" content="{{ og_description }}">
+            <meta property="og:description" content="{{ og_description }}">
+            <meta name="twitter:description" content="{{ og_description }}">
+        {{ else }}
+            <meta name="description" content="Learn about who's running and find links to their websites and social media.">
+            <meta property="og:description" content="Learn about who's running and find links to their websites and social media.">
+            <meta name="twitter:description" content="Learn about who's running and find links to their websites and social media.">
+        {{ /if }}
 
         <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="https://troypavlek.ca/yegvote-2025/whos-running">
+        <meta property="og:url" content="{{ current_url }}">
+        <meta property="twitter:url" content="{{ current_url }}">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Who's running in the 2025 Edmonton election?">
-        <meta property="og:description" content="Learn about who's running and find links to their websites and social media.">
-        <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
+        {{ if og_title }}
+            <meta property="og:title" content="{{ og_title }}">
+            <meta name="twitter:title" content="{{ og_title }}">
+        {{ else }}
+            <meta property="og:title" content="Who's running in the 2025 Edmonton election?">
+            <meta name="twitter:title" content="Who's running in the 2025 Edmonton election?">
+        {{ /if }}
+
+        {{ if og_image }}
+            <meta property="og:image" content="{{ og_image:url }}">
+            <meta name="twitter:image" content="{{ og_image:url }}">
+        {{ else }}
+            <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
+            <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">
+        {{ /if }}
+
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
         <meta property="twitter:domain" content="troypavlek.ca">
-        <meta property="twitter:url" content="https://troypavlek.ca/yegvote-2025/whos-running">
-        <meta name="twitter:title" content="Who's running in the 2025 Edmonton election?">
-        <meta name="twitter:description" content="Learn about who's running and find links to their websites and social media.">
-        <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">
+
+
 
         <script src="https://kit.fontawesome.com/3221bcdf2a.js" crossorigin="anonymous"></script>
 
