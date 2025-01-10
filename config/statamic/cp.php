@@ -53,7 +53,12 @@ return [
     */
 
     'widgets' => [
-        'getting_started',
+        [
+            'type' => 'collection',
+            'collection' => 'yegvote_2025_candidates',
+            'limit' => 20,
+            'width' => 100
+        ]
     ],
 
     /*

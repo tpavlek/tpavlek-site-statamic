@@ -1,4 +1,27 @@
-<div class="pt-16 pb-8 max-w-4xl mx-auto text-lg content">
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ collection:posts as="posts" }}
+        {{ posts }}
+        <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
+            <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50">
+                <div class="border-teal border-l-8">
+                    <div class="px-4 py-2">
+                        <div class="text-2xl text-gray-800">
+                            <div class="flex items-center">
+                                <span><i class="fa-solid fa-comment text-lg text-teal"></i></span> <span class="ml-2">Analysis</span>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-600 uppercase">{{ date }}</span>
+                        <div class="text-normal font-light">{{ title }}</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        {{ /posts }}
+    {{ /collection:posts }}
+</div>
+
+<div class="pt-8 pb-8 max-w-4xl mx-auto text-lg content">
     {{ content | widont }}
 </div>
 
@@ -23,7 +46,7 @@
 
     {{ wards }}
 
-    <h1 class="text-3xl mb-4 text-teal">Councillor — {{ name }}</h1>
+    <h1 class="text-3xl mb-4 text-teal pt-12">Councillor — {{ name }}</h1>
 
     {{ if commentary }}
         <div class="py-4 px-8 bg-yellow-100 rounded-lg mb-4">

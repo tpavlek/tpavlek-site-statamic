@@ -17,6 +17,22 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: Content
+              sets:
+                new_set_group:
+                  display: 'New Set Group'
+                  sets:
+                    candidate:
+                      display: Candidate
+                      fields:
+                        -
+                          handle: candidate
+                          field:
+                            max_items: 1
+                            mode: typeahead
+                            collections:
+                              - yegvote_2025_candidates
+                            type: entries
+                            display: Candidate
   sidebar:
     display: Sidebar
     sections:

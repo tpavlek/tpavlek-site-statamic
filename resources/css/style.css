@@ -8,6 +8,12 @@ h1 {
     @apply text-4xl font-bold leading-none mb-16;
 }
 
+.content.post-content {
+    > h2 {
+        @apply mt-4;
+    }
+}
+
 .content {
     > h2 {
         @apply text-2xl font-bold leading-none mt-12 py-6;
@@ -37,7 +43,7 @@ h1 {
         @apply text-3xl leading-tight;
     }
 
-    img {
+    img:not(.candidate-photo) {
         @apply my-12;
     }
 
