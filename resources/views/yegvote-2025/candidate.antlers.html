@@ -37,9 +37,7 @@
         <div class="text-sm flex items-center justify-center gap-x-4 md:items-start md:justify-start flex-wrap">
             {{ if website }}
                 <div class="pb-2">
-                    <a class="hover:text-teal" href="{{ website }}">
-                        <span class="inline-block pr-1"><i class="fa-solid fa-globe text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ website | remove_left('https://') | remove_left('www.') | remove_right('/') }}</span>
-                    </a>
+                    <a class="hover:text-teal" href="{{ website }}"><span class="inline-block pr-1"><i class="fa-solid fa-globe text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ website | remove_left('https://') | remove_left('www.') | remove_right('/') }}</span></a>
                 </div>
             {{ /if }}
             {{ if twitter }}
@@ -73,7 +71,7 @@
             {{ if linkedin }}
                 <div class="pb-2">
                     <a href="https://linkedin.com/in/{{ linkedin }}" class="hover:text-teal flex items-center">
-                        <span class="inline-block pr-1"><i class="fa-brands fa-linkedin text-teal text-3xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ linkedin }}</span>
+                        <span class="inline-block pr-1"><i class="fa-brands fa-linkedin text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ linkedin }}</span>
                     </a>
                 </div>
             {{ /if }}

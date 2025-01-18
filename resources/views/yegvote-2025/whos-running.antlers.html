@@ -1,13 +1,13 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg">
-    {{ collection:posts as="posts" }}
+    {{ collection:posts as="posts" sort="date:desc" }}
         {{ posts }}
         <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
-            <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50">
+            <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50 mb-3">
                 <div class="border-teal border-l-8">
                     <div class="px-4 py-2">
                         <div class="text-2xl text-gray-800">
                             <div class="flex items-center">
-                                <span><i class="fa-solid fa-comment text-lg text-teal"></i></span> <span class="ml-2">Analysis</span>
+                                <span><i class="fa-solid fa-comment text-lg text-teal"></i></span> <span class="ml-2">{{ yegvote_2025_update_types:first }} {{ title }} {{ /yegvote_2025_update_types:first }}</span>
                             </div>
                         </div>
                         <span class="text-xs text-gray-600 uppercase">{{ date }}</span>
