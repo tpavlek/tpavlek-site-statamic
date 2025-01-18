@@ -37,40 +37,40 @@
         <div class="text-sm flex items-center justify-center gap-x-4 md:items-start md:justify-start flex-wrap">
             {{ if website }}
                 <div class="pb-2">
-                    <a class="hover:text-teal" href="{{ website }}"><span class="inline-block pr-1"><i class="fa-solid fa-globe text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ website | remove_left('https://') | remove_left('www.') | remove_right('/') }}</span></a>
+                    <a class="hover:text-teal text-inherit font-normal no-underline" href="{{ website }}"><span class="inline-block pr-1"><i class="fa-solid fa-globe text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ website | remove_left('https://') | remove_left('www.') | remove_right('/') }}</span></a>
                 </div>
             {{ /if }}
             {{ if twitter }}
             <div class="pb-2">
-                <a href="https://x.com/{{ twitter }}" class="hover:text-teal flex items-center">
+                <a href="https://x.com/{{ twitter }}" class="hover:text-teal flex items-center text-inherit font-normal no-underline">
                     <span class="inline-block pr-1 "><i class="fa-brands fa-twitter text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ twitter }}</span>
                 </a>
             </div>
             {{ /if }}
             {{ if bluesky_handle }}
             <div class="pb-2">
-                <a href="https://bsky.app/profile/{{ bluesky_handle }}" class="hover:text-teal flex items-center">
+                <a href="https://bsky.app/profile/{{ bluesky_handle }}" class="hover:text-teal flex items-center text-inherit font-normal no-underline">
                     <span class="inline-block pr-1"><i class="fa-brands fa-bluesky text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ bluesky_handle }}</span>
                 </a>
             </div>
             {{ /if }}
             {{ if facebook }}
             <div class="pb-2">
-                <a href="https://facebook.com/{{ facebook }}" class="hover:text-teal flex items-center">
+                <a href="https://facebook.com/{{ facebook }}" class="hover:text-teal flex items-center text-inherit font-normal no-underline">
                     <span class="inline-block pr-1"><i class="fa-brands fa-facebook text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ facebook }}</span>
                 </a>
             </div>
             {{ /if }}
             {{ if instagram }}
             <div class="pb-2">
-                <a href="https://instagram.com/{{ instagram }}" class="hover:text-teal flex items-center">
+                <a href="https://instagram.com/{{ instagram }}" class="hover:text-teal flex items-center text-inherit font-normal no-underline">
                     <span class="inline-block pr-1"><i class="fa-brands fa-instagram text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ instagram }}</span>
                 </a>
             </div>
             {{ /if }}
             {{ if linkedin }}
                 <div class="pb-2">
-                    <a href="https://linkedin.com/in/{{ linkedin }}" class="hover:text-teal flex items-center">
+                    <a href="https://linkedin.com/in/{{ linkedin }}" class="hover:text-teal flex items-center text-inherit font-normal no-underline">
                         <span class="inline-block pr-1"><i class="fa-brands fa-linkedin text-teal text-xl lg:text-xs"></i></span> <span class="hidden lg:inline-block">{{ linkedin }}</span>
                     </a>
                 </div>
