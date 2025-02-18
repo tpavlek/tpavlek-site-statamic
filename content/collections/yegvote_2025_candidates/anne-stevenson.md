@@ -9,11 +9,11 @@ facebook: edmontonanne
 instagram: edmonton_anne
 description: 'One-term councillor, since 2021.'
 photo: hfilz-yc_400x400-modified.png
-confirmed: false
+confirmed: true
 ward: odaymin
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735398976
+updated_at: 1738176737
 linkedin: edmontonanne
 bluesky_handle: annestevenson.bsky.social
 ---

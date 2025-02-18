@@ -9,10 +9,10 @@ facebook: kerentangyeg
 instagram: kerentangyeg
 description: 'One-term councillor, since 2021.'
 photo: jfbwhq26_400x400-modified.png
-confirmed: false
+confirmed: true
 ward: karhiio
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065212
+updated_at: 1738365426
 linkedin: kerentang
 ---

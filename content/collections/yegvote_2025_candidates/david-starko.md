@@ -7,5 +7,6 @@ confirmed: true
 ward: undeclared
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1736956730
+updated_at: 1738638548
+party: 1bd33afa-60a2-4d12-b7a3-7ea879030d75
 ---

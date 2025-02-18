@@ -13,4 +13,8 @@ description: 'A conservative-leaning party'
 candidates:
   - 5ff31f81-68bb-4fac-a61b-9fa2a9d81133
   - 9d0236f1-a3b4-4258-9fbf-591a31b4e6b5
+  - 5a5b234d-ec7e-471d-87d4-41e383efbf2c
+  - 382d6dbd-22e9-4789-814d-bf6c923b300d
+  - ef9b5d30-d797-452f-97f2-946b2281af62
+  - 7bb687bc-e580-465c-9a23-1bf3a473630f
 ---
