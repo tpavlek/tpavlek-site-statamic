@@ -18,8 +18,15 @@
                     {{ partial src="yegvote-2025/candidate" }}
                 {{ /candidate }}
             {{ /if }}
-        {{ /content }}
+            {{ if type == "image" }}
+                {{ images }}
+                    <img src="{{ url }}" alt="{{ alt }}" />
+                {{ /images }}
+            {{ /if }}
 
-        {{ partial src="_email-subscribe" }}
+            {{ if type == "email_subscription_prompt" }}
+                {{ partial:email-subscribe }}
+            {{ /if }}
+        {{ /content }}
     </div>
 </article>

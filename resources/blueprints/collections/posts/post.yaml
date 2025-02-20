@@ -33,6 +33,32 @@ tabs:
                               - yegvote_2025_candidates
                             type: entries
                             display: Candidate
+                    image:
+                      display: image
+                      icon: media-image-picture-orientation
+                      fields:
+                        -
+                          handle: images
+                          field:
+                            container: assets
+                            dynamic: slug
+                            type: assets
+                            display: Images
+                    email_subscription_prompt:
+                      display: 'Email Subscription prompt'
+                      instructions: 'Include an inline email subscription prompt'
+                      icon: mail-sign-at
+                      fields:
+                        -
+                          handle: include_content
+                          field:
+                            options:
+                              -
+                                key: immediate_list
+                                value: 'Immediate List Note'
+                            type: checkboxes
+                            display: 'Include Content'
+                            instructions: 'Sections you want to include'
   sidebar:
     display: Sidebar
     sections:
@@ -69,4 +95,12 @@ tabs:
               container: assets
               type: assets
               display: 'OpenGraph Image'
+          -
+            handle: yegvote_2025_update_types
+            field:
+              type: terms
+              taxonomies:
+                - yegvote_2025_update_types
+              display: 'YEGVote 2025 Update Types'
+              mode: select
 title: Post

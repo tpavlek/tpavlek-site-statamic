@@ -1,12 +1,22 @@
+---
+include_content:
+    - value: immediate_list
+foo: "bar"
+---
 <div class="py-4 px-6 border-grey-200 border rounded-lg bg-grey-50">
     <p class="mb-4">
         <strong>Get updates straight to your inbox. </strong> Register to get digest updates to keep you informed right up until the election.
     </p>
     <script async data-uid="665dc00476" src="https://troypavlek.kit.com/665dc00476/index.js"></script>
 
-    <hr class="my-2 mb-4" />
-    <p class="text-sm">
-        If you're a journalist — or just super interested — Send an email to <a href="mailto:troy@tpavlek.me?subject=Add me to the Immediate List">troy@tpavlek.me</a> and ask to be added to the "immediate list".
-        I'll send you an update <em>as soon as I know anything</em>.
-    </p>
+    {{ if (view:include_content | count) > 0 }}
+        <hr class="my-2 mb-4" />
+
+        {{ if view:include_content | pluck('value') | contains('immediate_list') }}
+            <p class="text-sm">
+                If you're a journalist — or just super interested — Send an email to <a href="mailto:troy@tpavlek.me?subject=Add me to the Immediate List">troy@tpavlek.me</a> and ask to be added to the "immediate list".
+                I'll send you an update <em>as soon as I know anything</em>.
+            </p>
+        {{ /if }}
+    {{ /if }}
 </div>
