@@ -7,9 +7,9 @@ instagram: gocuanpix
 description: 'Stakeholder Relations and Community Outreach at the Office of the Premier'
 photo: 433479875_122097302996264546_5672845830149835375_n-modified.png
 confirmed: true
-ward: undeclared
+ward: nakota-isga
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065276
+updated_at: 1740789423
 linkedin: nicky-gocuan-7a19232
 ---

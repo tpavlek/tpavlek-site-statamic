@@ -4,10 +4,10 @@ blueprint: yegvote_2025_candidate
 title: 'Sarah Hamilton'
 name: 'Sarah Hamilton'
 confirmed: false
-ward: sipiwiyiniwak
+ward: ecsd-77
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065412
+updated_at: 1741901611
 website: 'https://www.sarahhamilton.ca/'
 twitter: sjlhamilton
 facebook: SarahHamiltonYEG

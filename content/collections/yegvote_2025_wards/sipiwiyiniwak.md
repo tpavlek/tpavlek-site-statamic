@@ -5,5 +5,6 @@ title: sipiwiyiniwak
 name: sipiwiyiniwak
 type: councillor
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732062073
+updated_at: 1741901646
+commentary: 'The incumbent in this ward, Sarah Hamilton, has announced that she will not be seeking re-election, making this an **open ward**'
 ---

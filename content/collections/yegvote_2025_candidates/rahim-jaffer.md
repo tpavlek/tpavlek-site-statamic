@@ -6,8 +6,8 @@ name: 'Rahim Jaffer'
 description: '4-term Conservative MP, Local Business Owner'
 photo: jafferrahim_cpc-modified.png
 confirmed: false
-ward: mayor
+ward: ecsd-77
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1736887313
+updated_at: 1740536740
 ---

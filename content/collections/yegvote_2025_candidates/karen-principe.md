@@ -8,8 +8,8 @@ facebook: councillorprincipe
 instagram: karenprincipe.yeg
 photo: 259606133_256161793243599_337225596396004470_n-modified.png
 confirmed: false
-ward: tastawiyiniwak
+ward: ecsd-71
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732123835
+updated_at: 1740104662
 ---
