@@ -10,7 +10,7 @@ ward: papastew
 incumbent: false
 facebook: 'profile.php?id=61573279144202'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1740161381
-website: rozaliajaniszewska.squarespace.com
+updated_at: 1742000991
+website: 'https://rozaliajaniszewska.ca'
 instagram: rjforpapastew
 ---
