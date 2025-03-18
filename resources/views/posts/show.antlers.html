@@ -27,6 +27,12 @@
             {{ if type == "email_subscription_prompt" }}
                 {{ partial:email-subscribe }}
             {{ /if }}
+
+            {{ if type == "social_embed" }}
+                {{ if instagram }}
+                    {{ instagram }}
+                {{ /if }}
+            {{ /if }}
         {{ /content }}
     </div>
 </article>

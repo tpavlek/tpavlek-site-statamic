@@ -59,6 +59,17 @@ tabs:
                             type: checkboxes
                             display: 'Include Content'
                             instructions: 'Sections you want to include'
+                    social_embed:
+                      display: 'Social Embed'
+                      instructions: 'Embed social content'
+                      icon: social-share
+                      fields:
+                        -
+                          handle: instagram
+                          field:
+                            type: code
+                            display: Instagram
+                            instructions: 'Enter in the instagram embed code'
   sidebar:
     display: Sidebar
     sections:
