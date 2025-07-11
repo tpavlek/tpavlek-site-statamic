@@ -6,10 +6,10 @@ name: 'Aaron Paquette'
 website: 'https://www.aaronpaquette.ca/'
 twitter: AaronWardDene
 description: 'Two-term councillor since 2017.'
-confirmed: false
+confirmed: true
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735064559
+updated_at: 1752075151
 ward: dene
 bluesky_handle: apaquette.bsky.social
 facebook: AaronWardDene

@@ -9,9 +9,10 @@ facebook: JoAnneWrightYEG
 instagram: joannewrightyeg
 description: 'One-term councillor (since 2021)'
 photo: lmbi5bjq_400x400-modified.png
-confirmed: false
+confirmed: true
 ward: sspomitapi
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732144112
+updated_at: 1746723270
+party: f38d080d-1092-4330-9e67-881de742be14
 ---

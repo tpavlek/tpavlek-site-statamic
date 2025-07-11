@@ -17,4 +17,11 @@ candidates:
   - 382d6dbd-22e9-4789-814d-bf6c923b300d
   - ef9b5d30-d797-452f-97f2-946b2281af62
   - 7bb687bc-e580-465c-9a23-1bf3a473630f
+  - 614dd3b0-a218-48bb-a10e-273431f4e08a
+  - d7da3fb6-a70b-4c4d-9d5b-f980c0600b4e
+  - 5156b350-ca21-4d8d-aa74-d73c545045ca
+  - dfb86dda-abe0-407c-8873-4a2c8a743fb5
+  - 5894a338-374f-415f-9fee-45c49a4e1217
+  - 10e21f88-fece-4afc-9b99-c19d5f05a744
+  - 54ced6f9-fdda-4044-b337-155dad5f3b1e
 ---

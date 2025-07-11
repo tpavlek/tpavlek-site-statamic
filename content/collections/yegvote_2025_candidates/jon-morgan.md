@@ -8,11 +8,12 @@ confirmed: true
 ward: ipiihkoohkanipiaohtsi
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065151
+updated_at: 1742997757
 website: 'https://www.jonmorgan.ca/'
 twitter: jonmorganyeg
 bluesky_handle: jonmorganyeg.bsky.social
 instagram: jonmorganyeg
 photo: bafkreicmgcoai5v6l4ewgbziacciiejdei6fx53twuiti472a7ay2l7p4y-modified.png
 linkedin: jonmorganyeg
+party: f38d080d-1092-4330-9e67-881de742be14
 ---
