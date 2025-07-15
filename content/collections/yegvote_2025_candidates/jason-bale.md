@@ -8,7 +8,7 @@ confirmed: true
 ward: karhiio
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065082
+updated_at: 1752599625
 website: 'https://www.jasonbale.ca/'
 twitter: Jasonwbale
 bluesky_handle: jasonwbale.bsky.social
@@ -16,4 +16,5 @@ facebook: 'profile.php?id=61561716416594'
 instagram: iambehir
 photo: jason-headshot-modified.png
 linkedin: jason-bale-a08a93a9
+tier: 4
 ---

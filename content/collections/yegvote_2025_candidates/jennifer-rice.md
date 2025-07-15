@@ -12,5 +12,6 @@ confirmed: true
 ward: ipiihkoohkanipiaohtsi
 incumbent: true
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1742997177
+updated_at: 1752601150
+tier: 1
 ---

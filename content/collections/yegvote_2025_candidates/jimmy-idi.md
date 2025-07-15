@@ -9,6 +9,7 @@ confirmed: true
 ward: tastawiyiniwak
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1746401137
+updated_at: 1752600918
 website: 'https://jimmyidi.ca'
+tier: 3
 ---

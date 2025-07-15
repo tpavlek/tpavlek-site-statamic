@@ -2,3 +2,11 @@ name: 'Troy Pavlek'
 super: true
 id: 9c6b6866-e047-4568-b3f4-71623caf17dd
 password_hash: $2y$12$2O6cQduzVto.ZRKJXMgGHuk6s1pPV0DflQpT8awjp2zEhTLQ3KXAq
+preferences:
+  collections:
+    yegvote_2025_candidates:
+      columns:
+        - title
+        - slug
+        - status
+        - ward

@@ -12,6 +12,7 @@ party: f38d080d-1092-4330-9e67-881de742be14
 twitter: fchak
 linkedin: farhanchak
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1739922700
+updated_at: 1752600912
 website: 'https://www.farhanchak.com/'
+tier: 2
 ---

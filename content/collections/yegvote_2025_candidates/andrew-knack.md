@@ -16,5 +16,6 @@ facebook: AndrewKnackEdmonton
 instagram: andrewknack
 linkedin: andrew-knack-27466824
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1747933066
+updated_at: 1752599297
+tier: 1
 ---

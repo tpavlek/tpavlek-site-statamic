@@ -10,5 +10,7 @@ ward: karhiio
 incumbent: false
 facebook: 'profile.php?id=61577204242037'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1749673873
+updated_at: 1752599672
+email: info@atiqrehman.ca
+tier: 3
 ---

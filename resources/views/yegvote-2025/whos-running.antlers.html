@@ -1,5 +1,9 @@
+<div class="pt-8 pb-8 max-w-4xl mx-auto text-lg content">
+    {{ content | widont }}
+</div>
+
 <div class="pb-8 max-w-4xl mx-auto text-lg">
-    {{ collection:posts as="posts" sort="date:desc" }}
+    {{ collection:posts as="posts" sort="date:desc" limit="4" }}
         {{ posts }}
         {{ if yegvote_2025_update_types | pluck('title') | contains_any('Update', 'Analysis', 'Context') }}
             <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
@@ -17,10 +21,10 @@
 
         {{ /posts }}
     {{ /collection:posts }}
-</div>
+    <p class="content">
+        <a href="/posts">View all posts →</a>
+    </p>
 
-<div class="pt-8 pb-8 max-w-4xl mx-auto text-lg content">
-    {{ content | widont }}
 </div>
 
 <div class="content mb-4 max-w-4xl mx-auto">
@@ -35,7 +39,7 @@
         Mayor Amarjeet Sohi, the incumbent, <strong>will not be running again</strong> making this an open Mayoral race.
     </div>
 
-    {{ collection:yegvote_2025_candidates ward:is="mayor" as="candidates" }}
+    {{ collection:yegvote_2025_candidates ward:is="mayor" as="candidates" sort="tier|name" }}
         {{ if no_results }}
             <h2 class="text-3xl italic tracking-tight">No one has declared for this yet!</h2>
         {{ /if }}
@@ -57,7 +61,7 @@
         </div>
     {{ /if }}
 
-    {{ collection:yegvote_2025_candidates :ward:is="slug" as="candidates" }}
+    {{ collection:yegvote_2025_candidates :ward:is="slug" as="candidates" sort="tier|name" }}
     {{ if no_results }}
         <h3 class="italic tracking-tight mb-4">No one has declared for this ward yet!</h3>
     {{ /if }}

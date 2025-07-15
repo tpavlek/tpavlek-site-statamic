@@ -8,8 +8,9 @@ confirmed: true
 ward: karhiio
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1738027173
+updated_at: 1752599642
 website: 'https://www.mannybautistaforyegcouncillor.com/'
 photo: screenshot-2025-01-27-at-6.16.01-pm-modified.png
 facebook: 'profile.php?id=61556328519900'
+tier: 3
 ---

@@ -7,7 +7,7 @@ confirmed: true
 ward: tastawiyiniwak
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1739327258
+updated_at: 1752600906
 website: 'https://fidelammar.ca/'
 description: 'Transit operator instructor'
 photo: screenshot-2025-02-11-at-7.21.54-pm-modified.png
@@ -16,4 +16,5 @@ twitter: fidelammar
 facebook: 'profile.php?id=61568489956554'
 instagram: fidel.c.ammar
 linkedin: fidel-c-ammar-654943302
+tier: 2
 ---

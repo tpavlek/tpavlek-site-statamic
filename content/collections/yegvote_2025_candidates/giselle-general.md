@@ -10,7 +10,9 @@ confirmed: true
 ward: sipiwiyiniwak
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065065
+updated_at: 1752600782
 photo: 000072160027-modified.png
 linkedin: gisellegeneral
+party: f38d080d-1092-4330-9e67-881de742be14
+tier: 2
 ---

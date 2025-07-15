@@ -7,8 +7,9 @@ confirmed: true
 ward: nakota-isga
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1745529945
+updated_at: 1752599762
 website: 'https://voteforjoseph.ca/'
 description: Entrepreneur
 photo: screenshot-2025-04-24-at-3.21.35-pm-modified.png
+tier: 4
 ---

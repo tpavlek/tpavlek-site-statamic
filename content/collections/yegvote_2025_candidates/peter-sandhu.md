@@ -10,7 +10,8 @@ confirmed: true
 ward: mayor
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1735065324
+updated_at: 1752599382
 facebook: Petersandhu28
 linkedin: petersandhupolitician
+tier: 5
 ---

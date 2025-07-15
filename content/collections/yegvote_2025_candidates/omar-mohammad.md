@@ -7,11 +7,12 @@ confirmed: true
 ward: mayor
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1739487523
+updated_at: 1752599403
 photo: omar-hero-back-modified.png
 instagram: omar_4_mayor
 website: 'https://www.omar4mayor.ca/'
 description: 'Pediatric Dental Surgeon'
 twitter: omar_4_mayor
 facebook: omohammad
+tier: 3
 ---

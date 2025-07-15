@@ -9,8 +9,9 @@ confirmed: true
 ward: ipiihkoohkanipiaohtsi
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1749673752
+updated_at: 1752599602
 linkedin: rameydemian
 twitter: rameydemian
 website: 'http://ramey.ca/'
+tier: 3
 ---

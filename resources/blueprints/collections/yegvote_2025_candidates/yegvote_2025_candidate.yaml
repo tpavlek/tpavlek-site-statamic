@@ -134,6 +134,38 @@ tabs:
               type: entries
               display: Party
               instructions: 'Select the party this candidate is running with. Leave blank for unknown, select Independent if the candidate is known to be running independently.'
+          -
+            handle: email
+            field:
+              type: text
+              display: Email
+              instructions: "The candidate's email"
+              validate:
+                - sometimes
+                - email
+          -
+            handle: tier
+            field:
+              options:
+                -
+                  key: 1
+                  value: Competitive
+                -
+                  key: 2
+                  value: Electable
+                -
+                  key: 3
+                  value: Longshot
+                -
+                  key: 4
+                  value: Also-ran
+                -
+                  key: 5
+                  value: Joke
+              default: Competitive
+              type: select
+              display: Tier
+              instructions: 'The electability of this candidate (used for sorting and display on candidate lists)'
       -
         display: 'Social Media'
         instructions: "All fields are optional - link to the candidate's social media"
@@ -164,6 +196,14 @@ tabs:
               type: text
               display: LinkedIn
               instructions: 'Include everything after `linkedin.com/in/`'
+          -
+            handle: tiktok
+            field:
+              type: text
+              display: TikTok
+              instructions: 'Include the @sign'
+              validate:
+                - 'starts_with:@'
   sidebar:
     display: Sidebar
     sections:
