@@ -113,6 +113,9 @@ tabs:
                 -
                   key: ecsd-77
                   value: 'Catholic - Ward 77'
+                -
+                  key: dropped-out
+                  value: 'Dropped Out'
               type: select
               display: Ward
               instructions: 'Choose the ward this candidate is running for'
