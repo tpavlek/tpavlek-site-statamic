@@ -9,16 +9,19 @@
             <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">
                 <div class="border-teal border-l-8">
                     <a href="{{ url }}" class="appearance-none block text-gray-800 no-underline group">
-                        <div class="text-normal font-light flex items-center group-hover:bg-grey-50 px-4 pt-2">
+                        <div class="text-normal font-light flex flex-col md:flex-row md:items-center group-hover:bg-grey-50 px-4 pt-2">
                             {{ if stars }}
                                 <span class="text-teal mr-2">
                                     {{ stars:label }}
                                 </span>
 
                             {{ elseif recommended }}
-                                <span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+                                <div>
+                                    <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+                                </div>
+
                             {{ /if }}
-                            <span class="font-medium text-lg">{{ title }}</span> <i class="fas fa-link text-xs text-gray-600 ml-2"></i>
+                            <span><span class="font-medium text-lg">{{ title }}</span> <i class="fas fa-link text-xs text-gray-600 ml-2"></i></span>
                         </div>
                     </a>
                     <div class="px-4 pb-2">
