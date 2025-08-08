@@ -1,0 +1,59 @@
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    <h2 class="text-3xl font-light flex flex-col md:flex-row md:items-center group-hover:bg-grey-50">
+        {{ if stars }}
+            <span class="text-teal mr-2">
+                {{ stars:label }}
+            </span>
+
+        {{ elseif recommended }}
+            <div class="flex items-center">
+                <span class="inline-block bg-grey-200 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+            </div>
+
+        {{ /if }}
+        <span><span class=" font-bold">{{ title }}</span></span>
+    </h2>
+
+    <div class="space-x-2">
+        {{ if ticket_link }}
+            <a href="{{ ticket_link }}" target="_blank" class="text-xs text-gray-600 uppercase">
+                <i class="fas fa-link text-teal"></i> Tickets
+            </a>
+        {{ /if }}
+
+        {{ if artist_instagram }}
+            <a href="https://instagram.com/{{ artist_instagram }}" target="_blank" class="text-xs text-gray-600 uppercase">
+                <i class="fa-brands fa-instagram text-teal text-xl lg:text-xs"></i> {{ artist_instagram}}
+            </a>
+        {{ /if }}
+    </div>
+
+    <div class="content mt-4">
+        {{ content }}
+    </div>
+
+    <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">
+        <div class="border-teal border-l-8">
+            <div class="px-4 pb-2">
+                <h3 class="font-semibold pt-2 uppercase text-sm tracking-wide">Companion videos</h3>
+
+                    {{ companion_videos as="video" }}
+                    <div class="mt-4 flex space-x-2 items-center">
+                        {{ video }}
+                        <div class="my-2 ">
+                            {{ if youtube }}
+                                <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            {{ else }}
+                                <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
+                            {{ /if }}
+
+                        </div>
+
+                        {{ /video }}
+                    </div>
+                    {{ /companion_videos }}
+
+            </div>
+        </div>
+    </div>
+</div>

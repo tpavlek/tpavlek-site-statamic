@@ -3,67 +3,83 @@
         {{ content }}
     </div>
 
+        <div class="pb-2 overflow-scroll">
+            {{ collection:videos as="video" sort="random" limit="4" }}
+            <ul class="carousel grid grid-flow-col gap-2">
+                {{ video }}
+                <li class="my-2">
+                    {{ if youtube }}
+                        <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    {{ else }}
+                        <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
+                    {{ /if }}
 
+                </li>
+
+                {{ /video }}
+            </ul>
+            {{ /collection:videos }}
+
+        </div>
+
+    <hr class="w-1/2 text-center mx-auto py-4" />
+
+    <table class="w-full my-4">
+        <thead>
+        <tr>
+            <th class="text-left">Show</th>
+            <th class="text-left">Rating</th>
+            <th class="text-left">Tickets</th>
+        </tr>
+
+        </thead>
+        <tbody>
         {{ reviews }}
-
-            <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">
-                <div class="border-teal border-l-8">
+            <tr>
+                <td>
                     <a href="{{ url }}" class="appearance-none block text-gray-800 no-underline group">
-                        <div class="text-normal font-light flex flex-col md:flex-row md:items-center group-hover:bg-grey-50 px-4 pt-2">
-                            {{ if stars }}
-                                <span class="text-teal mr-2">
-                                    {{ stars:label }}
-                                </span>
-
-                            {{ elseif recommended }}
-                                <div>
-                                    <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
-                                </div>
-
-                            {{ /if }}
-                            <span><span class="font-medium text-lg">{{ title }}</span> <i class="fas fa-link text-xs text-gray-600 ml-2"></i></span>
+                        <div class="text-normal font-light flex flex-col md:flex-row md:items-center group-hover:bg-grey-50 py-2">
+                            <span>
+                                <span class="">{{ title }}</span>
+                                {{ if companion_videos }}
+                                    <i class="fa-brands fa-youtube text-teal opacity-85"></i>
+                                {{ /if }}
+                            </span>
                         </div>
                     </a>
-                    <div class="px-4 pb-2">
-                        <div class="space-x-2">
-                            {{ if ticket_link }}
+                </td>
+                <td>
+                    {{ if stars }}
+                        <span class="text-teal mr-2">
+                            {{ stars:label }}
+                        </span>
+
+                    {{ elseif recommended }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+                        </div>
+
+                    {{ /if }}
+                </td>
+                <td>
+                    <div class="space-x-2">
+                        {{ if ticket_link }}
                             <a href="{{ ticket_link }}" target="_blank" class="text-xs text-gray-600 uppercase">
                                 <i class="fas fa-link text-teal"></i> Tickets
                             </a>
-                            {{ /if }}
-
-                            {{ if artist_instagram }}
-                                <a href="https://instagram.com/{{ artist_instagram }}" target="_blank" class="text-xs text-gray-600 uppercase">
-                                    <i class="fa-brands fa-instagram text-teal text-xl lg:text-xs"></i> {{ artist_instagram}}
-                                </a>
-                            {{ /if }}
-                        </div>
-
-                        <details>
-                            <summary class="bg-teal rounded-lg px-4 py-2 inline-block cursor-pointer text-white text-sm mt-1">Click to expand/collapse review</summary>
-                            <div class="mt-2 space-y-2">
-                                {{ content }}
-                            </div>
-
-                            {{ companion_videos as="video" }}
-                            <div class="mt-4">
-                                {{ video }}
-                                <div class="my-2 flex space-x-2 items-center">
-                                    {{ if youtube }}
-                                        <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                                    {{ else }}
-                                        <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
-                                    {{ /if }}
-
-                                </div>
-
-                                {{ /video }}
-                            </div>
-                            {{ /companion_videos }}
-                        </details>
-
+                        {{ /if }}
                     </div>
-                </div>
-            </div>
+                </td>
+            </tr>
         {{ /reviews }}
+
+            <td></td>
+        </tbody>
+    </table>
+
+    <hr class="w-1/2 text-center mx-auto py-4" />
+
+    <div class="content">
+        {{ after_content }}
+    </div>
 </div>
