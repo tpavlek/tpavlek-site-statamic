@@ -3,6 +3,11 @@ data:
   site_name: 'Troy Pavlek'
   social:
     -
+      id: me1xcwky
+      name: Instagram
+      url: 'https://www.instagram.com/troypavlek.politics/'
+      icon: site/social-icons/instagram.svg
+    -
       id: AosUmbVH
       name: Twitter
       url: 'https://twitter.com/troypavlek'
@@ -12,3 +17,8 @@ data:
       name: Email
       url: 'mailto:troy@tpavlek.me'
       icon: site/social-icons/email.svg
+    -
+      id: me1xdfff
+      name: YouTube
+      url: 'https://www.youtube.com/@troypavlek'
+      icon: site/social-icons/youtube.svg

@@ -1,0 +1,112 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: content
+            field:
+              type: markdown
+              localizable: true
+          -
+            handle: stars
+            field:
+              options:
+                -
+                  key: 0
+                  value: ☆☆☆☆☆
+                -
+                  key: 1
+                  value: ★☆☆☆☆
+                -
+                  key: 2
+                  value: ★★☆☆☆
+                -
+                  key: 3
+                  value: ★★★☆☆
+                -
+                  key: 4
+                  value: ★★★★☆
+                -
+                  key: 5
+                  value: ★★★★★
+                -
+                  key: '1.5'
+                  value: ★½☆☆☆
+                -
+                  key: '2.5'
+                  value: ★★½☆☆
+                -
+                  key: '3.5'
+                  value: ★★★½☆
+                -
+                  key: '4.5'
+                  value: ★★★★½
+              type: select
+              display: Stars
+              clearable: true
+          -
+            handle: recommended
+            field:
+              default: true
+              type: toggle
+              display: Recommended
+          -
+            handle: ticket_link
+            field:
+              input_type: url
+              type: text
+              display: 'Ticket link'
+              validate:
+                - url
+          -
+            handle: artist_instagram
+            field:
+              type: text
+              display: 'Artist Instagram'
+              instructions: 'Include only the instagram handle'
+  video:
+    display: Video
+    sections:
+      -
+        display: 'New Section'
+        fields:
+          -
+            handle: companion_videos
+            field:
+              collections:
+                - videos
+              type: entries
+              display: 'Companion Videos'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: festival
+            field:
+              max_items: 1
+              taxonomies:
+                - fringe_festival
+              type: terms
+              display: Festival
+              default: 2025
+              instructions: 'Choose the festival this review is for'
+              validate:
+                - required
+title: 'Fringe Review'

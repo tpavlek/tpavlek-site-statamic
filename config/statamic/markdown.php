@@ -18,6 +18,7 @@ return [
     'configs' => [
 
         'default' => [
+            'html_input' => 'allow',
             // 'heading_permalink' => [
             //     'symbol' => '#',
             // ],

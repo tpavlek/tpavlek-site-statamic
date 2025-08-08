@@ -1,0 +1,47 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: description
+            field:
+              type: text
+              display: Description
+          -
+            handle: content
+            field:
+              type: markdown
+              localizable: true
+          -
+            handle: youtube
+            field:
+              type: text
+              display: YouTube
+              instructions: 'Enter the YouTube Video ID (not the full URL)'
+          -
+            handle: instagram
+            field:
+              type: text
+              display: Instagram
+              instructions: 'Enter the Instagram Reel ID'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Video

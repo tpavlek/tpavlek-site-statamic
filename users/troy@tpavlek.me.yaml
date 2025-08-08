@@ -10,3 +10,9 @@ preferences:
         - slug
         - status
         - ward
+    fringe_reviews:
+      columns:
+        - title
+        - slug
+        - status
+        - festival
