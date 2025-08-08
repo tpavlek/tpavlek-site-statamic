@@ -8,7 +8,7 @@ updated_at: 1754618491
 og_title: "Fringe 2025 Reviews by Troy Pavlek"
 og_description: "The reviews and recommendations you need to get into a great Fringe show"
 og_image: 
-    url: "https://troypavlek.ca/assets/fringe/og-fringe-reviews.jpeg"
+    url: "https://troypavlek.ca/assets/og-fringe-reviews.jpeg"
 ---
 I love the Fringe, and I think you should, too.
 
