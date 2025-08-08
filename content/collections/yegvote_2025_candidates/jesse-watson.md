@@ -9,9 +9,9 @@ confirmed: true
 ward: anirniq
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1752599464
+updated_at: 1754590821
 linkedin: jesse-watson-28a85037
 website: 'http://jessewatson.ca/'
 description: 'Owner/Operator of Boxcar Coffeeshop, former city employee'
-tier: Competitive
+tier: 1
 ---

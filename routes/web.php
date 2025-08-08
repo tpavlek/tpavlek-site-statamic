@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Route;
 // ]);
 //
 
-Route::get("test", fn() => dd("test"));
+Route::get("test/", fn() => dd("test"));
 
 Route::get('/fringe-2025/reviews', [ FringeController::class, 'currentYear' ]);
