@@ -4,7 +4,7 @@ blueprint: page
 title: 'Fringe 2025: Reviews'
 template: fringe-2025/index
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754679062
+updated_at: 1754778940
 og_title: 'Fringe 2025 Reviews by Troy Pavlek'
 og_description: 'The reviews and recommendations you need to get into a great Fringe show'
 og_image:
@@ -24,4 +24,4 @@ But that would be a mistake, so I'm here to help.
 
 I go to dozens of shows a year, so I know what's been good in the past, and is likely to be good this year. And I'll update this page as I see more and more shows throughout the fest. The reviews on this page represent _my opinion_ (but I have a very good opinions).
 
-Lean about what **stars** mean in these reviews [by reading more here →](/fringe/what-do-ratings-mean)
+Lean about what **stars/recommended** mean in these reviews [by reading more here →](/fringe/what-do-ratings-mean)
