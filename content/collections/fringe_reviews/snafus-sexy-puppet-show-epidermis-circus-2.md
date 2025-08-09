@@ -7,9 +7,11 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6747/'
 artist_instagram: iamingridhansen
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754618962
+updated_at: 1754752782
 companion_videos:
   - 32e4b018-ebae-4eef-af74-2d86b46ece42
+categories:
+  - comedy
 ---
 I've seen both past versions of this show: Ingie's Fingies and Epidermis Circus - both were a joy, and the second was only an improvement on the first.
 

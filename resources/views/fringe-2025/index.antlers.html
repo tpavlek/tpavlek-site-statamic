@@ -49,16 +49,26 @@
                     </a>
                 </td>
                 <td>
+
                     {{ if stars }}
                         <span class="text-teal mr-2">
                             {{ stars:label }}
                         </span>
 
+                    {{ elseif !recommended }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Not Recommended</span>
+                        </div>
+
+                    {{ elseif categories|pluck('slug')|contains('improv') }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
+                        </div>
+
                     {{ elseif recommended }}
                         <div>
                             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
                         </div>
-
                     {{ /if }}
                 </td>
                 <td>

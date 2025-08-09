@@ -10,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('fringe', '/fringe-2025/reviews');
 Route::get('/fringe-2025/reviews', [ FringeController::class, 'currentYear' ]);
+//Route::get('/fringe/{entry}/social', [ FringeController::class, 'generateSocialImage' ]);

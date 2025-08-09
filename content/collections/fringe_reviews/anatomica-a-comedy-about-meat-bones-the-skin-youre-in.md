@@ -6,10 +6,12 @@ recommended: true
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6638/'
 artist_instagram: meatymeekers
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754619053
+updated_at: 1754752801
 festival: '2025'
 companion_videos:
   - 32e4b018-ebae-4eef-af74-2d86b46ece42
+categories:
+  - comedy
 ---
 The show describes itself as "a gloriously deranged Ted-Talk by a wanna-be scientist who dropped out of college to go to clown school" –– and that's apt.
 

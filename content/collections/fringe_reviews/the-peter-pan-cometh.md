@@ -7,7 +7,10 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6664/'
 artist_instagram: clevernametheatre
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754681137
+updated_at: 1754752995
+categories:
+  - comedy
+  - drama
 ---
 A blending of The Iceman Cometh and Peter Pan.
 

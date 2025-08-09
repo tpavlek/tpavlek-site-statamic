@@ -73,6 +73,15 @@ tabs:
               type: text
               display: 'Artist Instagram'
               instructions: 'Include only the instagram handle'
+          -
+            handle: poster
+            field:
+              max_files: 1
+              container: assets
+              folder: fringe
+              restrict: true
+              type: assets
+              display: Poster
   video:
     display: Video
     sections:
@@ -109,4 +118,28 @@ tabs:
               instructions: 'Choose the festival this review is for'
               validate:
                 - required
+          -
+            handle: categories
+            field:
+              taxonomies:
+                - fringe_show_categories
+              type: terms
+              display: Categories
+          -
+            handle: og_title
+            field:
+              type: text
+              display: 'OpenGraph Title'
+          -
+            handle: og_description
+            field:
+              type: textarea
+              display: 'OpenGraph Description'
+          -
+            handle: og_image
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: 'OpenGraph Image'
 title: 'Fringe Review'

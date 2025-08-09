@@ -9,7 +9,9 @@ companion_videos:
   - 85fe81dd-aa11-4ae5-81d7-8d628125116b
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754711625
+updated_at: 1754752183
+categories:
+  - comedy
 ---
 Weird Al Karaoke is a long-running monthly show where anyone can show up with their original parodies, and the Fringe show is the best of the best. It's funny, stupid, and doesn't take itself too seriously. It's a small theatre show in the Grindstone and a blast.
 

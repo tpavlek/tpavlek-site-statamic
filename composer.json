@@ -10,6 +10,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "intervention/image": "^2.7",
         "laravel/framework": "^11",
         "laravel/tinker": "^2.9",
         "statamic/cms": "^5.0",

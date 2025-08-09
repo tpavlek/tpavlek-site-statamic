@@ -7,7 +7,9 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6646/'
 artist_instagram: epo.artsco
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754663846
+updated_at: 1754752897
+categories:
+  - cabaret
 ---
 If you're a fan of drag, this is one to go to.
 

@@ -9,7 +9,9 @@ companion_videos:
   - b7f2b6fa-3c65-4bc5-8e59-956e164ed529
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754663496
+updated_at: 1754753005
+categories:
+  - musical
 ---
 Theatre tends to have a pretty large queer audience, so Harry Potter is a risky pick right now.
 

@@ -9,7 +9,9 @@ companion_videos:
   - 85fe81dd-aa11-4ae5-81d7-8d628125116b
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754710524
+updated_at: 1754752927
+categories:
+  - comedy
 ---
 A staple in the Edmonton sketch scene (for ten years!) this is Marv N' Berry's anniversary show which, they allege, contains their greatest hits.
 

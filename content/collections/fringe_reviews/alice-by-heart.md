@@ -9,7 +9,9 @@ companion_videos:
   - b7f2b6fa-3c65-4bc5-8e59-956e164ed529
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754619564
+updated_at: 1754752791
+categories:
+  - musical
 ---
 Taking place in 1941, post-blitz this musical is a WWII era riff on Alice in Wonderland, but the plot is not the important part here.
 
