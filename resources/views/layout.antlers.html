@@ -35,6 +35,9 @@
         {{ if og_image }}
             <meta property="og:image" content="{{ og_image:url }}">
             <meta name="twitter:image" content="{{ og_image:url }}">
+        {{ elseif review_og_image }}
+            <meta property="og:image" content="{{ review_og_image:url }}">
+            <meta name="twitter:image" content="{{ review_og_image:url }}">
         {{ else }}
             <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
             <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">
