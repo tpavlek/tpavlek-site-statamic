@@ -4,7 +4,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ ($og_title) ? $og_title : ($title . "—" . settings:site_name) }}</title>
+        <title>
+            {{ if og_title }}
+                {{ og_title }}
+            {{ else }}
+                {{ title }} — {{ settings:site_name }}
+            {{ /if }}
+</title>
         <meta name="description" content="{{ excerpt ?? title }}">
         <meta name="theme-color" content="00908F">
 
