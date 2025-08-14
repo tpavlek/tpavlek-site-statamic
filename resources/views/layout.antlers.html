@@ -55,6 +55,16 @@
 
 
         {{ vite src="resources/js/site.js|resources/css/site.css" }}
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1006551655">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-1006551655');
+        </script>
     </head>
     <body class="bg-white font-sans leading-normal text-grey-800 px-4 sm:px-10" x-data="{ showMobileNav: false }">
         {{ partial:nav }}
