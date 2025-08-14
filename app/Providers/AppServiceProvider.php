@@ -34,10 +34,10 @@ class AppServiceProvider extends ServiceProvider
             }
 
             if ($entry->stars) {
-                return "{$entry->stars->label()} $entry->title (Review by Troy Pavlek)";
+                return "$entry->title — {$entry->stars->label()} (Edmonton Fringe Review by Troy Pavlek)";
             }
 
-            return "{$entry->title} (Review by Troy Pavlek)";
+            return "{$entry->title} (Edmonton Fringe Review by Troy Pavlek)";
         });
 
         Collection::computed('fringe_reviews', 'og_description', function ($entry, $value) {

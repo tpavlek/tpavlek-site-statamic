@@ -14,8 +14,6 @@ updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1755132855
 categories:
   - comedy
-og_title: '★★★★★ Edmontask (Review by Troy Pavlek)'
-og_description: 'Read why Edmontask earned ★★★★★ from Troy Pavlek at the 2025 Edmonton International Fringe Festival'
 ---
 Bias warning: I'm in this show!
 

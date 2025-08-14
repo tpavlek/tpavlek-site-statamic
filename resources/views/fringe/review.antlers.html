@@ -60,4 +60,23 @@
     {{ /if }}
 </div>
 
-{{? $og_title = "foobar"; ?}}
+{{ if stars }}
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "author": {
+                "@type": "Person",
+                "name": "Troy Pavlek"
+            },
+            "itemReviewed": {
+                "@type": "Event",
+                "name": "{{ title }}"
+            },
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "{{ stars->value() }}"
+            }
+        }
+    </script>
+{{ /if }}
