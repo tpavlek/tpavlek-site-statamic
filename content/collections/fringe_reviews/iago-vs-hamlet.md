@@ -2,7 +2,7 @@
 id: b4ed6f58-207f-4478-ac9a-26a371168bd6
 blueprint: fringe_review
 title: 'Iago vs Hamlet'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6662/'
 artist_instagram: ribbitrepublic
 companion_videos:

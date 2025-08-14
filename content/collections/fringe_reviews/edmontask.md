@@ -3,7 +3,7 @@ id: 2ea62050-4a7c-4fb2-9235-99029220a8e0
 blueprint: fringe_review
 title: Edmontask
 stars: 5
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6546/'
 artist_instagram: edmontask
 companion_videos:

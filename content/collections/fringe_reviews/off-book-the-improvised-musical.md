@@ -2,7 +2,7 @@
 id: 41180e1a-4dbc-4bae-a029-6372f21cdc7c
 blueprint: fringe_review
 title: 'Off Book: The Improvised Musical'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6595/'
 poster: fringe/off-book-poster.jpg
 companion_videos:

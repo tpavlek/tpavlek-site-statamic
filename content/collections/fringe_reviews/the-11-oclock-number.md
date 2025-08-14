@@ -2,7 +2,7 @@
 id: f4257795-eae2-44dd-9aef-4852ba3e3772
 blueprint: fringe_review
 title: "The 11 O'clock Number"
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6676/'
 artist_instagram: the11oclocknumber
 poster: fringe/11-oclock-poster.jpg

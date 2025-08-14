@@ -2,7 +2,7 @@
 id: c563bcc6-30cd-4265-901a-5bf327a0777a
 blueprint: fringe_review
 title: 'Chris Borger and Julian Faid do Crowd Work'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6707/'
 artist_instagram: cheeseborger
 poster: fringe/crowd-work-poster.jpg

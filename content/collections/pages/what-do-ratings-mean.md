@@ -28,4 +28,5 @@ Roughly, the ratings translate as follows:
 | ☆☆☆☆☆ | I walked out. This has only ever happened twice.
 | Recommended | I haven't seen the show yet, but I have reason to recommend it to you |
 | Not Recommended | I haven't seen the show yet, and I probably won't. I don't recommend you see this one. |
+| Interested      | I don't know enough about the show to recommend it or not, but it's caught my eye, and I'll probably see it. Look for the review soon! |
 | Improv          | It's an Improv show, so you get what you get! My personal hot take is that the best way to Fringe is to minimize the amount of improv - which we have all year - and check out some of the unique shows "Fringe" has to offer. But if you want improv, these are the ones. |

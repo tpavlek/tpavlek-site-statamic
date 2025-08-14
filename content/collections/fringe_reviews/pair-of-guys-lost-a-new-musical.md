@@ -2,7 +2,7 @@
 id: 6cc0a180-c8e0-41ee-b1ce-cfc4a492e25c
 blueprint: fringe_review
 title: 'Pair of Guys Lost: A New Musical'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6715/'
 artist_instagram: darkstage.productions
 festival: '2025'

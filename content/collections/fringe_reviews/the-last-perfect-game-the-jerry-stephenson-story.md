@@ -3,7 +3,7 @@ id: 9e36686d-8927-4ab5-818d-4fd484219e64
 blueprint: fringe_review
 title: 'The Last Perfect Game: The Jerry Stephenson Story'
 stars: '4.5'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6666/'
 artist_instagram: highfivesatzero
 poster: fringe/last-perfect-game-poster.jpg

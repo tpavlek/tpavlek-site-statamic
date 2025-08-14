@@ -2,7 +2,7 @@
 id: 4f418dd7-74d7-476f-bf12-395c60f96465
 blueprint: fringe_review
 title: 'Weird Al Karaoke: The Best of the Very Best'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6614/'
 artist_instagram: weirdalkaraokeyeg
 companion_videos:

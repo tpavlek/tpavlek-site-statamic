@@ -45,19 +45,14 @@
                             {{ stars:label }}
                         </span>
 
-                    {{ elseif !recommended }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Not Recommended</span>
-                        </div>
-
                     {{ elseif categories|pluck('slug')|contains('improv') }}
                         <div>
                             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
                         </div>
 
-                    {{ elseif recommended }}
+                    {{ else }}
                         <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">Recommended</span>
+                            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">{{ recommendation:label }}</span>
                         </div>
                     {{ /if }}
                 </span>
@@ -98,19 +93,13 @@
                             {{ stars:label }}
                         </span>
 
-                    {{ elseif !recommended }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Not Recommended</span>
-                        </div>
-
                     {{ elseif categories|pluck('slug')|contains('improv') }}
                         <div>
                             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
                         </div>
-
-                    {{ elseif recommended }}
+                    {{ else }}
                         <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
                         </div>
                     {{ /if }}
                 </td>

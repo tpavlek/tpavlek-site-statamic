@@ -2,7 +2,7 @@
 id: bd6aafb1-603e-4a99-8d9f-7cf4e5cbbe4f
 blueprint: fringe_review
 title: 'Fear Fables: The Horror Drag Anthology'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6646/'
 artist_instagram: epo.artsco
 festival: '2025'

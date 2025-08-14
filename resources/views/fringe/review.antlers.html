@@ -5,9 +5,9 @@
                 {{ stars:label }}
             </span>
 
-        {{ elseif recommended }}
+        {{ else }}
             <div class="flex items-center">
-                <span class="inline-block bg-grey-200 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Recommended</span>
+                <span class="inline-block bg-grey-200 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
             </div>
 
         {{ /if }}

@@ -2,7 +2,7 @@
 id: a7c47b73-5828-4e2a-83e8-596979f68fcb
 blueprint: fringe_review
 title: 'Final Girl: A New Musical'
-recommended: true
+recommendation: 'recommended'
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1754752906

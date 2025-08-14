@@ -2,7 +2,7 @@
 id: a3529ab7-b962-491d-b899-46bcb556cdb6
 blueprint: fringe_review
 title: 'Sketchy Broads: Easy Bake Coven'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6652/'
 artist_instagram: sketchybroads
 companion_videos:

@@ -54,11 +54,22 @@ tabs:
               display: Stars
               clearable: true
           -
-            handle: recommended
+            handle: recommendation
             field:
-              default: true
-              type: toggle
-              display: Recommended
+              options:
+                -
+                  key: recommended
+                  value: Recommended
+                -
+                  key: not-recommended
+                  value: 'Not Recommended'
+                -
+                  key: interested
+                  value: Interested
+              max_items: 1
+              default: recommended
+              type: select
+              display: Recommendation
           -
             handle: ticket_link
             field:
@@ -125,16 +136,6 @@ tabs:
                 - fringe_show_categories
               type: terms
               display: Categories
-          -
-            handle: og_title
-            field:
-              type: text
-              display: 'OpenGraph Title'
-          -
-            handle: og_description
-            field:
-              type: textarea
-              display: 'OpenGraph Description'
           -
             handle: og_image
             field:

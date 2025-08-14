@@ -2,7 +2,7 @@
 id: bf8300e7-b968-4a80-8660-c2356dbf3640
 blueprint: fringe_review
 title: 'Alice By Heart'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6655/'
 artist_instagram: _satco_
 companion_videos:

@@ -2,7 +2,7 @@
 id: a1add6b2-bdcc-4a3a-be96-7edfda3c3928
 blueprint: fringe_review
 title: "Marv N' Berry: Greatest Hits"
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6620/'
 artist_instagram: marvnberry
 companion_videos:

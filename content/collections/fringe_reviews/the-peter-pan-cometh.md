@@ -2,7 +2,7 @@
 id: 7bc0902c-fef1-491f-8f9f-25dc322ba3e2
 blueprint: fringe_review
 title: 'The Peter Pan Cometh'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6664/'
 artist_instagram: clevernametheatre
 festival: '2025'

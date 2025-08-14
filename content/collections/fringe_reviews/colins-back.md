@@ -2,7 +2,7 @@
 id: 2059f38f-7b49-4dbe-a1a5-ad5d4f5ea758
 blueprint: fringe_review
 title: "Colin's Back"
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6688/'
 artist_instagram: rapidfiretheatre
 poster: fringe/colins-back-poster.jpg

@@ -3,7 +3,7 @@ id: 988578e2-09d2-4a3c-b947-e81853f76e91
 blueprint: fringe_review
 title: "Who's Afraid of Winnie the Pooh?"
 stars: 5
-recommended: true
+recommendation: 'recommended'
 festival: '2024'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1754753025

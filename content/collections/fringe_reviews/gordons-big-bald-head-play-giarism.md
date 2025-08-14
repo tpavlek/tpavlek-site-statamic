@@ -2,7 +2,7 @@
 id: c27ed7c9-4db2-4aed-9325-6e1a6edfbbd0
 blueprint: fringe_review
 title: "GORDON'S BIG BALD HEAD: Play-giarism"
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6660/'
 artist_instagram: mr.markmeer
 festival: '2025'

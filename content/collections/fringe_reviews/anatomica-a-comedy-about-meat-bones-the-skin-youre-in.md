@@ -2,7 +2,7 @@
 id: a07e4698-e2e5-4b9f-947f-d62524ffd651
 blueprint: fringe_review
 title: "Anatomica: A Comedy About Meat, Bones, & The Skin You're In"
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6638/'
 artist_instagram: meatymeekers
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd

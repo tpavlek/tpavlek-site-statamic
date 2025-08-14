@@ -2,7 +2,7 @@
 id: 821da223-93c3-402c-b1a6-34540cb59fa8
 blueprint: fringe_review
 title: Scratch
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6661/'
 artist_instagram: kgillese
 poster: fringe/scratch-poster.jpg

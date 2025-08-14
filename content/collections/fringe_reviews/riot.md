@@ -2,7 +2,7 @@
 id: 26499b35-5cca-4bde-ba0c-50273c029c44
 blueprint: fringe_review
 title: RIOT!
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6612/'
 artist_instagram: monstertheatre
 companion_videos:

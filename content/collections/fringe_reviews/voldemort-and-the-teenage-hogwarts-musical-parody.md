@@ -2,7 +2,7 @@
 id: a7e29746-2155-4991-94b6-7210f5a05b6b
 blueprint: fringe_review
 title: 'Voldemort and the Teenage Hogwarts Musical Parody'
-recommended: true
+recommendation: 'recommended'
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6679/'
 artist_instagram: darkstage.productions
 companion_videos:
