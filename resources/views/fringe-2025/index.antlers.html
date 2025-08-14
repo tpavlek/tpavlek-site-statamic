@@ -24,7 +24,50 @@
 
     <hr class="w-1/2 text-center mx-auto py-4" />
 
-    <table class="w-full my-4">
+    <div class="sm:hidden space-y-4 pb-4">
+        {{ reviews }}
+        <div>
+            <a href="{{ url }}" class="appearance-none block text-gray-800 no-underline hover:bg-grey-50">
+                <div class="text-normal font-light flex flex-col md:flex-row md:items-center">
+                    <span>
+                        <span class="">
+                            {{ if companion_videos }}
+                                <i class="fa-brands fa-youtube text-teal opacity-85"></i>
+                            {{ /if }}
+                            {{ title }}
+                        </span>
+
+                    </span>
+                </div>
+                <span>
+                    {{ if stars }}
+                        <span class="text-teal mr-2 text-sm">
+                            {{ stars:label }}
+                        </span>
+
+                    {{ elseif !recommended }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Not Recommended</span>
+                        </div>
+
+                    {{ elseif categories|pluck('slug')|contains('improv') }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
+                        </div>
+
+                    {{ elseif recommended }}
+                        <div>
+                            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">Recommended</span>
+                        </div>
+                    {{ /if }}
+                </span>
+            </a>
+        </div>
+
+        {{ /reviews }}
+    </div>
+
+    <table class="w-full my-4 max-sm:hidden">
         <thead>
         <tr>
             <th class="text-left">Show</th>
