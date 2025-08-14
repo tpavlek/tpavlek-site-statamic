@@ -7,9 +7,16 @@ recommended: true
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6666/'
 artist_instagram: highfivesatzero
 poster: fringe/last-perfect-game-poster.jpg
+companion_videos:
+  - 1d7c7736-c088-498b-8541-54f0ecb979ab
 festival: '2025'
+categories:
+  - drama
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754921126
+updated_at: 1754929134
+og_title: '★★★★½ The Last Perfect Game: The Jerry Stephenson Story (Review by Troy Pavlek)'
+og_description: 'Read why The Last Perfect Game: The Jerry Stephenson Story earned ★★★★½ from Troy Pavlek at the 2025 Edmonton International Fringe Festival'
+og_image: stephenson-review-1.png
 ---
 This is the type of show Fringe was made for.
 

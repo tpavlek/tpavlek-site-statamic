@@ -8,11 +8,14 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6546/'
 artist_instagram: edmontask
 companion_videos:
   - 3fddae21-97f4-49a3-bb35-1802a99795b4
+  - d8cf0ae0-03a6-4f87-9c3b-fb53f946fc0c
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754752811
+updated_at: 1755132855
 categories:
   - comedy
+og_title: '★★★★★ Edmontask (Review by Troy Pavlek)'
+og_description: 'Read why Edmontask earned ★★★★★ from Troy Pavlek at the 2025 Edmonton International Fringe Festival'
 ---
 Bias warning: I'm in this show!
 
