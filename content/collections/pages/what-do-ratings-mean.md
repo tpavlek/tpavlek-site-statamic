@@ -3,8 +3,8 @@ id: 354db16c-3ee5-4458-8161-64e10a605b17
 blueprint: page
 title: 'What do ratings mean?'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754607486
-template: fringe/what-do-ratings-mean
+updated_at: 1755040719
+template: page
 ---
 What do **stars** and **recommended** mean?
 
@@ -28,4 +28,4 @@ Roughly, the ratings translate as follows:
 | ☆☆☆☆☆ | I walked out. This has only ever happened twice.
 | Recommended | I haven't seen the show yet, but I have reason to recommend it to you |
 | Not Recommended | I haven't seen the show yet, and I probably won't. I don't recommend you see this one. |
-| Improv          | It's an Improv show, so you get what you get! My personal hot take is that the best way to Fringe is to minimize the amount of improv - which we have all year - and check out some of the unique shows "Fringe" has to offer. But if you want improv, these are the ones. | 
+| Improv          | It's an Improv show, so you get what you get! My personal hot take is that the best way to Fringe is to minimize the amount of improv - which we have all year - and check out some of the unique shows "Fringe" has to offer. But if you want improv, these are the ones. |
