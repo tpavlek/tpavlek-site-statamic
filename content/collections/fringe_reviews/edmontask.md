@@ -3,7 +3,7 @@ id: 2ea62050-4a7c-4fb2-9235-99029220a8e0
 blueprint: fringe_review
 title: Edmontask
 stars: 5
-recommendation: 'recommended'
+recommendation: recommended
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6546/'
 artist_instagram: edmontask
 companion_videos:
@@ -11,19 +11,23 @@ companion_videos:
   - d8cf0ae0-03a6-4f87-9c3b-fb53f946fc0c
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1755132855
+updated_at: 1755466802
 categories:
   - comedy
 ---
 Bias warning: I'm in this show!
 
-I had such a blast watching Edmontask at the 2024 Fringe that I applied to be a contestant this time around - and I was accepted!
+However, the show, a riff on the British panel show Taskmaster, cast 15 Edmonton comedians and personalities to show up for three different panels of five.
 
-The show is a riff on the British panel show Taskmaster. 15 Edmonton comedians and personalities have spent the better part of the past year doing silly and embarrassing tasks while production films. 
+The contestants are given ridiculous, inane and often embarrassing tasks that they must complete on a time limit, on camera.
 
-The shows will include live tasks, reacting to the footage, awarding points and much more. Every show is entirely different, so you could go to all nine and get a fully different experience.
+A year was spent filming tasks that are edited together and the cast and the Edmaster, who is judging their performance, are all seeing the results for the very first time –– live!
 
-The shows I'm in are: 
+If you saw the show last year, as great as it was, _everything_ about the production has leveled up this year. The venue is better, the screen is gorgeous and large. Mics work much better, and filming and editing has all improved as the producers get better and better at what they do.
+
+Go to this one, honestly more than once. No two shows are the same, there are new tasks, new casts and new antics every single show.
+
+If you want to come see me, the shows I'm in are: 
 
 * Sun, Aug 17, NOON
 * Mon, Aug 18, 10:30pm

@@ -6,11 +6,13 @@ recommendation: interested
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6645/'
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1755240801
+updated_at: 1755281931
 artist_instagram: psychopomp_comedy
 categories:
   - comedy
 stars: 4
+companion_videos:
+  - 90af244c-5a1c-4dd0-8bb2-ac72dcf113cd
 ---
 It was the "50% less wardrobe" pun that did got me in the door.
 

@@ -8,7 +8,9 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6600/'
 artist_instagram: nat.chrissy.comedy
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1755241303
+updated_at: 1755281921
+companion_videos:
+  - 90af244c-5a1c-4dd0-8bb2-ac72dcf113cd
 ---
 This show is _so_ dumb.
 

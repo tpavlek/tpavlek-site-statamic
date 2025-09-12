@@ -7,9 +7,10 @@ ticket_link: 'https://tickets.fringetheatre.ca/event/601:6679/'
 artist_instagram: darkstage.productions
 companion_videos:
   - b7f2b6fa-3c65-4bc5-8e59-956e164ed529
+  - 90af244c-5a1c-4dd0-8bb2-ac72dcf113cd
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1755241094
+updated_at: 1755281946
 categories:
   - musical
 stars: '4.5'
