@@ -21,7 +21,7 @@ candidates:
   - ea79a4aa-51c2-4050-9ffc-2566e0df6ac0
   - fa3a750c-5998-481b-a450-b6c45d33c2a4
   - f56743b8-f28e-48f0-920b-896b3879dc17
-  - 68a11bca-88fb-4e2b-8298-355e8a86901b
   - 8fbc2639-7dd7-48f5-8d39-f78733249ad6
+  - 68a11bca-88fb-4e2b-8298-355e8a86901b
 website: 'https://www.votebetteredmonton.ca/'
 ---

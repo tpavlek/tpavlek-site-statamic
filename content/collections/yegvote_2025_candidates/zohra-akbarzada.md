@@ -4,8 +4,9 @@ blueprint: yegvote_2025_candidate
 title: 'Zohra Akbarzada'
 name: 'Zohra Akbarzada'
 confirmed: true
-ward: undeclared
+ward: dropped-out
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1739327508
+updated_at: 1758651858
+tier: Competitive
 ---

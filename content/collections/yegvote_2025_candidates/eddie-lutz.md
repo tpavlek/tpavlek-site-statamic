@@ -4,8 +4,9 @@ blueprint: yegvote_2025_candidate
 title: 'Eddie Lutz'
 name: 'Eddie Lutz'
 confirmed: true
-ward: undeclared
+ward: dropped-out
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732979676
+updated_at: 1758651931
+tier: Competitive
 ---

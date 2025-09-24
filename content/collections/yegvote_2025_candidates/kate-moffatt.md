@@ -4,8 +4,9 @@ blueprint: yegvote_2025_candidate
 title: 'Kate Moffatt'
 name: 'Kate Moffatt'
 confirmed: true
-ward: undeclared
+ward: dropped-out
 incumbent: false
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1732063062
+updated_at: 1758651952
+tier: Competitive
 ---

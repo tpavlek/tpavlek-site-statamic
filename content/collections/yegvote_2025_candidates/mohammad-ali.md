@@ -6,10 +6,10 @@ name: 'Mohammad Ali'
 description: 'Small business owner'
 photo: 414202936_10224231512991735_2002186912890076833_n-modified.png
 confirmed: true
-ward: undeclared
+ward: dropped-out
 incumbent: false
 tier: 4
 facebook: groups/738946948512704/
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1753992964
+updated_at: 1758651959
 ---

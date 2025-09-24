@@ -26,4 +26,6 @@ candidates:
   - 9e72d596-7cb4-4b43-bd47-310ef6ad7cc6
   - dbf9b05e-ad46-4667-9d63-929ec61f8eeb
   - 0e79a58c-6e7d-41fc-811a-5cad7542f771
+  - 124cefce-fafa-401b-9538-d4cdb9ef352a
+  - f1be7b26-317c-4ae4-ad49-3bb19119d6f1
 ---

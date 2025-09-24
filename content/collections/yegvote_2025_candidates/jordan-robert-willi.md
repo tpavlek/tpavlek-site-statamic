@@ -7,11 +7,11 @@ website: 'https://www.jordanwilli.ca/'
 description: 'Supply chain specialist'
 photo: 1680208168998-modified.png
 confirmed: true
-ward: dene
+ward: dropped-out
 incumbent: false
 twitter: jordanwilliyeg
 linkedin: jordan-willi
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1752599561
+updated_at: 1758651124
 tier: 2
 ---

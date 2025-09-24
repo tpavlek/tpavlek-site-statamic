@@ -7,10 +7,10 @@ website: 'https://www.jasonlaface.ca/'
 description: 'Podcast host at Alberta Radio'
 photo: 1726846519156-modified.png
 confirmed: true
-ward: papastew
+ward: dropped-out
 incumbent: false
 linkedin: albertaradio
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1752600668
+updated_at: 1758651660
 tier: 4
 ---
