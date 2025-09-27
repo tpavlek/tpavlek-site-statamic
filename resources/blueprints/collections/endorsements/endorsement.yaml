@@ -18,6 +18,7 @@ tabs:
               remove_empty_nodes: false
               type: bard
               display: content
+              container: assets
           -
             handle: ward
             field:
@@ -36,6 +37,13 @@ tabs:
               folder: yegvote-2025/endorsements
               type: assets
               display: 'Sharable Image'
+          -
+            handle: videos
+            field:
+              collections:
+                - videos
+              type: entries
+              display: videos
   sidebar:
     display: Sidebar
     sections:
@@ -47,4 +55,13 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
+          -
+            handle: parent
+            field:
+              type: entries
+              collections:
+                - endorsements
+              max_items: 1
+              listable: false
+              localizable: true
 title: Endorsement

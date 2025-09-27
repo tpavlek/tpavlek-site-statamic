@@ -28,9 +28,27 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
         {{ collection:endorsements as="endorsement" }}
             {{ endorsement }}
-            <div class="">
-                <img src="{{ sharable_image:url }}" />
-            </div>
+            {{ if content }}
+                <a href="{{ url }}">
+                    <div class="hover:opacity-90">
+                        <img src="{{ sharable_image:url }}" />
+                    </div>
+                    <div class="text-right text-sm tracking-tight uppercase px-2 py-2 border border-teal rounded-b-md bg-opacity-30 bg-teal">
+                        READ MORE
+                    </div>
+                </a>
+            {{ else }}
+                <div>
+                    <div class="">
+                        <img src="{{ sharable_image:url }}" />
+                    </div>
+                    <div class="text-right text-sm tracking-tight uppercase px-2 py-2 border border-teal rounded-b-md bg-opacity-30 bg-teal">
+                        Coming soon
+                    </div>
+
+                </div>
+            {{ /if }}
+
             {{ /endorsement }}
         {{ /collection:endorsements }}
     </div>

@@ -42,6 +42,9 @@
         {{ elseif review_og_image }}
             <meta property="og:image" content="{{ review_og_image:url }}">
             <meta name="twitter:image" content="{{ review_og_image:url }}">
+        {{ elseif endorsement_image }}
+            <meta property="og:image" content="{{ endorsement_image:url }}">
+            <meta name="twitter:image" content="{{ endorsement_image:url }}">
         {{ else }}
             <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
             <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">

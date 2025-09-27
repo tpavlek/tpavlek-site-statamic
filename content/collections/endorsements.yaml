@@ -1,7 +1,8 @@
 title: Endorsements
-template: default
+template: yegvote-2025/endorsement
 layout: layout
 revisions: false
+route: 'yegvote-2025/endorsements/{slug}'
 sort_dir: asc
 date_behavior:
   past: public
