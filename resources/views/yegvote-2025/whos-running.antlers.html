@@ -2,6 +2,30 @@
     {{ content | widont }}
 </div>
 
+<div class="max-w-5xl mx-auto mb-8 border border-teal rounded-b-lg hover:opacity-90">
+    <a href="/yegvote-2025/endorsements">
+        <div class="bg-[url(/assets/yegvote-2025/endorsement-bg.png)] bg-cover px-5 py-4 flex flex-col md:flex-row md:items-center">
+            <div class="h-full pr-8">
+                <img src="/assets/yegvote-2025/thumbs-up.png" class="h-[140px]"/>
+            </div>
+            <div>
+                <div>
+                    <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-black text-4xl">
+                        Pavlek's Picks
+                    </h1>
+                </div>
+
+                <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-light text-4xl">
+                    Edmonton Election 2025
+                </h1>
+            </div>
+        </div>
+        <div class="uppercase text-grey-900 text-sm tracking-tight py-3 px-4">
+            View my endorsements for Edmonton City Council
+        </div>
+    </a>
+</div>
+
 <div class="pb-8 max-w-4xl mx-auto text-lg">
     {{ collection:posts as="posts" sort="date:desc" limit="4" }}
         {{ posts }}
