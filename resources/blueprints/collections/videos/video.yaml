@@ -44,4 +44,11 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
+          -
+            handle: category
+            field:
+              taxonomies:
+                - video_category
+              type: terms
+              display: category
 title: Video

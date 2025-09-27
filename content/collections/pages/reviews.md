@@ -16,7 +16,7 @@ after_content: |-
 
   I'm here to help you find a show to see over the 11-day festival, and share in the wonderful experience that is the **Edmonton Fringe**.
 
-  I also produce video reviews that you can find on each show's review page or you can subscribe on [Instagram](https://www.instagram.com/troypavlek.politics/), [TikTok](https://www.tiktok.com/@troypavlek) or [YouTube](https://www.youtube.com/@troypavlek).
+  I also produce video reviews that you can find on each show's review page or you can subscribe on [Instagram](https://www.instagram.com/troypavlek), [TikTok](https://www.tiktok.com/@troypavlek) or [YouTube](https://www.youtube.com/@troypavlek).
 
   If you have any questions, or want to drop recommendations, or even share your own review, I'd love to hear from you! You can DM me on any of the above platforms, or [email](mailto:troy@tpavlek.me).
 ---

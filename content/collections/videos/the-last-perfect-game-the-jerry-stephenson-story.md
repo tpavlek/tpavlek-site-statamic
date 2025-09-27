@@ -5,5 +5,7 @@ title: 'The Last Perfect Game: The Jerry Stephenson Story'
 description: 'The Last Perfect Game: The Jerry Stephenson Story'
 youtube: l7v8RWp-Stg
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754923812
+updated_at: 1758750114
+category:
+  - fringe
 ---

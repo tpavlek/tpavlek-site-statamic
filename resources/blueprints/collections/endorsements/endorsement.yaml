@@ -1,0 +1,50 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+              display: Name
+          -
+            handle: content
+            field:
+              remove_empty_nodes: false
+              type: bard
+              display: content
+          -
+            handle: ward
+            field:
+              max_items: 1
+              collections:
+                - yegvote_2025_wards
+              type: entries
+              display: ward
+              validate:
+                - required
+          -
+            handle: sharable_image
+            field:
+              max_files: 1
+              container: assets
+              folder: yegvote-2025/endorsements
+              type: assets
+              display: 'Sharable Image'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Endorsement

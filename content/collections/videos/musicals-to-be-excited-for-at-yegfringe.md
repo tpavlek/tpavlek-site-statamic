@@ -5,6 +5,8 @@ title: 'Musicals to be excited for at #yegfringe'
 description: 'Musicals to be excited for at #yegfringe'
 youtube: UfVRnZafEAs
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754605257
+updated_at: 1758750096
 instagram: DND5fSZpBTJ
+category:
+  - fringe
 ---

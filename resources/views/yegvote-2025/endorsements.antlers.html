@@ -1,0 +1,62 @@
+
+
+<div class="max-w-5xl mx-auto mb-8">
+    <div class="bg-[url(http://tpavlek-me-statamic.test/assets/yegvote-2025/endorsement-bg.png)] bg-cover px-5 py-4 flex flex-col md:flex-row md:items-center">
+        <div class="h-full pr-8">
+            <img src="/assets/yegvote-2025/thumbs-up.png" class="h-[140px]"/>
+        </div>
+        <div>
+            <div>
+                <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-black text-4xl">
+                    Pavlek's Picks
+                </h1>
+            </div>
+
+            <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-light text-4xl">
+                Edmonton Election 2025
+            </h1>
+        </div>
+    </div>
+</div>
+
+
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    <div class="content">
+        {{ content }}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        {{ collection:endorsements as="endorsement" }}
+            {{ endorsement }}
+            <div class="">
+                <img src="{{ sharable_image:url }}" />
+            </div>
+            {{ /endorsement }}
+        {{ /collection:endorsements }}
+    </div>
+
+    <hr class="w-1/2 text-center mx-auto py-4" />
+
+    <h3 class="uppercase font-semibold text-2xl">Videos</h3>
+
+    <div class="pb-2 overflow-scroll">
+        {{ videos as="video" }}
+        <ul class="carousel grid grid-flow-col gap-2">
+            {{ video }}
+            <li class="my-2">
+                {{ if youtube }}
+                    <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {{ else }}
+                    <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
+                {{ /if }}
+
+            </li>
+
+            {{ /video }}
+        </ul>
+        {{ /videos }}
+
+    </div>
+
+
+</div>
