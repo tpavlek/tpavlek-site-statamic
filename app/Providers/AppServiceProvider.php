@@ -28,6 +28,18 @@ class AppServiceProvider extends ServiceProvider
             'municipal_parties.candidates'
         );
 
+        Collection::computed('endorsements', 'og_title', function ($entry, $value) {
+            return "{$entry->title} for {$entry->ward->slug} - Endorsement by Troy Pavlek";
+        });
+
+        Collection::computed('endorsements', 'og_description', function ($entry, $value) {
+            return "Read why {$entry->title} is the best vote for {$entry->ward->slug} in the 2025 Edmonton municipal election";
+        });
+
+        Collection::computed('endorsements', 'endorsement_image', function ($entry, $value) {
+            return $entry->sharable_image;
+        });
+
         Collection::computed('fringe_reviews', 'og_title', function ($entry, $value) {
             if ($value) {
                 return $value;
@@ -58,18 +70,6 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return [ 'url' => "https://troypavlek.ca/assets/og-fringe-reviews.jpeg" ];
-        });
-
-        Collection::computed('endorsements', 'og_title', function ($entry, $value) {
-            return "{$entry->title} for {$entry->ward->slug} - Endorsement by Troy Pavlek";
-        });
-
-        Collection::computed('endorsements', 'og_description', function ($entry, $value) {
-            return "Read why {$entry->title} is the best vote for {$entry->ward->slug} in the 2025 Edmonton municipal election";
-        });
-
-        Collection::computed('endorsements', 'endorsement_image', function ($entry, $value) {
-            return $entry->sharable_image;
         });
     }
 }
