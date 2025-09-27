@@ -61,26 +61,14 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Collection::computed('endorsements', 'og_title', function ($entry, $value) {
-            if ($value) {
-                return $value;
-            }
-
             return "{$entry->title} for {$entry->ward->slug} - Endorsement by Troy Pavlek";
         });
 
         Collection::computed('endorsements', 'og_description', function ($entry, $value) {
-            if ($value) {
-                return $value;
-            }
-
             return "Read why {$entry->title} is the best vote for {$entry->ward->slug} in the 2025 Edmonton municipal election";
         });
 
         Collection::computed('endorsements', 'endorsement_image', function ($entry, $value) {
-            if ($value) {
-                return $value;
-            }
-
             return $entry->sharable_image;
         });
     }
