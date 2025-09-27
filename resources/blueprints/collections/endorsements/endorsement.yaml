@@ -56,6 +56,18 @@ tabs:
               localizable: true
               validate: 'max:200'
           -
+            handle: og_title
+            field:
+              type: text
+              display: 'OpenGraph Title'
+              visibility: computed
+          -
+            handle: og_description
+            field:
+              type: text
+              display: 'OpenGraph Description'
+              visibility: computed
+          -
             handle: parent
             field:
               type: entries
