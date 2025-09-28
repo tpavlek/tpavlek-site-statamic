@@ -84,6 +84,13 @@ tabs:
                             type: code
                             display: Instagram
                             instructions: 'Enter in the instagram embed code'
+          -
+            handle: related_videos
+            field:
+              collections:
+                - videos
+              type: entries
+              display: 'Related Videos'
   sidebar:
     display: Sidebar
     sections:

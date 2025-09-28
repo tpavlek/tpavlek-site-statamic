@@ -35,4 +35,23 @@
             {{ /if }}
         {{ /content }}
     </div>
+    <h3 class="uppercase font-black mt-8">Related videos</h3>
+    <div class="pb-2 overflow-scroll">
+        {{ related_videos as="video" }}
+        <ul class="carousel grid grid-flow-col gap-2">
+            {{ video }}
+            <li class="my-2">
+                {{ if youtube }}
+                    <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {{ else }}
+                    <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
+                {{ /if }}
+
+            </li>
+
+            {{ /video }}
+        </ul>
+        {{ /related_videos }}
+
+    </div>
 </article>
