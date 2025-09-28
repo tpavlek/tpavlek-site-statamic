@@ -11,7 +11,6 @@
                 {{ title }} — {{ settings:site_name }}
             {{ /if }}
 </title>
-        <meta name="description" content="{{ excerpt ?? title }}">
         <meta name="theme-color" content="00908F">
 
         {{ if og_description }}
@@ -19,7 +18,7 @@
             <meta property="og:description" content="{{ og_description }}">
             <meta name="twitter:description" content="{{ og_description }}">
         {{ else }}
-            <meta name="description" content="Learn about who's running and find links to their websites and social media.">
+            <meta name="description" content="{{ excerpt ?? title }}">
             <meta property="og:description" content="Learn about who's running and find links to their websites and social media.">
             <meta name="twitter:description" content="Learn about who's running and find links to their websites and social media.">
         {{ /if }}
