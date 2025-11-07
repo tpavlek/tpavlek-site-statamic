@@ -5,9 +5,11 @@ title: 'Andrew Knack'
 ward: 01efdeda-8bff-490e-86f0-6b3398a60450
 sharable_image: yegvote-2025/endorsements/a-mayor-knack-endorsement.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1758995306
+updated_at: 1759588560
 videos:
   - 3590a897-a3ec-4b9d-9a71-0aaa536638e1
+  - 6b02d553-85af-4f15-b248-0cc5750fa9aa
+  - 316278ae-d1ad-498c-936b-25056c86a0eb
 content:
   -
     type: paragraph
