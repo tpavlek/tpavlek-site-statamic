@@ -1,37 +1,73 @@
-<div class="max-w-5xl mx-auto relative mt-16">
-    {{ svg src="/assets/site/scratches" class="absolute text-gray-800 mt-8 top-0 left-0 w-20 hidden md:block" }}
-    <article class="py-32 max-w-2xl mx-auto">
-        <header class="content mb-16">
-            <h1>{{ title }}</h1>
-            {{ content | widont }}
-        </header>
+<div class="pt-8 pb-8 max-w-4xl mx-auto text-lg content">
+    {{ content | widont }}
+</div>
 
-        {{ collection:articles as="articles" paginate="10" }}
-        {{ if no_results }}
-        <h2 class="text-3xl italic tracking-tight">Feel the rhythm! Feel the rhyme! Get on up, it's writing time! Cool
-            writings!</h2>
+<div class="max-w-5xl mx-auto mb-8 border border-teal rounded-b-lg hover:opacity-90">
+    <a href="/yegvote-2025/endorsements">
+        <div class="bg-[url(/assets/yegvote-2025/endorsement-bg.png)] bg-cover px-5 py-4 flex flex-col md:flex-row md:items-center">
+            <div class="h-full pr-8">
+                <img src="/assets/yegvote-2025/thumbs-up.png" class="h-[140px]"/>
+            </div>
+            <div>
+                <div>
+                    <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-black text-4xl">
+                        Pavlek's Picks
+                    </h1>
+                </div>
+
+                <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-light text-4xl">
+                    Edmonton Election 2025
+                </h1>
+            </div>
+        </div>
+        <div class="uppercase text-grey-900 text-sm tracking-tight py-3 px-4">
+            View my endorsements for Edmonton City Council
+        </div>
+    </a>
+</div>
+
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ collection:posts as="posts" sort="date:desc" limit="4" }}
+        {{ posts }}
+        {{ if yegvote_2025_update_types | pluck('title') | contains_any('Update', 'Analysis', 'Context') }}
+            <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
+                <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50 mb-3">
+                    <div class="border-teal border-l-8">
+                        <div class="px-4 py-2">
+                            <div class="text-normal font-light flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">{{ yegvote_2025_update_types:first }} {{ title }} {{ /yegvote_2025_update_types:first }}</span> <span>{{ title }}</span></div>
+                            <span class="text-xs text-gray-600 uppercase">{{ date }}</span>
+
+                        </div>
+                    </div>
+                </div>
+            </a>
         {{ /if }}
 
-        {{ articles }}
-        <div class="mb-2">
-            <a href="{{ url }}" class="text-lg hover:text-teal tracking-tight leading-tight font-bold">
-                {{ title | widont }}
-            </a>
-        </div>
-        {{ /articles }}
+        {{ /posts }}
+    {{ /collection:posts }}
+    <p class="content">
+        <a href="/posts">View all posts →</a>
+    </p>
 
-        {{ paginate }}
-        {{ if prev_page || next_page }}
-        <div class="flex justify-between text-xl -mx-16 pt-16 font-bold">
-            <a href="{{ prev_page }}" class="{{ ! prev_page ?= 'opacity-25' }}">
-                &larr; Back to the future
-            </a>
-            <a href="{{ next_page }}">
-                Forward to the past &rarr;
-            </a>
-        </div>
-        {{ /if }}
-        {{ /paginate }}
-        {{ /collection:articles }}
-    </article>
+    <h3 class="uppercase font-semibold text-2xl">Videos</h3>
+
+    <div class="pb-2 overflow-scroll">
+        {{ videos as="video" }}
+        <ul class="carousel grid grid-flow-col gap-2">
+            {{ video }}
+            <li class="my-2">
+                {{ if youtube }}
+                    <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {{ else }}
+                    <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ description }}</div>
+                {{ /if }}
+
+            </li>
+
+            {{ /video }}
+        </ul>
+        {{ /videos }}
+
+    </div>
+
 </div>

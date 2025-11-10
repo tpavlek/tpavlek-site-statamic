@@ -16,3 +16,5 @@ preferences:
         - slug
         - status
         - festival
+    pages:
+      after_save: continue_editing

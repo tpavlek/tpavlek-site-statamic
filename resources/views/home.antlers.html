@@ -1,8 +1,34 @@
-<div class="max-w-5xl mx-auto relative py-16 lg:pt-40 lg:pb-32">
-    <article class="content">
-        <p class="font-medium text-lg text-teal">{{ subtitle }}</p>
-        <h1>{{ content }}</h1>
-    </article>
+
+
+<div class="max-w-2xl mx-auto">
+    <div class="inline-block mx-auto mb-8 border border-teal rounded-b-lg hover:opacity-90">
+        <div class="bg-[url(/assets/yegvote-2025/endorsement-bg.png)] bg-cover">
+            <div class="h-full">
+                <img src="/assets/troy-at-computer-cutout-scaled.png" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pb-8 max-w-4xl mx-auto text-lg content">
+    {{ content | widont }}
+
+    <div class="grid grid-cols-1">
+        {{ foreach:page_links }}
+            <div class="mb-8 hover:opacity-90">
+                <a href="{{ value['link'] }}">
+                    <div class="bg-[url(/assets/yegvote-2025/endorsement-bg.png)] bg-cover px-5 py-4 flex flex-col md:flex-row md:items-center md:justify-center">
+                        <div class="">
+                            <div>
+                                <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-black text-2xl">
+                                    <i class="{{ value['icon'] }} mr-2"></i> {{ value['label'] }}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {{ /foreach:page_links }}
+    </div>
 </div>
 
-{{ redirect to="/yegvote-2025/whos-running" }}
+
