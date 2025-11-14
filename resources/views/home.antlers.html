@@ -17,23 +17,15 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg content">
     {{ content | widont }}
 
-    <div class="grid grid-cols-1">
+    <h3>You can find me on...</h3>
+    <table>
         {{ foreach:page_links }}
-            <div class="mb-8 hover:opacity-90">
-                <a href="{{ value['link'] }}">
-                    <div class="bg-[url(/assets/yegvote-2025/endorsement-bg.png)] bg-cover px-5 py-4 flex flex-col md:flex-row md:items-center md:justify-center">
-                        <div class="">
-                            <div>
-                                <h1 class="text-black bg-yellow-300 px-4 py-2 my-0 inline-block font-black text-2xl">
-                                    <i class="{{ value['icon'] }} mr-2"></i> {{ value['label'] }}
-                                </h1>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <tr>
+                <td><i class="{{ value['icon'] }} mr-2 opacity-90"></i>{{ value['label'] }}</td><td><a href="{{ value['link'] }}">{{ value['handle'] }}</a></td>
+            </tr>
         {{ /foreach:page_links }}
-    </div>
+
+    </table>
 </div>
 
 
