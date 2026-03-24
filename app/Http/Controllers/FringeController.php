@@ -7,6 +7,7 @@ use Intervention\Image\Facades\Image;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Fields\LabeledValue;
+use Statamic\Taxonomies\LocalizedTerm;
 
 class FringeController extends Controller
 {
@@ -39,12 +40,19 @@ class FringeController extends Controller
                 return ($entry->stars->value()) ? (float)$entry->stars->value() * 10 : 35;
             });
 
+        $videos = EntryFacade::query()
+            ->where('collection', 'videos')
+            ->get()
+            ->filter(function (Entry $entry) {
+                return $entry->category->contains(fn (LocalizedTerm $term) => $term->slug === 'fringe-2025');
+            });
+
         //dd($reviews->first()->categories);
 
         return (new \Statamic\View\View)
             ->template('fringe-2025/index')
             ->layout('layout')
-            ->with([ 'reviews' => $reviews ])
+            ->with([ 'reviews' => $reviews, 'videos' => $videos ])
             ->cascadeContent($page);
     }
 

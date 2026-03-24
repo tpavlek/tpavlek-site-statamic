@@ -23,6 +23,14 @@ tabs:
               display: Year
               validate:
                 - required
+          -
+            handle: artwork
+            field:
+              type: assets
+              display: Artwork
+              container: assets
+              folder: fringe
+              max_files: 1
   sidebar:
     display: Sidebar
     sections:

@@ -1,78 +1,151 @@
-<div class="max-w-2xl mx-auto px-4 py-8">
+<div class="max-w-5xl mx-auto px-4 py-8 lg:py-12">
 
-    {{# Video embed #}}
-    <div class="flex justify-center mb-6">
-        <div class="w-full max-w-sm">
-            {{ if youtube }}
-                <div class="aspect-[9/16] rounded-lg overflow-hidden bg-black">
-                    <iframe
-                        class="w-full h-full"
-                        src="https://www.youtube.com/embed/{{ youtube }}"
-                        title="{{ title }}"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen
-                    ></iframe>
-                </div>
-            {{ elseif instagram }}
-                <div class="aspect-[9/16] rounded-lg overflow-hidden bg-black flex items-center justify-center text-white">
-                    <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" class="text-white no-underline flex flex-col items-center gap-2">
-                        <i class="fa-brands fa-instagram text-5xl"></i>
-                        <span class="text-sm">Watch on Instagram</span>
-                    </a>
+    {{# Desktop: side-by-side; Mobile: stacked #}}
+    <div class="flex flex-col lg:flex-row lg:gap-12 lg:items-start">
+
+        {{# Video embed column #}}
+        <div class="flex-shrink-0 w-full lg:w-96 mb-6 lg:mb-0">
+            <div class="w-full max-w-sm mx-auto lg:mx-0">
+                {{ if youtube }}
+                    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl">
+                        <iframe
+                            class="w-full h-full"
+                            src="https://www.youtube.com/embed/{{ youtube }}"
+                            title="{{ title }}"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen
+                        ></iframe>
+                    </div>
+                {{ elseif instagram }}
+                    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl flex items-center justify-center">
+                        <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" rel="noopener noreferrer"
+                           class="text-white no-underline flex flex-col items-center gap-3">
+                            <i class="fa-brands fa-instagram text-5xl"></i>
+                            <span class="text-sm font-medium">Watch on Instagram</span>
+                        </a>
+                    </div>
+                {{ /if }}
+            </div>
+        </div>
+
+        {{# Text content column #}}
+        <div class="flex-1 min-w-0 flex flex-col">
+
+            {{# Title & meta #}}
+            <div class="mb-5">
+                <h1 class="text-2xl lg:text-3xl font-bold leading-snug mb-2">{{ title }}</h1>
+                {{ if publish_date }}
+                    <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
+                {{ /if }}
+            </div>
+
+            {{# Categories/tags #}}
+            {{ if category }}
+                <div class="flex flex-wrap gap-2 mb-5">
+                    {{ category }}
+                        <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
+                    {{ /category }}
                 </div>
             {{ /if }}
+
+            {{# Description #}}
+            {{ if description }}
+                <p class="text-gray-700 text-base leading-relaxed mb-5">{{ description }}</p>
+            {{ /if }}
+
+            {{# Long-form content #}}
+            {{ if content }}
+                <div class="content text-gray-800 mb-6">{{ content }}</div>
+            {{ /if }}
+
+            {{# Platform links #}}
+            {{ if youtube || instagram }}
+                <div class="mt-auto pt-4">
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-3">View on</p>
+                    <div class="flex flex-wrap gap-3">
+                        {{ if youtube }}
+                            <a href="https://www.youtube.com/watch?v={{ youtube }}" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 text-sm font-medium no-underline hover:border-red-600 hover:bg-red-600 hover:text-white transition-all">
+                                <i class="fa-brands fa-youtube text-base"></i>
+                                YouTube
+                            </a>
+                        {{ /if }}
+                        {{ if instagram }}
+                            <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 text-sm font-medium no-underline hover:border-pink-500 hover:bg-pink-500 hover:text-white transition-all">
+                                <i class="fa-brands fa-instagram text-base"></i>
+                                Instagram
+                            </a>
+                        {{ /if }}
+                    </div>
+                </div>
+            {{ /if }}
+
         </div>
     </div>
-
-    {{# Title & meta #}}
-    <div class="mb-4">
-        <h1 class="text-2xl font-bold leading-snug mb-2">{{ title }}</h1>
-        {{ if publish_date }}
-            <p class="text-sm text-gray-500 uppercase tracking-wide">{{ publish_date format="F j, Y" }}</p>
-        {{ /if }}
-    </div>
-
-    {{# Categories/tags #}}
-    {{ if category }}
-        <div class="flex flex-wrap gap-2 mb-4">
-            {{ category }}
-                <span class="bg-gray-100 text-gray-700 text-xs font-medium uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
-            {{ /category }}
-        </div>
-    {{ /if }}
-
-    {{# Description #}}
-    {{ if description }}
-        <p class="text-gray-700 text-base leading-relaxed mb-4">{{ description }}</p>
-    {{ /if }}
-
-    {{# Long-form content #}}
-    {{ if content }}
-        <div class="content text-gray-800 mb-6">{{ content }}</div>
-    {{ /if }}
 
     {{# Prev / Next navigation #}}
-    <div class="border-t border-gray-200 mt-8 pt-6 flex items-stretch justify-between gap-4">
-        <div class="flex-1">
-            {{ prev }}
-                <a href="{{ url }}" class="group flex flex-col h-full appearance-none no-underline text-gray-600 hover:text-gray-900">
-                    <span class="text-xs uppercase tracking-wide text-gray-400 mb-1">&larr; Newer</span>
-                    <span class="text-sm font-medium leading-snug group-hover:text-teal transition-colors">{{ title }}</span>
-                </a>
-            {{ /prev }}
-        </div>
-        <div class="flex-none self-center">
-            <a href="/videos" class="text-xs text-gray-400 hover:text-teal uppercase tracking-wide transition-colors">All Videos</a>
-        </div>
-        <div class="flex-1 text-right">
-            {{ next }}
-                <a href="{{ url }}" class="group flex flex-col h-full items-end appearance-none no-underline text-gray-600 hover:text-gray-900">
-                    <span class="text-xs uppercase tracking-wide text-gray-400 mb-1">Older &rarr;</span>
-                    <span class="text-sm font-medium leading-snug group-hover:text-teal transition-colors">{{ title }}</span>
-                </a>
-            {{ /next }}
+    <div class="border-t border-gray-200 mt-10 pt-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            {{# Newer video (more recent publish_date) — left #}}
+            <div>
+                {{ collection:videos sort="publish_date:asc" limit="1" publish_date:is_after="{{ publish_date }}" }}
+                    <a href="{{ url }}" class="group flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all no-underline">
+                        <div class="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </div>
+                        <div class="flex-shrink-0 w-12 aspect-[9/16] rounded-md overflow-hidden bg-gray-100">
+                            {{ if thumbnail }}
+                                <img src="{{ thumbnail:url }}" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                            {{ elseif youtube }}
+                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                            {{ else }}
+                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                    <i class="fa-brands fa-instagram text-lg"></i>
+                                </div>
+                            {{ /if }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Newer</p>
+                            <p class="text-sm font-medium text-gray-700 leading-snug group-hover:text-gray-900 transition-colors line-clamp-2">{{ title }}</p>
+                        </div>
+                    </a>
+                {{ /collection:videos }}
+            </div>
+
+            {{# Older video (earlier publish_date) — right #}}
+            <div>
+                {{ collection:videos from="videos" sort="publish_date:desc" limit="1" publish_date:is_before="{{ publish_date }}" }}
+                    <a href="{{ url }}" class="group flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all no-underline sm:flex-row-reverse">
+                        <div class="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                        <div class="flex-shrink-0 w-12 aspect-[9/16] rounded-md overflow-hidden bg-gray-100">
+                            {{ if thumbnail }}
+                                <img src="{{ thumbnail:url }}" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                            {{ elseif youtube }}
+                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                            {{ else }}
+                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                    <i class="fa-brands fa-instagram text-lg"></i>
+                                </div>
+                            {{ /if }}
+                        </div>
+                        <div class="flex-1 min-w-0 sm:text-right">
+                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-0.5">Older</p>
+                            <p class="text-sm font-medium text-gray-700 leading-snug group-hover:text-gray-900 transition-colors line-clamp-2">{{ title }}</p>
+                        </div>
+                    </a>
+                {{ /collection:videos }}
+            </div>
+
         </div>
     </div>
 

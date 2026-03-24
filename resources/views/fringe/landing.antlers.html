@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+    {{# Hero #}}
+    <div class="mb-10">
+        <h1 class="text-4xl font-bold mb-3">Edmonton International Fringe Festival</h1>
+        <p class="text-xl text-gray-500 leading-relaxed">The largest fringe theatre festival in North America, right here in Edmonton.</p>
+    </div>
+
+    {{# Intro content #}}
+    <div class="content text-lg text-gray-800 leading-relaxed mb-12 max-w-3xl">
+        <p>Every August, Edmonton transforms. Over 11 days, hundreds of shows take over venues across the city — theatre, comedy, musicals, storytelling, and things that defy categorization. The Edmonton International Fringe Festival is the largest fringe theatre festival in North America, and it's one of my favourite events of the year.</p>
+
+        <h2>About the Reviewer</h2>
+        <p>I'm Troy Pavlek. I've been a huge fan of the Edmonton International Fringe Festival for a long time. Over the years I've seen hundreds of shows across several dozen venues. I've seen the greats, and I've seen the really, really bad.</p>
+
+        <p>I'm here to help you find a show to see over the 11-day festival, and share in the wonderful experience that is the <strong>Edmonton Fringe</strong>.</p>
+
+        <p>I also produce video reviews that you can find on each show's review page, or you can subscribe on <a href="https://www.instagram.com/troypavlek">Instagram</a>, <a href="https://www.tiktok.com/@troypavlek">TikTok</a>, or <a href="https://www.youtube.com/@troypavlek">YouTube</a>.</p>
+
+        <p>If you have any questions, want to drop recommendations, or share your own review, I'd love to hear from you! DM me on any of the above platforms, or <a href="mailto:troy@tpavlek.me">send an email</a>.</p>
+    </div>
+
+    {{# Festival years #}}
+    <div>
+        <h2 class="text-2xl font-bold mb-6">Browse by Festival Year</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {{ taxonomy:fringe_festival sort="slug:desc" }}
+                <a href="/fringe-{{ slug }}/reviews" class="group block rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all no-underline">
+                    {{ if artwork }}
+                        <div class="aspect-[16/9] overflow-hidden bg-gray-100">
+                            <img src="{{ artwork:url }}" alt="{{ title }} festival artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                    {{ else }}
+                        <div class="aspect-[16/9] bg-gray-100 flex items-center justify-center">
+                            <span class="text-5xl font-bold text-gray-200">{{ slug }}</span>
+                        </div>
+                    {{ /if }}
+                    <div class="p-5">
+                        <p class="text-2xl font-bold text-gray-800 group-hover:text-teal transition-colors mb-1">{{ slug }}</p>
+                        <p class="text-sm text-gray-500 font-medium mb-3">{{ title }}</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide group-hover:text-teal transition-colors">Browse reviews &rarr;</p>
+                    </div>
+                </a>
+            {{ /taxonomy:fringe_festival }}
+        </div>
+    </div>
+
+</div>

@@ -17,6 +17,8 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg content">
     {{ content | widont }}
 
+    {{ partial:_email-subscribe }}
+
     <h3>You can find me on...</h3>
     <table>
         {{ foreach:page_links }}
@@ -27,5 +29,7 @@
 
     </table>
 </div>
+
+
 
 

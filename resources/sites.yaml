@@ -1,0 +1,5 @@
+default:
+  name: 'Troy Pavlek'
+  url: /
+  locale: '{{ config:app:locale }}'
+  lang: en_CA

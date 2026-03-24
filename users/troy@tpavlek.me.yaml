@@ -19,6 +19,7 @@ preferences:
       view: list
     pages:
       after_save: continue_editing
+      view: tree
     videos:
       view: list
       columns:
