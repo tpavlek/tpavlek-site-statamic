@@ -1,0 +1,68 @@
+<div class="pb-8 max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Videos</h1>
+
+    {{ collection:videos
+        sort="publish_date:desc"
+        paginate="12"
+        as="videos"
+    }}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {{ videos }}
+                <a href="{{ url }}" class="group appearance-none text-gray-800 no-underline">
+                    <div class="rounded-lg overflow-hidden border border-gray-200 hover:border-teal transition-colors h-full flex flex-col">
+                        {{ if thumbnail }}
+                            <div class="aspect-[9/16] bg-gray-100">
+                                <img
+                                    src="{{ thumbnail:url }}"
+                                    alt="{{ title }}"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                />
+                            </div>
+                        {{ elseif youtube }}
+                            <div class="aspect-[9/16] bg-gray-100">
+                                <img
+                                    src="https://img.youtube.com/vi/{{ youtube }}/hqdefault.jpg"
+                                    alt="{{ title }}"
+                                    class="w-full h-full object-cover"
+                                    loading="lazy"
+                                />
+                            </div>
+                        {{ else }}
+                            <div class="aspect-video bg-gray-100 flex items-center justify-center">
+                                <i class="fa-brands fa-instagram text-4xl text-gray-400"></i>
+                            </div>
+                        {{ /if }}
+                        <div class="p-3 flex-1 flex flex-col">
+                            <p class="font-medium text-sm leading-snug group-hover:text-teal transition-colors">{{ title }}</p>
+                            {{ if description }}
+                                <p class="text-xs text-gray-500 mt-1 leading-snug">{{ description }}</p>
+                            {{ /if }}
+                            {{ if publish_date }}
+                                <p class="text-xs text-gray-400 mt-auto pt-2">{{ publish_date format="M j, Y" }}</p>
+                            {{ /if }}
+                        </div>
+                    </div>
+                </a>
+            {{ /videos }}
+        </div>
+
+        {{ paginate }}
+            {{ if prev_page or next_page }}
+                <div class="flex items-center justify-between border-t border-gray-200 pt-6">
+                    <div>
+                        {{ if prev_page }}
+                            <a href="{{ prev_page }}" class="text-sm text-gray-600 hover:text-teal">&larr; Newer</a>
+                        {{ /if }}
+                    </div>
+                    <span class="text-xs text-gray-400">Page {{ current_page }} of {{ total_pages }}</span>
+                    <div>
+                        {{ if next_page }}
+                            <a href="{{ next_page }}" class="text-sm text-gray-600 hover:text-teal">Older &rarr;</a>
+                        {{ /if }}
+                    </div>
+                </div>
+            {{ /if }}
+        {{ /paginate }}
+    {{ /collection:videos }}
+</div>

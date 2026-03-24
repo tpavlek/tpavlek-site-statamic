@@ -1,6 +1,7 @@
 ---
 id: 32e4b018-ebae-4eef-af74-2d86b46ece42
 blueprint: video
+publish_date: '2025-08-06'
 title: 'Quintessential Fringe Recommendations'
 description: 'Quintessential Fringe Recommendations'
 youtube: GZ3ZIDPS0dA
@@ -9,4 +10,5 @@ updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750103
 category:
   - fringe
+thumbnail: videos/covers/fringe-recs-weird-cover.png
 ---

@@ -69,13 +69,4 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
-          -
-            handle: parent
-            field:
-              type: entries
-              collections:
-                - municipal_parties
-              max_items: 1
-              listable: false
-              localizable: true
 title: 'Municipal Party'

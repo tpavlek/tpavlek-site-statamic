@@ -67,13 +67,4 @@ tabs:
               type: text
               display: 'OpenGraph Description'
               visibility: computed
-          -
-            handle: parent
-            field:
-              type: entries
-              collections:
-                - endorsements
-              max_items: 1
-              listable: false
-              localizable: true
 title: Endorsement

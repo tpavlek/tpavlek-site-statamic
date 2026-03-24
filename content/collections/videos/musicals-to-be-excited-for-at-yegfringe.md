@@ -1,6 +1,7 @@
 ---
 id: b7f2b6fa-3c65-4bc5-8e59-956e164ed529
 blueprint: video
+publish_date: '2025-08-07'
 title: 'Musicals to be excited for at #yegfringe'
 description: 'Musicals to be excited for at #yegfringe'
 youtube: UfVRnZafEAs
@@ -9,4 +10,5 @@ updated_at: 1758750096
 instagram: DND5fSZpBTJ
 category:
   - fringe
+thumbnail: videos/covers/musicals-rec-cover.png
 ---

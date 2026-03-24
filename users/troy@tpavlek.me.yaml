@@ -16,5 +16,15 @@ preferences:
         - slug
         - status
         - festival
+      view: list
     pages:
       after_save: continue_editing
+    videos:
+      view: list
+      columns:
+        - title
+        - publish_date
+        - slug
+        - status
+    posts:
+      view: list

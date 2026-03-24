@@ -1,0 +1,79 @@
+<div class="max-w-2xl mx-auto px-4 py-8">
+
+    {{# Video embed #}}
+    <div class="flex justify-center mb-6">
+        <div class="w-full max-w-sm">
+            {{ if youtube }}
+                <div class="aspect-[9/16] rounded-lg overflow-hidden bg-black">
+                    <iframe
+                        class="w-full h-full"
+                        src="https://www.youtube.com/embed/{{ youtube }}"
+                        title="{{ title }}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+            {{ elseif instagram }}
+                <div class="aspect-[9/16] rounded-lg overflow-hidden bg-black flex items-center justify-center text-white">
+                    <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" class="text-white no-underline flex flex-col items-center gap-2">
+                        <i class="fa-brands fa-instagram text-5xl"></i>
+                        <span class="text-sm">Watch on Instagram</span>
+                    </a>
+                </div>
+            {{ /if }}
+        </div>
+    </div>
+
+    {{# Title & meta #}}
+    <div class="mb-4">
+        <h1 class="text-2xl font-bold leading-snug mb-2">{{ title }}</h1>
+        {{ if publish_date }}
+            <p class="text-sm text-gray-500 uppercase tracking-wide">{{ publish_date format="F j, Y" }}</p>
+        {{ /if }}
+    </div>
+
+    {{# Categories/tags #}}
+    {{ if category }}
+        <div class="flex flex-wrap gap-2 mb-4">
+            {{ category }}
+                <span class="bg-gray-100 text-gray-700 text-xs font-medium uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
+            {{ /category }}
+        </div>
+    {{ /if }}
+
+    {{# Description #}}
+    {{ if description }}
+        <p class="text-gray-700 text-base leading-relaxed mb-4">{{ description }}</p>
+    {{ /if }}
+
+    {{# Long-form content #}}
+    {{ if content }}
+        <div class="content text-gray-800 mb-6">{{ content }}</div>
+    {{ /if }}
+
+    {{# Prev / Next navigation #}}
+    <div class="border-t border-gray-200 mt-8 pt-6 flex items-stretch justify-between gap-4">
+        <div class="flex-1">
+            {{ prev }}
+                <a href="{{ url }}" class="group flex flex-col h-full appearance-none no-underline text-gray-600 hover:text-gray-900">
+                    <span class="text-xs uppercase tracking-wide text-gray-400 mb-1">&larr; Newer</span>
+                    <span class="text-sm font-medium leading-snug group-hover:text-teal transition-colors">{{ title }}</span>
+                </a>
+            {{ /prev }}
+        </div>
+        <div class="flex-none self-center">
+            <a href="/videos" class="text-xs text-gray-400 hover:text-teal uppercase tracking-wide transition-colors">All Videos</a>
+        </div>
+        <div class="flex-1 text-right">
+            {{ next }}
+                <a href="{{ url }}" class="group flex flex-col h-full items-end appearance-none no-underline text-gray-600 hover:text-gray-900">
+                    <span class="text-xs uppercase tracking-wide text-gray-400 mb-1">Older &rarr;</span>
+                    <span class="text-sm font-medium leading-snug group-hover:text-teal transition-colors">{{ title }}</span>
+                </a>
+            {{ /next }}
+        </div>
+    </div>
+
+</div>

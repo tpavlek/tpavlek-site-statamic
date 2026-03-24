@@ -49,13 +49,4 @@ tabs:
               type: slug
               localizable: true
               validate: 'max:200'
-          -
-            handle: parent
-            field:
-              type: entries
-              collections:
-                - yegvote_2025_wards
-              max_items: 1
-              listable: false
-              localizable: true
 title: 'YEGVote 2025 Ward'

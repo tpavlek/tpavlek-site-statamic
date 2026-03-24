@@ -1,5 +1,15 @@
 title: Videos
+template: videos/show
+layout: layout
 revisions: false
+route: 'video/{slug}'
+sort_field: publish_date
+sort_dir: desc
 date_behavior:
   past: public
   future: private
+preview_targets:
+  -
+    label: Entry
+    url: '{permalink}'
+    refresh: true

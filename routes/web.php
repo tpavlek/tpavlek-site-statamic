@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 // ]);
 //
 
+Route::statamic('/videos', 'videos/index', ['title' => 'Videos']);
+
 Route::redirect('fringe', '/fringe-2025/reviews');
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));
 Route::get('/fringe-2025/reviews', [ FringeController::class, 'currentYear' ]);

@@ -33,11 +33,24 @@ tabs:
               type: text
               display: Instagram
               instructions: 'Enter the Instagram Reel ID'
+          -
+            handle: thumbnail
+            field:
+              type: assets
+              display: Thumbnail
+              container: assets
+              folder: videos/covers
+              max_files: 1
   sidebar:
     display: Sidebar
     sections:
       -
         fields:
+          -
+            handle: publish_date
+            field:
+              type: date
+              display: 'Publish Date'
           -
             handle: slug
             field:
