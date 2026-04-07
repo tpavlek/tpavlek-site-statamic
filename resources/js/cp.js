@@ -1,14 +1,6 @@
-/**
- * When extending the control panel, be sure to uncomment the necessary code for your build process:
- * https://statamic.dev/extending/control-panel
- */
-
-/** Example Fieldtype
-
-import ExampleFieldtype from './components/fieldtypes/ExampleFieldtype.vue';
+import VideoDistributionFieldtype from './components/fieldtypes/VideoDistributionFieldtype.vue';
 
 Statamic.booting(() => {
-    Statamic.$components.register('example-fieldtype', ExampleFieldtype);
+    VideoDistributionFieldtype.mixins = [window.__STATAMIC__.core.FieldtypeMixin];
+    Statamic.$components.register('video_distribution-fieldtype', VideoDistributionFieldtype);
 });
-
-*/

@@ -35,8 +35,8 @@
                         {{ /if }}
                         <div class="p-3 flex-1 flex flex-col">
                             <p class="font-medium text-sm leading-snug group-hover:text-teal transition-colors">{{ title }}</p>
-                            {{ if description }}
-                                <p class="text-xs text-gray-500 mt-1 leading-snug">{{ description }}</p>
+                            {{ if content }}
+                                <p class="text-xs text-gray-500 mt-1 leading-snug">{{ content | strip_tags | safe_truncate:200:... }}</p>
                             {{ /if }}
                             {{ if publish_date }}
                                 <p class="text-xs text-gray-400 mt-auto pt-2">{{ publish_date format="M j, Y" }}</p>

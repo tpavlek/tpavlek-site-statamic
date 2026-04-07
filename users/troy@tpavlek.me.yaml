@@ -27,5 +27,8 @@ preferences:
         - publish_date
         - slug
         - status
+      after_save: continue_editing
     posts:
       view: list
+    endorsements:
+      view: tree

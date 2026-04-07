@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Fieldtypes\VideoDistribution;
+use App\Http\Controllers\CP\VideoDistributionController;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Statamic\Facades\Collection;
 use Statamic\Statamic;
@@ -23,6 +26,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        VideoDistribution::register();
+
+        Statamic::vite('video-distribution', [
+            'input' => ['resources/js/cp.js'],
+            'publicDirectory' => 'public',
+            'buildDirectory' => 'build',
+        ]);
+
+        Statamic::pushCpRoutes(function () {
+            Route::prefix('video-distribution')->group(function () {
+                Route::get('{entryId}/status', [VideoDistributionController::class, 'status']);
+                Route::post('{entryId}/distribute', [VideoDistributionController::class, 'distribute']);
+                Route::delete('{entryId}/{platform}/clear', [VideoDistributionController::class, 'clear']);
+            });
+        });
+
         Relate::oneToMany(
             'yegvote_2025_candidates.party',
             'municipal_parties.candidates'

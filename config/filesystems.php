@@ -66,6 +66,12 @@ return [
             'throw' => false,
         ],
 
+        'video-sources' => [
+            'driver' => 'local',
+            'root' => storage_path('app/video-sources'),
+            'throw' => false,
+        ],
+
     ],
 
     /*

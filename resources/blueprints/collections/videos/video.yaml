@@ -12,21 +12,57 @@ tabs:
               validate:
                 - required
           -
-            handle: description
-            field:
-              type: text
-              display: Description
-          -
             handle: content
             field:
               type: markdown
               localizable: true
+          -
+            handle: video_file
+            field:
+              type: assets
+              display: 'Video File'
+              container: video-sources
+              max_files: 1
+              instructions: 'Upload the source MP4 video file for distribution'
+          -
+            handle: shortform_content
+            field:
+              type: textarea
+              display: 'Shortform Content'
+              instructions: 'Short text for platforms with character limits (e.g. Twitter). Max 280 characters.'
+              character_limit: 280
+              validate:
+                - 'max:280'
+          -
+            handle: distribution
+            field:
+              type: video_distribution
+              display: Distribution
+              instructions: 'Distribute this video to platforms'
           -
             handle: youtube
             field:
               type: text
               display: YouTube
               instructions: 'Enter the YouTube Video ID (not the full URL)'
+          -
+            handle: tiktok
+            field:
+              type: text
+              display: TikTok
+              instructions: 'Enter the TikTok Video ID'
+          -
+            handle: twitter
+            field:
+              type: text
+              display: Twitter
+              instructions: 'The Twitter Tweet ID'
+          -
+            handle: bluesky
+            field:
+              type: text
+              display: Bluesky
+              instructions: 'The Bluesky post URI'
           -
             handle: instagram
             field:
