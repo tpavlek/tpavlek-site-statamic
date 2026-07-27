@@ -1,9 +1,38 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ if original_review }}
+        {{ original_review }}
+            <div class="border border-teal rounded-lg bg-teal-light bg-opacity-30 px-4 py-3 mb-6 text-base">
+                <i class="fas fa-history text-teal mr-1"></i>
+                This show was first reviewed at the {{ festival:slug }} Edmonton Fringe Festival.
+            </div>
+        {{ /original_review }}
+    {{ else }}
+        {{ collection:fringe_reviews :original_review:is="id" }}
+            <div class="border border-teal rounded-lg bg-teal-light bg-opacity-30 px-4 py-3 mb-6 text-base">
+                <i class="fas fa-history text-teal mr-1"></i>
+                This show returned at Fringe {{ festival:slug }} — <a href="{{ url }}">read the updated review &rarr;</a>
+            </div>
+        {{ /collection:fringe_reviews }}
+    {{ /if }}
+
     <h2 class="text-3xl font-light flex flex-col group-hover:bg-grey-50">
         {{ if stars }}
             <span class="text-teal mr-2">
                 {{ stars:label }}
             </span>
+
+        {{ elseif original_review }}
+            {{ original_review }}
+                {{ if stars }}
+                    <span class="text-teal mr-2">
+                        {{ stars:label }} <span class="text-base text-gray-500">at Fringe {{ festival:slug }}</span>
+                    </span>
+                {{ else }}
+                    <div class="flex items-center">
+                        <span class="inline-block bg-grey-200 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
+                    </div>
+                {{ /if }}
+            {{ /original_review }}
 
         {{ else }}
             <div class="flex items-center">
@@ -15,11 +44,7 @@
     </h2>
 
     <div class="space-x-2">
-        {{ if ticket_link }}
-            <a href="{{ ticket_link }}" target="_blank" class="text-xs text-gray-600 uppercase">
-                <i class="fas fa-link text-teal"></i> Tickets
-            </a>
-        {{ /if }}
+        {{ partial:fringe/ticket-link }}
 
         {{ if artist_instagram }}
             <a href="https://instagram.com/{{ artist_instagram }}" target="_blank" class="text-xs text-gray-600 uppercase">
@@ -29,8 +54,31 @@
     </div>
 
     <div class="content mt-4">
-        {{ content }}
+        {{ if content }}
+            {{ content }}
+        {{ elseif original_review }}
+            {{ original_review }}
+                {{ content }}
+            {{ /original_review }}
+        {{ /if }}
     </div>
+
+    {{ if content && original_review }}
+        {{ original_review }}
+            <div class="rounded-lg rounded-l-none border border-grey-300 mb-3 mt-6">
+                <div class="border-teal border-l-8">
+                    <div class="px-4 pb-4">
+                        <h3 class="font-semibold pt-2 uppercase text-sm tracking-wide">My review from Fringe {{ festival:slug }}</h3>
+                        {{ if stars }}
+                            <div class="text-teal mt-1">{{ stars:label }}</div>
+                        {{ /if }}
+                        <div class="content mt-2">{{ content }}</div>
+                        <a href="{{ url }}" class="text-xs text-gray-600 uppercase">View original review &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        {{ /original_review }}
+    {{ /if }}
 
     {{ if companion_videos }}
     <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">

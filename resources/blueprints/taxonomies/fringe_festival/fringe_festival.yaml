@@ -31,6 +31,13 @@ tabs:
               container: assets
               folder: fringe
               max_files: 1
+          -
+            handle: tickets_available
+            field:
+              type: toggle
+              display: 'Tickets Available'
+              instructions: 'Show ticket links for this festival year. Turn off once the festival ends and links go dead.'
+              default: false
   sidebar:
     display: Sidebar
     sections:

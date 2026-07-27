@@ -15,7 +15,9 @@ Route::statamic('/videos', 'videos/index', ['title' => 'Videos']);
 Route::statamic('/fringe', 'fringe/landing', ['title' => 'Edmonton Fringe']);
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));
-Route::get('/fringe-2025/reviews', [ FringeController::class, 'currentYear' ]);
+Route::get('/fringe-2026/reviews', [ FringeController::class, 'year2026' ]);
+Route::get('/fringe-2025/reviews', [ FringeController::class, 'year2025' ]);
+Route::get('/fringe-2024/reviews', [ FringeController::class, 'year2024' ]);
 Route::get('/yegvote-2025', [ YegvoteController::class, 'yegvote_2025' ]);
 Route::get('/yegvote-2025/endorsements', [ EndorsementsController::class, 'currentYear' ]);
 //Route::get('/fringe/{entry}/social', [ FringeController::class, 'generateSocialImage' ]);

@@ -79,6 +79,15 @@ tabs:
               validate:
                 - url
           -
+            handle: original_review
+            field:
+              max_items: 1
+              collections:
+                - fringe_reviews
+              type: entries
+              display: 'Original Review'
+              instructions: 'For a returning show: the review from the festival where I originally saw it. Leave stars empty to inherit the original rating.'
+          -
             handle: artist_instagram
             field:
               type: text

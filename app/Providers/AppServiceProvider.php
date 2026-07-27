@@ -47,6 +47,13 @@ class AppServiceProvider extends ServiceProvider
             'municipal_parties.candidates'
         );
 
+        // Review files are named with a festival-year prefix (e.g. 2026-field-zoology-301) so
+        // restagings of the same show don't collide, but URLs use the bare show slug since the
+        // year is already a segment of the route.
+        Collection::computed('fringe_reviews', 'url_slug', function ($entry, $value) {
+            return preg_replace('/^\d{4}-/', '', $entry->slug());
+        });
+
         Collection::computed('endorsements', 'og_title', function ($entry, $value) {
             return "{$entry->title} for {$entry->ward->slug} - Endorsement by Troy Pavlek";
         });
