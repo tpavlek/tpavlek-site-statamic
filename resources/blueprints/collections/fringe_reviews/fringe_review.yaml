@@ -115,6 +115,34 @@ tabs:
                 - videos
               type: entries
               display: 'Companion Videos'
+  social:
+    display: 'Social Card'
+    sections:
+      -
+        fields:
+          -
+            handle: share_quote
+            field:
+              type: textarea
+              display: 'Share Quote'
+              character_limit: 280
+              instructions: 'Pull quote overlaid on the Instagram share card. Line breaks are kept. Best edited in the social card builder.'
+          -
+            handle: share_image
+            field:
+              max_files: 1
+              container: assets
+              folder: fringe/share-cards
+              type: assets
+              display: 'Share Card Background'
+              instructions: 'Optional background that overrides the poster on the share card.'
+          -
+            handle: share_card_options
+            field:
+              type: array
+              mode: dynamic
+              display: 'Share Card Options'
+              instructions: 'Positioning settings saved from the social card builder.'
   sidebar:
     display: Sidebar
     sections:

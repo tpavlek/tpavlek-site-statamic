@@ -9,7 +9,7 @@ companion_videos:
   - 85fe81dd-aa11-4ae5-81d7-8d628125116b
 festival: '2025'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1755541522
+updated_at: 1785196258
 categories:
   - comedy
 stars: 4
@@ -20,4 +20,4 @@ It's a long-running monthly show where anyone can show up with their original pa
 
 The small venue of the Grindstone makes the show feel very intimate and helps the crowd get hyped –– most parodies have opportunities for the crowd to sing along and oh boy do they.
 
-Weird Al Karaoke is simple an uncomplicated fun, I love it.
+Weird Al Karaoke is simple and uncomplicated fun, I love it.

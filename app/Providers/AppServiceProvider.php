@@ -35,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Statamic::pushCpRoutes(function () {
+            Route::prefix('fringe-social-card')->group(function () {
+                Route::get('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'show'])->name('fringe-social-card.show');
+                Route::post('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'save'])->name('fringe-social-card.save');
+            });
+
             Route::prefix('video-distribution')->group(function () {
                 Route::get('{entryId}/status', [VideoDistributionController::class, 'status']);
                 Route::post('{entryId}/distribute', [VideoDistributionController::class, 'distribute']);

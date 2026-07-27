@@ -51,6 +51,10 @@
                 <i class="fa-brands fa-instagram text-teal text-xl lg:text-xs"></i> {{ artist_instagram}}
             </a>
         {{ /if }}
+
+        <a href="{{ url }}/share-card" class="text-xs text-gray-600 uppercase">
+            <i class="fas fa-image text-teal"></i> Share image
+        </a>
     </div>
 
     <div class="content mt-4">
@@ -106,6 +110,12 @@
         </div>
     </div>
     {{ /if }}
+
+    <div class="mt-8 text-center">
+        <a href="{{ url }}/share-card" class="inline-block border border-teal rounded-lg bg-teal-light bg-opacity-30 hover:bg-opacity-50 transition-colors px-4 py-3 text-base text-teal no-underline font-medium">
+            <i class="fas fa-image mr-1"></i> Generate a social image with this review &rarr;
+        </a>
+    </div>
 </div>
 
 {{ if stars }}
