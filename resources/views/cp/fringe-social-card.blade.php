@@ -139,7 +139,7 @@
                                     <div class="stars">{{ $stars }}</div>
                                 @endif
                                 <div class="quote" :style="`font-size: ${textSize}px`" x-text="quote"></div>
-                                <div class="attribution">&mdash; Troy's Fringe Reviews</div>
+                                <div class="attribution" :style="`font-size: ${attributionSize}px`">&mdash; Troy's Fringe Reviews</div>
                             </div>
                         </div>
                     </div>
@@ -265,6 +265,9 @@
             },
             get frameAspect() {
                 return 1080 / this.cardHeight;
+            },
+            get attributionSize() {
+                return this.format === 'story' ? 44 : 34;
             },
             // Dark plateau centered on the text, fading to transparent in both directions.
             // At the extremes the plateau runs off the card edge, leaving a single fade —
