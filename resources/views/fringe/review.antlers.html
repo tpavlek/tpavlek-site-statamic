@@ -187,25 +187,9 @@
     </div>
 </div>
 
-{{ if stars }}
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Review",
-            "url": "{{ permalink }}",
-            "dateModified": "{{ updated_at format="c" }}",
-            "author": {
-                "@type": "Person",
-                "name": "Troy Pavlek"
-            },
-            "itemReviewed": {
-                "@type": "Event",
-                "name": "{{ title }}"
-            },
-            "reviewRating": {
-                "@type": "Rating",
-                "ratingValue": "{{ stars->value() }}"
-            }
-        }
-    </script>
+{{# Assembled in App\Schema\FringeReviewSchema so show titles are escaped properly and
+    the Event carries the startDate and location Google requires. Empty for unrated
+    shows and for festival years with no dates set on the taxonomy term. #}}
+{{ if review_schema }}
+    <script type="application/ld+json">{{ review_schema }}</script>
 {{ /if }}

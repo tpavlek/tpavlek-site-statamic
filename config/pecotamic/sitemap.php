@@ -1,6 +1,6 @@
 <?php
 
-use Statamic\Entries\Entry;
+use App\Sitemap\CanonicalReviewUrl;
 
 return [
     'url' => 'sitemap.xml',
@@ -23,23 +23,11 @@ return [
     'filter' => null,
 
     /**
-     * Statamic derives an entry's slug from its filename, ignoring any `slug` key in
-     * the front matter. The reviews pages are named fringe-2024-reviews.md and
-     * fringe-2026-reviews.md, so Statamic routes them to /fringe-2024/fringe-2024-reviews
-     * rather than the /fringe-2024/reviews the FringeController actually serves. Only
-     * 2025 lands correctly, and only because its file happens to be named reviews.md.
+     * Points each year's reviews page at the URL the FringeController actually serves;
+     * see the class for why that differs from the URL Statamic derives.
      *
-     * Rather than depend on filenames, point every fringe/index entry at the canonical
-     * controller route. Future years are covered without another change here, and the
-     * filename-derived URLs 301 to the same place (see routes/web.php).
+     * Must stay a "Class::method" string, not a closure. Closures can't be serialized,
+     * so `php artisan config:cache` fails on them at deploy time.
      */
-    'properties' => static function ($entry): ?array {
-        if (! $entry instanceof Entry || $entry->template() !== 'fringe/index') {
-            return null;
-        }
-
-        return [
-            'loc' => preg_replace('~/[^/]+$~', '/reviews', $entry->absoluteUrl()),
-        ];
-    },
+    'properties' => CanonicalReviewUrl::class.'::handle',
 ];

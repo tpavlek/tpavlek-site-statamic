@@ -24,6 +24,18 @@ tabs:
               validate:
                 - required
           -
+            handle: starts_at
+            field:
+              type: date
+              display: 'First day'
+              instructions: 'Opening day of the festival. Feeds the Event structured data on every review page for this year, which Google needs before it will show star ratings in search results.'
+          -
+            handle: ends_at
+            field:
+              type: date
+              display: 'Last day'
+              instructions: 'Closing day of the festival.'
+          -
             handle: artwork
             field:
               type: assets

@@ -19,6 +19,10 @@ Route::statamic('/fringe', 'fringe/landing', [
 ]);
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));
+
+// Retired: the landing page and the reviews intro cover this better. Redirected rather
+// than 404'd so anything already linking or indexed lands somewhere useful.
+Route::redirect('/fringe/why-fringe', '/fringe', 301);
 Route::get('/fringe-reviews/{festival}/{slug}/share-card', [ \App\Http\Controllers\CP\SocialCardController::class, 'publicShow' ]);
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe-2026/reviews', [ FringeController::class, 'year2026' ]);

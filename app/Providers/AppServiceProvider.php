@@ -108,5 +108,9 @@ class AppServiceProvider extends ServiceProvider
 
             return [ 'url' => "https://troypavlek.ca/assets/og-fringe-reviews.jpeg" ];
         });
+
+        Collection::computed('fringe_reviews', 'review_schema', function ($entry, $value) {
+            return \App\Schema\FringeReviewSchema::build($entry);
+        });
     }
 }
