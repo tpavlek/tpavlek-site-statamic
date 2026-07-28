@@ -1,0 +1,11 @@
+{{#
+    A star rating with a text alternative.
+
+    "★★★½☆" is read out by screen readers as a run of star characters, or skipped
+    entirely, which on a review site loses the single most important thing on the page.
+    The glyphs are hidden from assistive tech and a spoken equivalent sits alongside.
+
+    Expects `stars` in scope. `size` is an optional text-size class.
+#}}
+<span class="text-teal {{ size ?? 'text-sm' }} whitespace-nowrap" aria-hidden="true">{{ stars:label }}</span>
+<span class="sr-only">{{ stars:value }} out of 5 stars</span>

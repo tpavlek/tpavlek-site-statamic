@@ -11,6 +11,6 @@ festival: '2026'
 categories:
   - comedy
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1785209410
-venue: '13: SERVUS Credit Union Théâtre'
+updated_at: 1785270374
+venue: '13: SERVUS Credit Union Theatre'
 ---

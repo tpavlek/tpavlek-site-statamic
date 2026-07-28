@@ -61,7 +61,6 @@
 
 
         <script src="https://kit.fontawesome.com/3221bcdf2a.js" crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
 
 
         {{ vite src="resources/js/site.js|resources/css/site.css" }}
@@ -77,8 +76,16 @@
         </script>
     </head>
     <body class="bg-white font-sans leading-normal text-grey-800 px-4 sm:px-10" x-data="{ showMobileNav: false }">
+        <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-teal focus:text-white focus:no-underline focus:rounded-lg focus:px-4 focus:py-2">
+            Skip to content
+        </a>
+
         {{ partial:nav }}
-        {{ template_content }}
+
+        <main id="main">
+            {{ template_content }}
+        </main>
+
         {{ partial:footer }}
     </body>
 </html>

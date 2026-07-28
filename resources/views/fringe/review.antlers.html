@@ -25,15 +25,16 @@
 
     <h1 class="text-3xl font-light leading-normal mb-0 flex flex-col group-hover:bg-grey-50">
         {{ if stars }}
-            <span class="text-teal mr-2">
-                {{ stars:label }}
+            <span class="mr-2">
+                {{ partial:fringe/stars size="text-3xl" }}
             </span>
 
         {{ elseif original_review }}
             {{ original_review }}
                 {{ if stars }}
-                    <span class="text-teal mr-2">
-                        {{ stars:label }} <span class="text-base text-gray-500">at Fringe {{ festival:slug }}</span>
+                    <span class="mr-2">
+                        {{ partial:fringe/stars size="text-3xl" }}
+                        <span class="text-base text-gray-500">at Fringe {{ festival:slug }}</span>
                     </span>
                 {{ else }}
                     <div class="flex items-center">
@@ -102,7 +103,7 @@
                     <div class="px-4 pb-4">
                         <h2 class="font-semibold pt-2 uppercase text-sm tracking-wide">My review from Fringe {{ festival:slug }}</h2>
                         {{ if stars }}
-                            <div class="text-teal mt-1">{{ stars:label }}</div>
+                            <div class="mt-1">{{ partial:fringe/stars }}</div>
                         {{ /if }}
                         <div class="content mt-2">{{ content }}</div>
                         <a href="{{ url }}" class="text-xs text-gray-600 uppercase">View original review &rarr;</a>
@@ -180,7 +181,7 @@
     {{ /if }}
 
     <div class="mt-8 text-center">
-        <a href="{{ url }}/share-card" class="inline-block border border-teal rounded-lg bg-teal-light bg-opacity-30 hover:bg-opacity-50 transition-colors px-4 py-3 text-base text-teal no-underline font-medium">
+        <a href="{{ url }}/share-card" class="inline-block border border-teal rounded-lg bg-teal-light bg-opacity-30 hover:bg-opacity-50 transition-colors px-4 py-3 text-base text-teal-dark no-underline font-medium">
             <i class="fas fa-image mr-1"></i> Generate a social image with this review &rarr;
         </a>
     </div>

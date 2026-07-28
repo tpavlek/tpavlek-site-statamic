@@ -1,9 +1,9 @@
 {{ if stars }}
-    <span class="text-teal text-sm whitespace-nowrap">{{ stars:label }}</span>
+    {{ partial:fringe/stars }}
 {{ elseif original_review }}
     {{ original_review }}
         {{ if stars }}
-            <span class="text-teal text-sm whitespace-nowrap">{{ stars:label }}</span>
+            {{ partial:fringe/stars }}
             <span class="text-gray-500 text-xs whitespace-nowrap">(at Fringe {{ festival:slug }})</span>
         {{ else }}
             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">{{ recommendation:label }}</span>

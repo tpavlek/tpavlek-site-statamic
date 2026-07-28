@@ -1,4 +1,8 @@
 <div class="mt-8 pb-8 max-w-4xl mx-auto text-lg">
+    {{# mb-6 overrides the global `h1 { mb-16 }` in style.css, which leaves far too
+        much air between a page title and its first paragraph. #}}
+    <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-6">{{ title }}</h1>
+
     <div class="content">
         {{ content | widont }}
     </div>
