@@ -5,6 +5,12 @@ tabs:
       -
         fields:
           -
+            handle: ticket_import
+            field:
+              type: ticket_import
+              display: 'Populate from ticketing site'
+              instructions: 'Paste a tickets.fringetheatre.ca event link to fill in the show details below.'
+          -
             handle: title
             field:
               type: text
@@ -14,8 +20,22 @@ tabs:
           -
             handle: content
             field:
-              type: markdown
+              type: bard
               localizable: true
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - removeformat
+                - quote
+                - anchor
+                - bts_pins
+              bts_pins:
+                - review_ref
+              save_html: false
           -
             handle: stars
             field:
@@ -66,6 +86,9 @@ tabs:
                 -
                   key: interested
                   value: Interested
+                -
+                  key: watchlist
+                  value: Watchlist
               max_items: 1
               default: recommended
               type: select
@@ -88,11 +111,15 @@ tabs:
               display: 'Original Review'
               instructions: 'For a returning show: the review from the festival where I originally saw it. Leave stars empty to inherit the original rating.'
           -
-            handle: artist_instagram
+            handle: artist
             field:
-              type: text
-              display: 'Artist Instagram'
-              instructions: 'Include only the instagram handle'
+              max_items: 1
+              collections:
+                - artists
+              type: entries
+              display: Artist
+              create: true
+              instructions: 'The artist or company behind this show. Used to cross-link their other work.'
           -
             handle: poster
             field:
@@ -162,7 +189,7 @@ tabs:
                 - fringe_festival
               type: terms
               display: Festival
-              default: 2025
+              default: 2026
               instructions: 'Choose the festival this review is for'
               validate:
                 - required

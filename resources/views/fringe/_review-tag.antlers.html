@@ -1,0 +1,17 @@
+{{ if stars }}
+    <span class="text-teal text-sm">{{ stars:label }}</span>
+{{ elseif original_review }}
+    {{ original_review }}
+        {{ if stars }}
+            <span class="text-teal text-sm">{{ stars:label }}</span>
+        {{ else }}
+            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">{{ recommendation:label }}</span>
+        {{ /if }}
+    {{ /original_review }}
+{{ elseif recommendation:value == "watchlist" }}
+    <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">Watchlist</span>
+{{ elseif categories|pluck('slug')|contains('improv') }}
+    <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">Improv*</span>
+{{ else }}
+    <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">{{ recommendation:label }}</span>
+{{ /if }}

@@ -13,6 +13,7 @@
         "abraham/twitteroauth": "^8.1",
         "google/apiclient": "^2.16",
         "intervention/image": "^3.0",
+        "jacksleight/statamic-bard-texstyle": "^4.1",
         "laravel/framework": "^12.40",
         "laravel/tinker": "^2.9",
         "pecotamic/sitemap": "^1.4",

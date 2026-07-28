@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2e1f62f3715a2ac651faa250bb81808",
+    "content-hash": "1ea7e27354f28acc3475a59175e09ae0",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -1935,6 +1935,57 @@
                 }
             ],
             "time": "2026-02-19T13:11:17+00:00"
+        },
+        {
+            "name": "jacksleight/statamic-bard-texstyle",
+            "version": "4.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jacksleight/statamic-bard-texstyle.git",
+                "reference": "1bf689c8e50091b75bf29cb1f788a801ff4458d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jacksleight/statamic-bard-texstyle/zipball/1bf689c8e50091b75bf29cb1f788a801ff4458d3",
+                "reference": "1bf689c8e50091b75bf29cb1f788a801ff4458d3",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^6.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.21",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JackSleight\\StatamicBardTexstyle\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Bard Texstyle",
+                    "editions": [
+                        "free",
+                        "pro"
+                    ],
+                    "description": "This Statamic addon allows you to add custom element styles and attributes to the Bard fieldtype."
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JackSleight\\StatamicBardTexstyle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/jacksleight/statamic-bard-texstyle/issues",
+                "source": "https://github.com/jacksleight/statamic-bard-texstyle/tree/4.1.1"
+            },
+            "time": "2026-06-15T11:56:49+00:00"
         },
         {
             "name": "james-heinrich/getid3",

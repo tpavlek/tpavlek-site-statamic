@@ -4,7 +4,6 @@ blueprint: fringe_review
 title: 'Weird Al Karaoke: The Best of the Very Best'
 recommendation: recommended
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:6614/'
-artist_instagram: weirdalkaraokeyeg
 companion_videos:
   - 85fe81dd-aa11-4ae5-81d7-8d628125116b
 festival: '2025'
@@ -13,11 +12,38 @@ updated_at: 1785196258
 categories:
   - comedy
 stars: 4
+artist: b31a4de8-6b54-44c9-ab97-ec4a0306e8c2
+content:
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Weird Al Karaoke is a blast.'
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "It's a long-running monthly show where anyone can show up with their original parodies, and the Fringe show is the best of the best. It's funny, stupid, and doesn't take itself too seriously."
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'The small venue of the Grindstone makes the show feel very intimate and helps the crowd get hyped –– most parodies have opportunities for the crowd to sing along and oh boy do they.'
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Weird Al Karaoke is simple and uncomplicated fun, I love it.'
 ---
-Weird Al Karaoke is a blast.
-
-It's a long-running monthly show where anyone can show up with their original parodies, and the Fringe show is the best of the best. It's funny, stupid, and doesn't take itself too seriously.
-
-The small venue of the Grindstone makes the show feel very intimate and helps the crowd get hyped –– most parodies have opportunities for the crowd to sing along and oh boy do they.
-
-Weird Al Karaoke is simple and uncomplicated fun, I love it.

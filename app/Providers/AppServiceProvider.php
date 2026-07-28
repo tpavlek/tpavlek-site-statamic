@@ -27,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         VideoDistribution::register();
+        \App\Fieldtypes\TicketImport::register();
 
         Statamic::vite('video-distribution', [
             'input' => ['resources/js/cp.js'],
@@ -35,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Statamic::pushCpRoutes(function () {
+            Route::post('fringe-ticket-import', \App\Http\Controllers\CP\TicketImportController::class)->name('fringe-ticket-import');
+
             Route::prefix('fringe-social-card')->group(function () {
                 Route::get('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'show'])->name('fringe-social-card.show');
                 Route::post('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'save'])->name('fringe-social-card.save');

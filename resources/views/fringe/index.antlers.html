@@ -61,6 +61,11 @@
                             {{ /if }}
                         {{ /original_review }}
 
+                    {{ elseif recommendation:value == "watchlist" }}
+                        <div>
+                            <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">Watchlist</span>
+                        </div>
+
                     {{ elseif categories|pluck('slug')|contains('improv') }}
                         <div>
                             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
@@ -127,6 +132,10 @@
                             {{ /if }}
                         {{ /original_review }}
 
+                    {{ elseif recommendation:value == "watchlist" }}
+                        <div>
+                            <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Watchlist</span>
+                        </div>
                     {{ elseif categories|pluck('slug')|contains('improv') }}
                         <div>
                             <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>

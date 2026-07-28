@@ -70,6 +70,11 @@ class FringeController extends Controller
                 // A returning show without a fresh rating inherits the original review's stars
                 $stars = $entry->stars->value() ?: $this->originalReview($entry)?->stars->value();
 
+                // Watchlist shows haven't been seen yet — list them after everything reviewed
+                if (! $stars && $entry->recommendation->value() === 'watchlist') {
+                    return 0;
+                }
+
                 return $stars ? (float)$stars * 10 : 35;
             });
 

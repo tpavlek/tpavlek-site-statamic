@@ -8,6 +8,6 @@ recommendation: recommended
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1785189020
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:7623/'
-artist_instagram: sasquatchphd
 poster: fringe/field-zoology-301.jpg
+artist: 1459abb9-8704-471c-9e18-67e32142657d
 ---

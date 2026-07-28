@@ -1,0 +1,84 @@
+---
+id: 707c1e88-c05b-4f52-9796-8eecba26a37c
+blueprint: fringe_review
+title: 'PORK & BEANS: Attorneys At Law'
+recommendation: watchlist
+ticket_link: 'https://tickets.fringetheatre.ca/event/601:7574/'
+poster: fringe/pork-beans-attorneys-at-law-poster.jpg
+festival: '2026'
+categories:
+  - musical
+updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
+updated_at: 1785199567
+artist: f510decb-4862-43c6-91bd-32a2bd24db13
+content:
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "I can't wait for this show."
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "A couple of years ago, I had a middling impression of Top Bunk Theatre's "
+      -
+        type: btsPin
+        attrs:
+          id: 615d9abc-3a90-44e8-b7fb-72a1ad81fb51
+          values:
+            type: review_ref
+            review: 6ff38c9b-49c2-4b7f-8edc-99861b17e0a5
+      -
+        type: text
+        text: '. The idea had great legs, but I thought it needed a bit more time workshopping.'
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Then, last year, they gave '
+      -
+        type: btsPin
+        attrs:
+          id: d5d352d0-76ac-4add-8569-dc015d2e91d8
+          values:
+            type: review_ref
+            review: 23027189-f267-498c-b71a-7a4e030376b0
+      -
+        type: text
+        text: ' the '
+      -
+        type: text
+        text: exact
+        marks:
+          -
+            type: italic
+      -
+        type: text
+        text: ' amount of workshopping it needed. The show was silly, zany and legitimately laugh-out-loud funny.'
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "This is a fiercely talented, creative bunch and I can't wait to see what they're doing next."
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: '(Plus a new, original musical every year! Very ambitious!)'
+---

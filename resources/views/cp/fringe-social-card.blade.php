@@ -87,6 +87,7 @@
         .card .overlay { position: absolute; inset: 0; }
         .card .panel { position: absolute; left: 0; width: 100%; padding: 56px 60px; }
         .card .stars { font-size: 72px; color: white; letter-spacing: 6px; line-height: 1; margin-bottom: 28px; }
+        .card .watch-heading { font-size: 44px; font-weight: 600; color: white; text-transform: uppercase; letter-spacing: 8px; line-height: 1; margin-bottom: 28px; }
         .card .quote { font-family: Georgia, 'Times New Roman', serif; color: white; white-space: pre-line; line-height: 1.25; }
         .card .attribution { margin-top: 32px; font-size: 34px; color: rgba(255, 255, 255, 0.85); font-style: italic; }
 
@@ -137,6 +138,8 @@
                             <div class="panel" :style="`top: ${position}%; transform: translateY(-${position}%)`">
                                 @if ($stars)
                                     <div class="stars">{{ $stars }}</div>
+                                @elseif ($watchlist)
+                                    <div class="watch-heading">Show to watch</div>
                                 @endif
                                 <div class="quote" :style="`font-size: ${textSize}px`" x-text="quote"></div>
                                 <div class="attribution" :style="`font-size: ${attributionSize}px`">&mdash; Troy's Fringe Reviews</div>

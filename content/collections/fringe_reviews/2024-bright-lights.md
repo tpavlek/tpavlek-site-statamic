@@ -9,7 +9,21 @@ categories:
   - comedy
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1784044582
+content:
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "Watching this show felt a lot like watching an episode of It's Always Sunny in Philadelphia. People resolved arguments by talking over each other and yelling - but impressively they were doing it all live and didn't flub their lines."
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'The show properly addresses the pitfalls of answering the question "How do I know if someone in my alien abduction support group is themselves an alien?"'
 ---
-Watching this show felt a lot like watching an episode of It's Always Sunny in Philadelphia. People resolved arguments by talking over each other and yelling - but impressively they were doing it all live and didn't flub their lines.
-
-The show properly addresses the pitfalls of answering the question "How do I know if someone in my alien abduction support group is themselves an alien?"

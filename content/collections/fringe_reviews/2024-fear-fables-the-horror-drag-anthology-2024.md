@@ -7,7 +7,21 @@ categories:
   - cabaret
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1784045482
+content:
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Full disclosure: this show is hosted by Emmonia, who happens to be my brother-in-law. Which means, that positive or negative, my review would probably be discounted as either patronage or overcompensating.'
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "I'll say this, it is a drag show - if you like drag shows you should go to this one. If you're looking for something that's not a drag show, this is the wrong place because this is a drag show."
 ---
-Full disclosure: this show is hosted by Emmonia, who happens to be my brother-in-law. Which means, that positive or negative, my review would probably be discounted as either patronage or overcompensating.
-
-I'll say this, it is a drag show - if you like drag shows you should go to this one. If you're looking for something that's not a drag show, this is the wrong place because this is a drag show.

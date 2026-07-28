@@ -9,7 +9,21 @@ categories:
   - musical
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1784042782
+content:
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "Even if you don't like High School Musical (and you're wrong if you don't), the Uniform Theatre production is absolutely jaw-dropping. Large cast, robust sets and complex choreo."
+  -
+    type: paragraph
+    attrs:
+      textAlign: left
+    content:
+      -
+        type: text
+        text: "They did Get Your Head in the Game with real basketballs! They dribbled and threw them! In time! What a show. Run's sold out though."
 ---
-Even if you don't like High School Musical (and you're wrong if you don't), the Uniform Theatre production is absolutely jaw-dropping. Large cast, robust sets and complex choreo.
-
-They did Get Your Head in the Game with real basketballs! They dribbled and threw them! In time! What a show. Run's sold out though.

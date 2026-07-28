@@ -32,3 +32,5 @@ preferences:
       view: list
     endorsements:
       view: tree
+    artists:
+      view: list

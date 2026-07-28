@@ -31,11 +31,13 @@ class SocialCardController extends Controller
     {
         $options = collect($entry->value('share_card_options') ?? []);
         $lines = $this->reviewLines($entry);
+        $stars = $this->starsLabel($entry);
 
         return view('cp.fringe-social-card', [
             'entry' => $entry,
             'title' => $entry->value('title'),
-            'stars' => $this->starsLabel($entry),
+            'stars' => $stars,
+            'watchlist' => ! $stars && $entry->recommendation->value() === 'watchlist',
             'quote' => $entry->value('share_quote') ?: ($lines[0] ?? ''),
             'reviewLines' => $lines,
             'posterUrl' => $entry->poster?->url(),
@@ -129,12 +131,39 @@ class SocialCardController extends Controller
             $body = EntryFacade::find($originalId)?->value('content');
         }
 
-        return collect(preg_split('/\n+/', trim(strip_tags((string) $body))))
+        $text = is_array($body) ? $this->bardText($body) : trim(strip_tags((string) $body));
+
+        return collect(preg_split('/\n+/', trim($text)))
             ->flatMap(fn ($paragraph) => preg_split('/(?<=[.!?])\s+/', trim($paragraph)) ?: [])
             ->map(fn ($sentence) => trim($sentence))
             ->filter()
             ->values()
             ->all();
+    }
+
+    /**
+     * Plain text from Bard content; review-reference pins become the referenced show's title.
+     */
+    private function bardText(array $nodes): string
+    {
+        return collect($nodes)->map(function ($node) {
+            $type = $node['type'] ?? '';
+
+            if ($type === 'text') {
+                return $node['text'] ?? '';
+            }
+
+            if ($type === 'btsPin') {
+                $id = $node['attrs']['values']['review'] ?? null;
+                $id = is_array($id) ? ($id[0] ?? null) : $id;
+
+                return $id ? (EntryFacade::find($id)?->value('title') ?? '') : '';
+            }
+
+            $inner = $this->bardText($node['content'] ?? []);
+
+            return in_array($type, ['paragraph', 'heading']) ? $inner."\n" : $inner;
+        })->implode('');
     }
 
     private function uploadBackground(Entry $entry, Request $request): string

@@ -1,0 +1,16 @@
+{
+  "resources/css/addon.css": {
+    "file": "assets/addon-oLmPPS62.css",
+    "src": "resources/css/addon.css",
+    "isEntry": true,
+    "names": [
+      "addon.css"
+    ]
+  },
+  "resources/js/addon.js": {
+    "file": "assets/addon-BH0WT4lp.js",
+    "name": "addon",
+    "src": "resources/js/addon.js",
+    "isEntry": true
+  }
+}
