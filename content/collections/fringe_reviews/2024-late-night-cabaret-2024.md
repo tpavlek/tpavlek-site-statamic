@@ -8,7 +8,8 @@ festival: '2024'
 categories:
   - cabaret
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1784048182
+updated_at: 1785208990
+artist: b388fedc-a358-4087-b6dd-afd01cb34cf5
 content:
   -
     type: paragraph

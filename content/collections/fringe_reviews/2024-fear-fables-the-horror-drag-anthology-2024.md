@@ -6,20 +6,24 @@ festival: '2024'
 categories:
   - cabaret
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1784045482
+updated_at: 1785209149
+recommendation: recommended
+artist: bda15638-c379-4aad-90f5-ff36712f7449
 content:
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text
-        text: 'Full disclosure: this show is hosted by Emmonia, who happens to be my brother-in-law. Which means, that positive or negative, my review would probably be discounted as either patronage or overcompensating.'
+        text: 'Full disclosure: this show is hosted by Emmonia, who happens to be my brother-in-law. '
   -
     type: paragraph
-    attrs:
-      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Which means, that positive or negative, my review would probably be discounted as either patronage or overcompensating.'
+  -
+    type: paragraph
     content:
       -
         type: text

@@ -9,28 +9,28 @@ categories:
   - comedy
   - drama
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1784043682
+updated_at: 1785208565
 content:
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text
-        text: "The big fringe shows with big productions and huge, inventive sets can be fun. This is not that. This is two girls, on stage in a car, driving to a wedding. And then they talk, and bicker. That's it, but it's executed flawlessly."
+        text: 'The big fringe shows with big productions and huge, inventive sets can be fun. '
   -
     type: paragraph
-    attrs:
-      textAlign: left
+    content:
+      -
+        type: text
+        text: "This is not that. This is two girls, on stage in a car, driving to a wedding. And then they talk, and bicker. That's it, but it's executed flawlessly."
+  -
+    type: paragraph
     content:
       -
         type: text
         text: 'They talk a million miles a minute and in many ways it felt like watching an episode of Gilmore Girls crossed with Seinfeld.'
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text

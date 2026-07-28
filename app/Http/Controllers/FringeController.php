@@ -24,17 +24,17 @@ class FringeController extends Controller
 
     public function year2026()
     {
-        return $this->yearReviews('2d1ff3e5-2587-4ff3-a46b-a3fd0f87910c', '2026', 'fringe-2026');
+        return $this->yearReviews('2490f7bc-36fe-4846-9f52-2374c8886e74', '2026', 'fringe-2026');
     }
 
     public function year2025()
     {
-        return $this->yearReviews('0e886b54-f9f8-4421-96a3-1af5568a9866', '2025', 'fringe-2025');
+        return $this->yearReviews('3251fd42-35da-45f5-a189-f98809d2f488', '2025', 'fringe-2025');
     }
 
     public function year2024()
     {
-        return $this->yearReviews('5ccd2e90-a7f6-4d71-ba92-9783469febec', '2024', 'fringe-2024');
+        return $this->yearReviews('754a4add-f747-4b84-9d15-83f19faf505e', '2024', 'fringe-2024');
     }
 
     /**
@@ -51,13 +51,9 @@ class FringeController extends Controller
         return $id ? EntryFacade::find($id) : null;
     }
 
-    private function yearReviews(string $landingPageId, string $festivalSlug, string $videoCategorySlug)
+    private function yearReviews(string $reviewsPageId, string $festivalSlug, string $videoCategorySlug)
     {
-        $page = EntryFacade::query()
-            ->where('collection', 'pages')
-            ->where('parent', $landingPageId)
-            ->where('slug', 'reviews')
-            ->first();
+        $page = EntryFacade::find($reviewsPageId);
 
         $reviews = EntryFacade::query()
             ->where('collection', 'fringe_reviews')

@@ -1,0 +1,53 @@
+---
+id: 04e18ed3-8618-4234-9670-d362bd9af40a
+blueprint: fringe_review
+title: 'Sketchy Broads presents: Resting Bitumen Face'
+recommendation: watchlist
+ticket_link: 'https://tickets.fringetheatre.ca/event/601:7613/'
+artist: e364c0af-c0d9-4ebd-b857-ef8b99fbdbca
+poster: fringe/sketchy-broads-presents-resting-bitumen-face-poster.jpeg
+festival: '2026'
+categories:
+  - comedy
+updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
+updated_at: 1785251914
+content:
+  -
+    type: paragraph
+    content:
+      -
+        type: text
+        text: 'Sketchy Broads have made themselves a must-see each year.'
+  -
+    type: paragraph
+    content:
+      -
+        type: text
+        text: 'The past two fringes have seen dozens of fantastic sketches in '
+      -
+        type: btsPin
+        attrs:
+          id: YNh3n4WXCJ7mq3XOSdtjG
+          values:
+            review: bea5d31d-3287-4e89-8d4b-5728ec9f4e24
+            type: review_ref
+      -
+        type: text
+        text: ' and  '
+      -
+        type: btsPin
+        attrs:
+          id: y30R8hnQuAPbda5GTvfMr
+          values:
+            review: a3529ab7-b962-491d-b899-46bcb556cdb6
+            type: review_ref
+      -
+        type: text
+        text: .
+  -
+    type: paragraph
+    content:
+      -
+        type: text
+        text: 'Sketch is always hit or miss, and with Sketchy Broads they hit way, way more often.'
+---

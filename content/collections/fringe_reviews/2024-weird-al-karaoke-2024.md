@@ -8,20 +8,23 @@ festival: '2024'
 categories:
   - comedy
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1784043982
+updated_at: 1785208682
+artist: b31a4de8-6b54-44c9-ab97-ec4a0306e8c2
 content:
   -
     type: paragraph
-    attrs:
-      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Weird is good.'
+  -
+    type: paragraph
     content:
       -
         type: text
         text: 'There''s a rotating cast of "weird" parody artists so your show may vary - but this is the "Greatest Hits" selections so all of them should be Great Hits!'
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text

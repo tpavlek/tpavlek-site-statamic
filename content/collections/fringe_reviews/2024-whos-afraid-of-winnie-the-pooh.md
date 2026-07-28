@@ -6,10 +6,11 @@ stars: 5
 recommendation: recommended
 festival: '2024'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1754753025
+updated_at: 1785208632
 categories:
   - comedy
   - drama
+artist: 8aeedac0-3574-41ba-b701-2d0fedd819a0
 content:
   -
     type: paragraph

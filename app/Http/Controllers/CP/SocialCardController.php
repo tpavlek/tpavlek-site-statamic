@@ -47,6 +47,9 @@ class SocialCardController extends Controller
                 'focal_x' => (int) $options->get('focal_x', 50),
                 'focal_y' => (int) $options->get('focal_y', 50),
                 'text_size' => (int) $options->get('text_size', 42),
+                'attribution_enabled' => (bool) $options->get('attribution_enabled', true),
+                'attribution_text' => (string) $options->get('attribution_text', "\u{2014} Troy's Fringe Reviews"),
+                'attribution_size' => (int) $options->get('attribution_size', 34),
             ],
             'canSave' => UserFacade::current() !== null,
             'saveUrl' => cp_route('fringe-social-card.save', $entry->id()),
@@ -65,6 +68,9 @@ class SocialCardController extends Controller
             'focal_x' => 'required|integer|between:0,100',
             'focal_y' => 'required|integer|between:0,100',
             'text_size' => 'required|integer|between:20,150',
+            'attribution_enabled' => 'required|boolean',
+            'attribution_text' => 'nullable|string|max:120',
+            'attribution_size' => 'required|integer|between:16,80',
             'image' => 'nullable|image|max:10240',
             'clear_image' => 'nullable|boolean',
         ]);
@@ -82,6 +88,9 @@ class SocialCardController extends Controller
                 'focal_x' => (int) $request->input('focal_x'),
                 'focal_y' => (int) $request->input('focal_y'),
                 'text_size' => (int) $request->input('text_size'),
+                'attribution_enabled' => $request->boolean('attribution_enabled'),
+                'attribution_text' => (string) $request->input('attribution_text'),
+                'attribution_size' => (int) $request->input('attribution_size'),
             ])
             ->save();
 

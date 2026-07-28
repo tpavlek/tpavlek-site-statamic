@@ -8,10 +8,12 @@
         {{ /original_review }}
     {{ else }}
         {{ collection:fringe_reviews :original_review:is="id" }}
-            <div class="border border-teal rounded-lg bg-teal-light bg-opacity-30 px-4 py-3 mb-6 text-base">
-                <i class="fas fa-history text-teal mr-1"></i>
-                This show returned at Fringe {{ festival:slug }} — <a href="{{ url }}">read the updated review &rarr;</a>
-            </div>
+            {{ unless no_results }}
+                <div class="border border-teal rounded-lg bg-teal-light bg-opacity-30 px-4 py-3 mb-6 text-base">
+                    <i class="fas fa-history text-teal mr-1"></i>
+                    This show returned at Fringe {{ festival:slug }} — <a href="{{ url }}">read the updated review &rarr;</a>
+                </div>
+            {{ /unless }}
         {{ /collection:fringe_reviews }}
     {{ /if }}
 
@@ -140,7 +142,7 @@
                                         <li>
                                             <a href="{{ url }}" class="no-underline text-gray-800 hover:bg-grey-50 flex flex-col sm:flex-row sm:items-center sm:gap-2">
                                                 <span>{{ title }}</span>
-                                                <span class="text-xs text-gray-500 uppercase">This year's Fringe</span>
+                                                <span class="text-xs text-gray-500 uppercase">Fringe {{ festival:slug }}</span>
                                                 {{ partial:fringe/review-tag }}
                                             </a>
                                         </li>

@@ -50,6 +50,16 @@
         .field { margin-bottom: 1rem; }
         .field:last-child { margin-bottom: 0; }
         .field > label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 0.35rem; }
+        .text-input { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 0.95rem; background: white; }
+        .group-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.9rem; }
+        .group-head .group-title { margin-bottom: 0; }
+        .switch { position: relative; display: inline-block; width: 2.5rem; height: 1.4rem; cursor: pointer; }
+        .switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+        .switch-track { position: absolute; inset: 0; background: #cfcfc9; border-radius: 999px; transition: background 0.15s; pointer-events: none; }
+        .switch-track::after { content: ''; position: absolute; top: 2px; left: 2px; width: calc(1.4rem - 4px); height: calc(1.4rem - 4px); background: white; border-radius: 50%; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); transition: transform 0.15s; }
+        .switch input:checked + .switch-track { background: var(--teal); }
+        .switch input:checked + .switch-track::after { transform: translateX(1.1rem); }
+        .switch input:focus-visible + .switch-track { outline: 2px solid var(--teal); outline-offset: 2px; }
         .field .hint { font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.3rem; line-height: 1.4; }
         textarea#quote { width: 100%; min-height: 7.5rem; padding: 0.7rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; line-height: 1.45; resize: vertical; background: white; }
         .char-count { float: right; font-weight: 400; color: var(--ink-soft); font-size: 0.78rem; }
@@ -87,8 +97,11 @@
         .card .overlay { position: absolute; inset: 0; }
         .card .panel { position: absolute; left: 0; width: 100%; padding: 56px 60px; }
         .card .stars { font-size: 72px; color: white; letter-spacing: 6px; line-height: 1; margin-bottom: 28px; }
-        .card .watch-heading { font-size: 44px; font-weight: 600; color: white; text-transform: uppercase; letter-spacing: 8px; line-height: 1; margin-bottom: 28px; }
+        .card .watch-heading { display: inline-block; font-size: 34px; font-weight: 700; color: #a6d0cf; text-transform: uppercase; letter-spacing: 5px; line-height: 1; background: rgba(166, 208, 207, 0.3); border: 3px solid #a6d0cf; border-radius: 12px; padding: 16px 30px 14px; margin-bottom: 32px; }
         .card .quote { font-family: Georgia, 'Times New Roman', serif; color: white; white-space: pre-line; line-height: 1.25; }
+        .card .quote .quote-mark { font-size: 1.5em; line-height: 0; opacity: 0.55; position: relative; top: 0.22em; }
+        .card .quote .quote-mark.open { margin-right: 0.08em; }
+        .card .quote .quote-mark.close { margin-left: 0.08em; }
         .card .attribution { margin-top: 32px; font-size: 34px; color: rgba(255, 255, 255, 0.85); font-style: italic; }
 
         @media (max-width: 720px) {
@@ -141,8 +154,8 @@
                                 @elseif ($watchlist)
                                     <div class="watch-heading">Show to watch</div>
                                 @endif
-                                <div class="quote" :style="`font-size: ${textSize}px`" x-text="quote"></div>
-                                <div class="attribution" :style="`font-size: ${attributionSize}px`">&mdash; Troy's Fringe Reviews</div>
+                                <div class="quote" :style="`font-size: ${textSize}px`"><span class="quote-mark open">&ldquo;</span><span x-text="quote"></span><span class="quote-mark close">&rdquo;</span></div>
+                                <div class="attribution" x-show="attributionEnabled" :style="`font-size: ${attributionSize}px`" x-text="attributionText"></div>
                             </div>
                         </div>
                     </div>
@@ -192,6 +205,34 @@
                     <p class="hint">Long quotes read better a couple of sizes smaller.</p>
                 </div>
             </div>
+        </div>
+
+        <div class="group">
+            <div class="group-head">
+                <p class="group-title">Attribution</p>
+                <label class="switch">
+                    <input type="checkbox" x-model="attributionEnabled" aria-label="Show the attribution line on the card">
+                    <span class="switch-track" aria-hidden="true"></span>
+                </label>
+            </div>
+            <input type="hidden" name="attribution_enabled" :value="attributionEnabled ? 1 : 0">
+            <input type="hidden" name="attribution_text" :value="attributionText">
+            <input type="hidden" name="attribution_size" :value="attributionSize">
+            <div x-show="attributionEnabled">
+                <div class="field">
+                    <label for="attribution_text">Attribution text</label>
+                    <input type="text" id="attribution_text" class="text-input" maxlength="120" x-model="attributionText">
+                </div>
+                <div class="field">
+                    <label for="attribution_size">Text size</label>
+                    <div class="stepper">
+                        <button type="button" @click="attributionSize = Math.max(16, attributionSize - 2)" aria-label="Smaller attribution text">&minus;</button>
+                        <input type="number" id="attribution_size" min="16" max="80" x-model.number="attributionSize" aria-label="Attribution text size in pixels">
+                        <button type="button" @click="attributionSize = Math.min(80, attributionSize + 2)" aria-label="Larger attribution text">+</button>
+                    </div>
+                </div>
+            </div>
+            <p class="hint" x-show="!attributionEnabled">The attribution line is hidden from the card.</p>
         </div>
 
         <div class="group">
@@ -245,6 +286,9 @@
             textSize: @json($options['text_size']),
             focalX: @json($options['focal_x']),
             focalY: @json($options['focal_y']),
+            attributionEnabled: @json($options['attribution_enabled']),
+            attributionText: @json($options['attribution_text']),
+            attributionSize: @json($options['attribution_size']),
             posterUrl: @json($posterUrl),
             savedShareUrl: @json($shareImageUrl),
             uploadedUrl: null,
@@ -268,9 +312,6 @@
             },
             get frameAspect() {
                 return 1080 / this.cardHeight;
-            },
-            get attributionSize() {
-                return this.format === 'story' ? 44 : 34;
             },
             // Dark plateau centered on the text, fading to transparent in both directions.
             // At the extremes the plateau runs off the card edge, leaving a single fade —

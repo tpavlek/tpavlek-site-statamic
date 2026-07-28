@@ -9,28 +9,28 @@ categories:
   - comedy
   - improv
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1784046082
+updated_at: 1785209231
 content:
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text
-        text: 'This show has heavy audience participation, so that can make or break a show. Go to this one with the intention to participate.'
+        text: 'This show has heavy audience participation, so that can make or break a show. '
   -
     type: paragraph
-    attrs:
-      textAlign: left
+    content:
+      -
+        type: text
+        text: 'Go to this one with the intention to participate.'
+  -
+    type: paragraph
     content:
       -
         type: text
         text: "The rating above doesn't mean you shouldn't go - I'm an advocate of mixing in a couple shows that got middle-of-the-pack reviews because you might love it, and even if you don't it gives you a floor to love your favourites by."
   -
     type: paragraph
-    attrs:
-      textAlign: left
     content:
       -
         type: text

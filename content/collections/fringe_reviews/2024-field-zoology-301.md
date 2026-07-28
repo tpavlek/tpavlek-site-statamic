@@ -6,7 +6,8 @@ stars: 5
 recommendation: recommended
 festival: '2024'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1785188297
+updated_at: 1785209120
+artist: 1459abb9-8704-471c-9e18-67e32142657d
 content:
   -
     type: paragraph
