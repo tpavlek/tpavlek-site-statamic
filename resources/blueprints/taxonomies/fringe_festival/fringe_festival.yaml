@@ -44,6 +44,18 @@ tabs:
               folder: fringe
               max_files: 1
           -
+            handle: og_title
+            field:
+              type: text
+              display: 'Reviews page title'
+              instructions: 'Overrides the title and share headline on this year''s reviews page. Leave blank for the default, "Reviews for Edmonton Fringe Festival {year} — The best shows, reviewed".'
+          -
+            handle: og_description
+            field:
+              type: textarea
+              display: 'Reviews page description'
+              instructions: 'Overrides the meta description on this year''s reviews page. Leave blank for the default.'
+          -
             handle: tickets_available
             field:
               type: toggle

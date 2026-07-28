@@ -112,5 +112,19 @@ class AppServiceProvider extends ServiceProvider
         Collection::computed('fringe_reviews', 'review_schema', function ($entry, $value) {
             return \App\Schema\FringeReviewSchema::build($entry);
         });
+
+        // Each festival's reviews page is a controller route rather than an entry, so the
+        // sitemap generator can't discover it. One per fringe_festival term, which means a
+        // new year appears automatically.
+        \Pecotamic\Sitemap\Sitemap::addEntries(function () {
+            return \Statamic\Facades\Term::query()
+                ->where('taxonomy', 'fringe_festival')
+                ->get()
+                ->map(fn ($term) => new \Pecotamic\Sitemap\SitemapEntry(
+                    "/fringe/{$term->slug()}/reviews",
+                    $term->lastModified() ?? new \DateTime,
+                ))
+                ->all();
+        });
     }
 }

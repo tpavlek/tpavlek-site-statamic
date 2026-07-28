@@ -2,7 +2,7 @@ title: 'Fringe Reviews'
 template: fringe/review
 layout: layout
 revisions: false
-route: 'fringe-reviews/{festival}/{url_slug}'
+route: 'fringe/{festival}/reviews/{url_slug}'
 sort_dir: asc
 date_behavior:
   past: public

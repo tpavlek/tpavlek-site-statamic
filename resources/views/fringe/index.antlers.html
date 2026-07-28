@@ -21,7 +21,7 @@
             {{ if slug == current_year }}
                 <span aria-current="page" class="inline-block rounded-lg bg-teal text-white font-medium py-1 px-3">Fringe {{ slug }}</span>
             {{ else }}
-                <a href="/fringe-{{ slug }}/reviews" class="inline-block rounded-lg border border-gray-200 text-gray-600 no-underline py-1 px-3 hover:border-teal hover:text-teal transition-colors">Fringe {{ slug }}</a>
+                <a href="/fringe/{{ slug }}/reviews" class="inline-block rounded-lg border border-gray-200 text-gray-600 no-underline py-1 px-3 hover:border-teal hover:text-teal transition-colors">Fringe {{ slug }}</a>
             {{ /if }}
         {{ /taxonomy:fringe_festival }}
 

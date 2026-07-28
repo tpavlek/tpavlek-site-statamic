@@ -20,7 +20,7 @@ class SocialCardController extends Controller
 
     public function publicShow(string $festival, string $slug)
     {
-        $entry = EntryFacade::findByUri("/fringe-reviews/{$festival}/{$slug}");
+        $entry = EntryFacade::findByUri("/fringe/{$festival}/reviews/{$slug}");
 
         abort_unless($entry && $entry->collectionHandle() === 'fringe_reviews', 404);
 

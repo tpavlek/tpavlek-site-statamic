@@ -33,7 +33,7 @@ class FringeController extends Controller
      */
     public function currentYear()
     {
-        return redirect('/fringe-'.$this->currentFestivalSlug().'/reviews');
+        return redirect('/fringe/'.$this->currentFestivalSlug().'/reviews');
     }
 
     private function currentFestivalSlug(): string
@@ -46,19 +46,17 @@ class FringeController extends Controller
             ?->slug() ?? '2026';
     }
 
-    public function year2026()
+    /**
+     * Every festival year's reviews page. Adding a year is now a matter of creating the
+     * fringe_festival term; no route or controller change needed.
+     */
+    public function year(string $year)
     {
-        return $this->yearReviews('2490f7bc-36fe-4846-9f52-2374c8886e74', '2026', 'fringe-2026');
-    }
+        $festival = TermFacade::find("fringe_festival::{$year}");
 
-    public function year2025()
-    {
-        return $this->yearReviews('3251fd42-35da-45f5-a189-f98809d2f488', '2025', 'fringe-2025');
-    }
+        abort_if(! $festival, 404);
 
-    public function year2024()
-    {
-        return $this->yearReviews('754a4add-f747-4b84-9d15-83f19faf505e', '2024', 'fringe-2024');
+        return $this->yearReviews($festival, $year, "fringe-{$year}");
     }
 
     /**
@@ -75,10 +73,8 @@ class FringeController extends Controller
         return $id ? EntryFacade::find($id) : null;
     }
 
-    private function yearReviews(string $reviewsPageId, string $festivalSlug, string $videoCategorySlug)
+    private function yearReviews($festival, string $festivalSlug, string $videoCategorySlug)
     {
-        $page = EntryFacade::find($reviewsPageId);
-
         $reviews = EntryFacade::query()
             ->where('collection', 'fringe_reviews')
             ->get()
@@ -105,9 +101,16 @@ class FringeController extends Controller
                 return $entry->category->contains(fn (LocalizedTerm $term) => $term->slug === $videoCategorySlug);
             });
 
-        $festival = TermFacade::find("fringe_festival::{$festivalSlug}");
+        $lastUpdated = $this->lastUpdated($reviews) ?? $festival?->lastModified();
 
-        $lastUpdated = $this->lastUpdated($reviews) ?? $page?->lastModified();
+        // Page metadata lives on the festival term rather than a stub page entry. Those
+        // entries held nothing but a title and og tags, and their filename-derived slugs
+        // were what produced duplicate, controller-less copies of this page.
+        $title = $festival?->value('og_title')
+            ?: "Reviews for Edmonton Fringe Festival {$festivalSlug} — The best shows, reviewed";
+
+        $description = $festival?->value('og_description')
+            ?: 'The reviews and recommendations you need to get into a great Fringe show';
 
         return (new \Statamic\View\View)
             ->template('fringe/index')
@@ -121,9 +124,12 @@ class FringeController extends Controller
                 'rated_count' => $reviews->filter(fn (Entry $entry) => $entry->stars->value() !== null)->count(),
                 'last_updated_display' => $lastUpdated?->format('F j, Y'),
                 'last_updated_iso' => $lastUpdated?->toIso8601String(),
-                'structured_data' => $this->structuredData($page, $reviews, $festivalSlug, $lastUpdated),
-            ])
-            ->cascadeContent($page);
+                'structured_data' => $this->structuredData($title, $description, $reviews, $festivalSlug, $lastUpdated),
+                'title' => $title,
+                'og_title' => $title,
+                'og_description' => $description,
+                'og_image' => ['url' => 'https://troypavlek.ca/assets/og-fringe-reviews.jpeg'],
+            ]);
     }
 
     /**
@@ -144,7 +150,7 @@ class FringeController extends Controller
      * at the show's own page — the full Review markup (rating, author) lives there,
      * which is the structure Google documents for list-plus-detail pages.
      */
-    private function structuredData(?Entry $page, Collection $reviews, string $festivalSlug, ?Carbon $lastUpdated): string
+    private function structuredData(string $title, string $description, Collection $reviews, string $festivalSlug, ?Carbon $lastUpdated): string
     {
         $items = $reviews
             ->values()
@@ -159,8 +165,8 @@ class FringeController extends Controller
         $data = array_filter([
             '@context' => 'https://schema.org',
             '@type' => 'CollectionPage',
-            'name' => $page?->value('title'),
-            'description' => $page?->value('og_description'),
+            'name' => $title,
+            'description' => $description,
             'url' => request()->url(),
             'dateModified' => $lastUpdated?->toIso8601String(),
             'inLanguage' => 'en-CA',
