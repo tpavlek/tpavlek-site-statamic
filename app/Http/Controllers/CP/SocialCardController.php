@@ -53,6 +53,7 @@ class SocialCardController extends Controller
             ],
             'canSave' => UserFacade::current() !== null,
             'saveUrl' => cp_route('fringe-social-card.save', $entry->id()),
+            'ogUrl' => cp_route('fringe-social-card.og', $entry->id()),
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
         ]);
@@ -73,7 +74,7 @@ class SocialCardController extends Controller
             'attribution_size' => 'required|integer|between:16,80',
             'image' => 'nullable|image|max:10240',
             'clear_image' => 'nullable|boolean',
-        ]);
+        ], $this->validationMessages());
 
         if ($request->file('image')) {
             $entry->set('share_image', $this->uploadBackground($entry, $request));
@@ -96,6 +97,81 @@ class SocialCardController extends Controller
 
         return redirect(cp_route('fringe-social-card.show', $entryId))
             ->with('success', 'Share card saved.');
+    }
+
+    /**
+     * Takes the rendered card and hangs it on the entry as its OpenGraph image, so a
+     * review's share preview can be an actual excerpt of the review rather than the
+     * generic Fringe fallback.
+     *
+     * CP-only, like the rest of this controller: the route sits behind Statamic's CP
+     * middleware, so the public share-card page can't reach it.
+     */
+    public function setOgImage(string $entryId, Request $request)
+    {
+        $entry = $this->findReview($entryId);
+
+        $request->validate([
+            'image' => 'required|image|mimes:png|max:10240',
+        ], $this->validationMessages());
+
+        $file = $request->file('image');
+        $path = 'fringe/og/'.$entry->slug().'.png';
+
+        $container = AssetContainer::findByHandle('assets');
+
+        // Replace any previous card for this review rather than accumulating copies
+        $container->asset($path)?->delete();
+        $container->makeAsset($path)->upload($file);
+
+        $entry->set('og_image', $path)->save();
+
+        return response()->json([
+            'message' => 'Set as the OpenGraph image.',
+            'path' => $path,
+        ]);
+    }
+
+    /**
+     * Statamic's lang file drops :attribute from the validation messages, which reads fine
+     * in the CP where the label sits beside the field but leaves this standalone form
+     * saying "This field is required." with no clue which field. Name them.
+     */
+    private function validationMessages(): array
+    {
+        $labels = [
+            'quote' => 'Quote',
+            'position' => 'Text position',
+            'focal_x' => 'Horizontal focus',
+            'focal_y' => 'Vertical focus',
+            'text_size' => 'Text size',
+            'attribution_enabled' => 'Attribution toggle',
+            'attribution_text' => 'Attribution text',
+            'attribution_size' => 'Attribution text size',
+            'image' => 'Background image',
+            'clear_image' => 'Background image',
+        ];
+
+        $templates = [
+            'required' => ':label is missing.',
+            'string' => ':label must be text.',
+            'integer' => ':label must be a whole number.',
+            'boolean' => ':label must be on or off.',
+            'between' => ':label is out of range.',
+            'max' => ':label is too large.',
+            'image' => ':label must be an image file.',
+            'mimes' => ':label must be a PNG.',
+        ];
+
+        $messages = [];
+
+        foreach ($labels as $field => $label) {
+            foreach ($templates as $rule => $template) {
+                $messages["{$field}.{$rule}"] = str_replace(':label', $label, $template);
+            }
+        }
+
+        return $messages;
     }
 
     private function findReview(string $entryId): Entry

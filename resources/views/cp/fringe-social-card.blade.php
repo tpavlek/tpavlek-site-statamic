@@ -29,6 +29,8 @@
         .masthead .lede { margin-top: 0.6rem; font-size: 0.9rem; color: var(--ink-soft); max-width: 46rem; }
 
         .flash { background: var(--teal-wash); border: 1px solid var(--teal); color: var(--teal-dark); padding: 0.6rem 1rem; border-radius: 8px; margin: 1.25rem 2rem 0; font-size: 0.9rem; }
+        .flash-error { background: #fdf2f2; border-color: #c53030; color: #9b2c2c; }
+        .flash-error ul { margin: 0.35rem 0 0 1.1rem; }
 
         /* ---- Two-pane layout ---- */
         .builder { display: flex; gap: 2.5rem; padding: 2rem; align-items: flex-start; flex-wrap: wrap; }
@@ -88,11 +90,12 @@
         .btn-secondary:hover { background: var(--teal-wash); }
         .btn-link { background: none; color: var(--ink-soft); font-weight: 400; padding: 0.7rem 0.5rem; }
         .btn-link:hover { color: var(--ink); }
+        .og-status { margin-top: 0.7rem; font-size: 0.85rem; color: var(--teal-dark); }
         button.btn-inline { border: none; background: none; font: inherit; font-size: inherit; color: var(--teal); cursor: pointer; padding: 0; text-decoration: underline; }
         :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
         /* ---- The card itself: this exact node is what gets rasterized ---- */
-        .card { width: 1080px; position: relative; overflow: hidden; background: #111; }
+        .card { position: relative; overflow: hidden; background: #111; }
         .card .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .card .overlay { position: absolute; inset: 0; }
         .card .panel { position: absolute; left: 0; width: 100%; padding: 56px 60px; }
@@ -135,17 +138,31 @@
     <div class="flash">{{ session('success') }}</div>
 @endif
 
+@if ($errors->any())
+    <div class="flash flash-error" role="alert">
+        <strong>That didn't save.</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="builder">
     <section class="stage-pane" aria-label="Card preview">
         <div class="format-tabs" role="tablist">
             <button type="button" :class="format === 'feed' && 'active'" @click="format = 'feed'">Feed post</button>
             <button type="button" :class="format === 'story' && 'active'" @click="format = 'story'">Story</button>
+            @if ($canSave)
+                <button type="button" :class="format === 'og' && 'active'" @click="format = 'og'">OpenGraph</button>
+            @endif
         </div>
 
         <div class="stage">
-            <div class="preview-frame" :style="`width: ${1080 * previewScale}px; height: ${cardHeight * previewScale}px`">
+            <div class="preview-frame" :style="`width: ${cardWidth * previewScale}px; height: ${cardHeight * previewScale}px`">
                 <div class="preview-scale" :style="`transform: scale(${previewScale})`">
-                    <div class="card" id="card" :style="`height: ${cardHeight}px`">
+                    <div class="card" id="card" :style="`width: ${cardWidth}px; height: ${cardHeight}px`">
                         <img class="bg" :src="bgUrl" x-show="bgUrl" :style="`object-position: ${focalX}% ${focalY}%`" @load="measureImage($event.target)" alt="">
                         <div class="overlay" :style="scrimStyle">
                             <div class="panel" :style="`top: ${position}%; transform: translateY(-${position}%)`">
@@ -163,7 +180,7 @@
             </div>
         </div>
 
-        <p class="stage-caption" x-text="(format === 'feed' ? '1080 × 1080' : '1080 × 1920') + ' px · PNG'"></p>
+        <p class="stage-caption" x-text="cardWidth + ' × ' + cardHeight + ' px · PNG'"></p>
     </section>
 
     <form class="controls" method="POST" action="{{ $saveUrl }}" enctype="multipart/form-data">
@@ -249,14 +266,19 @@
                     </template>
                 </p>
             </div>
+            {{-- Disabled controls aren't submitted, and both focus sliders disable
+                 themselves when the image can't be cropped on that axis. Carry the
+                 values in hidden inputs so the required fields always arrive. --}}
+            <input type="hidden" name="focal_x" :value="focalX">
+            <input type="hidden" name="focal_y" :value="focalY">
             <div class="row">
                 <div class="field">
                     <label for="focal_x">Focus &larr;&rarr;</label>
-                    <input type="range" id="focal_x" name="focal_x" min="0" max="100" x-model="focalX" :disabled="!canFocusX">
+                    <input type="range" id="focal_x" min="0" max="100" x-model="focalX" :disabled="!canFocusX">
                 </div>
                 <div class="field">
                     <label for="focal_y">Focus &uarr;&darr;</label>
-                    <input type="range" id="focal_y" name="focal_y" min="0" max="100" x-model="focalY" :disabled="!canFocusY">
+                    <input type="range" id="focal_y" min="0" max="100" x-model="focalY" :disabled="!canFocusY">
                 </div>
             </div>
             <p class="hint">
@@ -268,12 +290,24 @@
         </div>
 
         <div class="actions">
-            <button type="button" class="btn btn-primary" @click="download" x-text="downloading ? 'Rendering…' : 'Download PNG'"></button>
+            {{-- OpenGraph mode has one job: render the card and hang it on the entry.
+                 Downloading or saving card settings isn't what you're there for. --}}
+            <template x-if="format !== 'og'">
+                <button type="button" class="btn btn-primary" @click="download" x-text="downloading ? 'Rendering…' : 'Download PNG'"></button>
+            </template>
             @if ($canSave)
-                <button type="submit" class="btn btn-secondary">Save to entry</button>
+                <template x-if="format !== 'og'">
+                    <button type="submit" class="btn btn-secondary">Save to entry</button>
+                </template>
+                <template x-if="format === 'og'">
+                    <button type="button" class="btn btn-primary" @click="setOgImage" :disabled="settingOg" x-text="settingOg ? 'Uploading…' : 'Set as OG image'"></button>
+                </template>
             @endif
             <a href="{{ $backUrl }}" class="btn btn-link">{{ $backLabel }}</a>
         </div>
+        @if ($canSave)
+            <p class="og-status" x-show="ogMessage" x-text="ogMessage" role="status"></p>
+        @endif
     </form>
 </div>
 
@@ -294,6 +328,10 @@
             uploadedUrl: null,
             clearImage: false,
             downloading: false,
+@if ($canSave)
+            settingOg: false,
+            ogMessage: '',
+@endif
             imgAspect: null,
             format: 'feed',
             vw: window.innerWidth,
@@ -302,16 +340,23 @@
                 window.addEventListener('resize', () => this.vw = window.innerWidth);
             },
 
+            // OpenGraph is 1200x630, the 1.91:1 Facebook/Twitter/Slack render at.
+            get cardWidth() {
+                return this.format === 'og' ? 1200 : 1080;
+            },
+            // Guard: 'og' is only selectable from a tab that admins alone are served.
             get cardHeight() {
+                if (this.format === 'og') return 630;
                 return this.format === 'feed' ? 1080 : 1920;
             },
             get previewScale() {
                 const available = Math.max(240, Math.min(540, this.vw - 64));
-                const byWidth = available / 1080;
+                const byWidth = available / this.cardWidth;
+                if (this.format === 'og') return Math.min(0.45, byWidth);
                 return this.format === 'feed' ? Math.min(0.5, byWidth) : Math.min(0.3, byWidth);
             },
             get frameAspect() {
-                return 1080 / this.cardHeight;
+                return this.cardWidth / this.cardHeight;
             },
             // Dark plateau centered on the text, fading to transparent in both directions.
             // At the extremes the plateau runs off the card edge, leaving a single fade —
@@ -359,10 +404,10 @@
                 this.clearImage = true;
                 document.getElementById('image').value = '';
             },
-            async download() {
-                this.downloading = true;
+            // Shared by the download button and the OpenGraph upload.
+            async renderPng() {
                 const options = {
-                    width: 1080,
+                    width: this.cardWidth,
                     height: this.cardHeight,
                     pixelRatio: 1,
                     style: { transform: 'none' },
@@ -370,42 +415,82 @@
                     // SecurityErrors from stylesheets injected by browser extensions.
                     skipFonts: true,
                 };
+                return await this.withCaptureClone(async (node) => {
+                    // html-to-image's first render can fail or come back incomplete in
+                    // some engines — retry, then fall back to the Blob-URL route.
+                    let result = null;
+                    let lastError = null;
+                    for (let attempt = 0; attempt < 2 && !result; attempt++) {
+                        try {
+                            result = await htmlToImage.toPng(node, options);
+                        } catch (error) {
+                            lastError = error;
+                        }
+                    }
+                    if (!result) {
+                        try {
+                            result = await this.renderViaBlob(node, options);
+                        } catch (error) {
+                            lastError = error;
+                        }
+                    }
+                    if (!result) throw lastError;
+                    return result;
+                });
+            },
+            reportRenderFailure(error) {
+                console.error('Share card render failed:', error);
+                const detail = (error && error.message) ? error.message : String(error);
+                alert('Could not render the image: ' + detail + ' — check the browser console for details.');
+            },
+            async download() {
+                this.downloading = true;
                 try {
-                    const dataUrl = await this.withCaptureClone(async (node) => {
-                        // html-to-image's first render can fail or come back incomplete in
-                        // some engines — retry, then fall back to the Blob-URL route.
-                        let result = null;
-                        let lastError = null;
-                        for (let attempt = 0; attempt < 2 && !result; attempt++) {
-                            try {
-                                result = await htmlToImage.toPng(node, options);
-                            } catch (error) {
-                                lastError = error;
-                            }
-                        }
-                        if (!result) {
-                            try {
-                                result = await this.renderViaBlob(node, options);
-                            } catch (error) {
-                                lastError = error;
-                            }
-                        }
-                        if (!result) throw lastError;
-                        return result;
-                    });
-
                     const link = document.createElement('a');
                     link.download = @json($entry->slug()) + '-' + this.format + '.png';
-                    link.href = dataUrl;
+                    link.href = await this.renderPng();
                     link.click();
                 } catch (error) {
-                    console.error('Share card render failed:', error);
-                    const detail = (error && error.message) ? error.message : String(error);
-                    alert('Could not render the image: ' + detail + ' — check the browser console for details.');
+                    this.reportRenderFailure(error);
                 } finally {
                     this.downloading = false;
                 }
             },
+@if ($canSave)
+            // Renders the card and posts it straight to the entry's OpenGraph image, so a
+            // review's share preview can be an actual excerpt of the review.
+            async setOgImage() {
+                this.settingOg = true;
+                this.ogMessage = '';
+                try {
+                    const dataUrl = await this.renderPng();
+                    const blob = await (await fetch(dataUrl)).blob();
+
+                    const body = new FormData();
+                    body.append('_token', document.querySelector('input[name=_token]').value);
+                    body.append('image', blob, @json($entry->slug()) + '-og.png');
+
+                    const response = await fetch(@json($ogUrl), {
+                        method: 'POST',
+                        body,
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin',
+                    });
+                    const payload = await response.json().catch(() => ({}));
+
+                    if (!response.ok) {
+                        throw new Error(payload.message || ('Upload failed (' + response.status + ')'));
+                    }
+
+                    this.ogMessage = 'Set as the OpenGraph image for this show.';
+                } catch (error) {
+                    console.error('Setting the OG image failed:', error);
+                    this.ogMessage = 'Failed: ' + ((error && error.message) ? error.message : String(error));
+                } finally {
+                    this.settingOg = false;
+                }
+            },
+@endif
             // Alpine's :src/:style/@load attribute names are invalid XML and corrupt
             // html-to-image's SVG serialization — and stripping them from the LIVE card
             // makes Alpine revert those bindings. So capture a detached clone instead:
@@ -448,9 +533,9 @@
                         img.src = blobUrl;
                     });
                     const canvas = document.createElement('canvas');
-                    canvas.width = 1080;
+                    canvas.width = this.cardWidth;
                     canvas.height = this.cardHeight;
-                    canvas.getContext('2d').drawImage(image, 0, 0, 1080, this.cardHeight);
+                    canvas.getContext('2d').drawImage(image, 0, 0, this.cardWidth, this.cardHeight);
                     return canvas.toDataURL('image/png');
                 } finally {
                     URL.revokeObjectURL(blobUrl);

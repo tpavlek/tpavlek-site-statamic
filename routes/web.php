@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::statamic('/videos', 'videos/index', ['title' => 'Videos']);
 Route::statamic('/fringe', 'fringe/landing', [
-    'title' => 'Edmonton Fringe Festival Reviews',
-    'og_title' => 'Edmonton Fringe Festival Reviews',
+    'title' => 'Edmonton Fringe Reviews',
+    'og_title' => 'Edmonton Fringe Reviews',
     'og_description' => 'Reviews of every show I see at the Edmonton International Fringe Theatre Festival, so you can find a good one.',
+    // Without this the layout falls through to the site-wide default, which is a
+    // screenshot of the 2025 election candidate list.
+    'og_image' => ['url' => 'https://troypavlek.ca/assets/og-fringe-reviews.jpeg'],
 ]);
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));

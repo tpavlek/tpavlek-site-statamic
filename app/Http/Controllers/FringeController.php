@@ -107,7 +107,7 @@ class FringeController extends Controller
         // entries held nothing but a title and og tags, and their filename-derived slugs
         // were what produced duplicate, controller-less copies of this page.
         $title = $festival?->value('og_title')
-            ?: "Reviews for Edmonton Fringe Festival {$festivalSlug} — The best shows, reviewed";
+            ?: "Edmonton Fringe Reviews ({$festivalSlug}) | The best shows at the Fringe";
 
         $description = $festival?->value('og_description')
             ?: 'The reviews and recommendations you need to get into a great Fringe show';

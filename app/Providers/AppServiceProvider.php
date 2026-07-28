@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             Route::prefix('fringe-social-card')->group(function () {
                 Route::get('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'show'])->name('fringe-social-card.show');
                 Route::post('{entryId}', [\App\Http\Controllers\CP\SocialCardController::class, 'save'])->name('fringe-social-card.save');
+                Route::post('{entryId}/og-image', [\App\Http\Controllers\CP\SocialCardController::class, 'setOgImage'])->name('fringe-social-card.og');
             });
 
             Route::prefix('video-distribution')->group(function () {
