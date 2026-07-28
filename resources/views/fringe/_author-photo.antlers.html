@@ -1,0 +1,16 @@
+{{#
+    Troy's cutout on the Fringe doodle pattern. Shared by the reviews index and the
+    Fringe landing page so the two can't drift apart.
+
+    The pattern tile is 1024px square, so it gets an explicit background-size: bg-cover
+    would squash the whole tile into the photo and turn the doodles into specks.
+
+    my-0 on the image undoes the global `.content img { my-12 }` rule in style.css,
+    which would otherwise pad 48px of background above and below the cutout.
+#}}
+<span class="float-right ml-4 sm:ml-5 mb-3 block w-28 sm:w-48 border border-teal rounded-lg overflow-hidden bg-teal bg-[url(/assets/fringe/fringe-doodles.svg)] bg-[length:300px_300px]">
+    <img src="/assets/troy-fringe-avatar.png"
+         alt="Troy Pavlek"
+         width="360" height="360"
+         class="block w-full h-auto my-0">
+</span>

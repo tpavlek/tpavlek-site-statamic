@@ -1,17 +1,18 @@
 {{ if stars }}
-    <span class="text-teal text-sm">{{ stars:label }}</span>
+    <span class="text-teal text-sm whitespace-nowrap">{{ stars:label }}</span>
 {{ elseif original_review }}
     {{ original_review }}
         {{ if stars }}
-            <span class="text-teal text-sm">{{ stars:label }}</span>
+            <span class="text-teal text-sm whitespace-nowrap">{{ stars:label }}</span>
+            <span class="text-gray-500 text-xs whitespace-nowrap">(at Fringe {{ festival:slug }})</span>
         {{ else }}
-            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">{{ recommendation:label }}</span>
+            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">{{ recommendation:label }}</span>
         {{ /if }}
     {{ /original_review }}
 {{ elseif recommendation:value == "watchlist" }}
-    <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">Watchlist</span>
+    <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Watchlist</span>
 {{ elseif categories|pluck('slug')|contains('improv') }}
-    <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">Improv*</span>
+    <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Improv*</span>
 {{ else }}
-    <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 leading-loose">{{ recommendation:label }}</span>
+    <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">{{ recommendation:label }}</span>
 {{ /if }}

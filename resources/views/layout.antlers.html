@@ -12,6 +12,7 @@
             {{ /if }}
 </title>
         <meta name="theme-color" content="00908F">
+        <link rel="canonical" href="{{ current_url }}">
 
         {{ if og_description }}
             <meta name="description" content="{{ og_description }}">
@@ -19,8 +20,8 @@
             <meta name="twitter:description" content="{{ og_description }}">
         {{ else }}
             <meta name="description" content="{{ excerpt ?? title }}">
-            <meta property="og:description" content="Learn about who's running and find links to their websites and social media.">
-            <meta name="twitter:description" content="Learn about who's running and find links to their websites and social media.">
+            <meta property="og:description" content="Honest reviews of the Edmonton International Fringe Festival — find a show you'll actually like.">
+            <meta name="twitter:description" content="Honest reviews of the Edmonton International Fringe Festival — find a show you'll actually like.">
         {{ /if }}
 
         <!-- Facebook Meta Tags -->
@@ -30,9 +31,12 @@
         {{ if og_title }}
             <meta property="og:title" content="{{ og_title }}">
             <meta name="twitter:title" content="{{ og_title }}">
+        {{ elseif title }}
+            <meta property="og:title" content="{{ title }}">
+            <meta name="twitter:title" content="{{ title }}">
         {{ else }}
-            <meta property="og:title" content="Who's running in the 2025 Edmonton election?">
-            <meta name="twitter:title" content="Who's running in the 2025 Edmonton election?">
+            <meta property="og:title" content="Edmonton Fringe Festival Reviews">
+            <meta name="twitter:title" content="Edmonton Fringe Festival Reviews">
         {{ /if }}
 
         {{ if og_image }}

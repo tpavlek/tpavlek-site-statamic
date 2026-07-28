@@ -1,20 +1,40 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
 
     {{# Hero #}}
-    <div class="mb-10">
-        <h1 class="text-4xl font-bold mb-3">Edmonton International Fringe Festival</h1>
-        <p class="text-xl text-gray-500 leading-relaxed">The largest fringe theatre festival in North America, right here in Edmonton.</p>
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">Edmonton International Fringe Festival Reviews</h1>
+        <p class="text-xl text-gray-500 leading-relaxed">Reviews you can trust. This line says so.</p>
     </div>
 
     {{# Intro content #}}
     <div class="content text-lg text-gray-800 leading-relaxed mb-12 max-w-3xl">
-        <p>Every August, Edmonton transforms. Over 11 days, hundreds of shows take over venues across the city — theatre, comedy, musicals, storytelling, and things that defy categorization. The Edmonton International Fringe Festival is the largest fringe theatre festival in North America, and it's one of my favourite events of the year.</p>
+        {{ partial:fringe/author-photo }}
 
-        {{ partial:fringe/about-author }}
+        <p>
+            For 11 days, every August, Old Strathcona hosts Edmonton's best festival.
+        </p>
+
+        <p>
+            The Fringe is wonderful, weird, chaotic and, for many, overwhemling. With hundreds of shows in dozens of venues, most of them by companies you've never heard of and just as likely to not exist next year.
+        </p>
+
+        <p>
+            This is where I come in. For 11 days I shrug off trite, humanly needs like "sleep" and "balance" and instead see eleven billion shows, so I can distill for you the absolute must-sees.
+        </p>
+
+        <p>
+            Fringe is home to some of the best one-hour shows you'll see in your life. But, also sleeping in the basement of that home are some really, really bad ones. I'll walk down those basement stairs, and let you know about the monsters.
+        </p>
+
+        <p>Reviews are simple, short, and directly honest. Apologies to many of the artists in the city whom I'm proud to call friends. When I publicly rate your show as one-star, I still love you, I just wish you had made a better show.</p>
+
+        <p>I am but one person, so reviews go up during the festival, as I see shows. On the best years, I'll be lucky to have seen 20% of the shows on offer.</p>
+
+        <p><a href="/fringe/reviews">Read this year's reviews &rarr;</a></p>
     </div>
 
     {{# Festival years #}}
-    <div>
+    <div class="clear-both">
         <h2 class="text-2xl font-bold mb-6">Browse by Festival Year</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {{ taxonomy:fringe_festival sort="slug:desc" }}
@@ -36,6 +56,11 @@
                 </a>
             {{ /taxonomy:fringe_festival }}
         </div>
+    </div>
+
+    {{# Outro content #}}
+    <div class="content text-lg text-gray-800 leading-relaxed mb-12 max-w-3xl">
+        {{ partial:fringe/about-author }}
     </div>
 
 </div>

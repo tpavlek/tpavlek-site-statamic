@@ -1,164 +1,111 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg">
+    <header class="mb-4">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">Edmonton Fringe {{ year }} Reviews</h1>
+
+        {{ if review_count }}
+            <p class="text-sm text-gray-500 mt-2">
+                {{ review_count }} shows
+                {{ if rated_count }}&middot; {{ rated_count }} reviewed{{ /if }}
+                {{ if last_updated_display }}
+                    &middot; Updated <time datetime="{{ last_updated_iso }}">{{ last_updated_display }}</time>
+                {{ /if }}
+            </p>
+        {{ /if }}
+    </header>
+
+    {{# Year switcher. The term's own `year` field would shadow the page's, so the
+        page year is stashed under a different name before the loop. #}}
+    {{ current_year = year }}
+    <nav aria-label="Festival years" class="mb-8 flex flex-wrap items-center gap-2 text-sm">
+        {{ taxonomy:fringe_festival sort="slug:desc" }}
+            {{ if slug == current_year }}
+                <span aria-current="page" class="inline-block rounded-lg bg-teal text-white font-medium py-1 px-3">Fringe {{ slug }}</span>
+            {{ else }}
+                <a href="/fringe-{{ slug }}/reviews" class="inline-block rounded-lg border border-gray-200 text-gray-600 no-underline py-1 px-3 hover:border-teal hover:text-teal transition-colors">Fringe {{ slug }}</a>
+            {{ /if }}
+        {{ /taxonomy:fringe_festival }}
+
+        <a href="/fringe" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">About the Fringe &rarr;</a>
+    </nav>
+
     <div class="content">
+        {{ partial:fringe/author-photo }}
+
         {{ partial:fringe/intro }}
     </div>
 
     {{ if videos | length }}
-        <div class="pb-2 overflow-scroll">
-            <ul class="carousel grid grid-flow-col gap-2">
+        <section class="clear-both pt-4">
+            <h2 class="text-xl font-bold mb-3">Fringe {{ year }} on video</h2>
+
+            <ul class="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
                 {{ videos }}
-                <li class="my-2">
-                    {{ if youtube }}
-                        <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    {{ else }}
-                        <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ content | strip_tags | safe_truncate:200:... }}</div>
-                    {{ /if }}
-
-                </li>
-
+                    <li class="shrink-0 w-36 sm:w-44">
+                        <a href="{{ url }}" class="block no-underline text-gray-800 group">
+                            {{ if thumbnail }}
+                                <img src="{{ thumbnail:url }}"
+                                     alt="{{ title }}"
+                                     loading="lazy"
+                                     class="w-full aspect-[9/16] object-cover rounded-lg bg-grey-100 group-hover:opacity-90 transition-opacity">
+                            {{ else }}
+                                <div class="w-full aspect-[9/16] rounded-lg bg-grey-100 flex items-center justify-center">
+                                    <i class="fas fa-play text-teal text-2xl"></i>
+                                </div>
+                            {{ /if }}
+                            <p class="text-sm leading-snug mt-2 group-hover:text-teal transition-colors">{{ title }}</p>
+                        </a>
+                    </li>
                 {{ /videos }}
             </ul>
-
-        </div>
+        </section>
 
         <hr class="w-1/2 text-center mx-auto py-4" />
     {{ /if }}
 
-    <div class="sm:hidden space-y-4 pb-4">
-        {{ reviews }}
-        <div>
-            <a href="{{ url }}" class="appearance-none block text-gray-800 no-underline hover:bg-grey-50">
-                <div class="text-normal font-light flex flex-col md:flex-row md:items-center">
-                    <span>
-                        <span class="">
-                            {{ if companion_videos }}
-                                <i class="fa-brands fa-youtube text-teal opacity-85"></i>
-                            {{ /if }}
-                            {{ title }}
-                        </span>
-                        {{ if original_review }}
-                            <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 ml-1 leading-loose">Returning &middot; {{ original_review }}{{ festival:slug }}{{ /original_review }}</span>
-                        {{ /if }}
-
-                    </span>
-                </div>
-                <span>
-                    {{ if stars }}
-                        <span class="text-teal mr-2 text-sm">
-                            {{ stars:label }}
-                        </span>
-
-                    {{ elseif original_review }}
-                        {{ original_review }}
-                            {{ if stars }}
-                                <span class="text-teal mr-2 text-sm">
-                                    {{ stars:label }} <span class="text-gray-500 text-xs">(at Fringe {{ festival:slug }})</span>
-                                </span>
-                            {{ else }}
-                                <div>
-                                    <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">{{ recommendation:label }}</span>
-                                </div>
-                            {{ /if }}
-                        {{ /original_review }}
-
-                    {{ elseif recommendation:value == "watchlist" }}
-                        <div>
-                            <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">Watchlist</span>
-                        </div>
-
-                    {{ elseif categories|pluck('slug')|contains('improv') }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
-                        </div>
-
-                    {{ else }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 mr-2 leading-loose">{{ recommendation:label }}</span>
-                        </div>
-                    {{ /if }}
-                </span>
-            </a>
+    {{# One list for every screen size: stacked on mobile, aligned columns from `sm` up. #}}
+    <div class="clear-both">
+        <div class="hidden sm:grid sm:grid-cols-12 sm:gap-4 text-xs uppercase tracking-wide text-gray-400 pb-2 border-b border-gray-200">
+            <div class="col-span-6">Show</div>
+            <div class="{{ if tickets_available }}col-span-4{{ else }}col-span-6{{ /if }}">Rating</div>
+            {{ if tickets_available }}
+                <div class="col-span-2">Tickets</div>
+            {{ /if }}
         </div>
 
-        {{ /reviews }}
-    </div>
+        <ul class="divide-y divide-gray-100 border-b border-gray-100">
+            {{ reviews }}
+                {{# `relative` anchors the stretched title link that makes the whole row tappable. #}}
+                <li class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
+                    <div class="sm:col-span-6 font-light">
+                        <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
 
-    <table class="w-full my-4 max-sm:hidden">
-        <thead>
-        <tr>
-            <th class="text-left">Show</th>
-            <th class="text-left">Rating</th>
-            {{ if tickets_available }}
-                <th class="text-left">Tickets</th>
-            {{ /if }}
-        </tr>
+                        {{ if companion_videos }}
+                            <i class="fa-brands fa-youtube text-teal opacity-85" title="Has a video review"></i>
+                        {{ /if }}
 
-        </thead>
-        <tbody>
-        {{ reviews }}
-            <tr>
-                <td>
-                    <a href="{{ url }}" class="appearance-none block text-gray-800 no-underline group">
-                        <div class="text-normal font-light flex flex-col md:flex-row md:items-center group-hover:bg-grey-50 py-2">
-                            <span>
-                                <span class="">{{ title }}</span>
-                                {{ if companion_videos }}
-                                    <i class="fa-brands fa-youtube text-teal opacity-85"></i>
-                                {{ /if }}
-                                {{ if original_review }}
-                                    <span class="inline-block border border-teal text-teal rounded-lg text-[9px] font-medium uppercase py-0 px-1.5 ml-1 leading-loose">Returning &middot; {{ original_review }}{{ festival:slug }}{{ /original_review }}</span>
-                                {{ /if }}
-                            </span>
-                        </div>
-                    </a>
-                </td>
-                <td>
+                        {{ if original_review }}
+                            <span class="inline-block border border-teal text-teal rounded-lg text-[10px] font-medium uppercase py-0 px-1.5 ml-1 leading-loose whitespace-nowrap">Returning &middot; {{ original_review }}{{ festival:slug }}{{ /original_review }}</span>
+                        {{ /if }}
 
-                    {{ if stars }}
-                        <span class="text-teal mr-2">
-                            {{ stars:label }}
-                        </span>
+                        {{ if venue }}
+                            <div class="text-xs text-gray-500 mt-0.5">{{ venue }}</div>
+                        {{ /if }}
+                    </div>
 
-                    {{ elseif original_review }}
-                        {{ original_review }}
-                            {{ if stars }}
-                                <span class="text-teal mr-2">
-                                    {{ stars:label }} <span class="text-gray-500 text-xs">(at Fringe {{ festival:slug }})</span>
-                                </span>
-                            {{ else }}
-                                <div>
-                                    <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
-                                </div>
-                            {{ /if }}
-                        {{ /original_review }}
+                    <div class="mt-1 sm:mt-0 {{ if tickets_available }}sm:col-span-4{{ else }}sm:col-span-6{{ /if }}">
+                        {{ partial:fringe/review-tag }}
+                    </div>
 
-                    {{ elseif recommendation:value == "watchlist" }}
-                        <div>
-                            <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Watchlist</span>
-                        </div>
-                    {{ elseif categories|pluck('slug')|contains('improv') }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">Improv*</span>
-                        </div>
-                    {{ else }}
-                        <div>
-                            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
-                        </div>
-                    {{ /if }}
-                </td>
-                {{ if tickets_available }}
-                    <td>
-                        <div class="space-x-2">
+                    {{ if tickets_available }}
+                        {{# `relative` lifts this above the stretched link so it stays clickable. #}}
+                        <div class="relative mt-1 sm:mt-0 sm:col-span-2">
                             {{ partial:fringe/ticket-link }}
                         </div>
-                    </td>
-                {{ /if }}
-            </tr>
-        {{ /reviews }}
-
-            <td></td>
-        </tbody>
-    </table>
+                    {{ /if }}
+                </li>
+            {{ /reviews }}
+        </ul>
+    </div>
 
     <hr class="w-1/2 text-center mx-auto py-4" />
 
@@ -166,3 +113,5 @@
         {{ partial:fringe/about-author }}
     </div>
 </div>
+
+<script type="application/ld+json">{{ structured_data }}</script>

@@ -10,4 +10,5 @@ updated_at: 1785189020
 ticket_link: 'https://tickets.fringetheatre.ca/event/601:7623/'
 poster: fringe/field-zoology-301.jpg
 artist: 1459abb9-8704-471c-9e18-67e32142657d
+venue: '34: The Faculty Events Centre'
 ---

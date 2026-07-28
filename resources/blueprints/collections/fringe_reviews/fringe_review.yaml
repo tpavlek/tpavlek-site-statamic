@@ -102,6 +102,12 @@ tabs:
               validate:
                 - url
           -
+            handle: venue
+            field:
+              type: text
+              display: Venue
+              instructions: 'Where the show plays, e.g. "34: The Faculty Events Centre". Filled in by the ticket importer, but venues do occasionally move — check it against the ticketing site if a show relocates.'
+          -
             handle: original_review
             field:
               max_items: 1

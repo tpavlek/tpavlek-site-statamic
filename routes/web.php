@@ -12,10 +12,15 @@ use Illuminate\Support\Facades\Route;
 //
 
 Route::statamic('/videos', 'videos/index', ['title' => 'Videos']);
-Route::statamic('/fringe', 'fringe/landing', ['title' => 'Edmonton Fringe']);
+Route::statamic('/fringe', 'fringe/landing', [
+    'title' => 'Edmonton Fringe Festival Reviews',
+    'og_title' => 'Edmonton Fringe Festival Reviews',
+    'og_description' => 'Reviews of every show I see at the Edmonton International Fringe Theatre Festival, so you can find a good one.',
+]);
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));
 Route::get('/fringe-reviews/{festival}/{slug}/share-card', [ \App\Http\Controllers\CP\SocialCardController::class, 'publicShow' ]);
+Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe-2026/reviews', [ FringeController::class, 'year2026' ]);
 Route::get('/fringe-2025/reviews', [ FringeController::class, 'year2025' ]);
 Route::get('/fringe-2024/reviews', [ FringeController::class, 'year2024' ]);

@@ -65,6 +65,10 @@ class TicketImportController extends Controller
             $raw['categories'] = $categories;
         }
 
+        if ($venue = $this->venue($html)) {
+            $raw['venue'] = $venue;
+        }
+
         if ($posterPath = $this->downloadPoster($html, $title)) {
             $raw['poster'] = [$posterPath];
         }
@@ -160,6 +164,20 @@ class TicketImportController extends Controller
             ->values()
             ->unique()
             ->all();
+    }
+
+    /**
+     * The venue sits in the same schedule list as the genre, marked by the subvenue
+     * icon, e.g. "34: The Faculty Events Centre". The leading number is the venue
+     * number Fringers navigate by, so it's kept as part of the string.
+     */
+    private function venue(string $html): ?string
+    {
+        if (! preg_match('~subvenue\.svg[^>]*>\s*</span>\s*([^<]+)~', $html, $m)) {
+            return null;
+        }
+
+        return trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5)) ?: null;
     }
 
     private function downloadPoster(string $html, string $title): ?string

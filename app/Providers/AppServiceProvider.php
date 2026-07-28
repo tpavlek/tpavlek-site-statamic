@@ -79,7 +79,8 @@ class AppServiceProvider extends ServiceProvider
                 return $value;
             }
 
-            if ($entry->stars) {
+            // ->value(), not the Value object itself, which is truthy even when unrated.
+            if ($entry->stars?->value()) {
                 return "$entry->title — {$entry->stars->label()} (Edmonton Fringe Review by Troy Pavlek)";
             }
 
@@ -91,11 +92,13 @@ class AppServiceProvider extends ServiceProvider
                 return $value;
             }
 
-            if ($entry->stars) {
-                return "Read why {$entry->title} earned {$entry->stars->label()} from Troy Pavlek at the 2025 Edmonton International Fringe Festival";
+            $year = $entry->festival?->slug() ?? '';
+
+            if ($entry->stars?->value()) {
+                return "Read why {$entry->title} earned {$entry->stars->label()} from Troy Pavlek at the {$year} Edmonton International Fringe Festival";
             }
 
-            return "Read Troy's review of {$entry->title} at the 2025 Edmonton International Fringe Festival";
+            return "Read Troy's review of {$entry->title} at the {$year} Edmonton International Fringe Festival";
         });
 
         Collection::computed('fringe_reviews', 'review_og_image', function ($entry, $value) {

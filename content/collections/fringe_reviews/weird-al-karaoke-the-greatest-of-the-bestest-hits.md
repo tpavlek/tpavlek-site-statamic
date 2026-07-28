@@ -13,4 +13,5 @@ categories:
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1785189438
 artist: b31a4de8-6b54-44c9-ab97-ec4a0306e8c2
+venue: '17: Grindstone Comedy Theatre and Bistro'
 ---
