@@ -35,9 +35,18 @@ Route::redirect('/fringe/why-fringe', '/fringe', 301);
 | Everything Fringe lives under /fringe:
 |
 |   /fringe                              landing page
-|   /fringe/reviews                      302 to whichever festival is current
-|   /fringe/{year}/reviews               that year's reviews
+|   /fringe/reviews                      the current festival's reviews (200)
+|   /fringe/{year}                       301 to that year's reviews
+|   /fringe/{year}/reviews               that year's reviews, or 302 to /fringe/reviews
+|                                        while that year is the current festival
 |   /fringe/{year}/reviews/{slug}        a single show (see fringe_reviews.yaml)
+|
+| The current festival's reviews exist at exactly one URL, /fringe/reviews, so the one
+| URL that never changes is the one that ranks for "edmonton fringe reviews" and friends.
+| The year URL redirects there rather than serving a copy that points its canonical
+| elsewhere: a redirect is a directive, a canonical is only a hint, so this consolidates
+| the signals instead of asking Google to. Once a year stops being current its URL starts
+| serving its own archive, which is why that redirect is a 302.
 |
 | Adding a festival year means creating the fringe_festival term. Nothing here
 | or in the controller needs touching.
@@ -48,6 +57,17 @@ $year = ['year' => '[0-9]{4}'];
 
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year);
+
+// There has never been a festival landing page at /fringe/{year}, but it's the obvious
+// thing to type, and a 404 is a bad answer to a good guess. Permanent because it's true
+// regardless of which festival is current: the year's reviews are always one level down.
+// Unknown years 404 here rather than redirecting to a URL that would 404 anyway.
+Route::get('/fringe/{year}', function (string $year) {
+    abort_if(! \Statamic\Facades\Term::find("fringe_festival::{$year}"), 404);
+
+    return redirect("/fringe/{$year}/reviews", 301);
+})->where($year);
+
 Route::get('/fringe/{festival}/reviews/{slug}/share-card', [ \App\Http\Controllers\CP\SocialCardController::class, 'publicShow' ])
     ->where(['festival' => '[0-9]{4}']);
 

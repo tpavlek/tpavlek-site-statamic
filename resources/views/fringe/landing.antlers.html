@@ -38,7 +38,7 @@
         <h2 class="text-2xl font-bold mb-6">Browse by Festival Year</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {{ taxonomy:fringe_festival sort="slug:desc" }}
-                <a href="/fringe/{{ slug }}/reviews" class="group block rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all no-underline">
+                <a href="{{ fringe:reviews_url :year="slug" }}" class="group block rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all no-underline">
                     {{ if artwork }}
                         <div class="aspect-[16/9] overflow-hidden bg-gray-100">
                             <img src="{{ artwork:url }}" alt="{{ title }} festival artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">

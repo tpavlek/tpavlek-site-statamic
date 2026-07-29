@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Fieldtypes\VideoDistribution;
+use App\Fringe\FestivalUrls;
 use App\Http\Controllers\CP\VideoDistributionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -117,12 +118,16 @@ class AppServiceProvider extends ServiceProvider
         // Each festival's reviews page is a controller route rather than an entry, so the
         // sitemap generator can't discover it. One per fringe_festival term, which means a
         // new year appears automatically.
+        //
+        // FestivalUrls::reviews() resolves the current year to /fringe/reviews, so the map
+        // only ever emits URLs that actually serve a page. Listing one that redirects just
+        // asks Google to discard the entry.
         \Pecotamic\Sitemap\Sitemap::addEntries(function () {
             return \Statamic\Facades\Term::query()
                 ->where('taxonomy', 'fringe_festival')
                 ->get()
                 ->map(fn ($term) => new \Pecotamic\Sitemap\SitemapEntry(
-                    "/fringe/{$term->slug()}/reviews",
+                    FestivalUrls::reviews($term->slug()),
                     $term->lastModified() ?? new \DateTime,
                 ))
                 ->all();

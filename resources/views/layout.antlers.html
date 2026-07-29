@@ -12,7 +12,10 @@
             {{ /if }}
 </title>
         <meta name="theme-color" content="00908F">
-        <link rel="canonical" href="{{ current_url }}">
+        {{# Self-referential unless a page names its own canonical. The Fringe reviews index
+            does: the current festival answers on both /fringe/reviews and /fringe/{year}/reviews,
+            and the evergreen URL is the one that should rank. #}}
+        <link rel="canonical" href="{{ canonical_url ?? current_url }}">
 
         {{ if og_description }}
             <meta name="description" content="{{ og_description }}">
@@ -25,8 +28,8 @@
         {{ /if }}
 
         <!-- Facebook Meta Tags -->
-        <meta property="og:url" content="{{ current_url }}">
-        <meta property="twitter:url" content="{{ current_url }}">
+        <meta property="og:url" content="{{ canonical_url ?? current_url }}">
+        <meta property="twitter:url" content="{{ canonical_url ?? current_url }}">
         <meta property="og:type" content="website">
         {{ if og_title }}
             <meta property="og:title" content="{{ og_title }}">
