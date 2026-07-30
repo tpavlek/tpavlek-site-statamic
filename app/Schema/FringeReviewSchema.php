@@ -7,36 +7,37 @@ use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Term as TermFacade;
 
 /**
- * schema.org Review markup for a single Fringe show review.
+ * schema.org markup for a single Fringe show page.
  *
  * Built in PHP rather than inline in the Antlers template so that show titles are
  * escaped properly. The old inline version happened to survive because every title
  * uses apostrophes, but one double quote or angle bracket in a show name would have
  * produced invalid JSON on that page.
  *
- * Google will only show a review rich result if `itemReviewed` is a supported type
- * with its own required properties present. For an Event that means name, startDate
- * and location, none of which the old markup had. Festival dates come from the
- * fringe_festival term; if a year has no dates set, no markup is emitted at all,
- * since invalid structured data earns Search Console errors rather than rich results.
+ * Three shapes, depending on how much Troy can actually vouch for:
+ *
+ *   rated               Review, with reviewRating. Eligible for Google's review snippet.
+ *   recommended, unrated  Recommendation — a schema.org subtype of Review meaning
+ *                       "suggests or proposes something as the best option". These are
+ *                       shows Troy vouches for without having seen this staging, so
+ *                       inventing a star value would be a lie. Google doesn't surface
+ *                       Recommendation as a rich result, but it's the honest type and
+ *                       machine-readable to everything that isn't Google.
+ *   otherwise           the bare TheaterEvent, no review wrapper.
+ *
+ * Every shape carries the TheaterEvent, which is itself eligible for Google's event
+ * rich result — so a watchlist show is no longer a page with no structured data at all.
+ *
+ * Google requires reviewRating on a Review *unless* the markup carries both an author
+ * and a review date, which is why datePublished is not optional here. It comes from the
+ * entry's date, which is why the collection is dated. Festival dates come from the
+ * fringe_festival term; a year with no dates emits nothing, since invalid structured
+ * data earns Search Console errors rather than rich results.
  */
 class FringeReviewSchema
 {
     public static function build($entry): ?string
     {
-        $rating = $entry->value('stars');
-
-        // A returning show with no fresh rating inherits the original review's, the same
-        // way the page displays it ("★★★★★ at Fringe 2024") and the index sorts by it.
-        if ($rating === null || $rating === '') {
-            $rating = self::originalReview($entry)?->value('stars');
-        }
-
-        // Still nothing means it's a watchlist entry, which isn't a Review.
-        if ($rating === null || $rating === '') {
-            return null;
-        }
-
         $festival = self::festival($entry);
         $startDate = $festival?->value('starts_at');
 
@@ -44,32 +45,105 @@ class FringeReviewSchema
             return null;
         }
 
-        $data = array_filter([
-            '@context' => 'https://schema.org',
-            '@type' => 'Review',
-            'url' => $entry->absoluteUrl(),
-            'dateModified' => $entry->lastModified()?->toIso8601String(),
-            'author' => [
-                '@type' => 'Person',
-                'name' => 'Troy Pavlek',
-                'url' => 'https://troypavlek.ca',
-            ],
-            'reviewRating' => [
-                '@type' => 'Rating',
-                'ratingValue' => (string) $rating,
-                // Zero stars is a real rating here: "I walked out."
-                'worstRating' => '0',
-                'bestRating' => '5',
-            ],
-            'reviewBody' => self::reviewBody($entry),
-            'itemReviewed' => self::show($entry, $festival, $startDate),
-        ]);
+        $show = self::show($entry, $festival, $startDate);
+        $rating = self::rating($entry);
+
+        $data = match (true) {
+            $rating !== null => self::review($entry, $show, $rating),
+            self::isRecommended($entry) => self::recommendation($entry, $show),
+            default => ['@context' => 'https://schema.org'] + $show,
+        };
 
         return json_encode(
             $data,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
             | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_PRETTY_PRINT
         );
+    }
+
+    private static function review($entry, array $show, string $rating): array
+    {
+        return array_filter(self::reviewBase('Review', $entry, $show) + [
+            'reviewRating' => [
+                '@type' => 'Rating',
+                'ratingValue' => $rating,
+                // Zero stars is a real rating here: "I walked out."
+                'worstRating' => '0',
+                'bestRating' => '5',
+            ],
+        ]);
+    }
+
+    /**
+     * A show Troy endorses without a rating of his own — he's seen the company elsewhere,
+     * or trusts the people who have. No reviewRating, deliberately: there is no rating.
+     */
+    private static function recommendation($entry, array $show): array
+    {
+        return array_filter(self::reviewBase('Recommendation', $entry, $show) + [
+            'category' => 'Recommended',
+        ]);
+    }
+
+    private static function reviewBase(string $type, $entry, array $show): array
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => $type,
+            'url' => $entry->absoluteUrl(),
+            // Required by Google whenever reviewRating is absent, so always emitted.
+            'datePublished' => $entry->date()?->toDateString(),
+            'dateModified' => self::dateModified($entry),
+            'author' => [
+                '@type' => 'Person',
+                'name' => 'Troy Pavlek',
+                'url' => 'https://troypavlek.ca',
+            ],
+            'reviewBody' => self::reviewBody($entry),
+            'itemReviewed' => $show,
+        ];
+    }
+
+    /**
+     * Omitted when it would predate publication. Entry dates are the festival day the show
+     * was seen, while lastModified is when the file was last touched, and for reviews
+     * written up before their festival opened the second can precede the first. A review
+     * modified before it was published is incoherent, and dateModified is optional.
+     */
+    private static function dateModified($entry): ?string
+    {
+        $modified = $entry->lastModified();
+        $published = $entry->date();
+
+        if (! $modified || ($published && $modified->lt($published))) {
+            return null;
+        }
+
+        return $modified->toIso8601String();
+    }
+
+    /**
+     * The star rating as a string, or null when there isn't one. A returning show with no
+     * fresh rating inherits the original review's, the same way the page displays it
+     * ("★★★★★ at Fringe 2024") and the index sorts by it.
+     */
+    private static function rating($entry): ?string
+    {
+        $rating = $entry->value('stars');
+
+        if ($rating === null || $rating === '') {
+            $rating = self::originalReview($entry)?->value('stars');
+        }
+
+        return ($rating === null || $rating === '') ? null : (string) $rating;
+    }
+
+    private static function isRecommended($entry): bool
+    {
+        $value = $entry->value('recommendation');
+        $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+        return $value === 'recommended';
     }
 
     private static function show($entry, $festival, string $startDate): array
@@ -90,14 +164,14 @@ class FringeReviewSchema
 
     /**
      * The show's own venue when it's known, otherwise the festival's city, so the
-     * property is always present. Venue strings carry the number Fringers navigate
-     * by, e.g. "34: The Faculty Events Centre".
+     * property is always present. The name carries the number Fringers navigate by,
+     * e.g. "34: The Faculty Events Centre".
      */
     private static function location($entry): array
     {
         return array_filter([
             '@type' => 'Place',
-            'name' => $entry->value('venue') ?: 'Edmonton International Fringe Theatre Festival',
+            'name' => self::venueName($entry) ?: 'Edmonton International Fringe Theatre Festival',
             'address' => [
                 '@type' => 'PostalAddress',
                 'addressLocality' => 'Edmonton',
@@ -105,6 +179,25 @@ class FringeReviewSchema
                 'addressCountry' => 'CA',
             ],
         ]);
+    }
+
+    /**
+     * "29: Strathcona High School" — the number and name are stored separately on the venue
+     * entry, and joined by its display_name computed field.
+     */
+    private static function venueName($entry): ?string
+    {
+        $id = $entry->value('venue');
+        $id = is_array($id) ? ($id[0] ?? null) : $id;
+
+        if (! $id || ! ($venue = EntryFacade::find($id))) {
+            return null;
+        }
+
+        $number = $venue->value('number');
+        $name = $venue->value('title');
+
+        return $number ? "{$number}: {$name}" : $name;
     }
 
     private static function performer($entry): ?array

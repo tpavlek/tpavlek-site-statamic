@@ -101,6 +101,46 @@ h1 {
 }
 
 
+/*
+ * Practical notes about a Fringe venue, appended to the end of every review of a show playing
+ * there. Deliberately not `.content`: these are an aside about the room, and `.content` sets
+ * paragraphs at text-lg and its first paragraph at text-2xl, which is the treatment for a
+ * review's opening line and far too loud for a footnote. Size comes from the container.
+ */
+.venue-notes {
+    > p {
+        @apply mb-3;
+    }
+
+    > p:last-child {
+        @apply mb-0;
+    }
+
+    ul, ol {
+        @apply ml-5 mb-3;
+
+        li {
+            @apply mb-1;
+        }
+    }
+
+    ul {
+        @apply list-disc;
+    }
+
+    ol {
+        @apply list-decimal;
+    }
+
+    a {
+        @apply text-teal font-medium underline;
+
+        &:hover {
+            @apply text-black;
+        }
+    }
+}
+
 /* Responsive Wangjangling */
 @screen lg {
     h1 {

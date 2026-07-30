@@ -1,13 +1,12 @@
+{{# A returning show inherits only the original review's STARS. Everything below is about
+    this year's entry, so it must not be evaluated inside the original_review scope — doing
+    that showed last year's recommendation and skipped the watchlist and improv rules. #}}
 {{ if stars }}
     {{ partial:fringe/stars }}
-{{ elseif original_review }}
+{{ elseif original_review:stars }}
     {{ original_review }}
-        {{ if stars }}
-            {{ partial:fringe/stars }}
-            <span class="text-gray-500 text-xs whitespace-nowrap">(at Fringe {{ festival:slug }})</span>
-        {{ else }}
-            <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">{{ recommendation:label }}</span>
-        {{ /if }}
+        {{ partial:fringe/stars }}
+        <span class="text-gray-500 text-xs whitespace-nowrap">(at Fringe {{ festival:slug }})</span>
     {{ /original_review }}
 {{ elseif recommendation:value == "watchlist" }}
     <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Watchlist</span>

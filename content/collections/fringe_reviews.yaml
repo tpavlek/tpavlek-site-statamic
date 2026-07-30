@@ -4,9 +4,13 @@ layout: layout
 revisions: false
 route: 'fringe/{festival}/reviews/{url_slug}'
 sort_dir: asc
+date: true
+# Reviews are dated within the festival they cover, so a show at an upcoming festival is
+# future-dated. Watchlist entries have to be readable before the festival opens, so future
+# entries stay public.
 date_behavior:
   past: public
-  future: private
+  future: public
 preview_targets:
   -
     label: Entry

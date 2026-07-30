@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Collection as CollectionFacade;
 use Statamic\Facades\Entry as EntryFacade;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class TicketImportController extends Controller
 {
@@ -168,8 +169,9 @@ class TicketImportController extends Controller
 
     /**
      * The venue sits in the same schedule list as the genre, marked by the subvenue
-     * icon, e.g. "34: The Faculty Events Centre". The leading number is the venue
-     * number Fringers navigate by, so it's kept as part of the string.
+     * icon, e.g. "34: The Faculty Events Centre". Returns the id of the matching venue
+     * entry, created on the fly the first time a venue shows up, so that venue notes
+     * written once apply to every show playing there.
      */
     private function venue(string $html): ?string
     {
@@ -177,7 +179,44 @@ class TicketImportController extends Controller
             return null;
         }
 
-        return trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5)) ?: null;
+        $raw = trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5));
+
+        if ($raw === '') {
+            return null;
+        }
+
+        // The number is stored separately so renumbering a venue, or a new sponsor in its
+        // name, doesn't strand the notes on an orphaned entry.
+        $number = null;
+        $name = $raw;
+
+        if (preg_match('/^\s*(\d+)\s*:\s*(.+)$/', $raw, $parts)) {
+            [, $number, $name] = $parts;
+            $name = trim($name);
+        }
+
+        return $this->findOrCreateVenue($name, $number);
+    }
+
+    private function findOrCreateVenue(string $name, ?string $number): string
+    {
+        $existing = EntryFacade::query()
+            ->where('collection', 'venues')
+            ->get()
+            ->first(fn ($venue) => $venue->value('title') === $name);
+
+        if ($existing) {
+            return $existing->id();
+        }
+
+        $venue = EntryFacade::make()
+            ->collection('venues')
+            ->slug(Str::slug($name))
+            ->data(array_filter(['title' => $name, 'number' => $number]));
+
+        $venue->save();
+
+        return $venue->id();
     }
 
     private function downloadPoster(string $html, string $title): ?string
@@ -199,11 +238,36 @@ class TicketImportController extends Controller
         }
 
         $extension = strtolower(pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION)) ?: 'jpg';
-        $path = 'fringe/'.Str::slug($title).'-poster.'.$extension;
+        $filename = Str::slug($title).'-poster.'.$extension;
+        $path = 'fringe/'.$filename;
 
         $container = AssetContainer::findByHandle('assets');
-        $container->disk()->put($path, $image->body());
 
-        return $path;
+        // Reuse the file only when it's byte-for-byte the poster we just fetched, i.e.
+        // this show was imported before. Matching on the filename alone isn't enough:
+        // a returning show keeps its title, so "Scratch" in 2026 would silently adopt
+        // the 2025 poster. A same-named but different image falls through and Statamic
+        // gives it a non-colliding name.
+        if ($container->disk()->exists($path) && $container->disk()->get($path) === $image->body()) {
+            // The file may predate this importer and not be in the container's cached
+            // file listing yet; saving registers it.
+            $existing = $container->asset($path) ?? tap($container->makeAsset($path))->save();
+
+            return $existing->path();
+        }
+
+        $temp = tempnam(sys_get_temp_dir(), 'poster');
+        file_put_contents($temp, $image->body());
+
+        // Upload through the container rather than writing to the disk directly,
+        // so the asset gets its meta file and lands in the container's cached file
+        // listing. Without that, the asset doesn't "exist" yet and the assets
+        // fieldtype silently drops the path when preprocessing it.
+        // Statamic deletes the source file itself once the upload is written.
+        $asset = $container->makeAsset($path)->upload(
+            new UploadedFile($temp, $filename, null, null, true)
+        );
+
+        return $asset ? $asset->path() : null;
     }
 }

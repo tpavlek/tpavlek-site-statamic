@@ -88,6 +88,15 @@ class FringeController extends Controller
         return $id ? EntryFacade::find($id) : null;
     }
 
+    /**
+     * Whether the show carries the improv category, which is what earns it the "Improv*"
+     * badge in fringe/_review-tag when it has no rating of its own.
+     */
+    private function isImprov(Entry $entry): bool
+    {
+        return $entry->categories?->contains(fn (LocalizedTerm $term) => $term->slug === 'improv') ?? false;
+    }
+
     private function yearReviews($festival, string $festivalSlug, string $videoCategorySlug)
     {
         $reviews = EntryFacade::query()
@@ -97,16 +106,24 @@ class FringeController extends Controller
                 return $entry->festival->slug === $festivalSlug;
             })
             ->sortByDesc(function (Entry $entry) {
-                // We sort by stars, but if we don't have a stars, "not recommended" is 0-stars, "recommended" is 3.5 stars
-                // A returning show without a fresh rating inherits the original review's stars
+                // We sort by stars on a 0-50 scale. A returning show without a fresh rating
+                // inherits the original review's stars.
                 $stars = $entry->stars->value() ?: $this->originalReview($entry)?->stars->value();
 
-                // Watchlist shows haven't been seen yet — list them after everything reviewed
-                if (! $stars && $entry->recommendation->value() === 'watchlist') {
-                    return 0;
+                if ($stars) {
+                    return (float) $stars * 10;
                 }
 
-                return $stars ? (float)$stars * 10 : 35;
+                // Unrated shows slot onto the same scale. The buckets mirror the badges in
+                // fringe/_review-tag, and are checked in the same order, so the list reads the
+                // way the badges suggest. Watchlist and improv both sit just above a 3-star
+                // show, watchlist first: a show Troy picked out unseen is a better bet than
+                // "it's improv, you get what you get".
+                return match (true) {
+                    $entry->recommendation->value() === 'watchlist' => 32,
+                    $this->isImprov($entry) => 31,
+                    default => 35,
+                };
             });
 
         $videos = EntryFacade::query()

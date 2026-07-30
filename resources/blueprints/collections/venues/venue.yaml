@@ -1,0 +1,40 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Name
+              instructions: 'The venue name without its number, e.g. "Strathcona High School". The number lives in its own field so notes survive a renumbering or a new sponsor name.'
+              required: true
+              validate:
+                - required
+          -
+            handle: number
+            field:
+              type: text
+              display: 'Venue Number'
+              instructions: 'The number Fringers navigate by, e.g. "29". Keep any leading zero.'
+              width: 33
+          -
+            handle: notes
+            field:
+              type: markdown
+              display: 'Venue Notes'
+              instructions: 'Tips about the room itself — sightlines, seating, accessibility, where to sit. Appended to the end of every review of a show playing here, so write it about the venue and not about any one show.'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Venue

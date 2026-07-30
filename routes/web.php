@@ -72,6 +72,17 @@ Route::get('/fringe/{festival}/reviews/{slug}/share-card', [ \App\Http\Controlle
     ->where(['festival' => '[0-9]{4}']);
 
 /*
+| The public share-card generator: same builder, but for a review published anywhere.
+| The build step fetches a URL server-side, so it's throttled — the host allowlist in
+| App\Fringe\ReviewScraper is what stops it being pointed somewhere it shouldn't.
+*/
+Route::get('/fringe/social-review-generator', [\App\Http\Controllers\SocialReviewGeneratorController::class, 'index'])
+    ->name('fringe.social-review-generator');
+Route::post('/fringe/social-review-generator', [\App\Http\Controllers\SocialReviewGeneratorController::class, 'build'])
+    ->middleware('throttle:20,1')
+    ->name('fringe.social-review-generator.build');
+
+/*
 | Legacy URLs from before everything moved under /fringe. All 301, all still
 | linked from the wild, so they stay indefinitely.
 |

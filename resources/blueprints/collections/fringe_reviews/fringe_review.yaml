@@ -104,9 +104,14 @@ tabs:
           -
             handle: venue
             field:
-              type: text
+              max_items: 1
+              collections:
+                - venues
+              mode: select
+              type: entries
               display: Venue
-              instructions: 'Where the show plays, e.g. "34: The Faculty Events Centre". Filled in by the ticket importer, but venues do occasionally move — check it against the ticketing site if a show relocates.'
+              create: true
+              instructions: 'Where the show plays. Filled in by the ticket importer, but venues do occasionally move — check it against the ticketing site if a show relocates. Notes on the venue go on the venue itself and are appended to every review playing there.'
           -
             handle: original_review
             field:

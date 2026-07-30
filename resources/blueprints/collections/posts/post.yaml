@@ -31,6 +31,9 @@ tabs:
                 - image
                 - table
                 - code
+                - bts_pins
+              bts_pins:
+                - review_ref
               sets:
                 new_set_group:
                   display: 'New Set Group'

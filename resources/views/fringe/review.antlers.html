@@ -29,23 +29,26 @@
                 {{ partial:fringe/stars size="text-3xl" }}
             </span>
 
-        {{ elseif original_review }}
+        {{# Only the stars are inherited from the original review; the badge below describes
+            this year's entry, so it stays outside the original_review scope. #}}
+        {{ elseif original_review:stars }}
             {{ original_review }}
-                {{ if stars }}
-                    <span class="mr-2">
-                        {{ partial:fringe/stars size="text-3xl" }}
-                        <span class="text-base text-gray-500">at Fringe {{ festival:slug }}</span>
-                    </span>
-                {{ else }}
-                    <div class="flex items-center">
-                        <span class="inline-block bg-grey-200 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">{{ recommendation:label }}</span>
-                    </div>
-                {{ /if }}
+                <span class="mr-2">
+                    {{ partial:fringe/stars size="text-3xl" }}
+                    <span class="text-base text-gray-500">at Fringe {{ festival:slug }}</span>
+                </span>
             {{ /original_review }}
 
         {{ elseif recommendation:value == "watchlist" }}
             <div class="flex items-center">
                 <span class="inline-block border border-teal text-teal rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Watchlist</span>
+            </div>
+
+        {{# Same branch order as fringe/_review-tag, so a show's badge reads the same here as
+            it does in the review list. The asterisk is explained on the ratings page. #}}
+        {{ elseif categories|pluck('slug')|contains('improv') }}
+            <div class="flex items-center">
+                <a href="/fringe/what-do-ratings-mean" class="inline-block bg-grey-200 hover:bg-grey-300 transition-colors text-gray-800 no-underline rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Improv*</a>
             </div>
 
         {{ else }}
@@ -60,7 +63,7 @@
     <div class="space-x-2">
         {{ if venue }}
             <span class="text-xs text-gray-600 uppercase">
-                <i class="fas fa-location-dot text-teal"></i> {{ venue }}
+                <i class="fas fa-location-dot text-teal"></i> {{ venue:display_name }}
             </span>
         {{ /if }}
 
@@ -113,6 +116,26 @@
         {{ /original_review }}
     {{ /if }}
 
+    {{# Notes about the room rather than the show, written once on the venue and appended to
+        every review playing there. Only renders when that venue has notes.
+
+        Deliberately not one of the bordered panels below — three of those in a row reads as
+        repetitive, and this is a footnote, not a section. A hairline rule and small grey text
+        keep it subordinate to the review. "Venue notes" is a tag rather than a heading, which
+        is what lets the venue keep its usual "29: Strathcona High School" form without a
+        second colon running into it. #}}
+    {{ venue }}
+        {{ if notes }}
+            <aside class="mt-10 border-t border-grey-200 pt-4" aria-label="Notes about {{ display_name }}">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span class="inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">Venue notes</span>
+                    <span class="text-sm text-gray-700">{{ display_name }}</span>
+                </div>
+                <div class="venue-notes mt-2 text-sm leading-relaxed text-gray-600">{{ notes }}</div>
+            </aside>
+        {{ /if }}
+    {{ /venue }}
+
     {{ if companion_videos }}
     <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">
         <div class="border-teal border-l-8">
@@ -140,42 +163,33 @@
     </div>
     {{ /if }}
 
+    {{# Same quiet aside treatment as the venue notes above: a hairline rule and a tag rather
+        than another bordered panel. The tag form also carries the artist's name without a
+        colon, but only when it's a real name — the ticket importer titles new artists with
+        their Instagram handle until one is filled in, and a handle is not a name. #}}
     {{ if artist }}
         {{ current_festival = festival:slug }}
         {{ artist_id = artist:id }}
+        {{ artist_name = artist:title }}
+        {{ artist_handle = artist:instagram }}
         {{ collection:fringe_reviews :artist:is="artist_id" :id:isnt="id" :title:isnt="title" sort="slug:desc" as="other_shows" }}
             {{ if other_shows }}
-                <div class="rounded-lg rounded-l-none border border-grey-300 mb-3 mt-8">
-                    <div class="border-teal border-l-8">
-                        <div class="px-4 pb-4">
-                            <h2 class="font-semibold pt-2 uppercase text-sm tracking-wide">Also from this artist</h2>
-                            <ul class="mt-3 space-y-2">
-                                {{ other_shows }}
-                                    {{ if festival:slug == current_festival }}
-                                        <li>
-                                            <a href="{{ url }}" class="no-underline text-gray-800 hover:bg-grey-50 flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                                                <span>{{ title }}</span>
-                                                <span class="text-xs text-gray-500 uppercase">Fringe {{ festival:slug }}</span>
-                                                {{ partial:fringe/review-tag }}
-                                            </a>
-                                        </li>
-                                    {{ /if }}
-                                {{ /other_shows }}
-                                {{ other_shows }}
-                                    {{ if festival:slug != current_festival }}
-                                        <li>
-                                            <a href="{{ url }}" class="no-underline text-gray-800 hover:bg-grey-50 flex flex-col sm:flex-row sm:items-center sm:gap-2">
-                                                <span>{{ title }}</span>
-                                                <span class="text-xs text-gray-500 uppercase">Fringe {{ festival:slug }}</span>
-                                                {{ partial:fringe/review-tag }}
-                                            </a>
-                                        </li>
-                                    {{ /if }}
-                                {{ /other_shows }}
-                            </ul>
-                        </div>
+                <aside class="mt-10 border-t border-grey-200 pt-4" aria-label="Other shows from this artist">
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span class="inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">Also from this artist</span>
+                        {{ if artist_name && artist_name != artist_handle }}
+                            <span class="text-sm text-gray-700">{{ artist_name }}</span>
+                        {{ /if }}
                     </div>
-                </div>
+                    <ul class="mt-3 space-y-1.5">
+                        {{ other_shows }}
+                            {{ if festival:slug == current_festival }}{{ partial:fringe/other-show }}{{ /if }}
+                        {{ /other_shows }}
+                        {{ other_shows }}
+                            {{ if festival:slug != current_festival }}{{ partial:fringe/other-show }}{{ /if }}
+                        {{ /other_shows }}
+                    </ul>
+                </aside>
             {{ /if }}
         {{ /collection:fringe_reviews }}
     {{ /if }}

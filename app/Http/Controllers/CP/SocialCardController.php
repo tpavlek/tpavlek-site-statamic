@@ -30,32 +30,48 @@ class SocialCardController extends Controller
     private function builder(Entry $entry, string $backUrl, string $backLabel)
     {
         $options = collect($entry->value('share_card_options') ?? []);
-        $lines = $this->reviewLines($entry);
+        $lines = $this->quotableLines($entry);
         $stars = $this->starsLabel($entry);
+        $canSave = UserFacade::current() !== null;
 
-        return view('cp.fringe-social-card', [
-            'entry' => $entry,
-            'title' => $entry->value('title'),
+        return view('fringe.social-card.page', [
+            'mode' => 'entry',
+            'step' => 'build',
+            'pageTitle' => 'Share this review — '.$entry->value('title'),
+            'eyebrow' => "Troy's Fringe Reviews",
+            'heading' => 'Share this review',
+            'showLine' => $entry->value('title'),
             'stars' => $stars,
+            'lede' => $canSave
+                ? 'Tweak the card, save the settings to the entry, and download the PNG.'
+                : 'Turn this review into an image for Instagram. Pick your favourite line, adjust the layout, and download.',
             'watchlist' => ! $stars && $entry->recommendation->value() === 'watchlist',
-            'quote' => $entry->value('share_quote') ?: ($lines[0] ?? ''),
-            'reviewLines' => $lines,
-            'posterUrl' => $entry->poster?->url(),
-            'shareImageUrl' => $entry->share_image?->url(),
-            'options' => [
-                'position' => (int) $options->get('position', 100),
-                'focal_x' => (int) $options->get('focal_x', 50),
-                'focal_y' => (int) $options->get('focal_y', 50),
-                'text_size' => (int) $options->get('text_size', 42),
-                'attribution_enabled' => (bool) $options->get('attribution_enabled', true),
-                'attribution_text' => (string) $options->get('attribution_text', "\u{2014} Troy's Fringe Reviews"),
-                'attribution_size' => (int) $options->get('attribution_size', 34),
-            ],
-            'canSave' => UserFacade::current() !== null,
+            'starsEditable' => false,
+            'warning' => null,
+            'canSave' => $canSave,
             'saveUrl' => cp_route('fringe-social-card.save', $entry->id()),
-            'ogUrl' => cp_route('fringe-social-card.og', $entry->id()),
+            'buildUrl' => null,
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
+            'config' => [
+                'quote' => $entry->value('share_quote') ?: ($lines[0] ?? ''),
+                'reviewLines' => $lines,
+                'position' => (int) $options->get('position', 100),
+                'textSize' => (int) $options->get('text_size', 42),
+                'focalX' => (int) $options->get('focal_x', 50),
+                'focalY' => (int) $options->get('focal_y', 50),
+                'starsEnabled' => (bool) $options->get('stars_enabled', true),
+                // Fixed: the rating belongs to the review, so the switch only hides it.
+                'starsFixedText' => (string) $stars,
+                'starsValue' => 0,
+                'attributionEnabled' => (bool) $options->get('attribution_enabled', true),
+                'attributionText' => (string) $options->get('attribution_text', "\u{2014} Troy's Fringe Reviews"),
+                'attributionSize' => (int) $options->get('attribution_size', 34),
+                'posterUrl' => $entry->poster?->url(),
+                'savedShareUrl' => $entry->share_image?->url(),
+                'downloadName' => $entry->slug(),
+                'ogUrl' => $canSave ? cp_route('fringe-social-card.og', $entry->id()) : null,
+            ],
         ]);
     }
 
@@ -69,6 +85,7 @@ class SocialCardController extends Controller
             'focal_x' => 'required|integer|between:0,100',
             'focal_y' => 'required|integer|between:0,100',
             'text_size' => 'required|integer|between:20,150',
+            'stars_enabled' => 'required|boolean',
             'attribution_enabled' => 'required|boolean',
             'attribution_text' => 'nullable|string|max:120',
             'attribution_size' => 'required|integer|between:16,80',
@@ -89,6 +106,7 @@ class SocialCardController extends Controller
                 'focal_x' => (int) $request->input('focal_x'),
                 'focal_y' => (int) $request->input('focal_y'),
                 'text_size' => (int) $request->input('text_size'),
+                'stars_enabled' => $request->boolean('stars_enabled'),
                 'attribution_enabled' => $request->boolean('attribution_enabled'),
                 'attribution_text' => (string) $request->input('attribution_text'),
                 'attribution_size' => (int) $request->input('attribution_size'),
@@ -145,6 +163,7 @@ class SocialCardController extends Controller
             'focal_x' => 'Horizontal focus',
             'focal_y' => 'Vertical focus',
             'text_size' => 'Text size',
+            'stars_enabled' => 'Star rating toggle',
             'attribution_enabled' => 'Attribution toggle',
             'attribution_text' => 'Attribution text',
             'attribution_size' => 'Attribution text size',
@@ -205,10 +224,30 @@ class SocialCardController extends Controller
     }
 
     /**
-     * The review body (own, or the original's for restagings) split into sentences,
-     * so any line can be picked as the quote — including the last one.
+     * The numeric rating, inheriting from the original review for restagings. Public because
+     * App\Fringe\ReviewScraper reuses it when the pasted URL is one of our own reviews —
+     * there is one definition of what a review's rating is.
      */
-    private function reviewLines(Entry $entry): array
+    public function starsValue(Entry $entry): ?float
+    {
+        if ($entry->stars->value() !== null && $entry->stars->value() !== '') {
+            return (float) $entry->stars->value();
+        }
+
+        $originalId = $entry->value('original_review');
+        $originalId = is_array($originalId) ? ($originalId[0] ?? null) : $originalId;
+        $original = $originalId ? EntryFacade::find($originalId) : null;
+        $value = $original?->stars->value();
+
+        return ($value === null || $value === '') ? null : (float) $value;
+    }
+
+    /**
+     * The review body (own, or the original's for restagings) split into sentences,
+     * so any line can be picked as the quote — including the last one. Public for the same
+     * reason as starsValue.
+     */
+    public function quotableLines(Entry $entry): array
     {
         $body = $entry->value('content');
 

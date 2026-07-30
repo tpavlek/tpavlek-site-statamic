@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Fieldtypes\VideoDistribution;
 use App\Fringe\FestivalUrls;
 use App\Http\Controllers\CP\VideoDistributionController;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Statamic\Events\EntrySaving;
 use Statamic\Facades\Collection;
 use Statamic\Statamic;
 use Statamic\Support\Str;
@@ -29,6 +31,31 @@ class AppServiceProvider extends ServiceProvider
     {
         VideoDistribution::register();
         \App\Fieldtypes\TicketImport::register();
+
+        // Keep dated entry filenames as YYYY-MM-DD.slug.md.
+        //
+        // Saving from the CP passes Entry::date() a Carbon, and that branch of the setter
+        // returns $date->utc() without the start-of-day normalisation the string branch gets.
+        // With a non-UTC app timezone (America/Edmonton) midnight becomes 06:00 UTC, which
+        // makes Entry::hasTime() true and stamps the time into the filename
+        // (2026-08-22-0600.2026-scratch.md). Re-setting from the date string routes through
+        // parseDateFromString, which starts the day properly. Only when the blueprint's date
+        // field doesn't want a time — collections that do keep theirs.
+        Event::listen(EntrySaving::class, function (EntrySaving $event) {
+            $entry = $event->entry;
+
+            if (! $entry->collection()?->dated()) {
+                return;
+            }
+
+            if ($entry->blueprint()->field('date')?->fieldtype()->timeEnabled()) {
+                return;
+            }
+
+            if (($date = $entry->date()) && ! $date->isStartOfDay()) {
+                $entry->date($date->toDateString());
+            }
+        });
 
         Statamic::vite('video-distribution', [
             'input' => ['resources/js/cp.js'],
@@ -62,6 +89,15 @@ class AppServiceProvider extends ServiceProvider
         // year is already a segment of the route.
         Collection::computed('fringe_reviews', 'url_slug', function ($entry, $value) {
             return preg_replace('/^\d{4}-/', '', $entry->slug());
+        });
+
+        // Fringers navigate by venue number, so a venue always reads "29: Strathcona High
+        // School". The number is stored separately from the name so that renumbering a venue,
+        // or a new sponsor in its name, doesn't strand the notes on an orphaned entry.
+        Collection::computed('venues', 'display_name', function ($entry, $value) {
+            $number = $entry->value('number');
+
+            return $number ? "{$number}: {$entry->value('title')}" : $entry->value('title');
         });
 
         Collection::computed('endorsements', 'og_title', function ($entry, $value) {
@@ -132,5 +168,14 @@ class AppServiceProvider extends ServiceProvider
                 ))
                 ->all();
         });
+
+        // The public share-card generator is a controller route, so the sitemap can't find
+        // it on its own. It's a free tool for artists, worth being findable.
+        \Pecotamic\Sitemap\Sitemap::addEntries(fn () => [
+            new \Pecotamic\Sitemap\SitemapEntry(
+                FestivalUrls::absolute('/fringe/social-review-generator'),
+                new \DateTime,
+            ),
+        ]);
     }
 }

@@ -1,0 +1,13 @@
+{{#
+    One row of the "Also from this artist" list. Expects a fringe_reviews entry in scope.
+
+    Extracted because the list is built from two passes over the same query — this festival's
+    shows first, then earlier years — and the row was duplicated verbatim between them.
+#}}
+<li>
+    <a href="{{ url }}" class="group flex flex-col sm:flex-row sm:items-center sm:gap-2 no-underline text-gray-700 hover:text-teal transition-colors">
+        <span class="text-sm group-hover:underline">{{ title }}</span>
+        <span class="text-xs text-gray-500 uppercase whitespace-nowrap">Fringe {{ festival:slug }}</span>
+        {{ partial:fringe/review-tag }}
+    </a>
+</li>

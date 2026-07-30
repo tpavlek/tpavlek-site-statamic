@@ -64,7 +64,16 @@ class FestivalUrls
 
     public static function absoluteReviews(?string $year = null): string
     {
-        return self::ORIGIN.self::reviews($year);
+        return self::absolute(self::reviews($year));
+    }
+
+    /**
+     * A site-absolute URL for any Fringe path, so the production origin lives in one place
+     * rather than being pasted into sitemap entries and canonicals.
+     */
+    public static function absolute(string $path): string
+    {
+        return self::ORIGIN.'/'.ltrim($path, '/');
     }
 
     /**
