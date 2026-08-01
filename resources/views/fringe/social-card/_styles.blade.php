@@ -122,6 +122,17 @@
         .notice { margin-top: 1rem; border-radius: 8px; padding: 0.7rem 0.9rem; font-size: 0.88rem; }
         .notice-warn { background: #fffaf0; border: 1px solid #dd6b20; color: #9c4221; }
 
+        /* ---- Star colour swatches ---- */
+        .swatches { display: flex; gap: 0.4rem; }
+        .swatch { width: 2.4rem; height: 2.4rem; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; font-size: 1.1rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .swatch.on { border-color: var(--teal); box-shadow: 0 0 0 2px var(--teal-wash); }
+        /* Checkerboard so a white star is visible on a white control panel. */
+        .swatch--white { background: repeating-conic-gradient(#f1f1ef 0% 25%, white 0% 50%) 50% / 12px 12px; color: white; text-shadow: 0 0 2px rgba(0,0,0,0.5); }
+        .swatch--black { background: white; color: #111; }
+        .swatch--gold { background: white; color: #f5c518; }
+        .swatch--teal { background: white; color: #008483; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
         /* ---- Stars control ---- */
         .star-picker { display: flex; gap: 0.25rem; }
         .star-picker button { border: 1px solid var(--line); background: white; border-radius: 8px; width: 2.4rem; height: 2.2rem; font: inherit; font-size: 0.9rem; cursor: pointer; color: var(--ink-soft); }

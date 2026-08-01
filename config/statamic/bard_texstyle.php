@@ -20,7 +20,7 @@ return [
             'fields' => [
                 'review' => [
                     'display' => 'Review',
-                    'type' => 'entries',
+                    'type' => 'review_ref_entries',
                     'collections' => ['fringe_reviews'],
                     'max_items' => 1,
                     'mode' => 'select',

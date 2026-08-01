@@ -68,6 +68,7 @@ class SocialReviewGeneratorController extends Controller
                 // couldn't read it — start with the switch off rather than showing a made-up
                 // zero, and let them turn it on if they want to set one.
                 'starsEnabled' => $review->stars !== null,
+                'starsColour' => 'white',
                 'starsFixedText' => null,
                 'starsValue' => $review->stars ?? 0,
                 'attributionEnabled' => $review->attribution !== null,
@@ -90,10 +91,11 @@ class SocialReviewGeneratorController extends Controller
             'eyebrow' => "Troy's Fringe Reviews",
             'heading' => 'Turn a review into a shareable image',
             'showLine' => null,
-            'lede' => "Got a review of your Fringe show? Paste the link and we'll pull out the quote, the rating and the artwork — then you can lay it out and download an image for Instagram.",
+            'lede' => "Paste in a link to a prominent review site, or manually copy over review details. This tool can generate Instagram-ready images for stories and feeds.",
             'watchlist' => false,
             'starsEditable' => true,
             'canSave' => false,
+            'existingOgUrl' => null,
             'saveUrl' => null,
             'buildUrl' => route('fringe.social-review-generator.build'),
             'backUrl' => route('fringe.social-review-generator'),

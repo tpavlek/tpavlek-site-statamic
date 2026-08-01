@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
     {
         VideoDistribution::register();
         \App\Fieldtypes\TicketImport::register();
+        // Powers the review_ref bard pin — same as `entries`, but the dropdown says which
+        // festival each review is from. See config/statamic/bard_texstyle.php.
+        \App\Fieldtypes\ReviewRef::register();
 
         // Keep dated entry filenames as YYYY-MM-DD.slug.md.
         //

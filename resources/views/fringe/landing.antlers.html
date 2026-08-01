@@ -33,6 +33,16 @@
         <p><a href="/fringe/reviews">Read this year's reviews &rarr;</a></p>
     </div>
 
+    {{# A free tool for artists rather than a pitch for the reviews, so it gets its own block
+        above the festival list, where an artist arriving to check their review will see it. #}}
+    <a href="/fringe/social-review-generator" class="group block no-underline border border-grey-300 hover:border-teal rounded-lg p-5 mb-12 transition-colors">
+        <span class="inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">For artists</span>
+        <p class="mt-3 text-2xl font-bold text-gray-800 group-hover:text-teal transition-colors">Turn a review of your show into a shareable social media image</p>
+        <p class="mt-1 text-base text-gray-600">Paste a link to a review from common review sites like the Edmonton Journal, 12thNight (or troypavlek.ca 😉), and get a card sized for Instagram.</p>
+        <p class="mt-1 text-base text-gray-600">Reviewed in person by your friend Steve? You can also type in the review manually.</p>
+        <p class="mt-3 text-xs text-gray-500 uppercase tracking-wide group-hover:text-teal transition-colors">Open the generator &rarr;</p>
+    </a>
+
     {{# Festival years #}}
     <div class="clear-both">
         <h2 class="text-2xl font-bold mb-6">Browse by Festival Year</h2>
@@ -57,15 +67,6 @@
             {{ /taxonomy:fringe_festival }}
         </div>
     </div>
-
-    {{# A free tool for artists rather than a pitch for the reviews, so it gets its own block
-        under the festival list instead of competing with them. #}}
-    <a href="/fringe/social-review-generator" class="group block no-underline border border-grey-300 hover:border-teal rounded-lg p-5 mb-12 transition-colors">
-        <span class="inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">For artists</span>
-        <p class="mt-3 text-2xl font-bold text-gray-800 group-hover:text-teal transition-colors">Turn a review of your show into a shareable image</p>
-        <p class="mt-1 text-base text-gray-600">Paste a link to a review on the Edmonton Journal, 12thNight or here, and get a card sized for Instagram. Reviewed somewhere else? Type it in yourself.</p>
-        <p class="mt-3 text-xs text-gray-500 uppercase tracking-wide group-hover:text-teal transition-colors">Open the generator &rarr;</p>
-    </a>
 
     {{# Outro content #}}
     <div class="content text-lg text-gray-800 leading-relaxed mb-12 max-w-3xl">

@@ -18,10 +18,26 @@
                     {{ partial src="yegvote-2025/candidate" }}
                 {{ /candidate }}
             {{ /if }}
+            {{# A floated image wraps the paragraphs that follow it in the same .post-content
+                flow. The float is cleared on the next full-width image and at the end of the
+                article, and drops to full width on narrow screens where wrapping just gives
+                you two-word lines. #}}
             {{ if type == "image" }}
+                {{# Held in variables because inside {{ images }} the scope is the asset,
+                    which has its own alt and could have its own caption field. #}}
+                {{ image_alignment = alignment ?? 'full' }}
+                {{ image_caption = caption }}
                 {{ images }}
-                    <img src="{{ url }}" alt="{{ alt }}" />
+                    <figure class="post-image post-image--{{ image_alignment }}">
+                        <img src="{{ url }}" alt="{{ alt }}" />
+                        {{ if image_caption }}<figcaption>{{ image_caption }}</figcaption>{{ /if }}
+                    </figure>
                 {{ /images }}
+            {{ /if }}
+
+            {{# Draws nothing; its only job is to stop the wrap around a floated image. #}}
+            {{ if type == "break" }}
+                <div class="post-break post-break--{{ space ?? 'none' }}" aria-hidden="true"></div>
             {{ /if }}
 
             {{ if type == "email_subscription_prompt" }}
@@ -35,6 +51,9 @@
             {{ /if }}
         {{ /content }}
     </div>
+    {{# Heading lives inside the check so a post with no videos doesn't announce a section
+        that isn't there. #}}
+    {{ if related_videos }}
     <h3 class="uppercase font-black mt-8">Related videos</h3>
     <div class="pb-2 overflow-scroll">
         {{ related_videos as="video" }}
@@ -54,4 +73,5 @@
         {{ /related_videos }}
 
     </div>
+    {{ /if }}
 </article>

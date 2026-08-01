@@ -102,6 +102,86 @@ h1 {
 
 
 /*
+ * Images in a blog post. Full width by default; floated left or right so the paragraphs that
+ * follow wrap around them.
+ *
+ * `.content img:not(.candidate-photo)` sets my-12 on every image in post prose, which is
+ * right for a full-width image and far too much beside a float, so the figure owns the
+ * spacing and the image inside it is reset to none.
+ */
+.post-content .post-image {
+    @apply mb-6;
+
+    img {
+        @apply w-full my-0;
+    }
+
+    figcaption {
+        @apply mt-2 text-sm text-gray-600 leading-snug;
+    }
+}
+
+.post-content .post-image--full {
+    @apply my-12;
+}
+
+/*
+ * Nothing wraps past the next full-width image, a horizontal rule, or the end of the article.
+ *
+ * A rule clearing floats is what makes two facing images work: float one left, drop a rule,
+ * float the next right, and the following text starts beside the second image instead of
+ * carrying on around the first. Without the clear the rule would sit in the gutter beside a
+ * float and the text would never move down.
+ */
+.post-content .post-image--full,
+.post-content hr {
+    clear: both;
+}
+
+.post-content hr {
+    @apply border-0 border-t border-grey-300 my-12;
+}
+
+/*
+ * The invisible sibling of the rule: same clearing, nothing drawn. `clear` has no effect on
+ * an element with no box, so it keeps display:block and gets its height from the gap chosen
+ * on the set — zero by default, which still clears.
+ */
+.post-content .post-break {
+    display: block;
+    clear: both;
+}
+
+.post-content .post-break--small {
+    @apply h-6;
+}
+
+.post-content .post-break--large {
+    @apply h-16;
+}
+
+.post-content::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+@screen md {
+    .post-content .post-image--left,
+    .post-content .post-image--right {
+        @apply w-1/2 mb-4;
+    }
+
+    .post-content .post-image--left {
+        @apply float-left mr-8;
+    }
+
+    .post-content .post-image--right {
+        @apply float-right ml-8;
+    }
+}
+
+/*
  * Practical notes about a Fringe venue, appended to the end of every review of a show playing
  * there. Deliberately not `.content`: these are an aside about the room, and `.content` sets
  * paragraphs at text-lg and its first paragraph at text-2xl, which is the treatment for a

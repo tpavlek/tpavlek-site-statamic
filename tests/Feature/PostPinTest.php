@@ -40,6 +40,34 @@ class PostPinTest extends TestCase
         $this->assertContains('review_ref', $field->get('bts_pins'), 'review_ref is not among the pins available on posts.');
     }
 
+    /**
+     * Shows return under the same name year after year — two "Edmontask", two "Late Night
+     * Cabaret" — so the picker has to say which festival each one is from or you can't tell
+     * them apart. Statamic renders a fieldtype's item hint as a badge in select mode.
+     */
+    public function test_the_review_picker_distinguishes_shows_by_festival(): void
+    {
+        $field = $this->contentField();
+
+        $pin = config('statamic.bard_texstyle.pins.review_ref.fields.review');
+        $this->assertSame('review_ref_entries', $pin['type'], 'The pin is not using the festival-aware fieldtype.');
+
+        $fieldtype = new \App\Fieldtypes\ReviewRef;
+        $fieldtype->setField(new \Statamic\Fields\Field('review', $pin));
+
+        $sameName = EntryFacade::query()->where('collection', 'fringe_reviews')->get()
+            ->filter(fn ($e) => $e->value('title') === 'Edmontask');
+
+        $this->assertGreaterThan(1, $sameName->count(), 'Expected more than one Edmontask review.');
+
+        $hints = $sameName->map(fn ($e) => $fieldtype->getItemHint($e))->values()->all();
+
+        $this->assertSame(count($hints), count(array_unique($hints)), 'Same-titled reviews got the same hint.');
+        foreach ($hints as $hint) {
+            $this->assertMatchesRegularExpression('/Fringe \d{4}/', (string) $hint);
+        }
+    }
+
     public function test_a_pinned_review_renders_in_a_post(): void
     {
         $this->cleanup();

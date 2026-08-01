@@ -71,8 +71,8 @@
             </div>
             <p class="sources">
                 Works with <strong>Edmonton Journal</strong>, <strong>12thNight.ca</strong> and
-                <strong>troypavlek.ca</strong>. We'll pull out the quote, the rating and the
-                artwork where the site publishes them &mdash; you can edit all of it afterwards.
+                <strong>troypavlek.ca</strong>. It'll pull out quotes, ratings and the
+                artwork where the site publishes them. You can edit any part of it before generating your image.
             </p>
         </form>
 
@@ -132,6 +132,17 @@
                     <a href="{{ $backUrl }}" class="btn btn-link">{{ $backLabel }}</a>
                 </div>
                 @if ($canSave)
+                    {{-- Whether this show already has an OpenGraph image, so you know before
+                         you overwrite one — setOgImage replaces it rather than adding. --}}
+                    <p class="og-status" x-show="format === 'og'">
+                        @if ($existingOgUrl)
+                            This show already has an OpenGraph image.
+                            <a href="{{ $existingOgUrl }}" target="_blank" rel="noopener">View it in a new tab &rarr;</a>
+                            Setting one replaces it.
+                        @else
+                            This show has no OpenGraph image yet, so shares fall back to the generic Fringe artwork.
+                        @endif
+                    </p>
                     <p class="og-status" x-show="ogMessage" x-text="ogMessage" role="status"></p>
                 @endif
             </form>

@@ -17,6 +17,7 @@ preferences:
         - status
         - festival
       view: list
+      after_save: continue_editing
     pages:
       after_save: continue_editing
       view: tree

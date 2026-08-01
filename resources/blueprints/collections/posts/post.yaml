@@ -28,6 +28,7 @@ tabs:
                 - removeformat
                 - quote
                 - anchor
+                - horizontalrule
                 - image
                 - table
                 - code
@@ -61,6 +62,40 @@ tabs:
                             dynamic: slug
                             type: assets
                             display: Images
+                        -
+                          handle: alignment
+                          field:
+                            type: select
+                            display: Placement
+                            default: full
+                            clearable: false
+                            instructions: 'Float left or right to wrap the following paragraphs around the image. On phones a floated image goes full width, because there is no room to wrap.'
+                            options:
+                              full: 'Full width'
+                              left: 'Float left, text wraps right'
+                              right: 'Float right, text wraps left'
+                        -
+                          handle: caption
+                          field:
+                            type: text
+                            display: Caption
+                            instructions: 'Optional. Shown under the image.'
+                    break:
+                      display: 'Break (invisible)'
+                      instructions: 'Ends the text wrap around a floated image without drawing anything. Use it between two facing images so the text starts beside the second one. For a visible divider, use the horizontal rule button instead.'
+                      fields:
+                        -
+                          handle: space
+                          field:
+                            type: select
+                            display: 'Extra space'
+                            default: none
+                            clearable: false
+                            instructions: 'Vertical gap left behind, on top of the clearing.'
+                            options:
+                              none: None
+                              small: Small
+                              large: Large
                     email_subscription_prompt:
                       display: 'Email Subscription prompt'
                       instructions: 'Include an inline email subscription prompt'

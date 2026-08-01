@@ -49,6 +49,8 @@ class SocialCardController extends Controller
             'starsEditable' => false,
             'warning' => null,
             'canSave' => $canSave,
+            // So the OpenGraph tab can say whether this show already has one, and link to it.
+            'existingOgUrl' => $canSave ? $entry->og_image?->url() : null,
             'saveUrl' => cp_route('fringe-social-card.save', $entry->id()),
             'buildUrl' => null,
             'backUrl' => $backUrl,
@@ -61,6 +63,7 @@ class SocialCardController extends Controller
                 'focalX' => (int) $options->get('focal_x', 50),
                 'focalY' => (int) $options->get('focal_y', 50),
                 'starsEnabled' => (bool) $options->get('stars_enabled', true),
+                'starsColour' => (string) $options->get('stars_colour', 'white'),
                 // Fixed: the rating belongs to the review, so the switch only hides it.
                 'starsFixedText' => (string) $stars,
                 'starsValue' => 0,
@@ -80,12 +83,15 @@ class SocialCardController extends Controller
         $entry = $this->findReview($entryId);
 
         $request->validate([
-            'quote' => 'required|string|max:280',
+            // Nullable so a stars-only card can be saved: with no quote the card drops the
+            // quotation marks entirely rather than showing an empty pair.
+            'quote' => 'nullable|string|max:280',
             'position' => 'required|integer|between:0,100',
             'focal_x' => 'required|integer|between:0,100',
             'focal_y' => 'required|integer|between:0,100',
             'text_size' => 'required|integer|between:20,150',
             'stars_enabled' => 'required|boolean',
+            'stars_colour' => 'required|in:white,black,gold,teal',
             'attribution_enabled' => 'required|boolean',
             'attribution_text' => 'nullable|string|max:120',
             'attribution_size' => 'required|integer|between:16,80',
@@ -107,6 +113,7 @@ class SocialCardController extends Controller
                 'focal_y' => (int) $request->input('focal_y'),
                 'text_size' => (int) $request->input('text_size'),
                 'stars_enabled' => $request->boolean('stars_enabled'),
+                'stars_colour' => (string) $request->input('stars_colour'),
                 'attribution_enabled' => $request->boolean('attribution_enabled'),
                 'attribution_text' => (string) $request->input('attribution_text'),
                 'attribution_size' => (int) $request->input('attribution_size'),
@@ -164,6 +171,7 @@ class SocialCardController extends Controller
             'focal_y' => 'Vertical focus',
             'text_size' => 'Text size',
             'stars_enabled' => 'Star rating toggle',
+            'stars_colour' => 'Star colour',
             'attribution_enabled' => 'Attribution toggle',
             'attribution_text' => 'Attribution text',
             'attribution_size' => 'Attribution text size',

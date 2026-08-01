@@ -33,6 +33,20 @@
         </label>
     </div>
     <input type="hidden" name="stars_enabled" :value="starsEnabled ? 1 : 0">
+    <input type="hidden" name="stars_colour" :value="starsColour">
+    <div class="field" x-show="starsEnabled">
+        <label>Star colour</label>
+        <div class="swatches" role="radiogroup" aria-label="Star colour">
+            @foreach (['white' => 'White', 'black' => 'Black', 'gold' => 'Gold', 'teal' => 'Teal'] as $key => $label)
+                <button type="button" class="swatch swatch--{{ $key }}"
+                        :class="starsColour === '{{ $key }}' && 'on'"
+                        :aria-checked="starsColour === '{{ $key }}'"
+                        role="radio"
+                        @click="starsColour = '{{ $key }}'"
+                        title="{{ $label }}"><span aria-hidden="true">★</span><span class="sr-only">{{ $label }}</span></button>
+            @endforeach
+        </div>
+    </div>
     @if ($starsEditable ?? false)
         <div x-show="starsEnabled">
             <div class="field">

@@ -13,6 +13,7 @@
             focalX: config.focalX,
             focalY: config.focalY,
             starsEnabled: config.starsEnabled,
+            starsColour: config.starsColour,
             // Fixed on an entry (it comes from the review); driven by starsValue in the
             // generator, where the user sets the rating themselves.
             starsFixedText: config.starsFixedText,
@@ -34,9 +35,21 @@
             imgAspect: null,
             format: 'feed',
             vw: window.innerWidth,
+            // Rendered height of the text panel in card pixels. Drives the scrim, so the
+            // dark band grows with the quote instead of being a fixed slice of the card.
+            panelHeight: 0,
 
             init() {
                 window.addEventListener('resize', () => this.vw = window.innerWidth);
+
+                // offsetHeight is layout size, unaffected by the CSS transform that scales
+                // the preview, so this is the true height at 1080px wide.
+                const panel = this.$refs.panel;
+                if (panel) {
+                    const measure = () => this.panelHeight = panel.offsetHeight;
+                    measure();
+                    new ResizeObserver(measure).observe(panel);
+                }
             },
 
             // ---- Stars ----
@@ -50,6 +63,20 @@
             },
             get showStars() {
                 return this.starsEnabled && !!this.starsText;
+            },
+            // Black is included deliberately — it's the right choice over a pale image, and
+            // the live preview shows immediately when it isn't.
+            get starsColourValue() {
+                return {
+                    white: '#ffffff',
+                    black: '#111111',
+                    gold: '#f5c518',
+                    teal: '#008483',
+                }[this.starsColour] || '#ffffff';
+            },
+            // A card can be stars-only; empty quotation marks around nothing look like a bug.
+            get hasQuote() {
+                return (this.quote || '').trim().length > 0;
             },
 
             // ---- Format ----
@@ -85,18 +112,35 @@
                     ? size + ' background: #111;'
                     : size + ' background: linear-gradient(155deg, #0d3d3c 0%, #08211f 55%, #050d0d 100%);';
             },
-            // Dark plateau centered on the text, fading to transparent in both directions.
-            // At the extremes the plateau runs off the card edge, leaving a single fade —
-            // solid black at the bottom fading upward (or the reverse at the top). Pointless
-            // without a photo underneath, so it's skipped on the flat background.
+            // A dark band behind the text, fading out above and below. It used to be a fixed
+            // slice of the card centred on `position`, which meant a long quote — or one with
+            // manual line breaks — overflowed the dark part and became unreadable against the
+            // photo, worst at the top and bottom positions. Now it's derived from where the
+            // panel actually sits and how tall it actually is, so it always covers the text.
+            //
+            // The panel is positioned `top: p%` with `translateY(-p%)` of its own height, so
+            // its top edge is at (p/100) * (cardHeight - panelHeight). At the extremes the
+            // band runs off the card edge, leaving a single fade, which is what you want.
+            //
+            // Pointless without a photo underneath, so it's skipped on the flat background.
             get scrimStyle() {
                 if (!this.bgUrl) return '';
-                const p = Number(this.position);
+
+                const height = this.cardHeight;
+                // Before the observer has reported, assume a typical panel rather than none.
+                const panel = this.panelHeight || height * 0.24;
+                const pct = (px) => (px / height) * 100;
+
+                const top = (Number(this.position) / 100) * (height - panel);
+                const solidFrom = pct(top - 40);
+                const solidTo = pct(top + panel + 40);
+                const fade = pct(260);
+
                 return `background: linear-gradient(to bottom,`
-                    + ` rgba(0,0,0,0) ${p - 38}%,`
-                    + ` rgba(0,0,0,0.88) ${p - 12}%,`
-                    + ` rgba(0,0,0,0.88) ${p + 12}%,`
-                    + ` rgba(0,0,0,0) ${p + 38}%)`;
+                    + ` rgba(0,0,0,0) ${solidFrom - fade}%,`
+                    + ` rgba(0,0,0,0.88) ${solidFrom}%,`
+                    + ` rgba(0,0,0,0.88) ${solidTo}%,`
+                    + ` rgba(0,0,0,0) ${solidTo + fade}%)`;
             },
             get usingPoster() {
                 return this.bgUrl === this.posterUrl;
