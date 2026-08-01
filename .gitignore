@@ -1,8 +1,10 @@
 /.phpunit.cache
 /node_modules
 /public/build
+/public/cp-hot
 /public/hot
 /public/storage
+/public/vendor/app
 /public/vendor/statamic
 /storage/*.key
 /vendor

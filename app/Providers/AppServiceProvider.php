@@ -60,10 +60,15 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        Statamic::vite('video-distribution', [
-            'input' => ['resources/js/cp.js'],
-            'publicDirectory' => 'public',
-            'buildDirectory' => 'build',
+        // Custom Control Panel assets — the two fieldtypes registered above. Built by
+        // `npm run cp:build` from vite-cp.config.js, which must stay in sync with this.
+        Statamic::vite('app', [
+            'input' => [
+                'resources/js/cp.js',
+                'resources/css/cp.css',
+            ],
+            'hotFile' => public_path('cp-hot'),
+            'buildDirectory' => 'vendor/app',
         ]);
 
         Statamic::pushCpRoutes(function () {
