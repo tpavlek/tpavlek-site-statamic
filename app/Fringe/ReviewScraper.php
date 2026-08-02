@@ -456,9 +456,13 @@ class ReviewScraper
             $author = trim($m[1]);
         }
 
+        // Photo credits are paragraphs too, and a long one clears MIN_PARAGRAPH: "Jeff and
+        // Ryan Gladstone in Riot! Monster Theatre at Edmonton Fringe 2025. Photo supplied" is
+        // 88 characters, so it was being offered as review prose — and being first, it was
+        // the line the card opened on. Excluding them by class beats guessing at their wording.
         $paragraphs = $this->paragraphs(
             $xpath,
-            "//div[contains(@class,'entry-content')]//p",
+            "//div[contains(@class,'entry-content')]//p[not(contains(@class,'wp-caption-text'))]",
             ['to help support', '12thnight.ca theatre coverage', 'click here', 'poster by'],
         );
 
@@ -468,8 +472,78 @@ class ReviewScraper
             paragraphs: $this->sentencesForParagraphs($paragraphs),
             stars: null,
             attribution: $author ? "— {$author}, {$name}" : "— {$name}",
-            image: $this->image($this->meta($xpath, 'og:image')),
+            // The production photo is in the article, not in a meta tag — 12thNight's
+            // og:image is always the site masthead, which image() rejects on shape. So the
+            // body is the first place to look and og:image is only the fallback.
+            image: $this->contentImage($xpath, "//div[contains(@class,'entry-content')]//img")
+                ?? $this->image($this->meta($xpath, 'og:image')),
         );
+    }
+
+    /**
+     * The first image in the article body that's usable as a card background.
+     *
+     * Everything still goes through image(), so the shape and size rules do the discriminating
+     * — which is what separates the show photo from the Patreon badge sitting under it without
+     * having to recognise either. Capped at a handful of candidates so a page full of images
+     * can't turn one crawl into dozens of downloads.
+     */
+    private function contentImage(DOMXPath $xpath, string $query): ?string
+    {
+        $tried = 0;
+
+        foreach ($xpath->query($query) as $img) {
+            if ($tried >= 4) {
+                break;
+            }
+
+            $url = $this->largestSource($img);
+
+            if ($url === null) {
+                continue;
+            }
+
+            $tried++;
+
+            if ($image = $this->image($url)) {
+                return $image;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The biggest rendition an <img> offers: the widest candidate in its srcset, else its src.
+     *
+     * WordPress serves a 640px-wide src with a srcset going up to 1280 — taking the src would
+     * mean a soft background on a 1080px card when a sharp one was on offer.
+     */
+    private function largestSource(\DOMElement $img): ?string
+    {
+        $best = null;
+        $bestWidth = -1;
+
+        foreach (explode(',', $img->getAttribute('srcset')) as $candidate) {
+            $parts = preg_split('/\s+/', trim($candidate));
+
+            if (($parts[0] ?? '') === '') {
+                continue;
+            }
+
+            $width = (int) rtrim($parts[1] ?? '0', 'w');
+
+            if ($width > $bestWidth) {
+                $best = $parts[0];
+                $bestWidth = $width;
+            }
+        }
+
+        $url = $best ?? $img->getAttribute('src');
+
+        // Only absolute http(s): this walks markup from a third-party page, and a relative or
+        // exotic-scheme src is either useless or something we shouldn't be fetching.
+        return preg_match('#^https?://#i', $url) ? $url : null;
     }
 
     /**

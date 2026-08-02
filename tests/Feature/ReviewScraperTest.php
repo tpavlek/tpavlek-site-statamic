@@ -96,6 +96,58 @@ class ReviewScraperTest extends TestCase
         $this->assertStringContainsString('visceral absurdity', implode(' ', $review->sentences()));
     }
 
+    /**
+     * 12thNight's og:image is always the site masthead, so the production photo has to come
+     * out of the article body — and the shape rules are what tell it apart from the Patreon
+     * badge sitting further down, without either having to be recognised.
+     */
+    public function test_it_takes_12th_nights_artwork_from_the_article_body(): void
+    {
+        $article = '<html lang="en"><head>'
+            .'<meta property="og:image" content="https://12thnight.ca/masthead.jpg">'
+            .'</head><body><div class="entry-content">'
+            .'<img src="https://12thnight.ca/show.jpg?w=640" srcset="https://12thnight.ca/show.jpg?w=640 640w, https://12thnight.ca/show.jpg?w=1280 1280w">'
+            .'<p>A properly long paragraph of review prose, easily past the minimum length that separates writing from furniture.</p>'
+            .'</div></body></html>';
+
+        Http::fake([
+            '12thnight.ca/2025/*' => Http::response($article),
+            // Only the widest srcset candidate should ever be asked for.
+            '12thnight.ca/show.jpg?w=1280' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+            '*' => Http::response('', 404),
+        ]);
+
+        $review = $this->scraper()->scrape(self::TN_URL);
+
+        $this->assertStringStartsWith('data:image/jpeg;base64,', $review->image);
+        Http::assertSent(fn ($request) => $request->url() === 'https://12thnight.ca/show.jpg?w=1280');
+        Http::assertNotSent(fn ($request) => $request->url() === 'https://12thnight.ca/show.jpg?w=640');
+    }
+
+    /**
+     * A photo credit is a paragraph too, and a wordy one clears MIN_PARAGRAPH — "…Photo
+     * supplied" is 88 characters. Being first in the article, it became the line the card
+     * opened on.
+     */
+    public function test_it_does_not_mistake_a_photo_caption_for_review_prose(): void
+    {
+        $article = '<html lang="en"><body><div class="entry-content">'
+            .'<div class="wp-caption"><img src="https://12thnight.ca/show.jpg">'
+            .'<p class="wp-caption-text">Jeff and Ryan Gladstone in Riot! Monster Theatre at Edmonton Fringe 2025. Photo supplied</p></div>'
+            .'<p>Imagine this: a time and place when live theatre was such a big deal that it caused a deadly riot.</p>'
+            .'</div></body></html>';
+
+        Http::fake([
+            '12thnight.ca/2025/*' => Http::response($article),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $review = $this->scraper()->scrape(self::TN_URL);
+
+        $this->assertStringStartsWith('Imagine this:', $review->openingLine());
+        $this->assertStringNotContainsString('Photo supplied', implode(' ', $review->sentences()));
+    }
+
     public function test_it_rejects_a_site_banner_as_artwork(): void
     {
         // 12thNight's og:image is its masthead. A 1200x275 strip stretched over a 1080 square
