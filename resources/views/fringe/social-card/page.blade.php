@@ -160,6 +160,9 @@
             </div>
         @endif
     </div>
+
+    {{-- Outside .builder so the overlay covers the page rather than one column. --}}
+    @include('fringe.social-card._quote-picker')
 @endif
 
 @if ($step === 'build')

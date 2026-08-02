@@ -12,8 +12,17 @@ class ScrapedReview
     public function __construct(
         public readonly string $sourceName,
         public readonly ?string $title = null,
-        /** @var string[] */
-        public readonly array $lines = [],
+        /**
+         * Sentences grouped by paragraph, in the order they appear in the article.
+         *
+         * The quote picker shows the review as it reads and lets the user select a run of
+         * sentences, so the paragraph structure has to survive the scrape — a flat list
+         * can't say where one paragraph ends and the next begins, and the excerpt needs
+         * that to put the line breaks back.
+         *
+         * @var string[][]
+         */
+        public readonly array $paragraphs = [],
         public readonly ?float $stars = null,
         public readonly ?string $attribution = null,
         /** Background image as a data: URI — see ReviewScraper::image() for why not a URL. */
@@ -22,15 +31,31 @@ class ScrapedReview
         public readonly ?string $warning = null,
     ) {}
 
+    /**
+     * Every sentence, flattened.
+     *
+     * @return string[]
+     */
+    public function sentences(): array
+    {
+        return $this->paragraphs === [] ? [] : array_merge(...array_values($this->paragraphs));
+    }
+
+    /** What the card starts on: the review's opening sentence. */
+    public function openingLine(): ?string
+    {
+        return $this->paragraphs[0][0] ?? null;
+    }
+
     public function isEmpty(): bool
     {
-        return $this->lines === [] && $this->stars === null && $this->image === null;
+        return $this->paragraphs === [] && $this->stars === null && $this->image === null;
     }
 
     public function withWarning(string $warning): self
     {
         return new self(
-            $this->sourceName, $this->title, $this->lines, $this->stars,
+            $this->sourceName, $this->title, $this->paragraphs, $this->stars,
             $this->attribution, $this->image, $warning,
         );
     }

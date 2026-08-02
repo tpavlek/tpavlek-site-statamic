@@ -67,9 +67,38 @@
         .stepper button:last-child { border-radius: 0 8px 8px 0; }
         .stepper input { width: 100%; text-align: center; border: 1px solid var(--line); border-left: none; border-right: none; font: inherit; font-size: 0.9rem; padding: 0.45rem 0; -moz-appearance: textfield; background: white; }
         .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
-        .line-picker { display: flex; flex-direction: column; gap: 0.35rem; max-height: 13rem; overflow-y: auto; }
-        .line-pick { text-align: left; font-family: Georgia, 'Times New Roman', serif; font-size: 0.92rem; line-height: 1.4; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 0.5rem 0.7rem; cursor: pointer; }
-        .line-pick:hover { border-color: var(--teal); background: var(--teal-wash); }
+        /* ---- Quote picker ---- */
+        [x-cloak] { display: none !important; }
+        .pick-link { display: inline-flex; align-items: center; gap: 0.4rem; font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--teal); background: none; border: none; padding: 0; cursor: pointer; }
+        .pick-link:hover { color: var(--teal-dark); }
+        .pick-link .glyph { font-size: 1rem; line-height: 1; }
+        .picker-backdrop { position: fixed; inset: 0; background: rgba(16, 32, 31, 0.55); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 50; }
+        .picker { background: white; border-radius: 14px; width: min(42rem, 100%); max-height: min(90vh, 46rem); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); }
+        .picker-head { padding: 1.1rem 1.35rem; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; gap: 1rem; }
+        .picker-title { font-size: 1rem; font-weight: 700; }
+        .picker-source { margin-top: 0.15rem; font-size: 0.82rem; color: var(--ink-soft); }
+        .picker-x { margin-left: auto; border: none; background: none; cursor: pointer; font-size: 1.4rem; line-height: 1; color: var(--ink-soft); padding: 0 0.2rem; }
+        .picker-x:hover { color: var(--ink); }
+        .picker-prose { padding: 1.1rem 1.35rem 1.5rem; overflow-y: auto; flex: 1; font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; line-height: 1.6; }
+        .picker-prose p { margin-bottom: 0.9rem; }
+        .picker-prose p:last-child { margin-bottom: 0; }
+        .picker-prose ::selection { background: rgba(0, 132, 131, 0.22); }
+        .sentence { cursor: pointer; border-radius: 3px; }
+        .sentence:hover { background: var(--teal-wash); }
+        .sentence.on { background: rgba(0, 132, 131, 0.2); box-shadow: 0 0 0 1px rgba(0, 132, 131, 0.28); }
+        .picker-foot { border-top: 1px solid var(--line); background: var(--paper); padding: 0.9rem 1.35rem 1.1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+        /* pre-line so a cross-paragraph excerpt previews with the break the card will render. */
+        .excerpt { font-family: Georgia, 'Times New Roman', serif; font-size: 0.95rem; line-height: 1.4; white-space: pre-line; background: white; border: 1px solid var(--line); border-radius: 8px; padding: 0.6rem 0.75rem; max-height: 7rem; overflow-y: auto; }
+        .excerpt.empty { color: var(--ink-soft); font-style: italic; }
+        .picker-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .excerpt-count { font-size: 0.78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+        .excerpt-count.over { color: #c53030; font-weight: 700; }
+        .snap { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--ink-soft); cursor: pointer; }
+        .snap input { accent-color: var(--teal); margin: 0; }
+        .picker-spacer { flex: 1; }
+        .picker .btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+        .picker .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .picker .btn-primary:disabled:hover { background: var(--teal); }
         input[type=file] { width: 100%; font-size: 0.85rem; color: var(--ink-soft); }
         input[type=file]::file-selector-button { font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--teal); background: var(--teal-wash); border: 1px solid var(--teal); border-radius: 8px; padding: 0.4rem 0.9rem; margin-right: 0.8rem; cursor: pointer; }
 

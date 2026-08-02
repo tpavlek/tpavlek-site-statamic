@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CP;
 
 use App\Http\Controllers\Controller;
+use App\Fringe\ReviewScraper;
 use Illuminate\Http\Request;
 use Statamic\Contracts\Entries\Entry;
 use Statamic\Facades\AssetContainer;
@@ -30,7 +31,7 @@ class SocialCardController extends Controller
     private function builder(Entry $entry, string $backUrl, string $backLabel)
     {
         $options = collect($entry->value('share_card_options') ?? []);
-        $lines = $this->quotableLines($entry);
+        $paragraphs = $this->quotableParagraphs($entry);
         $stars = $this->starsLabel($entry);
         $canSave = UserFacade::current() !== null;
 
@@ -56,8 +57,8 @@ class SocialCardController extends Controller
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
             'config' => [
-                'quote' => $entry->value('share_quote') ?: ($lines[0] ?? ''),
-                'reviewLines' => $lines,
+                'quote' => $entry->value('share_quote') ?: ($paragraphs[0][0] ?? ''),
+                'reviewParagraphs' => $paragraphs,
                 'position' => (int) $options->get('position', 100),
                 'textSize' => (int) $options->get('text_size', 42),
                 'focalX' => (int) $options->get('focal_x', 50),
@@ -255,7 +256,14 @@ class SocialCardController extends Controller
      * so any line can be picked as the quote — including the last one. Public for the same
      * reason as starsValue.
      */
-    public function quotableLines(Entry $entry): array
+    /**
+     * The review's prose, as sentences grouped by paragraph — the shape the quote picker
+     * needs so it can show the review as it reads. Splitting is delegated to ReviewScraper
+     * so one of Troy's reviews and a scraped one behave identically in the picker.
+     *
+     * @return string[][]
+     */
+    public function quotableParagraphs(Entry $entry): array
     {
         $body = $entry->value('content');
 
@@ -265,12 +273,13 @@ class SocialCardController extends Controller
 
         $text = is_array($body) ? $this->bardText($body) : trim(strip_tags((string) $body));
 
-        return collect(preg_split('/\n+/', trim($text)))
-            ->flatMap(fn ($paragraph) => preg_split('/(?<=[.!?])\s+/', trim($paragraph)) ?: [])
-            ->map(fn ($sentence) => trim($sentence))
-            ->filter()
-            ->values()
-            ->all();
+        return app(ReviewScraper::class)->sentencesForParagraphs(
+            collect(preg_split('/\n+/', trim($text)))
+                ->map(fn ($paragraph) => trim($paragraph))
+                ->filter()
+                ->values()
+                ->all()
+        );
     }
 
     /**

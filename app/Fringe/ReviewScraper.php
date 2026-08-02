@@ -29,6 +29,26 @@ class ReviewScraper
     /** Paragraphs shorter than this are captions, bylines and furniture, not review prose. */
     private const MIN_PARAGRAPH = 80;
 
+    /**
+     * Consent and legal furniture every one of these sites carries. It reads like prose and is
+     * long enough to clear MIN_PARAGRAPH, so without this the cookie banner gets offered as a
+     * quotable line.
+     */
+    private const BOILERPLATE = [
+        'uses cookies', 'cookies here', 'terms of use', 'privacy policy', 'all rights reserved',
+    ];
+
+    /**
+     * Words that end in a period without ending a sentence. "to be announced Aug. 22 at noon"
+     * used to split into a truncated fragment, which then became the card's default quote.
+     */
+    private const ABBREVIATIONS = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sept', 'Sep', 'Oct', 'Nov', 'Dec',
+        'Mon', 'Tues', 'Tue', 'Wed', 'Thurs', 'Thur', 'Thu', 'Fri', 'Sat', 'Sun',
+        'Mr', 'Mrs', 'Ms', 'Dr', 'Prof', 'Rev', 'Jr', 'Sr', 'St', 'Ave', 'Blvd', 'Rd',
+        'No', 'vs', 'etc', 'Inc', 'Ltd', 'Co', 'approx', 'min', 'Est',
+    ];
+
     public function supportedSources(): array
     {
         return collect(self::SOURCES)->map(fn ($s) => $s[1])->values()->all();
@@ -145,6 +165,7 @@ class ReviewScraper
     private function paragraphs(DOMXPath $xpath, string $query, array $reject): array
     {
         $out = [];
+        $reject = array_merge($reject, self::BOILERPLATE);
 
         foreach ($xpath->query($query) as $node) {
             $text = trim(preg_replace('/\s+/', ' ', $node->textContent));
@@ -162,16 +183,85 @@ class ReviewScraper
             $out[] = $text;
         }
 
-        return $out;
+        return $this->withoutEchoes($out);
     }
 
-    /** Split prose into sentences, the same unit the quote picker offers. */
-    private function sentences(array $paragraphs): array
+    /**
+     * Drops the standfirst.
+     *
+     * These articles open with a deck that repeats a sentence from the body verbatim, so the
+     * same line was offered twice — and, being first, it was what the card defaulted to.
+     * Anything wholly contained in another paragraph is an echo of it, not prose of its own.
+     *
+     * @param  string[]  $paragraphs
+     * @return string[]
+     */
+    private function withoutEchoes(array $paragraphs): array
+    {
+        return array_values(array_filter(
+            $paragraphs,
+            function (string $paragraph, int $i) use ($paragraphs) {
+                foreach ($paragraphs as $j => $other) {
+                    if ($i === $j) {
+                        continue;
+                    }
+
+                    if ($other === $paragraph) {
+                        return $j > $i; // Exact repeat: keep whichever came first.
+                    }
+
+                    if (mb_strlen($other) > mb_strlen($paragraph) && str_contains($other, $paragraph)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            ARRAY_FILTER_USE_BOTH,
+        ));
+    }
+
+    /**
+     * Split prose into sentences, keeping them grouped by paragraph.
+     *
+     * Nothing is dropped for being short. "I was wrong." is twelve characters and the best
+     * line in the review it comes from; the picker lets it be selected together with the
+     * sentence before it, which is the only way it works as a pull quote.
+     *
+     * @param  string[]  $paragraphs
+     * @return string[][]
+     */
+    public function sentencesForParagraphs(array $paragraphs): array
     {
         return collect($paragraphs)
-            ->flatMap(fn ($p) => preg_split('/(?<=[.!?])\s+/', $p) ?: [])
-            ->map(fn ($s) => trim($s))
-            ->filter(fn ($s) => mb_strlen($s) > 25 && mb_strlen($s) <= 280)
+            ->map(fn ($paragraph) => $this->splitSentences($paragraph))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /** @return string[] */
+    private function splitSentences(string $paragraph): array
+    {
+        $marker = "\x1a";
+
+        // Hide the periods that don't end sentences, split, then put them back. A lookbehind
+        // can't do this — PCRE won't take a variable-length one — and the alternative of
+        // listing abbreviations inside the split pattern misses the general case.
+        $protected = preg_replace_callback(
+            '/\b('.implode('|', self::ABBREVIATIONS).')\.|\b[A-Z]\.|\b[a-z]\.[a-z]\./u',
+            fn ($m) => str_replace('.', $marker, $m[0]),
+            $paragraph,
+        );
+
+        // Break on whitespace after terminal punctuation, but only where a new sentence
+        // plausibly starts — a capital, optionally behind an opening quote. \K keeps the
+        // punctuation with the sentence it closes.
+        $parts = preg_split('/[.!?]+["\'”’\)]*\K\s+(?=["\'“‘\(]*\p{Lu})/u', $protected) ?: [];
+
+        return collect($parts)
+            ->map(fn ($s) => trim(str_replace($marker, '.', $s)))
+            ->filter()
             ->values()
             ->all();
     }
@@ -263,7 +353,7 @@ class ReviewScraper
         return new ScrapedReview(
             sourceName: $name,
             title: $title,
-            lines: $this->sentences($paragraphs),
+            paragraphs: $this->sentencesForParagraphs($paragraphs),
             stars: $stars,
             attribution: $author ? "— {$author}, {$name}" : "— {$name}",
             image: $this->image($this->meta($xpath, 'og:image')),
@@ -295,7 +385,7 @@ class ReviewScraper
         return new ScrapedReview(
             sourceName: $name,
             title: $title,
-            lines: $this->sentences($paragraphs),
+            paragraphs: $this->sentencesForParagraphs($paragraphs),
             stars: null,
             attribution: $author ? "— {$author}, {$name}" : "— {$name}",
             image: $this->image($this->meta($xpath, 'og:image')),
@@ -322,7 +412,7 @@ class ReviewScraper
         return new ScrapedReview(
             sourceName: $name,
             title: $entry->value('title'),
-            lines: $shared->quotableLines($entry),
+            paragraphs: $shared->quotableParagraphs($entry),
             stars: $shared->starsValue($entry),
             attribution: "— {$name}",
             image: $entry->poster?->url(),

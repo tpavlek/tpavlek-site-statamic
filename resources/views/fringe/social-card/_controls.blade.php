@@ -13,14 +13,13 @@
         <textarea id="quote" name="quote" maxlength="280" x-model="quote"></textarea>
         <p class="hint">Press Return to set your own line breaks &mdash; they appear on the card exactly as typed.</p>
     </div>
-    <div class="field" x-show="reviewLines.length">
-        <label>Or take a line straight from the review</label>
-        <div class="line-picker">
-            <template x-for="(line, index) in reviewLines" :key="index">
-                <button type="button" class="line-pick" @click="quote = line" x-text="line"></button>
-            </template>
-        </div>
-        <p class="hint">Tap a sentence to make it the quote &mdash; you can still edit it above.</p>
+    {{-- One link rather than the review itself. The quote already starts on the review's
+         opening line, so most people never need to open this. --}}
+    <div class="field" x-show="reviewParagraphs.length">
+        <button type="button" class="pick-link" @click="openPicker">
+            <span class="glyph" aria-hidden="true">&#9776;</span>
+            Pick a different line from the review
+        </button>
     </div>
 </div>
 

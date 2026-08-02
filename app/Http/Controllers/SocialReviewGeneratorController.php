@@ -51,15 +51,13 @@ class SocialReviewGeneratorController extends Controller
 
     private function buildFrom(ScrapedReview $review)
     {
-        $lines = $review->lines;
-
         return view('fringe.social-card.page', array_merge($this->shell(step: 'build'), [
             'stars' => null,
             'showLine' => $review->title,
             'warning' => $review->warning,
             'config' => [
-                'quote' => $lines[0] ?? '',
-                'reviewLines' => $lines,
+                'quote' => $review->openingLine() ?? '',
+                'reviewParagraphs' => $review->paragraphs,
                 'position' => 100,
                 'textSize' => 42,
                 'focalX' => 50,

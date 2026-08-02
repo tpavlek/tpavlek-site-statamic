@@ -69,7 +69,7 @@ class ReviewScraperTest extends TestCase
         $this->assertSame('— Justin Bell, Edmonton Journal', $review->attribution);
         $this->assertStringStartsWith('data:image/jpeg;base64,', $review->image);
 
-        $joined = implode(' ', $review->lines);
+        $joined = implode(' ', $review->sentences());
         $this->assertStringContainsString('singing clinic', $joined);
         // Subscription and newsletter furniture must not end up offered as a pull quote.
         $this->assertStringNotContainsString('welcome email', $joined);
@@ -91,7 +91,7 @@ class ReviewScraperTest extends TestCase
         // 12thNight doesn't publish star ratings, so there is nothing to find.
         $this->assertNull($review->stars);
         $this->assertSame('— Liz Nicholls, 12thNight.ca', $review->attribution);
-        $this->assertStringContainsString('visceral absurdity', implode(' ', $review->lines));
+        $this->assertStringContainsString('visceral absurdity', implode(' ', $review->sentences()));
     }
 
     public function test_it_rejects_a_site_banner_as_artwork(): void
@@ -118,7 +118,7 @@ class ReviewScraperTest extends TestCase
         $review = $this->scraper()->scrape(self::EJ_URL);
 
         $this->assertNotNull($review->warning);
-        $this->assertSame([], $review->lines);
+        $this->assertSame([], $review->paragraphs);
         $this->assertNull($review->stars);
     }
 
@@ -141,7 +141,7 @@ class ReviewScraperTest extends TestCase
         $this->assertNull($review->warning);
         $this->assertSame('100% Wizard', $review->title);
         $this->assertSame(5.0, $review->stars);
-        $this->assertNotEmpty($review->lines);
+        $this->assertNotEmpty($review->paragraphs);
 
         Http::assertNothingSent();
     }
@@ -152,5 +152,111 @@ class ReviewScraperTest extends TestCase
 
         $this->assertNotNull($review->warning);
         $this->assertTrue($review->isEmpty());
+    }
+
+    /**
+     * The quote picker shows the review as it reads and lets the reader select a run of
+     * sentences, so the paragraph boundaries have to survive the scrape.
+     */
+    public function test_it_keeps_sentences_grouped_by_paragraph(): void
+    {
+        Http::fake([
+            'edmontonjournal.com/*' => Http::response($this->fixture('edmonton-journal-review.html')),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $paragraphs = $this->scraper()->scrape(self::EJ_URL)->paragraphs;
+
+        $this->assertNotEmpty($paragraphs);
+
+        foreach ($paragraphs as $paragraph) {
+            $this->assertIsArray($paragraph);
+            $this->assertNotEmpty($paragraph);
+        }
+
+        // More sentences than paragraphs, i.e. the paragraphs really were split up.
+        $this->assertGreaterThan(count($paragraphs), count($paragraphs, COUNT_RECURSIVE) - count($paragraphs));
+    }
+
+    /**
+     * A period inside an abbreviation used to end the sentence, truncating it — and because
+     * the fragment sorted first it became the card's default quote.
+     */
+    public function test_it_does_not_split_a_sentence_on_an_abbreviation(): void
+    {
+        $split = $this->scraper()->sentencesForParagraphs([
+            'Tickets are sold out for the rest of the run. Here it is, to be announced Aug. 22 at noon.',
+        ]);
+
+        $this->assertSame([[
+            'Tickets are sold out for the rest of the run.',
+            'Here it is, to be announced Aug. 22 at noon.',
+        ]], $split);
+    }
+
+    /**
+     * "I was wrong." is twelve characters and the best line in the review it comes from. The
+     * old 25-character floor dropped it, which made the whole excerpt unreachable.
+     */
+    public function test_it_keeps_short_sentences(): void
+    {
+        $split = $this->scraper()->sentencesForParagraphs([
+            'I saw it last year and didn’t think it could get much better. I was wrong.',
+        ]);
+
+        $this->assertSame([[
+            'I saw it last year and didn’t think it could get much better.',
+            'I was wrong.',
+        ]], $split);
+    }
+
+    /**
+     * These articles open with a deck repeating a line from the body verbatim, so the same
+     * sentence was offered twice and, being first, was what the card defaulted to.
+     */
+    public function test_it_drops_a_standfirst_that_repeats_the_body(): void
+    {
+        $deck = 'Here’s hoping the show will be part of the Fringe holdover series, to be announced in August';
+        $body = 'Tickets are sold out for the rest of the run. '.$deck.'.';
+
+        $html = '<html><body><p>'.$deck.'</p><p>'.$body.'</p></body></html>';
+
+        Http::fake(['*' => Http::response($html)]);
+
+        $paragraphs = $this->scraper()->scrape(self::EJ_URL)->paragraphs;
+
+        $this->assertCount(1, $paragraphs);
+        $this->assertStringStartsWith('Tickets are sold out', $paragraphs[0][0]);
+    }
+
+    /** The consent banner is long enough to look like prose, and was offered as a pull quote. */
+    public function test_it_rejects_the_cookie_banner(): void
+    {
+        $html = '<html><body>'
+            .'<p>This website uses cookies to personalize your content (including ads), and allows us to analyze our traffic. Read more about cookies here.</p>'
+            .'<p>The two clown rodents have taken their story and made it even funnier, and a good deal more tender besides.</p>'
+            .'</body></html>';
+
+        Http::fake(['*' => Http::response($html)]);
+
+        $sentences = implode(' ', $this->scraper()->scrape(self::EJ_URL)->sentences());
+
+        $this->assertStringNotContainsString('cookies', $sentences);
+        $this->assertStringContainsString('clown rodents', $sentences);
+    }
+
+    /** The card starts on the review's opening line, not on whatever sorted first. */
+    public function test_the_opening_line_is_the_first_sentence_of_the_first_paragraph(): void
+    {
+        $review = new \App\Fringe\ScrapedReview(
+            sourceName: 'Test',
+            paragraphs: [['First sentence.', 'Second sentence.'], ['Third sentence.']],
+        );
+
+        $this->assertSame('First sentence.', $review->openingLine());
+        $this->assertSame(
+            ['First sentence.', 'Second sentence.', 'Third sentence.'],
+            $review->sentences(),
+        );
     }
 }

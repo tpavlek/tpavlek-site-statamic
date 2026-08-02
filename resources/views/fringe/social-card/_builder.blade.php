@@ -7,7 +7,13 @@
     function cardBuilder(config) {
         return {
             quote: config.quote,
-            reviewLines: config.reviewLines,
+            // Sentences grouped by paragraph. The picker needs the grouping so an excerpt
+            // that crosses a paragraph gets its line break back.
+            reviewParagraphs: config.reviewParagraphs,
+            pickerOpen: false,
+            excerpt: '',
+            selectedSentences: [],
+            snapToSentences: true,
             position: config.position,
             textSize: config.textSize,
             focalX: config.focalX,
@@ -42,6 +48,12 @@
             init() {
                 window.addEventListener('resize', () => this.vw = window.innerWidth);
 
+                // selectionchange is the only event that catches every way a selection can
+                // change — drag, shift-click, double-click, touch handles, keyboard.
+                document.addEventListener('selectionchange', () => {
+                    if (this.pickerOpen) this.readSelection();
+                });
+
                 // offsetHeight is layout size, unaffected by the CSS transform that scales
                 // the preview, so this is the true height at 1080px wide.
                 const panel = this.$refs.panel;
@@ -50,6 +62,121 @@
                     measure();
                     new ResizeObserver(measure).observe(panel);
                 }
+            },
+
+            // ---- Quote picker ----
+            // Flat index for a sentence, so a selection spanning paragraphs is still one
+            // contiguous run of numbers.
+            sentenceIndex(pi, si) {
+                let n = 0;
+                for (let i = 0; i < pi; i++) n += this.reviewParagraphs[i].length;
+                return n + si;
+            },
+            get flatSentences() {
+                const out = [];
+                this.reviewParagraphs.forEach((paragraph, pi) => {
+                    paragraph.forEach((text) => out.push({ text, paragraph: pi }));
+                });
+                return out;
+            },
+            get excerptTooLong() {
+                return this.excerpt.length > 280;
+            },
+
+            openPicker() {
+                this.pickerOpen = true;
+                window.getSelection().removeAllRanges();
+                this.excerpt = '';
+                this.selectedSentences = [];
+                this.$nextTick(() => this.$refs.pickerClose?.focus());
+            },
+            closePicker() {
+                this.pickerOpen = false;
+                window.getSelection().removeAllRanges();
+            },
+            useExcerpt() {
+                this.quote = this.excerpt;
+                this.closePicker();
+            },
+
+            // A plain tap selects the whole sentence. A tap that lands at the end of a real
+            // drag would otherwise collapse it back to one sentence, so leave those alone —
+            // and let shift-click through to the browser, which extends the selection itself.
+            selectSentence(el, event) {
+                if (event.shiftKey) return;
+
+                const selection = window.getSelection();
+                if (selection && !selection.isCollapsed && selection.toString().trim().length > 1) {
+                    return this.readSelection();
+                }
+
+                const range = document.createRange();
+                range.selectNodeContents(el);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                this.readSelection();
+            },
+
+            readSelection() {
+                const prose = this.$refs.pickerProse;
+                const selection = window.getSelection();
+
+                if (!prose || !selection || !selection.rangeCount || selection.isCollapsed) {
+                    this.excerpt = '';
+                    this.selectedSentences = [];
+                    return;
+                }
+
+                const range = selection.getRangeAt(0);
+                if (!prose.contains(range.commonAncestorContainer)) return;
+
+                const hits = [...prose.querySelectorAll('[data-sentence]')]
+                    .filter((el) => this.rangeCovers(range, el))
+                    .map((el) => Number(el.dataset.sentence));
+
+                if (!hits.length) {
+                    this.excerpt = '';
+                    this.selectedSentences = [];
+                    return;
+                }
+
+                if (!this.snapToSentences) {
+                    this.selectedSentences = [];
+                    this.excerpt = selection.toString().replace(/[ \t]+/g, ' ').trim();
+                    return;
+                }
+
+                // Fill the run: a drag that clips the last sentence still takes all of it.
+                const first = Math.min(...hits);
+                const last = Math.max(...hits);
+                this.selectedSentences = Array.from({ length: last - first + 1 }, (_, i) => first + i);
+                this.excerpt = this.joinSentences(first, last);
+            },
+
+            // Sentences within a paragraph join with a space; a new paragraph starts a new
+            // line. The card renders the quote with white-space: pre-line, so the break
+            // survives all the way onto the image.
+            joinSentences(first, last) {
+                const sentences = this.flatSentences;
+                let out = '';
+
+                for (let i = first; i <= last; i++) {
+                    if (i > first) {
+                        out += sentences[i].paragraph === sentences[i - 1].paragraph ? ' ' : '\n\n';
+                    }
+                    out += sentences[i].text;
+                }
+
+                return out;
+            },
+
+            // Strict overlap: a selection that merely ends where a sentence begins doesn't
+            // touch it. intersectsNode() counts that as a hit and drags in a spare sentence.
+            rangeCovers(range, el) {
+                const bounds = document.createRange();
+                bounds.selectNodeContents(el);
+                return range.compareBoundaryPoints(Range.END_TO_START, bounds) < 0
+                    && range.compareBoundaryPoints(Range.START_TO_END, bounds) > 0;
             },
 
             // ---- Stars ----
