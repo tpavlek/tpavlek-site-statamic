@@ -120,6 +120,7 @@
         <label for="image">Image</label>
         <input type="file" id="image" name="image" accept="image/*" @change="pickImage">
         <input type="hidden" name="clear_image" :value="clearImage ? 1 : 0">
+        <p class="hint hint-error" x-show="imageError" x-text="imageError" role="status"></p>
         <p class="hint">
             <span x-show="!bgUrl">No image &mdash; the card uses a solid colour.</span>
             <span x-show="bgUrl && usingPoster">{{ $posterLabel ?? 'Using the show poster.' }}</span>

@@ -32,6 +32,7 @@
             downloadName: config.downloadName,
             ogUrl: config.ogUrl,
             uploadedUrl: null,
+            imageError: '',
             clearImage: false,
             downloading: false,
 @if ($canSave)
@@ -43,7 +44,7 @@
             // A story is 1080x1920, so the 42px that suits a square post reads small in it.
             // Switching formats carries the size across only while it's still the format's
             // default — once someone has set their own, that's their decision, not ours.
-            formatTextSizes: { feed: 42, story: 60, og: 42 },
+            formatTextSizes: { feed: 42, portrait: 42, story: 60, og: 42 },
             vw: window.innerWidth,
             // Rendered height of the text panel in card pixels. Drives the scrim, so the
             // dark band grows with the quote instead of being a fixed slice of the card.
@@ -221,19 +222,28 @@
 
                 this.format = next;
             },
-            // OpenGraph is 1200x630, the 1.91:1 Facebook/Twitter/Slack render at.
+            // OpenGraph is 1200x630, the 1.91:1 Facebook/Twitter/Slack render at. The rest
+            // are the Instagram sizes: square, 4:5 portrait, and a full-height story. The
+            // scale is the cap on the preview; a taller card gets a smaller one so the
+            // whole thing still fits on screen next to the controls.
+            formatSizes: {
+                feed: { width: 1080, height: 1080, scale: 0.5 },
+                portrait: { width: 1080, height: 1350, scale: 0.4 },
+                story: { width: 1080, height: 1920, scale: 0.3 },
+                og: { width: 1200, height: 630, scale: 0.45 },
+            },
+            get formatSize() {
+                return this.formatSizes[this.format] || this.formatSizes.feed;
+            },
             get cardWidth() {
-                return this.format === 'og' ? 1200 : 1080;
+                return this.formatSize.width;
             },
             get cardHeight() {
-                if (this.format === 'og') return 630;
-                return this.format === 'feed' ? 1080 : 1920;
+                return this.formatSize.height;
             },
             get previewScale() {
                 const available = Math.max(240, Math.min(540, this.vw - 64));
-                const byWidth = available / this.cardWidth;
-                if (this.format === 'og') return Math.min(0.45, byWidth);
-                return this.format === 'feed' ? Math.min(0.5, byWidth) : Math.min(0.3, byWidth);
+                return Math.min(this.formatSize.scale, available / this.cardWidth);
             },
             get frameAspect() {
                 return this.cardWidth / this.cardHeight;
@@ -300,15 +310,85 @@
             measureImage(img) {
                 this.imgAspect = img.naturalHeight ? img.naturalWidth / img.naturalHeight : null;
             },
-            pickImage(event) {
+            // A picked file becomes a downscaled JPEG data URL rather than a blob URL, which
+            // is what the poster already is. That matters more than it looks: html-to-image
+            // leaves a data: src alone, but for any other src it fetches the bytes and hands
+            // the cloned <img> a brand new data URL, which then has to be decoded from
+            // scratch inside the SVG the card is rasterized through. Safari drops the image
+            // at that point — silently, so the card renders with everything except the photo
+            // and the #111 card background shows through as a black square. Going in as a
+            // data URL puts an upload on the same path as the poster, which works everywhere.
+            //
+            // Re-encoding is what fixes it, and it settles three other things on the way:
+            // an iPhone HEIC becomes a JPEG every engine can draw, a 4000px photo stops
+            // being a multi-megabyte payload inside the SVG, and EXIF goes away.
+            async pickImage(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-                if (this.uploadedUrl) URL.revokeObjectURL(this.uploadedUrl);
-                this.uploadedUrl = URL.createObjectURL(file);
-                this.clearImage = false;
+
+                this.imageError = '';
+                try {
+                    this.uploadedUrl = await this.toCardImage(file);
+                    this.clearImage = false;
+                } catch (error) {
+                    console.error('Could not read the picked image:', error);
+                    // Whatever the browser can't decode it can't render either, so say so
+                    // now rather than at download time, when it looks like a broken card.
+                    this.imageError = 'This browser could not read that image. Try a JPEG or PNG.';
+                    event.target.value = '';
+                }
+            },
+            // 2160 is generous for a card that's at most 1080x1920 and crops to fill, and
+            // small enough to keep the embedded copy to about a megabyte.
+            async toCardImage(file, max = 2160) {
+                const source = await this.decodeImage(file);
+                const width = source.width || source.naturalWidth;
+                const height = source.height || source.naturalHeight;
+                if (!width || !height) throw new Error('Image decoded with no dimensions');
+
+                const scale = Math.min(1, max / Math.max(width, height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(width * scale);
+                canvas.height = Math.round(height * scale);
+
+                const context = canvas.getContext('2d');
+                // Transparency can't survive the card — .bg covers the frame and the card
+                // sits on #111 — so flatten onto that here instead of leaving it to whatever
+                // the JPEG encoder does with transparent pixels.
+                context.fillStyle = '#111111';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(source, 0, 0, canvas.width, canvas.height);
+                if (source.close) source.close();
+
+                return canvas.toDataURL('image/jpeg', 0.92);
+            },
+            // createImageBitmap applies the EXIF rotation, which matters because re-encoding
+            // drops the tag: a sideways phone photo would otherwise stay sideways. Older
+            // Safari has createImageBitmap but not the orientation option, and honours EXIF
+            // when drawing an <img> anyway, so that's the fallback.
+            async decodeImage(file) {
+                if (window.createImageBitmap) {
+                    try {
+                        return await createImageBitmap(file, { imageOrientation: 'from-image' });
+                    } catch (error) {
+                        // Falls through to the <img> route.
+                    }
+                }
+
+                const url = URL.createObjectURL(file);
+                try {
+                    return await new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = () => reject(new Error('The browser could not decode ' + file.type));
+                        img.src = url;
+                    });
+                } finally {
+                    URL.revokeObjectURL(url);
+                }
             },
             resetToPoster() {
-                if (this.uploadedUrl) URL.revokeObjectURL(this.uploadedUrl);
+                this.imageError = '';
                 this.uploadedUrl = null;
                 this.clearImage = true;
                 const input = document.getElementById('image');
@@ -317,7 +397,61 @@
 
             // ---- Rendering ----
             // Shared by the download button and the OpenGraph upload.
+            //
+            // The photo is drawn onto the canvas here rather than being left inside the card
+            // html-to-image rasterizes. Everything it renders goes through an SVG
+            // foreignObject, and a bitmap in there has to be decoded by the SVG image
+            // context — which some engines, phone browsers especially, quietly decline to
+            // do. The card then comes out with its text, stars and scrim intact and no
+            // photo, which is what a couple of people have reported. Text and gradients in
+            // a foreignObject are reliable; drawImage onto a canvas is reliable; a bitmap
+            // inside a foreignObject is the one part that isn't, so it doesn't go there.
+            //
+            // The crop repeats what `object-fit: cover` and `object-position` do in the
+            // preview, so the download frames the shot exactly as the sliders showed it.
             async renderPng() {
+                const photo = this.bgUrl ? await this.loadPhoto(this.bgUrl) : null;
+                // Without a photo the card is a flat wash the SVG renders perfectly well,
+                // and if the photo won't load for compositing, leaving it in the card is a
+                // better answer than dropping it.
+                const overlay = await this.renderOverlay(!!photo);
+                if (!photo) return overlay;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = this.cardWidth;
+                canvas.height = this.cardHeight;
+                const context = canvas.getContext('2d');
+
+                const scale = Math.max(this.cardWidth / photo.naturalWidth, this.cardHeight / photo.naturalHeight);
+                const width = photo.naturalWidth * scale;
+                const height = photo.naturalHeight * scale;
+                // Percentage object-position places the overflow, not the image: at 0% the
+                // left/top edge lines up, at 100% the right/bottom does.
+                const x = (this.cardWidth - width) * (Number(this.focalX) / 100);
+                const y = (this.cardHeight - height) * (Number(this.focalY) / 100);
+
+                context.drawImage(photo, x, y, width, height);
+                context.drawImage(await this.loadPhoto(overlay), 0, 0, this.cardWidth, this.cardHeight);
+
+                return canvas.toDataURL('image/png');
+            },
+            // Resolves to null rather than throwing: a photo that can't be loaded for
+            // compositing falls back to the old whole-card render.
+            loadPhoto(url) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    // Same-origin assets and data URLs don't need this, but it keeps a
+                    // CORS-enabled remote poster from tainting the canvas.
+                    if (!url.startsWith('data:')) img.crossOrigin = 'anonymous';
+                    img.onload = () => resolve(img);
+                    img.onerror = () => resolve(null);
+                    img.src = url;
+                });
+            },
+            // The card as html-to-image sees it. With the photo composited separately the
+            // background has to come out transparent, so the scrim fades onto the photo
+            // instead of onto a black card.
+            async renderOverlay(withoutPhoto) {
                 const options = {
                     width: this.cardWidth,
                     height: this.cardHeight,
@@ -327,7 +461,7 @@
                     // SecurityErrors from stylesheets injected by browser extensions.
                     skipFonts: true,
                 };
-                return await this.withCaptureClone(async (node) => {
+                return await this.withCaptureClone(withoutPhoto, async (node) => {
                     // html-to-image's first render can fail or come back incomplete in
                     // some engines — retry, then fall back to the Blob-URL route.
                     let result = null;
@@ -411,7 +545,7 @@
             // Alpine's applied state (src, inline styles, text) survives cloneNode, and
             // the clone can be scrubbed freely. It's parked off-viewport (not hidden —
             // html-to-image reads computed styles) and removed afterward.
-            async withCaptureClone(fn) {
+            async withCaptureClone(withoutPhoto, fn) {
                 const clone = document.getElementById('card').cloneNode(true);
                 clone.removeAttribute('id');
                 [clone, ...clone.querySelectorAll('*')].forEach((el) => {
@@ -421,6 +555,15 @@
                         }
                     });
                 });
+                // The photo never goes through html-to-image: either it's composited onto
+                // the canvas afterwards, or there isn't one and the <img> is sitting there
+                // with an empty src, which html-to-image fetches and chokes on — that one
+                // used to take the whole render down for a card with no image.
+                clone.querySelector('.bg')?.remove();
+                // Inline, because html-to-image copies the clone's computed styles onto its
+                // own copy: a removed class would have no effect, this does. Only when
+                // there's a photo to composite — otherwise the flat wash is the card.
+                if (withoutPhoto) clone.style.background = 'transparent';
                 const holder = document.createElement('div');
                 holder.style.position = 'fixed';
                 holder.style.left = '-12000px';

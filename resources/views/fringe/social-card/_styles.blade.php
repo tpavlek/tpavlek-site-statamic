@@ -55,6 +55,7 @@
         .switch input:checked + .switch-track::after { transform: translateX(1.1rem); }
         .switch input:focus-visible + .switch-track { outline: 2px solid var(--teal); outline-offset: 2px; }
         .field .hint { font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.3rem; line-height: 1.4; }
+        .field .hint-error { color: #a32b1f; font-weight: 600; }
         textarea#quote { width: 100%; min-height: 7.5rem; padding: 0.7rem 0.8rem; border: 1px solid var(--line); border-radius: 8px; font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; line-height: 1.45; resize: vertical; background: white; }
         .char-count { float: right; font-weight: 400; color: var(--ink-soft); font-size: 0.78rem; }
         input[type=range] { width: 100%; accent-color: var(--teal); }
