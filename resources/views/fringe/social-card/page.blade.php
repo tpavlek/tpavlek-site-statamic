@@ -118,10 +118,10 @@
     <div class="builder">
         <section class="stage-pane" aria-label="Card preview">
             <div class="format-tabs" role="tablist">
-                <button type="button" :class="format === 'feed' && 'active'" @click="format = 'feed'">Feed post</button>
-                <button type="button" :class="format === 'story' && 'active'" @click="format = 'story'">Story</button>
+                <button type="button" :class="format === 'feed' && 'active'" @click="setFormat('feed')">Feed post</button>
+                <button type="button" :class="format === 'story' && 'active'" @click="setFormat('story')">Story</button>
                 @if ($canSave)
-                    <button type="button" :class="format === 'og' && 'active'" @click="format = 'og'">OpenGraph</button>
+                    <button type="button" :class="format === 'og' && 'active'" @click="setFormat('og')">OpenGraph</button>
                 @endif
             </div>
 

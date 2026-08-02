@@ -40,6 +40,10 @@
 @endif
             imgAspect: null,
             format: 'feed',
+            // A story is 1080x1920, so the 42px that suits a square post reads small in it.
+            // Switching formats carries the size across only while it's still the format's
+            // default — once someone has set their own, that's their decision, not ours.
+            formatTextSizes: { feed: 42, story: 60, og: 42 },
             vw: window.innerWidth,
             // Rendered height of the text panel in card pixels. Drives the scrim, so the
             // dark band grows with the quote instead of being a fixed slice of the card.
@@ -207,6 +211,16 @@
             },
 
             // ---- Format ----
+            // Moves the quote size to the new format's default, but only if it's still
+            // sitting on the old one's — an untouched size is ours to adjust, a chosen one
+            // isn't. Someone who set 55px in a story keeps 55px in a post.
+            setFormat(next) {
+                if (next !== this.format && this.textSize === this.formatTextSizes[this.format]) {
+                    this.textSize = this.formatTextSizes[next];
+                }
+
+                this.format = next;
+            },
             // OpenGraph is 1200x630, the 1.91:1 Facebook/Twitter/Slack render at.
             get cardWidth() {
                 return this.format === 'og' ? 1200 : 1080;
