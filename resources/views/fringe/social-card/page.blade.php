@@ -15,7 +15,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle }}</title>
     @if ($mode === 'generator')
-        <meta name="description" content="Turn a review of your Fringe show into an image for Instagram. Paste a link to a review on Edmonton Journal, 12thNight or troypavlek.ca, or type it in yourself.">
+        {{-- This page has its own shell rather than layout.antlers.html, so the sharing tags
+             it would have inherited have to be set here. The image is the tool's own output
+             next to the pitch — an artist scrolling Facebook should see what they'd get. --}}
+        @php
+            $shareDescription = 'Paste a link to a review of your Fringe show and get an Instagram-ready image of your best line. Works with Fringe Reviews, the Edmonton Journal, 12thNight and troypavlek.ca. Free, no sign-up.';
+            $shareImage = url('/assets/og-social-review-generator.png');
+        @endphp
+        <link rel="canonical" href="{{ route('fringe.social-review-generator') }}">
+        <meta name="description" content="{{ $shareDescription }}">
+
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ route('fringe.social-review-generator') }}">
+        <meta property="og:title" content="Turn your Fringe review into a shareable image">
+        <meta property="og:description" content="{{ $shareDescription }}">
+        <meta property="og:image" content="{{ $shareImage }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="A five-star review quoted over a Fringe show poster as a square Instagram card, beside the words “Your review deserves better than a screenshot.”">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Turn your Fringe review into a shareable image">
+        <meta name="twitter:description" content="{{ $shareDescription }}">
+        <meta name="twitter:image" content="{{ $shareImage }}">
     @else
         <meta name="robots" content="noindex">
     @endif
@@ -70,9 +92,11 @@
                 <button type="submit" class="btn btn-primary">Fetch the review</button>
             </div>
             <p class="sources">
-                Works with <strong>Edmonton Journal</strong>, <strong>12thNight.ca</strong> and
-                <strong>troypavlek.ca</strong>. It'll pull out quotes, ratings and the
-                artwork where the site publishes them. You can edit any part of it before generating your image.
+                Works with <strong>Fringe Reviews</strong>, <strong>Edmonton Journal</strong>,
+                <strong>12thNight.ca</strong> and <strong>troypavlek.ca</strong>. It'll pull out
+                quotes, ratings and the artwork where the site publishes them. Link a show on
+                Fringe Reviews and you'll get to pick which of its reviews to use. You can edit
+                any part of it before generating your image.
             </p>
         </form>
 
@@ -88,6 +112,8 @@
             </form>
         </div>
     </div>
+@elseif ($step === 'select')
+    @include('fringe.social-card._review-chooser')
 @else
     <div class="builder">
         <section class="stage-pane" aria-label="Card preview">

@@ -36,17 +36,51 @@ class SocialReviewGeneratorController extends Controller
         }
 
         $request->validate(
-            ['url' => 'required|url|max:2048'],
+            ['url' => 'required|url|max:2048', 'review' => 'nullable|string|max:64'],
             ['url.required' => 'Paste the link to the review first.', 'url.url' => "That doesn't look like a web address."],
         );
 
+        $url = $request->input('url');
+        $chosen = $request->input('review');
+
         try {
-            $review = $this->scraper->scrape($request->input('url'));
+            // The official Fringe site has no page per review — a link to a show is a link to
+            // every review of it — so the artist says which one they mean before the builder
+            // opens. One review needs no choosing, and none falls through to the warning.
+            if ($chosen === null && $this->scraper->listsManyReviews($url)) {
+                $reviews = $this->scraper->scrapeAll($url);
+
+                if (count($reviews) > 1) {
+                    return $this->chooseFrom($url, $reviews);
+                }
+            }
+
+            $review = $this->scraper->scrape($url, $chosen);
         } catch (UnsupportedReviewSource $e) {
             return back()->withInput()->withErrors(['url' => $e->getMessage()]);
         }
 
         return $this->buildFrom($review);
+    }
+
+    /**
+     * @param  ScrapedReview[]  $reviews
+     */
+    private function chooseFrom(string $url, array $reviews)
+    {
+        $show = $reviews[0]->title;
+
+        return view('fringe.social-card.page', array_merge($this->shell(step: 'select'), [
+            'stars' => null,
+            'showLine' => $show,
+            'heading' => 'Which review?',
+            'lede' => 'There are '.count($reviews).' reviews of '.($show ? '“'.$show.'”' : 'this show')
+                .' on Fringe Reviews. Pick the one you want on your card — you can change the wording afterwards.',
+            'warning' => null,
+            'config' => null,
+            'reviews' => $reviews,
+            'sourceUrl' => $url,
+        ]));
     }
 
     private function buildFrom(ScrapedReview $review)

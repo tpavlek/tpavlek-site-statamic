@@ -23,8 +23,18 @@ class ReviewScraper
     private const SOURCES = [
         'edmontonjournal.com' => ['edmontonJournal', 'Edmonton Journal'],
         '12thnight.ca' => ['twelfthNight', '12thNight.ca'],
+        'reviews.fringetheatre.ca' => ['fringeReviews', 'Fringe Reviews'],
         'troypavlek.ca' => ['troyPavlek', "Troy's Fringe Reviews"],
     ];
+
+    /**
+     * Sources that put many reviews on one page.
+     *
+     * The official Fringe site has no page per review — they're all listed on the show's
+     * event page — so a link to it is a link to every review of that show, and the artist
+     * has to say which one they mean before the builder can open.
+     */
+    private const MULTI_REVIEW = ['fringeReviews'];
 
     /** Paragraphs shorter than this are captions, bylines and furniture, not review prose. */
     private const MIN_PARAGRAPH = 80;
@@ -54,7 +64,40 @@ class ReviewScraper
         return collect(self::SOURCES)->map(fn ($s) => $s[1])->values()->all();
     }
 
-    public function scrape(string $url): ScrapedReview
+    /** Whether a link to this source is a link to many reviews rather than one. */
+    public function listsManyReviews(string $url): bool
+    {
+        return in_array($this->sourceFor($url)[0], self::MULTI_REVIEW, true);
+    }
+
+    /**
+     * Every review on the page, for the chooser.
+     *
+     * The artwork is deliberately not downloaded here — it's one image for the whole show,
+     * and the chooser doesn't display it. It's fetched once the artist has picked.
+     *
+     * @return ScrapedReview[]
+     */
+    public function scrapeAll(string $url): array
+    {
+        [$method, $name] = $this->sourceFor($url);
+
+        if (! in_array($method, self::MULTI_REVIEW, true)) {
+            $review = $this->scrape($url);
+
+            return $review->isEmpty() ? [] : [$review];
+        }
+
+        $html = $this->fetch($url);
+
+        if ($html === null) {
+            return [];
+        }
+
+        return $this->fringeReviewList($this->parse($html), $name, withImage: false);
+    }
+
+    public function scrape(string $url, ?string $reviewId = null): ScrapedReview
     {
         [$method, $name] = $this->sourceFor($url);
 
@@ -73,11 +116,43 @@ class ReviewScraper
 
         $doc = $this->parse($html);
 
-        $review = $this->{$method}($doc, $name);
+        $review = in_array($method, self::MULTI_REVIEW, true)
+            ? $this->pickFromList($doc, $name, $reviewId)
+            : $this->{$method}($doc, $name);
 
         return $review->isEmpty()
             ? $review->withWarning("We loaded that {$name} page but couldn't find a review on it. Fill the card in yourself below.")
             : $review;
+    }
+
+    /**
+     * The chosen review, re-read from the page.
+     *
+     * Selecting by id rather than position is what makes the round-trip safe: a review
+     * posted between the two requests shifts every position after it, and the artist would
+     * silently get a different review than the one they clicked.
+     */
+    private function pickFromList(DOMXPath $xpath, string $name, ?string $reviewId): ScrapedReview
+    {
+        $reviews = $this->fringeReviewList($xpath, $name, withImage: true);
+
+        if ($reviews === []) {
+            return new ScrapedReview($name);
+        }
+
+        if ($reviewId === null) {
+            return $reviews[0];
+        }
+
+        foreach ($reviews as $review) {
+            if ($review->reviewId === $reviewId) {
+                return $review;
+            }
+        }
+
+        return $reviews[0]->withWarning(
+            "That review isn't on the page any more, so we've opened the most recent one instead."
+        );
     }
 
     /**
@@ -313,7 +388,12 @@ class ReviewScraper
         }
 
         // Too small to fill a 1080px card, or too strip-shaped to be artwork.
-        if (max($width, $height) < 500) {
+        //
+        // 400 rather than 500 because Fringe Reviews posters are routinely 450 square —
+        // real cover art, just modest. Upscaled behind the scrim it reads fine, and the
+        // alternative is the flat gradient, i.e. no artwork at all. Banners are caught by
+        // the ratio check below rather than by this one.
+        if (max($width, $height) < 400) {
             return null;
         }
 
@@ -390,6 +470,83 @@ class ReviewScraper
             attribution: $author ? "— {$author}, {$name}" : "— {$name}",
             image: $this->image($this->meta($xpath, 'og:image')),
         );
+    }
+
+    /**
+     * The official Fringe review site. Every review of a show lives on the show's event page
+     * — there is no page per review — so this returns all of them and the artist picks.
+     *
+     * Ratings are rendered as one filled star SVG per point, with the empty ones simply not
+     * drawn, so counting them is the rating. A review with none is unrated rather than
+     * zero-rated: the card starts with the star switch off, the same as 12thNight.
+     *
+     * @return ScrapedReview[]
+     */
+    private function fringeReviewList(DOMXPath $xpath, string $name, bool $withImage): array
+    {
+        $title = $this->meta($xpath, 'og:title');
+        $title = $title ? trim(preg_replace('/\s*[-–]\s*Fringe Reviews\s*$/i', '', $title)) : null;
+
+        $image = $withImage ? $this->image($this->meta($xpath, 'og:image')) : null;
+
+        $reviews = [];
+
+        foreach ($xpath->query('//div[@id="reviews"]//div[contains(@class,"rounded-2xl")]') as $block) {
+            $reviewer = null;
+
+            foreach ($xpath->query('.//a[starts-with(@href,"/reviewers/")]', $block) as $link) {
+                $reviewer = trim($link->textContent);
+                break;
+            }
+
+            // The report link is the only stable id the markup exposes, and it sits in the
+            // block's sibling rather than inside it.
+            $reviewId = null;
+
+            foreach ($xpath->query('following-sibling::div[1]//a[contains(@href,"/reports/create/")]', $block) as $link) {
+                if (preg_match('/review=(\d+)/', $link->getAttribute('href'), $matches)) {
+                    $reviewId = $matches[1];
+                    break;
+                }
+            }
+
+            $stars = $xpath->query('.//svg[contains(@class,"fill-yellow-500")]', $block)->length;
+
+            // Two muted lines under the name: which festival, then when.
+            $meta = [];
+
+            foreach ($xpath->query('.//div[contains(@class,"opacity-60")]', $block) as $node) {
+                $meta[] = trim(preg_replace('/\s+/', ' ', $node->textContent));
+            }
+
+            $paragraphs = [];
+
+            foreach ($xpath->query('.//div[contains(@class,"prose")]//p', $block) as $node) {
+                $text = trim(preg_replace('/\s+/', ' ', $node->textContent));
+
+                if ($text !== '') {
+                    $paragraphs[] = $text;
+                }
+            }
+
+            if ($paragraphs === []) {
+                continue;
+            }
+
+            $reviews[] = new ScrapedReview(
+                sourceName: $name,
+                title: $title,
+                paragraphs: $this->sentencesForParagraphs($paragraphs),
+                stars: $stars > 0 ? (float) $stars : null,
+                attribution: $reviewer ? "— {$reviewer}, {$name}" : "— {$name}",
+                image: $image,
+                reviewId: $reviewId,
+                reviewer: $reviewer,
+                reviewedAt: $meta[1] ?? null,
+            );
+        }
+
+        return $reviews;
     }
 
     /**

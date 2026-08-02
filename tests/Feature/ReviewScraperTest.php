@@ -20,6 +20,8 @@ class ReviewScraperTest extends TestCase
 
     private const TN_URL = 'https://12thnight.ca/2025/08/15/the-ticking-explosive-within-bomb-a-fringe-review/';
 
+    private const FR_URL = 'https://reviews.fringetheatre.ca/events/110-wizard/';
+
     private function fixture(string $name): string
     {
         return file_get_contents(__DIR__.'/../Fixtures/'.$name);
@@ -109,6 +111,46 @@ class ReviewScraperTest extends TestCase
         ]);
 
         $this->assertNull($this->scraper()->scrape(self::TN_URL)->image);
+    }
+
+    /**
+     * Fringe Reviews posters are routinely 450 square — real cover art, just modest. Behind
+     * the card's scrim an upscale of one reads fine, and rejecting it means no artwork at all.
+     */
+    public function test_it_accepts_a_modest_square_poster(): void
+    {
+        $this->fakeArtworkOf(450);
+
+        $this->assertNotNull($this->scraper()->scrape(self::TN_URL)->image);
+    }
+
+    /** Still small enough to be an icon rather than a poster. */
+    public function test_it_rejects_a_thumbnail_as_artwork(): void
+    {
+        $this->fakeArtworkOf(300);
+
+        $this->assertNull($this->scraper()->scrape(self::TN_URL)->image);
+    }
+
+    /**
+     * Serves a square JPEG of the given size for the artwork request.
+     *
+     * Scoped to the article path: a bare 12thnight.ca/* would also swallow the request for
+     * their og:image and the "image" would come back as the HTML fixture. It also has to be
+     * the only fake in the test — a second Http::fake() merges rather than replaces, so the
+     * first '*' stub would keep winning.
+     */
+    private function fakeArtworkOf(int $size): void
+    {
+        $image = imagecreatetruecolor($size, $size);
+        ob_start();
+        imagejpeg($image);
+        $bytes = (string) ob_get_clean();
+
+        Http::fake([
+            '12thnight.ca/2025/*' => Http::response($this->fixture('twelfth-night-review.html')),
+            '*' => Http::response($bytes, 200, ['Content-Type' => 'image/jpeg']),
+        ]);
     }
 
     public function test_an_unreachable_page_warns_instead_of_throwing(): void
@@ -243,6 +285,96 @@ class ReviewScraperTest extends TestCase
 
         $this->assertStringNotContainsString('cookies', $sentences);
         $this->assertStringContainsString('clown rodents', $sentences);
+    }
+
+    /**
+     * The official Fringe site lists every review of a show on the show's page, so a link to
+     * it is a link to ten reviews and the artist has to pick one.
+     */
+    public function test_it_reads_every_review_on_a_fringe_reviews_event_page(): void
+    {
+        Http::fake([
+            'reviews.fringetheatre.ca/*' => Http::response($this->fixture('fringe-reviews-event.html')),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $reviews = $this->scraper()->scrapeAll(self::FR_URL);
+
+        $this->assertCount(10, $reviews);
+        $this->assertSame('Allison Murray', $reviews[0]->reviewer);
+        $this->assertSame('2711', $reviews[0]->reviewId);
+        $this->assertSame('July 13, 2026, 4:59 p.m.', $reviews[0]->reviewedAt);
+        $this->assertSame('100% Wizard', $reviews[0]->title);
+        $this->assertSame('— Allison Murray, Fringe Reviews', $reviews[0]->attribution);
+        $this->assertNotEmpty($reviews[0]->paragraphs);
+
+        // Every review carries an id, which is what the chooser round-trips.
+        $ids = array_map(fn ($review) => $review->reviewId, $reviews);
+        $this->assertCount(10, array_filter($ids));
+        $this->assertSame($ids, array_unique($ids));
+
+        // The list doesn't display artwork, so it isn't downloaded to build one.
+        foreach ($reviews as $review) {
+            $this->assertNull($review->image);
+        }
+    }
+
+    /**
+     * Ratings render as one filled star each with the empty ones left undrawn, so counting
+     * them is the rating — and none means unrated, not zero, which is what keeps the card's
+     * star switch off rather than showing a made-up nought.
+     */
+    public function test_it_counts_stars_and_leaves_an_unrated_review_unrated(): void
+    {
+        Http::fake([
+            'reviews.fringetheatre.ca/*' => Http::response($this->fixture('fringe-reviews-event.html')),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $reviews = collect($this->scraper()->scrapeAll(self::FR_URL))->keyBy->reviewId;
+
+        $this->assertSame(5.0, $reviews['2662']->stars);
+        $this->assertNull($reviews['2471']->stars, 'Janine Marley left no rating.');
+    }
+
+    /**
+     * Selecting by id, not by position: a review posted between the two requests shifts
+     * every position after it and would hand the artist a different review.
+     */
+    public function test_it_builds_the_review_the_artist_picked(): void
+    {
+        Http::fake([
+            'reviews.fringetheatre.ca/*' => Http::response($this->fixture('fringe-reviews-event.html')),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $review = $this->scraper()->scrape(self::FR_URL, '2662');
+
+        $this->assertSame('Brian Cheung', $review->reviewer);
+        $this->assertNull($review->warning);
+        $this->assertStringContainsString('Excellent crowd work', $review->openingLine());
+        // The artwork is fetched now that there's one review to put it behind.
+        $this->assertStringStartsWith('data:image/jpeg;base64,', $review->image);
+    }
+
+    public function test_a_review_that_has_since_gone_falls_back_and_says_so(): void
+    {
+        Http::fake([
+            'reviews.fringetheatre.ca/*' => Http::response($this->fixture('fringe-reviews-event.html')),
+            '*' => Http::response($this->artwork(), 200, ['Content-Type' => 'image/jpeg']),
+        ]);
+
+        $review = $this->scraper()->scrape(self::FR_URL, '404404');
+
+        $this->assertSame('Allison Murray', $review->reviewer);
+        $this->assertStringContainsString("isn't on the page any more", $review->warning);
+    }
+
+    public function test_only_the_fringe_site_lists_many_reviews(): void
+    {
+        $this->assertTrue($this->scraper()->listsManyReviews(self::FR_URL));
+        $this->assertFalse($this->scraper()->listsManyReviews(self::EJ_URL));
+        $this->assertFalse($this->scraper()->listsManyReviews(self::TN_URL));
     }
 
     /** The card starts on the review's opening line, not on whatever sorted first. */

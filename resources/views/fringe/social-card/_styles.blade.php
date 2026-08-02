@@ -151,6 +151,31 @@
         .notice { margin-top: 1rem; border-radius: 8px; padding: 0.7rem 0.9rem; font-size: 0.88rem; }
         .notice-warn { background: #fffaf0; border: 1px solid #dd6b20; color: #9c4221; }
 
+        /* ---- Review chooser (sources that list many reviews on one page) ---- */
+        .review-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr)); gap: 1rem; margin-top: 0.5rem; }
+        .review-option { display: flex; flex-direction: column; gap: 0.5rem; background: white; border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem; }
+        .review-option:hover { border-color: var(--teal); }
+        .review-option-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; }
+        .review-who { font-weight: 700; font-size: 0.95rem; }
+        .review-stars { color: var(--teal); letter-spacing: 2px; font-size: 0.95rem; white-space: nowrap; }
+        .review-unrated { font-size: 0.78rem; color: var(--ink-soft); white-space: nowrap; }
+        .review-when { font-size: 0.78rem; color: var(--ink-soft); }
+        /* Capped rather than truncated: the whole review is here to read, but a seven-paragraph
+           one mustn't push every other option off the screen. Overlay scrollbars are why
+           there's a fade instead of a styled scrollbar — on macOS the thumb is invisible
+           until you're already scrolling, which is too late to be a hint. */
+        .review-body { font-family: Georgia, 'Times New Roman', serif; font-size: 0.92rem; line-height: 1.5; max-height: 11rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; }
+        /* Only where text is actually still below the fold. The box shrinks to its content —
+           the button's auto margin takes up the slack — so its bottom edge sits on the last
+           line whether or not anything is cut off. An unconditional mask therefore fades the
+           final line of every card, and swallows a one-line review whole: at 22px tall, a
+           1.4rem fade starts above the top of the element. markClipped() in the chooser keeps
+           this class in step with the scroll position. */
+        .review-body.is-clipped {
+            -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4rem), transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4rem), transparent 100%); }
+        .review-option .btn { margin-top: auto; align-self: flex-start; padding: 0.5rem 1rem; font-size: 0.88rem; }
+
         /* ---- Star colour swatches ---- */
         .swatches { display: flex; gap: 0.4rem; }
         .swatch { width: 2.4rem; height: 2.4rem; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; font-size: 1.1rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
