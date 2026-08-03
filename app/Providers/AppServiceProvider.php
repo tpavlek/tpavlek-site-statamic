@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Statamic\Events\EntrySaving;
 use Statamic\Facades\Collection;
+use Statamic\Hooks\CP\EntriesIndexQuery;
 use Statamic\Statamic;
 use Statamic\Support\Str;
 use Stillat\Relationships\Support\Facades\Relate;
@@ -85,6 +86,22 @@ class AppServiceProvider extends ServiceProvider
                 Route::post('{entryId}/distribute', [VideoDistributionController::class, 'distribute']);
                 Route::delete('{entryId}/{platform}/clear', [VideoDistributionController::class, 'clear']);
             });
+        });
+
+        // Second sort key for the fringe_reviews CP listing. The collection declares
+        // `sort_by: festival` / `sort_dir: desc`, but a collection only gets one, so within
+        // a festival the entries would fall back to Stache order. Appending last_modified puts
+        // whatever was touched most recently at the top of the current year.
+        //
+        // Skipped while searching, where the controller deliberately leaves the query unsorted
+        // so search relevance survives. Note the key is `last_modified`, not `updated_at` —
+        // only the former is queryable on an entry.
+        EntriesIndexQuery::hook('query', function ($payload, $next) {
+            if ($payload->collection->handle() === 'fringe_reviews' && ! request('search')) {
+                $payload->query->orderBy('last_modified', 'desc');
+            }
+
+            return $next($payload);
         });
 
         Relate::oneToMany(

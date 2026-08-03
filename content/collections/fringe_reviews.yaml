@@ -3,7 +3,11 @@ template: fringe/review
 layout: layout
 revisions: false
 route: 'fringe/{festival}/reviews/{url_slug}'
-sort_dir: asc
+# The CP opens on this collection (see the start_page preference in users/), so the list
+# defaults to newest festival first. AppServiceProvider adds last_modified desc as the
+# secondary sort, since a collection can only declare one sort field.
+sort_by: festival
+sort_dir: desc
 date: true
 # Reviews are dated within the festival they cover, so a show at an upcoming festival is
 # future-dated. Watchlist entries have to be readable before the festival opens, so future
