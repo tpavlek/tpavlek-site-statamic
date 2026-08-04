@@ -149,10 +149,15 @@
 
         /* Fanned show cards. Square art, so the stack is sized off the card height and the
            tilt alternates to read as a handful of them rather than a misaligned one. */
+        /* margin-right, not margin-left: the copy is `flex: 1 1 auto`, so a negative left
+           margin is simply handed back to the copy and the fan doesn't move. Pulling the
+           right margin in is what pushes the fan past the padding, so a fourth card runs off
+           the edge of the canvas instead of crowding the headline. */
         .art {
             flex: 0 0 auto;
             position: relative;
-            width: {{ $artWidth }}px;
+            width: {{ $fan['width'] }}px;
+            margin-right: -{{ $fan['overhang'] }}px;
             height: 400px;
         }
 
@@ -162,7 +167,9 @@
         .square .art {
             align-self: center;
             flex: 1 1 auto;
-            width: {{ $squareArtWidth }}px;
+            width: {{ $squareFan['width'] }}px;
+            /* Stacked and centred, so there is nothing to push against. */
+            margin-right: 0;
             height: auto;
         }
 
@@ -185,19 +192,44 @@
             outline-offset: -3px;
         }
 
+        {{-- A photo reads as a photo, not as another piece of show art: white edge, a firmer
+             tilt, and always on top of the fan. --}}
+        .art img.portrait {
+            /* White behind, so a cutout PNG reads as a photo rather than a teal-filled hole. */
+            background: white;
+            border: 10px solid white;
+            outline: none;
+            box-shadow: 0 22px 52px rgba(0, 0, 0, 0.5);
+            object-position: {{ $portraitFocus }};
+        }
+
         @foreach ($images as $i => $image)
             .art img:nth-child({{ $i + 1 }}) {
-                left: {{ $i * 112 }}px;
+                left: {{ $i * $fan['step'] }}px;
                 z-index: {{ $i + 1 }};
                 transform: translateY(-50%) rotate({{ $i % 2 === 0 ? -4 : 5 }}deg);
             }
 
             {{-- Bottom-anchored, so the translateY that centres the wide card's fan has to go. --}}
             .square .art img:nth-child({{ $i + 1 }}) {
-                left: {{ $i * 190 }}px;
+                left: {{ $i * $squareFan['step'] }}px;
                 transform: rotate({{ $i % 2 === 0 ? -4 : 5 }}deg);
             }
         @endforeach
+
+        @if ($portrait)
+            @php($p = count($images))
+            .art img:nth-child({{ $p + 1 }}) {
+                left: {{ $p * $fan['step'] }}px;
+                z-index: {{ $p + 1 }};
+                transform: translateY(-50%) rotate({{ $p % 2 === 0 ? -4 : 5 }}deg);
+            }
+
+            .square .art img:nth-child({{ $p + 1 }}) {
+                left: {{ $p * $squareFan['step'] }}px;
+                transform: rotate({{ $p % 2 === 0 ? -4 : 5 }}deg);
+            }
+        @endif
     </style>
 </head>
 <body class="{{ $format }}">
@@ -225,11 +257,15 @@
             @endif
         </div>
 
-        @if ($images)
+        @if ($images || $portrait)
             <div class="art">
                 @foreach ($images as $image)
                     <img src="{{ $image }}" alt="">
                 @endforeach
+
+                @if ($portrait)
+                    <img class="portrait" src="{{ $portrait }}" alt="">
+                @endif
             </div>
         @endif
     </div>

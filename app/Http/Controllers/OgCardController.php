@@ -47,6 +47,7 @@ class OgCardController extends Controller
         [$width, $height] = CardRenderer::FORMATS[$format];
 
         $headline = $this->text($request, 'headline', $defaults);
+        $portrait = $this->portrait($request);
         $images = $this->images($request, $defaults);
 
         return response()
@@ -61,11 +62,14 @@ class OgCardController extends Controller
                 'footnote' => $this->text($request, 'footnote', $defaults),
                 'cta' => $this->text($request, 'cta', $defaults),
                 'images' => $images,
-                // Two cards need less room than three, and the copy should take the slack.
-                'artWidth' => $images ? 300 + (count($images) - 1) * 112 : 0,
-                // The square card has the full width to play with, so the fan runs bigger
-                // and spreads further; these mirror the sizes in the stylesheet.
-                'squareArtWidth' => $images ? 520 + (count($images) - 1) * 190 : 0,
+                'portrait' => $portrait,
+                // A photo is rarely square and the interesting part is rarely dead centre.
+                'portraitFocus' => $this->focus($request->query('portrait_focus')),
+                // Geometry for the fan of cards beside (or beneath) the copy.
+                'fan' => $this->fan(count($images) + ($portrait ? 1 : 0), 300, self::FAN_STEP),
+                // The square card stacks, so it has the full width to play with and the fan
+                // runs bigger; these mirror the sizes in the stylesheet.
+                'squareFan' => $this->fan(count($images) + ($portrait ? 1 : 0), 520, self::SQUARE_FAN_STEP),
                 'pattern' => '/assets/fringe/fringe-doodles.svg',
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');
@@ -100,13 +104,78 @@ class OgCardController extends Controller
     }
 
     /**
-     * Local paths only. The rasteriser loads this page from the site itself, so a remote URL
-     * would be a cross-origin fetch that may or may not have resolved by the time Chrome
-     * takes the shot — and a card is not worth a flaky render.
-     *
-     * A bare path is an asset path (`fringe/og/foo.png`), matching how an entry stores one.
-     * Start it with a slash to mean a site-root path instead.
+     * The artwork fanned beside the copy. A bare path is an asset path
+     * (`fringe/og/foo.png`), matching how an entry stores one; start it with a slash to mean
+     * a site-root path instead.
      */
+    /**
+     * How far each card in the fan is offset from the one behind it, by how many there are.
+     *
+     * A fourth card is tighter than three so the fan grows by less than a full card width —
+     * see `bleed` below for where that growth goes.
+     */
+    private const FAN_STEP = [3 => 112, 4 => 96];
+
+    private const SQUARE_FAN_STEP = [3 => 190, 4 => 150];
+
+    /**
+     * The fan's geometry: how wide it is, how far apart the cards sit, and how far it hangs
+     * off the right edge of the card.
+     *
+     * The overhang is the point, and it has to be a negative *margin-right*. A negative
+     * margin-left does nothing here: the copy beside it is `flex: 1 1 auto`, so the flex
+     * algorithm hands the copy whatever the margin gives back and the fan lands in exactly
+     * the same place. Shrinking the fan's outer width from the right is what actually moves
+     * it, and lets it run past the padding.
+     *
+     * The layout reserves room for three cards. A fourth grows the fan by `width - reserved`,
+     * and the whole of that growth is pushed off the right edge — so the fan's left edge
+     * stays exactly where a three-card fan's would be, the headline keeps the breathing room
+     * it had, and the last card's corner is clipped by the canvas. Which reads as deliberate,
+     * because it is.
+     */
+    private function fan(int $count, int $card, array $steps): array
+    {
+        if ($count < 1) {
+            return ['width' => 0, 'step' => 0, 'overhang' => 0];
+        }
+
+        $step = $steps[min($count, max(array_keys($steps)))] ?? $steps[max(array_keys($steps))];
+        $width = $card + ($count - 1) * $step;
+        $reserved = $card + (min($count, 3) - 1) * ($steps[3] ?? $step);
+
+        return [
+            'width' => $width,
+            'step' => $step,
+            'overhang' => max(0, $width - $reserved),
+        ];
+    }
+
+    /**
+     * A photo of a person, laid on top of the fan.
+     *
+     * Show art says what the reviews are about; a face says who is doing the reviewing, and
+     * on a card for a page that lives or dies on whether you trust the reviewer, that is
+     * worth one of the three slots rather than an extra one — a fourth card would squeeze the
+     * headline column past the point where it reads.
+     */
+    private function portrait(Request $request): ?string
+    {
+        return $this->localPath($request->query('portrait'));
+    }
+
+    /**
+     * Which part of the photo survives the square crop, as a CSS object-position. Defaults
+     * to the middle, which is where a portrait's subject usually is and where a candid
+     * snapshot's usually isn't.
+     */
+    private function focus(?string $focus): string
+    {
+        $focus = trim((string) $focus);
+
+        return preg_match('~^[a-z0-9%. ]{1,20}$~i', $focus) ? $focus : 'center';
+    }
+
     private function images(Request $request, array $defaults): array
     {
         $images = $request->query('images');
@@ -115,13 +184,27 @@ class OgCardController extends Controller
             : (is_array($images) ? $images : explode(',', (string) $images));
 
         return collect($images)
-            ->map(fn ($path) => trim((string) $path))
+            ->map(fn ($path) => $this->localPath($path))
             ->filter()
-            ->reject(fn ($path) => (bool) preg_match('~^(https?:)?//~', $path))
-            ->map(fn ($path) => str_starts_with($path, '/') ? $path : '/assets/'.$path)
             ->take(self::MAX_IMAGES)
             ->values()
             ->all();
+    }
+
+    /**
+     * Local paths only, and a bare path is an asset path. The card is rasterised from the
+     * site itself, so a remote URL would be a cross-origin fetch that may or may not have
+     * resolved by the time Chrome takes the shot — and a card is not worth a flaky render.
+     */
+    private function localPath($path): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '' || preg_match('~^(https?:)?//~', $path)) {
+            return null;
+        }
+
+        return str_starts_with($path, '/') ? $path : '/assets/'.$path;
     }
 
     /**

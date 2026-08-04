@@ -183,7 +183,27 @@ class FringeController extends Controller
                 'title' => $title,
                 'og_title' => $title,
                 'og_description' => $description,
-                'og_image' => ['url' => 'https://troypavlek.ca/assets/og-fringe-reviews.jpeg'],
+                // Built with the card generator (App\Og\CardRenderer), like every other
+                // sharing image on the site. This page is a controller route rather than an
+                // entry, so there's no CP action for it — the command that made it is:
+                //
+                //   php artisan og:card --out=og/fringe-reviews.png \
+                //     --headline="Troy's Fringe Reviews" \
+                //     --subhead="The most excellent Fringe reviews you will find. It says so right here." \
+                //     --images=six-shows-to-watch-at-fringe-2026/edmontask-feed.png \
+                //     --images=six-shows-to-watch-at-fringe-2026/sketchy-broads-presents-resting-bitumen-face-feed.png \
+                //     --images=six-shows-to-watch-at-fringe-2026/2026-field-zoology-301-feed.png \
+                //     --portrait=fringe/fringe-with-atlas-2026.jpg --portrait-focus=15%
+                //
+                // Show art says what the reviews are about; a face says who is doing the
+                // reviewing, and this is a page that lives or dies on whether you trust the
+                // reviewer. `--portrait-focus=15%` is where the square crop keeps his whole
+                // face, the programme and the cat — the default centre cuts his face off and
+                // leaves the cat as the subject, and past about 20% his cheek starts to clip.
+                //
+                // An array with a bare `url` rather than an asset, because the layout needs
+                // an absolute URL here and this is the one place that knows the origin.
+                'og_image' => ['url' => FestivalUrls::absolute('/assets/og/fringe-reviews.png')],
             ]);
     }
 

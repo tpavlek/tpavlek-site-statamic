@@ -248,6 +248,98 @@ class OgCardTest extends TestCase
             ->assertDontSee('class="cta"', false);
     }
 
+    /** A portrait joins the fan as a fourth card, on top, rather than displacing artwork. */
+    public function test_a_portrait_is_added_to_the_artwork(): void
+    {
+        $html = $this->get('/og-card?'.http_build_query([
+            'headline' => 'Art',
+            'images' => 'a.png,b.png,c.png',
+            'portrait' => 'fringe/fringe-with-atlas-2026.jpg',
+        ]))->assertOk()->getContent();
+
+        preg_match_all('~<img[^>]*src="([^"]+)"~', $html, $m);
+
+        $this->assertSame([
+            '/assets/a.png',
+            '/assets/b.png',
+            '/assets/c.png',
+            '/assets/fringe/fringe-with-atlas-2026.jpg',
+        ], $m[1]);
+
+        // Last in the DOM, so it stacks on top of the fan rather than behind it.
+        $this->assertStringContainsString('<img class="portrait"', $html);
+    }
+
+    /**
+     * The fourth card runs off the right edge rather than crowding the headline, and the
+     * headline keeps its size either way.
+     *
+     * It has to be margin-*right*. The copy beside the fan is `flex: 1 1 auto`, so a negative
+     * left margin is handed straight back to the copy and the fan doesn't move at all — which
+     * is exactly the bug this replaced, and it was invisible because the card still rendered.
+     */
+    public function test_a_fourth_card_overhangs_the_edge_instead_of_crowding_the_headline(): void
+    {
+        $three = $this->get('/og-card?headline=Art&images=a.png,b.png,c.png')->getContent();
+        $four = $this->get('/og-card?headline=Art&images=a.png,b.png,c.png&portrait=p.jpg')->getContent();
+
+        $geometry = function (string $html): array {
+            preg_match('~\.art \{.*?width: (\d+)px;\s*\n\s*margin-right: -(\d+)px~s', $html, $m);
+
+            return ['width' => (int) $m[1], 'overhang' => (int) $m[2]];
+        };
+
+        $a = $geometry($three);
+        $b = $geometry($four);
+
+        $this->assertSame(0, $a['overhang'], 'Three cards fit the column they were given.');
+        $this->assertGreaterThan($a['width'], $b['width'], 'A fourth card widens the fan.');
+
+        // All of the growth goes off the right edge, so the fan's left edge doesn't move and
+        // the gap after the headline is the same as it was with three.
+        $this->assertSame($b['width'] - $a['width'], $b['overhang']);
+
+        preg_match('~font-size: (\d+)px;\s*\n\s*text-wrap~', $three, $sa);
+        preg_match('~font-size: (\d+)px;\s*\n\s*text-wrap~', $four, $sb);
+        $this->assertSame($sa[1], $sb[1], 'The headline should not shrink to make room.');
+    }
+
+    /** A candid snapshot's subject is rarely dead centre, so the crop has to be steerable. */
+    public function test_the_portrait_crop_can_be_aimed(): void
+    {
+        $base = ['headline' => 'Art', 'portrait' => 'a.jpg'];
+
+        $this->get('/og-card?'.http_build_query($base))
+            ->assertOk()
+            ->assertSee('object-position: center', false);
+
+        $this->get('/og-card?'.http_build_query($base + ['portrait_focus' => 'left']))
+            ->assertOk()
+            ->assertSee('object-position: left', false);
+    }
+
+    /** The focus lands in a stylesheet, so it can only ever be a position. */
+    public function test_a_bogus_portrait_focus_falls_back_to_centre(): void
+    {
+        $this->get('/og-card?'.http_build_query([
+            'headline' => 'Art',
+            'portrait' => 'a.jpg',
+            'portrait_focus' => 'left; } body { display: none } .x {',
+        ]))->assertOk()->assertSee('object-position: center', false);
+    }
+
+    /** A remote portrait is refused for the same reason a remote image is. */
+    public function test_a_remote_portrait_is_refused(): void
+    {
+        $html = $this->get('/og-card?'.http_build_query([
+            'headline' => 'Art',
+            'portrait' => 'https://example.com/evil.png',
+        ]))->assertOk()->getContent();
+
+        $this->assertStringNotContainsString('example.com', $html);
+        $this->assertStringNotContainsString('class="portrait"', $html);
+    }
+
     /** A long headline has to step down or it overflows the column beside the artwork. */
     public function test_the_headline_shrinks_as_it_lengthens(): void
     {
