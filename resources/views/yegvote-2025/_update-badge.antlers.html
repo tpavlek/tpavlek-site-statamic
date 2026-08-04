@@ -1,0 +1,15 @@
+{{#
+    The "YEGVOTE: UPDATE" badge on an election post in a list.
+
+    This was `{{ yegvote_2025_update_types:first }}{{ title }}{{ /... }}`, which rendered an
+    empty span: a terms field augments to a query builder, and `:first` on one resolves to
+    nothing rather than to the first term. A limited loop is the shape that works.
+
+    The YEGVOTE prefix lives here rather than in the term titles because the terms sit in a
+    taxonomy already called yegvote_2025_update_types — "Update" is the right label in the CP,
+    and the prefix only earns its keep in a list that also holds Fringe posts.
+
+    Expects a posts entry in scope. Renders nothing when the post has no update type, which
+    is what keeps it out of the way on a Fringe post.
+#}}
+{{ yegvote_2025_update_types limit="1" }}<span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2 whitespace-nowrap">YEGVOTE: {{ title }}</span>{{ /yegvote_2025_update_types }}
