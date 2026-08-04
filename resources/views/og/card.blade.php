@@ -120,12 +120,28 @@
             max-width: 19em;
         }
 
+        .square .cta { margin-top: 36px; padding: 15px 32px; font-size: 27px; }
         .square .eyebrow { font-size: 24px; margin-bottom: 26px; }
         .square .subhead { margin-top: 32px; font-size: 32px; max-width: 24em; }
         .square .footnote { margin-top: 34px; font-size: 22px; }
 
-        .footnote {
+        /* A card is a link, and a link should say what happens when you follow it. Bordered
+           rather than filled so it reads as a label on the artwork, not a real button
+           promising a tap target that doesn't exist. */
+        .cta {
+            display: inline-block;
             margin-top: 30px;
+            padding: 12px 26px;
+            border: 2px solid var(--teal-light);
+            border-radius: 999px;
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: white;
+        }
+
+        .footnote {
+            margin-top: 22px;
             font-size: 18px;
             font-weight: 500;
             color: var(--teal-light);
@@ -198,6 +214,10 @@
 
             @if ($subhead)
                 <p class="subhead">{{ $subhead }}</p>
+            @endif
+
+            @if ($cta)
+                <p><span class="cta">{{ $cta }}</span></p>
             @endif
 
             @if ($footnote)

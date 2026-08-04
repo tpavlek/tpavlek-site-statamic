@@ -46,7 +46,7 @@ class OgCardController extends Controller
         $format = isset(CardRenderer::FORMATS[$format]) ? $format : 'og';
         [$width, $height] = CardRenderer::FORMATS[$format];
 
-        $headline = trim((string) ($request->query('headline') ?? $defaults['headline'] ?? ''));
+        $headline = $this->text($request, 'headline', $defaults);
         $images = $this->images($request, $defaults);
 
         return response()
@@ -56,9 +56,10 @@ class OgCardController extends Controller
                 'format' => $format,
                 'width' => $width,
                 'height' => $height,
-                'eyebrow' => trim((string) ($request->query('eyebrow') ?? $defaults['eyebrow'] ?? '')),
-                'subhead' => trim((string) ($request->query('subhead') ?? $defaults['subhead'] ?? '')),
-                'footnote' => trim((string) ($request->query('footnote') ?? $defaults['footnote'] ?? '')),
+                'eyebrow' => $this->text($request, 'eyebrow', $defaults),
+                'subhead' => $this->text($request, 'subhead', $defaults),
+                'footnote' => $this->text($request, 'footnote', $defaults),
+                'cta' => $this->text($request, 'cta', $defaults),
                 'images' => $images,
                 // Two cards need less room than three, and the copy should take the slack.
                 'artWidth' => $images ? 300 + (count($images) - 1) * 112 : 0,
@@ -68,6 +69,23 @@ class OgCardController extends Controller
                 'pattern' => '/assets/fringe/fringe-doodles.svg',
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');
+    }
+
+    /**
+     * A field the caller may override, including with nothing.
+     *
+     * Keyed on the parameter being *present* rather than on its value: Laravel's
+     * ConvertEmptyStringsToNull middleware turns `?cta=` into null before it gets here, so a
+     * `??` chain reads a deliberate blank as "not supplied" and helpfully puts the default
+     * back. `?cta=` means no call to action; omitting it means take the entry's.
+     */
+    private function text(Request $request, string $key, array $defaults): string
+    {
+        if ($request->has($key)) {
+            return trim((string) $request->query($key));
+        }
+
+        return trim((string) ($defaults[$key] ?? ''));
     }
 
     private function headlineSize(string $headline, string $format): int
@@ -121,6 +139,7 @@ class OgCardController extends Controller
             'headline' => $entry->value('og_title') ?: $entry->value('title'),
             'subhead' => $entry->value('og_description'),
             'eyebrow' => $this->eyebrow($entry),
+            'cta' => $this->cta($entry),
             'footnote' => 'troypavlek.ca',
             'images' => $this->entryImages($entry),
         ];
@@ -133,6 +152,18 @@ class OgCardController extends Controller
         }
 
         return EntryFacade::query()->get()->first(fn ($e) => $e->slug() === $id);
+    }
+
+    /**
+     * A card is a link, so it should say what following it gets you. A round-up promises a
+     * list; anything else just promises the post, and claiming otherwise on the one thing
+     * people see before they click is the kind of small lie that costs trust.
+     */
+    private function cta($entry): string
+    {
+        $isList = BardSets::ofType($entry->value('content') ?? [], 'show') !== [];
+
+        return $isList ? 'Read the full list →' : 'Read the post →';
     }
 
     private function eyebrow($entry): string

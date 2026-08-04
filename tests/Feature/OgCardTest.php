@@ -207,6 +207,47 @@ class OgCardTest extends TestCase
         $this->assertGreaterThan((int) $og[1], (int) $square[1]);
     }
 
+    /**
+     * A card is a link, so it should say what following it gets you — and say it honestly.
+     * A round-up promises a list; anything else promises only the post.
+     */
+    public function test_a_round_up_promises_the_list_and_anything_else_promises_the_post(): void
+    {
+        $listPost = $this->makePost(['content' => [
+            ['type' => 'set', 'attrs' => ['id' => 'show1', 'values' => [
+                'type' => 'show',
+                'review' => EntryFacade::query()->where('collection', 'fringe_reviews')->get()->first()->id(),
+            ]]],
+        ]]);
+
+        $this->get('/og-card?entry='.$listPost->slug())
+            ->assertOk()
+            ->assertSee('Read the full list', false);
+
+        $prosePost = $this->makePost(['content' => [
+            ['type' => 'paragraph', 'content' => [['type' => 'text', 'text' => 'Just words.']]],
+        ]]);
+
+        $this->get('/og-card?entry='.$prosePost->slug())
+            ->assertOk()
+            ->assertSee('Read the post', false)
+            ->assertDontSee('Read the full list', false);
+    }
+
+    public function test_the_call_to_action_can_be_overridden_and_switched_off(): void
+    {
+        $post = $this->makePost();
+
+        $this->get('/og-card?cta=Book+tickets&entry='.$post->slug())
+            ->assertOk()
+            ->assertSee('Book tickets', false)
+            ->assertDontSee('Read the post', false);
+
+        $this->get('/og-card?cta=&entry='.$post->slug())
+            ->assertOk()
+            ->assertDontSee('class="cta"', false);
+    }
+
     /** A long headline has to step down or it overflows the column beside the artwork. */
     public function test_the_headline_shrinks_as_it_lengthens(): void
     {
