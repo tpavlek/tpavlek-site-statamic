@@ -1,0 +1,12 @@
+{{#
+    A link to one review: its title, its rating, and the year that rating was earned.
+
+    The year is the whole point. A returning show inherits the original review's stars, and
+    printing this festival's year beside them claims a verdict on a show that may not have
+    opened yet. `rating:year` is the year the stars actually come from, so this renders
+    "Field Zoology 301 ★★★★★ (2024)" rather than "(2026)". Shows with no rating anywhere
+    still get their own year, which is the useful thing to say about them.
+
+    Expects a fringe_reviews entry in scope. `class` overrides the classes on the <a>.
+#}}
+<a href="{{ url }}" class="{{ class ?? 'text-gray-800' }}">{{ title }}{{ if rating }} {{ partial:fringe/rating }} <span class="text-gray-500">({{ rating:year }})</span>{{ else }} <span class="text-gray-500">({{ festival:slug }})</span>{{ /if }}</a>

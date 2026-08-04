@@ -133,6 +133,8 @@ class FringeController extends Controller
                 return $entry->category->contains(fn (LocalizedTerm $term) => $term->slug === $videoCategorySlug);
             });
 
+        $posts = $this->posts($festivalSlug);
+
         $lastUpdated = $this->lastUpdated($reviews) ?? $festival?->lastModified();
 
         $ratedCount = $reviews->filter(fn (Entry $entry) => $entry->stars->value() !== null)->count();
@@ -169,6 +171,7 @@ class FringeController extends Controller
             ->with([
                 'reviews' => $reviews,
                 'videos' => $videos,
+                'posts' => $posts,
                 'year' => $festivalSlug,
                 'tickets_available' => (bool) $festival?->value('tickets_available'),
                 'review_count' => $reviews->count(),
@@ -182,6 +185,28 @@ class FringeController extends Controller
                 'og_description' => $description,
                 'og_image' => ['url' => 'https://troypavlek.ca/assets/og-fringe-reviews.jpeg'],
             ]);
+    }
+
+    /**
+     * Fringe posts about this festival, newest first.
+     *
+     * Most readers arrive here from search and never see the /fringe hub, so the writing has
+     * to be reachable from the page they actually land on.
+     *
+     * Filtered in PHP rather than queried: `festivals` is a computed field, and computed
+     * fields aren't in the Stache index. The posts collection is small enough that this
+     * doesn't matter, and the alternative is a second tag to keep in sync by hand.
+     */
+    private function posts(string $festivalSlug): Collection
+    {
+        return EntryFacade::query()
+            ->where('collection', 'posts')
+            ->where('published', true)
+            ->get()
+            ->filter(fn (Entry $entry) => $entry->topics?->contains(fn (LocalizedTerm $term) => $term->slug === 'fringe')
+                && in_array($festivalSlug, $entry->augmentedValue('festivals')->value() ?? [], true))
+            ->sortByDesc(fn (Entry $entry) => $entry->date())
+            ->values();
     }
 
     /**

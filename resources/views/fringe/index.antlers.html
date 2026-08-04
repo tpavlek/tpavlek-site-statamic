@@ -34,6 +34,29 @@
         {{ partial:fringe/intro }}
     </div>
 
+    {{# Posts about this festival. Above the review list on purpose: most people arrive here
+        from search rather than via the /fringe hub, so this is the only place they'll be
+        offered the writing at all, and nobody scrolls past seventy reviews to find it.
+        Which posts belong to which year is worked out in App\Fringe\PostFestivals. #}}
+    {{ if posts | length }}
+        <section class="clear-both pt-4">
+            <h2 class="text-xl font-bold mb-3">Reading for Fringe {{ year }}</h2>
+
+            <ul class="list-none p-0 m-0 divide-y divide-gray-100 border-t border-b border-gray-100">
+                {{ posts }}
+                    <li class="relative py-3 hover:bg-grey-50 transition-colors">
+                        <a href="{{ url }}" class="font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
+                        {{ if og_description }}
+                            <p class="text-sm text-gray-600 mt-0.5 mb-0">{{ og_description }}</p>
+                        {{ /if }}
+                    </li>
+                {{ /posts }}
+            </ul>
+        </section>
+
+        <hr class="w-1/2 text-center mx-auto py-4" />
+    {{ /if }}
+
     {{ if videos | length }}
         <section class="clear-both pt-4">
             <h2 class="text-xl font-bold mb-3">Fringe {{ year }} on video</h2>
@@ -83,9 +106,7 @@
                             <i class="fa-brands fa-youtube text-teal opacity-85" title="Has a video review"></i>
                         {{ /if }}
 
-                        {{ if original_review }}
-                            <span class="inline-block border border-teal text-teal rounded-lg text-[10px] font-medium uppercase py-0 px-1.5 ml-1 leading-loose whitespace-nowrap">Returning &middot; {{ original_review }}{{ festival:slug }}{{ /original_review }}</span>
-                        {{ /if }}
+                        {{ partial:fringe/returning-badge }}
 
                         {{ if venue }}
                             <div class="text-xs text-gray-500 mt-0.5">{{ venue:display_name }}</div>

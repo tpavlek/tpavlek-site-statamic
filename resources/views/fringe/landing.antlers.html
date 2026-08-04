@@ -43,6 +43,28 @@
         <p class="mt-3 text-xs text-gray-500 uppercase tracking-wide group-hover:text-teal transition-colors">Open the generator &rarr;</p>
     </a>
 
+    {{# Posts tagged `fringe`, newest first. Driven by the tag rather than a hand-kept list
+        so writing a Fringe post is the whole job of publishing one here. Hidden entirely
+        when there are none, rather than leaving an empty heading behind. #}}
+    {{ collection:posts taxonomy:topics="fringe" sort="date:desc" limit="6" as="fringe_posts" }}
+        {{ if fringe_posts }}
+            <div class="clear-both mb-12">
+                <h2 class="text-2xl font-bold mb-6">Reading before you go</h2>
+                <ul class="list-none p-0 m-0 divide-y divide-gray-200 border-t border-b border-gray-200">
+                    {{ fringe_posts }}
+                        <li class="relative py-4 hover:bg-grey-50 transition-colors">
+                            <a href="{{ url }}" class="text-lg font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
+                            <p class="text-sm text-gray-500 mt-1 mb-0">
+                                <time datetime="{{ date format="Y-m-d" }}">{{ date format="F j, Y" }}</time>
+                                {{ if og_description }}<span class="text-gray-600"> &middot; {{ og_description }}</span>{{ /if }}
+                            </p>
+                        </li>
+                    {{ /fringe_posts }}
+                </ul>
+            </div>
+        {{ /if }}
+    {{ /collection:posts }}
+
     {{# Festival years #}}
     <div class="clear-both">
         <h2 class="text-2xl font-bold mb-6">Browse by Festival Year</h2>

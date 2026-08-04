@@ -1,1 +1,6 @@
-{{ review }}<a href="{{ url }}" target="_blank" class="text-gray-800">{{ title }}{{ if stars }} <span class="text-teal whitespace-nowrap">{{ stars:label }}</span>{{ elseif original_review }}{{ original_review }}{{ if stars }} <span class="text-teal whitespace-nowrap">{{ stars:label }}</span>{{ /if }}{{ /original_review }}{{ /if }} <span class="text-gray-500">({{ festival:slug }})</span></a>{{ /review }}
+{{#
+    The inline review pin. A Bard pin is an inline node, so this always renders inside the
+    surrounding paragraph — for a section label that should be a heading, use the `show` set
+    instead.
+#}}
+{{ review }}{{ partial:fringe/review-link }}{{ /review }}

@@ -1,0 +1,10 @@
+{{#
+    "Returning · 2024" — this show played an earlier Fringe, and any rating shown beside it
+    was earned at that one rather than at the festival the page is about. Troy's position is
+    that a returning show is the same show, so the old rating still stands; the badge is what
+    keeps that from reading as a verdict on a staging nobody has seen yet.
+
+    Expects a fringe_reviews entry in scope. Renders nothing unless original_review is set.
+    `size` overrides the text size.
+#}}
+{{ if original_review }}<span class="inline-block border border-teal text-teal rounded-lg {{ size ?? 'text-[10px]' }} font-medium uppercase py-0 px-1.5 ml-1 leading-loose whitespace-nowrap align-middle">Returning &middot; {{ original_review }}{{ festival:slug }}{{ /original_review }}</span>{{ /if }}

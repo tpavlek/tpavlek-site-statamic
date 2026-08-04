@@ -1,0 +1,14 @@
+{{#
+    A star rating with a text alternative, from the `rating` computed field.
+
+    Companion to fringe/_stars, which does the same job for a `stars` field read directly
+    off an entry. This one is for anywhere a rating may have been inherited from an earlier
+    staging, because `rating` also carries the year it was earned. Keep the two in step: the
+    reason both exist is that "★★★½☆" is read out by screen readers as a run of star
+    characters, or skipped entirely, which on a review site loses the single most important
+    thing on the page.
+
+    Expects `rating` in scope. `size` is an optional text-size class.
+#}}
+<span class="text-teal {{ size ?? 'text-sm' }} whitespace-nowrap" aria-hidden="true">{{ rating:label }}</span>
+<span class="sr-only">{{ rating:value }} out of 5 stars</span>

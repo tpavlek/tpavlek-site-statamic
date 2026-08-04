@@ -1,0 +1,15 @@
+{{#
+    The "Previously:" line under a show heading — the company's earlier Fringe shows, each
+    with the rating it earned and the year it earned it.
+
+    Expects a list of fringe_reviews entries bound as `shows`, so the same markup serves both
+    the derived list (`previous_shows`, computed from the artist) and a hand-picked override
+    (`previous_reviews` on the set). Renders nothing when the list is empty, rather than
+    leaving a label with nothing after it.
+#}}
+{{ if shows }}
+    <p class="text-sm text-gray-600 mt-0 mb-2">
+        Previously:
+        {{ shows }}{{ partial:fringe/review-link class="text-gray-600 no-underline hover:underline" }}{{ unless last }}, {{ /unless }}{{ /shows }}
+    </p>
+{{ /if }}

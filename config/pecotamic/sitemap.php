@@ -11,8 +11,15 @@ return [
 
     /**
      * Matched with preg_match against the entry's relative URL.
+     *
+     * `topics` exists to tag posts and to point a byline at the section of the site that
+     * hosts the subject — /fringe for a Fringe post. The terms have no pages of their own
+     * (the templates are gone, so they 404), and `include_terms` above would otherwise put
+     * every one of them in the sitemap.
      */
-    'exclude_urls' => [],
+    'exclude_urls' => [
+        '~^/topics(/|$)~',
+    ],
 
     'filter' => null,
 

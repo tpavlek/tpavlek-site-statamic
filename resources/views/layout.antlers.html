@@ -30,7 +30,9 @@
         <!-- Facebook Meta Tags -->
         <meta property="og:url" content="{{ canonical_url ?? current_url }}">
         <meta property="twitter:url" content="{{ canonical_url ?? current_url }}">
-        <meta property="og:type" content="website">
+        {{# Posts compute this to `article`, which is what unlocks the byline and published
+            date in a share preview. Everything else is a website. #}}
+        <meta property="og:type" content="{{ og_type ?? 'website' }}">
         {{ if og_title }}
             <meta property="og:title" content="{{ og_title }}">
             <meta name="twitter:title" content="{{ og_title }}">
@@ -42,15 +44,19 @@
             <meta name="twitter:title" content="Edmonton Fringe Festival Reviews">
         {{ /if }}
 
+        {{# permalink first, url second. An asset's `url` is site-relative, and a relative
+            og:image is ignored by Facebook, LinkedIn and Slack — so any page that set its own
+            image was silently sharing without one. The `url` fallback is for the computed
+            defaults, which are plain arrays holding an already-absolute string. #}}
         {{ if og_image }}
-            <meta property="og:image" content="{{ og_image:url }}">
-            <meta name="twitter:image" content="{{ og_image:url }}">
+            <meta property="og:image" content="{{ og_image:permalink ?? og_image:url }}">
+            <meta name="twitter:image" content="{{ og_image:permalink ?? og_image:url }}">
         {{ elseif review_og_image }}
-            <meta property="og:image" content="{{ review_og_image:url }}">
-            <meta name="twitter:image" content="{{ review_og_image:url }}">
+            <meta property="og:image" content="{{ review_og_image:permalink ?? review_og_image:url }}">
+            <meta name="twitter:image" content="{{ review_og_image:permalink ?? review_og_image:url }}">
         {{ elseif endorsement_image }}
-            <meta property="og:image" content="{{ endorsement_image:url }}">
-            <meta name="twitter:image" content="{{ endorsement_image:url }}">
+            <meta property="og:image" content="{{ endorsement_image:permalink ?? endorsement_image:url }}">
+            <meta name="twitter:image" content="{{ endorsement_image:permalink ?? endorsement_image:url }}">
         {{ else }}
             <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
             <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">

@@ -9,3 +9,9 @@ sections:
           type: text
           localizable: false
           display: Title
+      -
+        handle: link
+        field:
+          type: text
+          display: 'Topic home'
+          instructions: 'Where a byline links this topic, e.g. /fringe. Topics have no pages of their own, so a topic either points at a real section of the site or is shown as plain text.'

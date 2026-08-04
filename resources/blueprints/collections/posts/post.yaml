@@ -51,6 +51,41 @@ tabs:
                               - yegvote_2025_candidates
                             type: entries
                             display: Candidate
+                    show:
+                      display: 'Show heading'
+                      icon: entry
+                      instructions: 'Starts a section about one show. Renders as a real heading, unlike the inline review pin, which is always stuck inside a paragraph.'
+                      fields:
+                        -
+                          handle: review
+                          field:
+                            max_items: 1
+                            mode: typeahead
+                            collections:
+                              - fringe_reviews
+                            type: review_ref_entries
+                            display: Show
+                            instructions: 'The show this section is about. Its stars only appear if this entry has its own rating — a returning show that has not opened yet has nothing to show.'
+                        -
+                          handle: previous_reviews
+                          field:
+                            mode: typeahead
+                            collections:
+                              - fringe_reviews
+                            type: review_ref_entries
+                            display: 'Previously'
+                            instructions: 'Leave empty and the company''s earlier Fringe shows are listed automatically, newest first. Only fill this in to show a specific subset, or for a company that has changed names.'
+                        -
+                          handle: level
+                          field:
+                            type: select
+                            display: 'Heading level'
+                            default: h2
+                            clearable: false
+                            instructions: 'h2 for a top-level section. h3 only if it sits inside one.'
+                            options:
+                              h2: 'Heading 2'
+                              h3: 'Heading 3'
                     image:
                       display: image
                       icon: media-image-picture-orientation
@@ -165,6 +200,24 @@ tabs:
               container: assets
               type: assets
               display: 'OpenGraph Image'
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
+              instructions: 'What this post is about. Tagging a post `Edmonton Fringe` is what lists it on the /fringe hub.'
+          -
+            handle: fringe_festival
+            field:
+              type: terms
+              taxonomies:
+                - fringe_festival
+              display: 'Fringe Festival'
+              mode: select
+              instructions: 'Which festival this post is about. Leave empty for a round-up — the year is taken from the shows it headlines. Only set it for a Fringe post that names no shows, or one whose subject year differs from the shows it mentions.'
           -
             handle: yegvote_2025_update_types
             field:

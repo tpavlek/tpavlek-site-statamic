@@ -1,9 +1,19 @@
-<article class="lg:py-32 max-w-4xl mx-auto">
-    <h1>{{ title }}</h1>
-    <div class="bg-gray-800 inline-block text-sm mb-16 pr-4 pl-16 -ml-16 uppercase tracking-widest text-white py-1 rounded-r-full">
+{{ if post_schema }}<script type="application/ld+json">{{ post_schema }}</script>{{ /if }}
+<article class="py-8 lg:py-16 max-w-4xl mx-auto">
+    {{# mb-5 overrides the global `h1 { mb-16 }`, which is four rems of air between a title
+        and its own byline. #}}
+    <h1 class="mb-5">{{ title }}</h1>
+    {{# Square left, rounded right. The byline used to earn that shape by bleeding out past
+        the column with `pl-16 -ml-16`, so the flat edge sat off-page; it keeps the shape but
+        starts where the text starts. The right side gets more padding than the left because
+        the radius eats into it. #}}
+    <div class="bg-gray-800 inline-block text-sm mb-10 pl-4 pr-5 uppercase tracking-widest text-white py-1 rounded-r-full">
         Published
+        {{# Topics have no pages of their own, so a topic links to the section of the site
+            that actually hosts it — the `link` field on the term, e.g. fringe → /fringe —
+            and is plain text when there isn't one. #}}
         {{ if topics }}
-        in {{ topics }}<a href="{{ url }}" class="text-teal-light no-underline hover:text-white">{{ title }}</a>{{ unless last }}, {{ /unless }}{{ /topics }}
+        in {{ topics }}{{ if link }}<a href="{{ link }}" class="text-teal-light no-underline hover:text-white">{{ title }}</a>{{ else }}{{ title }}{{ /if }}{{ unless last }}, {{ /unless }}{{ /topics }}
         {{ /if }}
         on {{ date format="M j, Y" }}
     </div>
@@ -18,6 +28,45 @@
                     {{ partial src="yegvote-2025/candidate" }}
                 {{ /candidate }}
             {{ /if }}
+            {{# A section about one show. This is a set rather than an inline review pin
+                because a pin is an inline Bard node — it always renders inside the
+                paragraph around it, so it can never be a heading, and a six-show post with
+                no headings is one a screen reader or a skimming reader can't navigate.
+
+                The rating shown is whatever fringe/_review-link would show, including one
+                inherited from an earlier staging, paired with a "Returning · 2024" badge so
+                the year it was earned is never in doubt. #}}
+            {{# The spacing utilities are undoing `.content > h2` in style.css, which sets
+                `mt-12 py-6` (and `mt-16` at lg) for headings that break up long prose. These
+                headings label a section that already opens with a rule and an image, so that
+                much air reads as an interruption rather than a division. Tailwind's config
+                sets `important: true`, so these beat the bare element selector. #}}
+            {{ if type == "show" }}
+                {{ heading_level = level ?? 'h2' }}
+                {{ review }}
+                    {{# The negative top margin is the line box's half-leading, not a nudge:
+                        `leading-tight` puts (1.25em - 1em) / 2 of space above the cap, which
+                        leaves the heading sitting visibly below the top of the image it's
+                        floated beside. Expressed in em so it stays correct at both sizes. #}}
+                    <{{ heading_level }} id="{{ url_slug }}" class="mt-[-0.125em] mb-0 pt-0 pb-2 text-xl lg:text-2xl leading-tight">
+                        {{# The year is the festival this staging plays, which is not
+                            necessarily the year the rating beside it was earned — that one is
+                            on the returning badge. #}}
+                        <a href="{{ url }}" class="no-underline text-gray-800 hover:text-teal">{{ title }} <span class="text-gray-500 font-normal">({{ festival:slug }})</span></a>
+                        {{ if rating }} {{ partial:fringe/rating size="text-lg" }}{{ /if }}
+                        {{ partial:fringe/returning-badge size="text-xs" }}
+                    </{{ heading_level }}>
+                {{ /review }}
+                {{# Earlier shows by the same company, derived from the artist rather than
+                    picked — see App\Fringe\ArtistShows. The set's own `previous_reviews`
+                    overrides that when the line should be a specific subset. #}}
+                {{ if previous_reviews }}
+                    {{ partial:fringe/previous-shows :shows="previous_reviews" }}
+                {{ else }}
+                    {{ review }}{{ partial:fringe/previous-shows :shows="previous_shows" }}{{ /review }}
+                {{ /if }}
+            {{ /if }}
+
             {{# A floated image wraps the paragraphs that follow it in the same .post-content
                 flow. The float is cleared on the next full-width image and at the end of the
                 article, and drops to full width on narrow screens where wrapping just gives
@@ -29,7 +78,10 @@
                 {{ image_caption = caption }}
                 {{ images }}
                     <figure class="post-image post-image--{{ image_alignment }}">
-                        <img src="{{ url }}" alt="{{ alt }}" />
+                        {{# |entities because alt text describing a share card quotes the
+                            card, and a double quote in it would otherwise close the
+                            attribute and spill the rest of the sentence into the markup. #}}
+                        <img src="{{ url }}" alt="{{ alt | entities }}" />
                         {{ if image_caption }}<figcaption>{{ image_caption }}</figcaption>{{ /if }}
                     </figure>
                 {{ /images }}

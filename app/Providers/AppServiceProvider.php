@@ -176,6 +176,37 @@ class AppServiceProvider extends ServiceProvider
             return \App\Schema\FringeReviewSchema::build($entry);
         });
 
+        // The stars to show, and the year they were earned — see App\Fringe\ReviewRating.
+        // Templates that link to a review should use this rather than reaching for `stars`
+        // and `festival` separately, which is how an inherited rating ended up wearing the
+        // wrong year.
+        Collection::computed('fringe_reviews', 'rating', function ($entry, $value) {
+            return \App\Fringe\ReviewRating::for($entry);
+        });
+
+        // The company's earlier Fringe shows. Computed rather than picked by hand — see
+        // App\Fringe\ArtistShows for why the CP can't scope a picker to a sibling field.
+        // Lazy, like every computed field, so the reviews index doesn't pay for it.
+        Collection::computed('fringe_reviews', 'previous_shows', function ($entry, $value) {
+            return \App\Fringe\ArtistShows::previous($entry);
+        });
+
+        // Posts get schema.org markup automatically when they reference reviews.
+        Collection::computed('posts', 'post_schema', function ($entry, $value) {
+            return \App\Schema\PostSchema::build($entry);
+        });
+
+        Collection::computed('posts', 'og_type', function ($entry, $value) {
+            return 'article';
+        });
+
+        // Which Fringe festivals a post covers — the explicit fringe_festival terms if it has
+        // any, otherwise derived from the shows it headlines. See App\Fringe\PostFestivals.
+        // Not queryable (computed fields never are), so callers filter in PHP.
+        Collection::computed('posts', 'festivals', function ($entry, $value) {
+            return \App\Fringe\PostFestivals::for($entry);
+        });
+
         // Each festival's reviews page is a controller route rather than an entry, so the
         // sitemap generator can't discover it. One per fringe_festival term, which means a
         // new year appears automatically.

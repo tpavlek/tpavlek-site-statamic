@@ -105,3 +105,10 @@ Route::get('/yegvote-2025/endorsements', [ EndorsementsController::class, 'curre
 //Route::get('/fringe/{entry}/social', [ FringeController::class, 'generateSocialImage' ]);
 
 Route::get('/youtube_oauth_handler', [YouTubeOAuthController::class, 'handle']);
+
+/*
+| The OpenGraph card, rendered as a real page so it can be iterated on in a browser.
+| `php artisan og:card` screenshots this exact URL, which is what keeps the preview and
+| the saved PNG from drifting apart. Noindex via a header on the response.
+*/
+Route::get('/og-card', \App\Http\Controllers\OgCardController::class)->name('og-card');
