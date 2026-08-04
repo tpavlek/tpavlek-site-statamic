@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    /**
+     * Headless Chrome, used by App\Og\CardRenderer to rasterise sharing cards. Set this only
+     * where the binary isn't in one of the usual places; card generation is a laptop job and
+     * degrades to a clear message rather than an error where Chrome is absent.
+     */
+    'chrome' => [
+        'binary' => env('CHROME_BINARY'),
+    ],
+
 ];

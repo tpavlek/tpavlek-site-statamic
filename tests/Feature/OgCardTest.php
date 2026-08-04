@@ -174,6 +174,39 @@ class OgCardTest extends TestCase
         $this->assertSame(3, substr_count($html, '<img'));
     }
 
+    /**
+     * The square card is the same page at Instagram's size, not a second implementation —
+     * a separate template is how the two would end up disagreeing.
+     */
+    public function test_the_square_format_renders_at_instagram_size(): void
+    {
+        $html = $this->get('/og-card?format=square&headline=Six+shows')->assertOk()->getContent();
+
+        $this->assertStringContainsString('width: 1080px; height: 1080px', $html);
+        $this->assertStringContainsString('<body class="square">', $html);
+    }
+
+    public function test_the_default_format_is_the_link_preview(): void
+    {
+        foreach (['', '&format=og', '&format=nonsense'] as $suffix) {
+            $html = $this->get('/og-card?headline=Six+shows'.$suffix)->assertOk()->getContent();
+
+            $this->assertStringContainsString('width: 1200px; height: 630px', $html);
+            $this->assertStringContainsString('<body class="og">', $html);
+        }
+    }
+
+    /** The square card stacks, so the headline gets the full width and can run larger. */
+    public function test_the_square_headline_runs_larger_than_the_link_preview(): void
+    {
+        $headline = urlencode('6 shows to watch at the 2026 Edmonton Fringe Festival');
+
+        preg_match('~font-size: (\d+)px;\s*\n\s*text-wrap~', $this->get('/og-card?headline='.$headline)->getContent(), $og);
+        preg_match('~font-size: (\d+)px;\s*\n\s*text-wrap~', $this->get('/og-card?format=square&headline='.$headline)->getContent(), $square);
+
+        $this->assertGreaterThan((int) $og[1], (int) $square[1]);
+    }
+
     /** A long headline has to step down or it overflows the column beside the artwork. */
     public function test_the_headline_shrinks_as_it_lengthens(): void
     {

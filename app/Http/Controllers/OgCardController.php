@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Og\CardRenderer;
 use App\Support\BardSets;
 use Illuminate\Http\Request;
 use Statamic\Facades\Entry as EntryFacade;
@@ -21,11 +22,19 @@ use Statamic\Facades\Entry as EntryFacade;
 class OgCardController extends Controller
 {
     /**
-     * Headline length to font size. The copy column is only about 530px wide once three
-     * cards are fanned beside it, so these are tuned to that column rather than to the full
-     * 1200 — a headline set from the width of the card overflows the moment art appears.
+     * Headline length to font size, per format.
+     *
+     * `og` is tuned to the ~530px column left once three cards are fanned beside it, not to
+     * the full 1200 — a headline sized off the card width overflows the moment art appears.
+     * `square` stacks instead of splitting, so the headline gets the whole width and can run
+     * larger at the same character count.
      */
-    private const HEADLINE_TIERS = [26 => 72, 44 => 60, 68 => 50];
+    private const HEADLINE_TIERS = [
+        'og' => [26 => 72, 44 => 60, 68 => 50],
+        'square' => [26 => 92, 44 => 76, 68 => 62],
+    ];
+
+    private const HEADLINE_FLOOR = ['og' => 42, 'square' => 52];
 
     private const MAX_IMAGES = 3;
 
@@ -33,33 +42,43 @@ class OgCardController extends Controller
     {
         $defaults = $this->fromEntry($request->query('entry'));
 
+        $format = $request->query('format', 'og');
+        $format = isset(CardRenderer::FORMATS[$format]) ? $format : 'og';
+        [$width, $height] = CardRenderer::FORMATS[$format];
+
         $headline = trim((string) ($request->query('headline') ?? $defaults['headline'] ?? ''));
         $images = $this->images($request, $defaults);
 
         return response()
             ->view('og.card', [
                 'headline' => $headline ?: 'troypavlek.ca',
-                'headlineSize' => $this->headlineSize($headline),
+                'headlineSize' => $this->headlineSize($headline, $format),
+                'format' => $format,
+                'width' => $width,
+                'height' => $height,
                 'eyebrow' => trim((string) ($request->query('eyebrow') ?? $defaults['eyebrow'] ?? '')),
                 'subhead' => trim((string) ($request->query('subhead') ?? $defaults['subhead'] ?? '')),
                 'footnote' => trim((string) ($request->query('footnote') ?? $defaults['footnote'] ?? '')),
                 'images' => $images,
                 // Two cards need less room than three, and the copy should take the slack.
                 'artWidth' => $images ? 300 + (count($images) - 1) * 112 : 0,
+                // The square card has the full width to play with, so the fan runs bigger
+                // and spreads further; these mirror the sizes in the stylesheet.
+                'squareArtWidth' => $images ? 520 + (count($images) - 1) * 190 : 0,
                 'pattern' => '/assets/fringe/fringe-doodles.svg',
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');
     }
 
-    private function headlineSize(string $headline): int
+    private function headlineSize(string $headline, string $format): int
     {
-        foreach (self::HEADLINE_TIERS as $limit => $size) {
+        foreach (self::HEADLINE_TIERS[$format] as $limit => $size) {
             if (mb_strlen($headline) <= $limit) {
                 return $size;
             }
         }
 
-        return 42;
+        return self::HEADLINE_FLOOR[$format];
     }
 
     /**

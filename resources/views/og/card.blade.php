@@ -8,7 +8,12 @@
 
     The look follows public/assets/og-social-review-generator.png, which was made by hand
     the first time — teal doodle field, teal-to-black scrim behind the text, Georgia
-    headline, and one or more show cards tilted into the right third.
+    headline, and one or more show cards tilted alongside the copy.
+
+    Two formats. `og` is the 1.91:1 link preview and splits left-to-right: copy in the left
+    column, art fanned into the right third. `square` is the Instagram feed post, where that
+    split would leave both halves too narrow, so it stacks — copy on top, art beneath — and
+    the scrim runs top-to-bottom to match.
 
     Everything is inline and self-contained. The rasteriser loads this over the local site,
     so referenced images must be site paths; system fonts only, because a webfont that has
@@ -28,7 +33,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html, body { width: 1200px; height: 630px; overflow: hidden; }
+        html, body { width: {{ $width }}px; height: {{ $height }}px; overflow: hidden; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -48,8 +53,9 @@
             opacity: 0.7;
         }
 
-        /* Text sits on the left, so the scrim is heaviest there and clears off to the right
-           where the artwork is. Without it a doodle can run straight through a letterform. */
+        /* The scrim is heaviest under the copy and clears off toward the artwork. Without it
+           a doodle can run straight through a letterform. It follows the layout: sideways on
+           the wide card, downward on the square one. */
         .scrim {
             position: absolute;
             inset: 0;
@@ -57,17 +63,34 @@
                 linear-gradient(100deg, rgba(0, 38, 40, 0.93) 0%, rgba(0, 48, 50, 0.78) 38%, rgba(0, 88, 92, 0.22) 72%, rgba(0, 110, 114, 0.06) 100%);
         }
 
+        .square .scrim {
+            background:
+                linear-gradient(176deg, rgba(0, 38, 40, 0.93) 0%, rgba(0, 46, 48, 0.84) 42%, rgba(0, 84, 88, 0.34) 74%, rgba(0, 110, 114, 0.10) 100%);
+        }
+
         .card {
             position: relative;
-            width: 1200px;
-            height: 630px;
+            width: {{ $width }}px;
+            height: {{ $height }}px;
             display: flex;
             align-items: center;
             padding: 56px 60px;
             gap: 32px;
         }
 
+        /* Stacked, and pushed to the top: the art hangs off the bottom edge rather than
+           floating in the middle of a square with dead space under it. */
+        .square .card {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            padding: 72px 72px 0;
+            gap: 40px;
+        }
+
         .copy { flex: 1 1 auto; min-width: 0; }
+
+        .square .copy { flex: 0 0 auto; }
 
         .eyebrow {
             font-size: 20px;
@@ -97,6 +120,10 @@
             max-width: 19em;
         }
 
+        .square .eyebrow { font-size: 24px; margin-bottom: 26px; }
+        .square .subhead { margin-top: 32px; font-size: 32px; max-width: 24em; }
+        .square .footnote { margin-top: 34px; font-size: 22px; }
+
         .footnote {
             margin-top: 30px;
             font-size: 18px;
@@ -111,6 +138,23 @@
             position: relative;
             width: {{ $artWidth }}px;
             height: 400px;
+        }
+
+        /* Fills whatever the copy leaves, and the cards hang off the bottom edge rather than
+           floating with dead space beneath them — a square crops from the bottom in most
+           feeds anyway, so there is nothing down there worth protecting. */
+        .square .art {
+            align-self: center;
+            flex: 1 1 auto;
+            width: {{ $squareArtWidth }}px;
+            height: auto;
+        }
+
+        .square .art img {
+            top: auto;
+            bottom: -72px;
+            width: 520px;
+            height: 520px;
         }
 
         .art img {
@@ -131,10 +175,16 @@
                 z-index: {{ $i + 1 }};
                 transform: translateY(-50%) rotate({{ $i % 2 === 0 ? -4 : 5 }}deg);
             }
+
+            {{-- Bottom-anchored, so the translateY that centres the wide card's fan has to go. --}}
+            .square .art img:nth-child({{ $i + 1 }}) {
+                left: {{ $i * 190 }}px;
+                transform: rotate({{ $i % 2 === 0 ? -4 : 5 }}deg);
+            }
         @endforeach
     </style>
 </head>
-<body>
+<body class="{{ $format }}">
     <div class="doodles"></div>
     <div class="scrim"></div>
 
