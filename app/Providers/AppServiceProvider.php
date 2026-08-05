@@ -176,6 +176,40 @@ class AppServiceProvider extends ServiceProvider
             return \App\Schema\FringeReviewSchema::build($entry);
         });
 
+        // The trail rendered by fringe/_breadcrumbs, and the BreadcrumbList markup that
+        // mirrors it. A show page is a controller-less entry route, so unlike the reviews
+        // index there's nowhere but a computed field to build this.
+        Collection::computed('fringe_reviews', 'breadcrumbs', function ($entry, $value) {
+            return \App\Schema\BreadcrumbSchema::forReview($entry);
+        });
+
+        Collection::computed('fringe_reviews', 'breadcrumb_schema', function ($entry, $value) {
+            return \App\Schema\BreadcrumbSchema::build(\App\Schema\BreadcrumbSchema::forReview($entry));
+        });
+
+        // The artist's own page, when they have one — only companies with a real name and
+        // more than one reviewed show do. Null otherwise, so the template links the name
+        // rather than printing a dead link for the other 42 artists. See App\Fringe\Artists.
+        Collection::computed('fringe_reviews', 'artist_page_url', function ($entry, $value) {
+            $id = $entry->value('artist');
+            $id = is_array($id) ? ($id[0] ?? null) : $id;
+            $artist = $id ? \Statamic\Facades\Entry::find($id) : null;
+
+            if (! $artist) {
+                return null;
+            }
+
+            return \App\Fringe\Artists::find(\App\Fringe\Artists::slug($artist))
+                ? \App\Fringe\Artists::url($artist)
+                : null;
+        });
+
+        // Publication date, and an update stamp only when there really was a later edit —
+        // see App\Fringe\ReviewFreshness.
+        Collection::computed('fringe_reviews', 'freshness', function ($entry, $value) {
+            return \App\Fringe\ReviewFreshness::for($entry);
+        });
+
         // The stars to show, and the year they were earned — see App\Fringe\ReviewRating.
         // Templates that link to a review should use this rather than reaching for `stars`
         // and `festival` separately, which is how an inherited rating ended up wearing the
@@ -222,6 +256,24 @@ class AppServiceProvider extends ServiceProvider
                     FestivalUrls::reviews($term->slug()),
                     $term->lastModified() ?? new \DateTime,
                 ))
+                ->all();
+        });
+
+        // Artist pages, likewise controller routes. The list is derived from the reviews, so
+        // a company earns a sitemap entry the moment their second review is published and
+        // loses nothing if they never come back.
+        \Pecotamic\Sitemap\Sitemap::addEntries(function () {
+            $artists = \App\Fringe\Artists::withPages();
+
+            return $artists
+                ->map(fn ($artist) => new \Pecotamic\Sitemap\SitemapEntry(
+                    \App\Fringe\Artists::url($artist),
+                    \App\Fringe\Artists::reviews($artist)
+                        ->map->lastModified()
+                        ->filter()
+                        ->max() ?? new \DateTime,
+                ))
+                ->push(new \Pecotamic\Sitemap\SitemapEntry('/fringe/artists', new \DateTime))
                 ->all();
         });
 

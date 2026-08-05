@@ -1,0 +1,44 @@
+{{# Visible breadcrumb trail. Expects `breadcrumbs` — the list of rungs from
+    App\Schema\BreadcrumbSchema, the same array the BreadcrumbList JSON-LD is built from, so
+    the trail a reader sees and the one Google reads can't drift apart.
+
+    Design notes, since a breadcrumb is easy to leave looking like leftover markup:
+
+    - 13px rather than `text-sm`. This is signage, not content; at 14px it competed with the
+      lede beneath it, and at 12px it stopped being comfortably tappable.
+    - The chevron is an inline SVG, not a "/" or a "›". Punctuation separators inherit the
+      text's weight and colour and land on the baseline, so they read as part of the words
+      either side; a stroked chevron sits on the optical centre and can be muted well below
+      the link colour without becoming invisible.
+    - Separators are drawn by the rung that follows them, hidden on the first, which is what
+      keeps the gaps even. Nesting them inside each item with its own gap gave two different
+      spacings either side of every chevron — the "haphazard" part.
+    - Linked rungs never wrap: "Edmonton Fringe Reviews (2026)" breaking across two lines
+      reads as two crumbs. The last rung is a show title of unpredictable length, so it's the
+      one thing allowed to wrap, and it wraps as a block rather than mid-phrase.
+    - `label`, not `name` — the reader-facing form. See BreadcrumbSchema::crumb.
+    - `path`, not `url` — relative, so a crumb on a preview host stays on that host. #}}
+{{ if breadcrumbs }}
+    <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="m-0 flex list-none flex-wrap items-center p-0 text-[13px] leading-6">
+            {{ breadcrumbs }}
+                <li class="flex min-w-0 items-center">
+                    {{ unless first }}
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"
+                             class="mx-2 h-3 w-3 shrink-0 text-grey-300">
+                            <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5"
+                                  stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    {{ /unless }}
+
+                    {{ if last }}
+                        <span aria-current="page" class="min-w-0 font-medium text-grey-700">{{ label }}</span>
+                    {{ else }}
+                        <a href="{{ path }}"
+                           class="whitespace-nowrap rounded text-grey-500 no-underline transition-colors hover:text-teal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal">{{ label }}</a>
+                    {{ /if }}
+                </li>
+            {{ /breadcrumbs }}
+        </ol>
+    </nav>
+{{ /if }}

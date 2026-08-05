@@ -15,6 +15,16 @@
             and the evergreen URL is the one that should rank. #}}
         <link rel="canonical" href="{{ canonical_url ?? current_url }}">
 
+        {{# Feed autodiscovery. Site-wide rather than per-template, because this is how a
+            reader (or a crawler) finds a feed at all: it looks in the head of whatever page
+            it was handed. A page can name a more specific feed via `feed_url` — the Fringe
+            reviews do, since someone on that page wants the reviews as they land, not the
+            blog. #}}
+        <link rel="alternate" type="application/rss+xml" title="{{ settings:site_name }}" href="/feed.xml">
+        {{ if feed_url }}
+            <link rel="alternate" type="application/rss+xml" title="{{ feed_title ?? 'Edmonton Fringe Reviews' }}" href="{{ feed_url }}">
+        {{ /if }}
+
         {{ if og_description }}
             <meta name="description" content="{{ og_description }}">
             <meta property="og:description" content="{{ og_description }}">
@@ -70,9 +80,9 @@
 
 
 
-        <script src="https://kit.fontawesome.com/3221bcdf2a.js" crossorigin="anonymous"></script>
-
-
+        {{# Icons used to come from a Font Awesome kit script here — render-blocking, from a
+            third-party origin, fetching a JS runtime and webfonts to draw fifteen glyphs.
+            They're SVG masks in the stylesheet now; see build/icons.mjs. #}}
         {{ vite src="resources/js/site.js|resources/css/site.css" }}
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1006551655">

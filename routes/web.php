@@ -1,5 +1,6 @@
 <?php
 
+use App\Fringe\FestivalUrls;
 use App\Http\Controllers\EndorsementsController;
 use App\Http\Controllers\FringeController;
 use App\Http\Controllers\YegvoteController;
@@ -55,6 +56,25 @@ Route::redirect('/fringe/why-fringe', '/fringe', 301);
 
 $year = ['year' => '[0-9]{4}'];
 
+/*
+| Feeds. Declared before the reviews routes so /fringe/reviews/feed.xml is never a candidate
+| for the {slug} pattern below it.
+|
+| The reviews feed always covers the current festival, matching /fringe/reviews itself. Past
+| years don't get one: a feed of a finished festival never updates again, which is a feed
+| that only ever wastes a subscriber's fetches.
+*/
+Route::get('/feed.xml', [\App\Http\Controllers\FeedController::class, 'posts'])->name('feed.posts');
+Route::get('/fringe/reviews/feed.xml', [\App\Http\Controllers\FeedController::class, 'fringeReviews'])->name('feed.fringe');
+
+/*
+| Artist pages. Which artists have one is a rule about their reviews rather than a flag on
+| the entry — see App\Fringe\Artists — so these are controller routes and the collection has
+| no route of its own. An artist who doesn't qualify 404s.
+*/
+Route::get('/fringe/artists', [\App\Http\Controllers\FringeArtistController::class, 'index'])->name('fringe.artists');
+Route::get('/fringe/artists/{slug}', [\App\Http\Controllers\FringeArtistController::class, 'show'])->name('fringe.artist');
+
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year);
 
@@ -91,12 +111,31 @@ Route::post('/fringe/social-review-generator', [\App\Http\Controllers\SocialRevi
 |   /fringe-{year}/fringe-{year}-reviews      Statamic's filename-derived duplicate
 |   /fringe-reviews/{year}/{slug}             old individual review
 |   /fringe-reviews/{year}/{slug}/share-card  old share card
+|
+| The legacy *index* URLs go to the evergreen page, not to their own year's archive.
+|
+| These were the "Troy's Fringe reviews" URL in their day — before the restructure there was
+| no year-agnostic page to link to, so anyone linking to the reviews at all linked to one of
+| these. The authority they carry is authority for the undated query, and Search Console says
+| so plainly: over July 2026, /fringe-2025/reviews took 85 impressions, and 81 of them were
+| "edmonton fringe reviews", "fringe reviews" and "edmonton international fringe festival
+| reviews". Three were year-qualified. Meanwhile /fringe/reviews, which is the page those
+| searchers actually want, had none at all.
+|
+| Sending them to /fringe/{year}/reviews spent that authority on an archive that gets a year
+| staler every August, and answered an undated question with last year's answer.
+|
+| The archives keep their own canonical URLs, stay in the sitemap and can still earn the
+| dated queries on their own merits — this only changes where the *legacy* paths point.
+|
+| Individual legacy review URLs below are deliberately untouched: those are about one show,
+| and the show's own page is exactly the right destination.
 */
-Route::get('/fringe-{year}/fringe-{yearAgain}-reviews', fn (string $year) => redirect("/fringe/{$year}/reviews", 301))
+Route::get('/fringe-{year}/fringe-{yearAgain}-reviews', fn () => redirect(FestivalUrls::EVERGREEN, 301))
     ->where(['year' => '[0-9]{4}', 'yearAgain' => '[0-9]{4}']);
 
-Route::get('/fringe-{year}/reviews', fn (string $year) => redirect("/fringe/{$year}/reviews", 301))->where($year);
-Route::get('/fringe-{year}', fn (string $year) => redirect("/fringe/{$year}/reviews", 301))->where($year);
+Route::get('/fringe-{year}/reviews', fn () => redirect(FestivalUrls::EVERGREEN, 301))->where($year);
+Route::get('/fringe-{year}', fn () => redirect(FestivalUrls::EVERGREEN, 301))->where($year);
 
 Route::get('/fringe-reviews/{year}/{slug}/share-card', fn (string $year, string $slug) => redirect("/fringe/{$year}/reviews/{$slug}/share-card", 301))->where($year);
 Route::get('/fringe-reviews/{year}/{slug}', fn (string $year, string $slug) => redirect("/fringe/{$year}/reviews/{$slug}", 301))->where($year);

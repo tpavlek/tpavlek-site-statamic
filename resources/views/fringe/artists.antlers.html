@@ -1,0 +1,43 @@
+{{# The artist index. Only companies I've reviewed more than once appear — see
+    App\Fringe\Artists for why, but briefly: a page for a company with one show is a worse
+    copy of the review it links to.
+
+    Each card carries its show titles rather than just a count, because the name a reader is
+    looking for is often the show's, not the company's — "the people who did Field Zoology"
+    is how anyone actually remembers them. #}}
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ partial:fringe/breadcrumbs }}
+
+    <header class="mb-6">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">Fringe Artists &amp; Companies</h1>
+        <p class="text-sm text-gray-500 mt-2 mb-0">{{ artist_count }} companies I've reviewed more than once</p>
+    </header>
+
+    <div class="content mb-8">
+        <p>
+            Some companies come back year after year. These are the ones I've reviewed more
+            than once — their whole Fringe history in one place, so you can see whether
+            they're a safe bet before you buy.
+        </p>
+    </div>
+
+    <ul class="list-none p-0 m-0 divide-y divide-gray-100 border-t border-b border-gray-100">
+        {{ artists }}
+            <li class="relative py-4 hover:bg-grey-50 transition-colors">
+                <a href="{{ url }}" class="font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
+
+                <p class="text-sm text-gray-500 mt-1 mb-0">
+                    {{ reviews }}{{ title }}{{ unless last }} &middot; {{ /unless }}{{ /reviews }}
+                </p>
+            </li>
+        {{ /artists }}
+    </ul>
+
+    <hr class="w-1/2 text-center mx-auto py-4" />
+
+    <div class="content">
+        {{ partial:fringe/about-author }}
+    </div>
+</div>
+
+<script type="application/ld+json">{{ breadcrumb_schema }}</script>

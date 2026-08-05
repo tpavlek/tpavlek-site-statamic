@@ -1,0 +1,111 @@
+{{# One company's Fringe history. Every show they've brought that I've reviewed, newest
+    festival first, with the rating each earned.
+
+    The point of the page is the thing no single review can say: whether this company is
+    reliable. So the shows are grouped by festival and the rating sits beside each one —
+    a reader deciding on tonight's ticket is really asking "are these people any good", and
+    three years of ratings in one glance answers it better than any paragraph would. #}}
+<div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ partial:fringe/breadcrumbs }}
+
+    <header class="mb-6">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">{{ artist_name }}</h1>
+
+        <p class="text-sm text-gray-500 mt-2 mb-0">
+            {{ review_count }} show{{ if review_count != 1 }}s{{ /if }} at the Edmonton Fringe
+            {{ if festival_range }}&middot; {{ festival_range }}{{ /if }}
+        </p>
+
+        {{# Only rendered when the artist has one, so a company with neither doesn't get an
+            empty row of dividers. #}}
+        {{ if instagram || website }}
+            <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+                {{ if instagram }}
+                    <a href="https://instagram.com/{{ instagram }}" target="_blank" rel="noopener" class="text-xs text-gray-600 uppercase no-underline hover:text-teal transition-colors">
+                        <i class="fa-brands fa-instagram text-teal"></i> {{ instagram }}
+                    </a>
+                {{ /if }}
+                {{ if website }}
+                    <a href="{{ website }}" target="_blank" rel="noopener" class="text-xs text-gray-600 uppercase no-underline hover:text-teal transition-colors">
+                        <i class="fas fa-globe text-teal"></i> Website
+                    </a>
+                {{ /if }}
+            </div>
+        {{ /if }}
+    </header>
+
+    {{# Same list mechanics as the reviews index — stacked on mobile, aligned columns from
+        `sm` up, whole row tappable via a stretched link — so a reader who has seen one list
+        on this site already knows how to read this one. The year replaces that list's
+        venue column, since a company's shows are told apart by festival, not by room. #}}
+    <div class="clear-both">
+        <div class="hidden sm:grid sm:grid-cols-12 sm:gap-4 text-xs uppercase tracking-wide text-gray-500 pb-2 border-b border-gray-200">
+            <div class="col-span-6">Show</div>
+            <div class="col-span-4">Rating</div>
+            <div class="col-span-2">Festival</div>
+        </div>
+
+        <ul class="divide-y divide-gray-100 border-b border-gray-100 list-none p-0 m-0">
+            {{ reviews }}
+                <li class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
+                    <div class="sm:col-span-6 font-light">
+                        <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
+
+                        {{ if companion_videos }}
+                            <i class="fa-brands fa-youtube text-teal opacity-85" title="Has a video review"></i>
+                        {{ /if }}
+
+                        {{# No returning badge here, unlike the reviews index. Every row on
+                            this page is already one show rather than one staging, and the
+                            "also 2025, 2024" line says the same thing with more in it. With
+                            the badge as well, a Weird Al Karaoke row said 2025 three times —
+                            badge, rating provenance, and staging list. #}}
+
+                        {{ if venue }}
+                            <div class="text-xs text-gray-500 mt-0.5">{{ venue:display_name }}</div>
+                        {{ /if }}
+                    </div>
+
+                    <div class="mt-1 sm:mt-0 sm:col-span-4">
+                        {{ partial:fringe/review-tag }}
+                    </div>
+
+                    {{# A returning show is one row, showing the year of its latest staging.
+                        The earlier ones are listed under it rather than dropped: each is a
+                        real review with a page of its own, and losing those links would cost
+                        the older reviews the only route into them from this page.
+
+                        `relative` lifts them above the stretched title link so they stay
+                        clickable — same trick the ticket column uses on the reviews index. #}}
+                    <div class="mt-1 sm:mt-0 sm:col-span-2 text-xs text-gray-500 uppercase">
+                        Fringe {{ festival:slug }}
+
+                        {{ if earlier_stagings }}
+                            <div class="relative mt-0.5 normal-case">
+                                also
+                                {{ earlier_stagings }}
+                                    <a href="{{ url }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="{{ title }} at Fringe {{ festival:slug }}">{{ festival:slug }}</a>{{ unless last }},{{ /unless }}
+                                {{ /earlier_stagings }}
+                            </div>
+                        {{ /if }}
+                    </div>
+                </li>
+            {{ /reviews }}
+        </ul>
+    </div>
+
+    <div class="mt-8">
+        <a href="/fringe/artists" class="text-sm text-gray-500 no-underline hover:text-teal transition-colors">
+            &larr; All artists and companies
+        </a>
+    </div>
+
+    <hr class="w-1/2 text-center mx-auto py-4" />
+
+    <div class="content">
+        {{ partial:fringe/about-author }}
+    </div>
+</div>
+
+<script type="application/ld+json">{{ structured_data }}</script>
+<script type="application/ld+json">{{ breadcrumb_schema }}</script>

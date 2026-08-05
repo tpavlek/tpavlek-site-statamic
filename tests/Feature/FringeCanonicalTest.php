@@ -27,6 +27,35 @@ class FringeCanonicalTest extends TestCase
         return isset($m[1]) ? trim(preg_replace('/\s+/', ' ', $m[1])) : null;
     }
 
+    /**
+     * The legacy year-index URLs point at the evergreen page, not at their own year.
+     *
+     * These carry the site's accumulated head-term authority — before the restructure they
+     * were the only "Troy's Fringe reviews" URL there was to link to — and Search Console
+     * showed 81 of /fringe-2025/reviews' 85 July 2026 impressions coming from undated
+     * queries. Pointing them back at a year archive would spend that on a page that answers
+     * an undated question with a stale year.
+     */
+    public function test_legacy_year_index_urls_go_to_the_evergreen_page(): void
+    {
+        foreach (['/fringe-2025/reviews', '/fringe-2024/reviews', '/fringe-2025', '/fringe-2025/fringe-2025-reviews'] as $legacy) {
+            $this->get($legacy)
+                ->assertRedirect(FestivalUrls::EVERGREEN)
+                ->assertStatus(301);
+        }
+    }
+
+    /**
+     * A legacy *review* URL is about one show, so it still goes to that show — only the
+     * index URLs were retargeted.
+     */
+    public function test_legacy_review_urls_still_go_to_their_own_show(): void
+    {
+        $this->get('/fringe-reviews/2025/edmontask')
+            ->assertRedirect('/fringe/2025/reviews/edmontask')
+            ->assertStatus(301);
+    }
+
     public function test_evergreen_url_serves_the_current_festival(): void
     {
         $response = $this->get('/fringe/reviews');

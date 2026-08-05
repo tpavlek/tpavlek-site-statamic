@@ -5,12 +5,14 @@
         "node": "^20.19.0 || >=22.12.0"
     },
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "npm run icons && vite",
+        "build": "npm run icons && vite build",
+        "icons": "node build/icons.mjs",
         "cp:dev": "vite --config vite-cp.config.js",
         "cp:build": "vite build --config vite-cp.config.js"
     },
     "devDependencies": {
+        "@fortawesome/fontawesome-free": "^7.3.1",
         "@tailwindcss/typography": "^0.5.20",
         "autoprefixer": "^10.5.4",
         "laravel-vite-plugin": "^3.1.3",

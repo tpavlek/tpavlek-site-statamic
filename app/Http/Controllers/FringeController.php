@@ -145,6 +145,10 @@ class FringeController extends Controller
         // which, which is why there's no branch here.
         $canonical = FestivalUrls::absoluteReviews($festivalSlug);
 
+        // Two rungs — the /fringe hub and this page. The show pages hang a third off the same
+        // builder, so the trail reads consistently across the section.
+        $breadcrumbs = \App\Schema\BreadcrumbSchema::forReviewsIndex($festivalSlug);
+
         // Page metadata lives on the festival term rather than a stub page entry. Those
         // entries held nothing but a title and og tags, and their filename-derived slugs
         // were what produced duplicate, controller-less copies of this page.
@@ -179,6 +183,12 @@ class FringeController extends Controller
                 'last_updated_display' => $lastUpdated?->format('F j, Y'),
                 'last_updated_iso' => $lastUpdated?->toIso8601String(),
                 'canonical_url' => $canonical,
+                // Only the current festival has a feed — see the route comment. An archive
+                // year advertising one would promise updates that will never come.
+                'feed_url' => FestivalUrls::isCurrent($festivalSlug) ? '/fringe/reviews/feed.xml' : null,
+                'feed_title' => "Edmonton Fringe Reviews ({$festivalSlug})",
+                'breadcrumbs' => $breadcrumbs,
+                'breadcrumb_schema' => \App\Schema\BreadcrumbSchema::build($breadcrumbs),
                 'structured_data' => $this->structuredData($title, $description, $reviews, $festivalSlug, $lastUpdated, $canonical),
                 'title' => $title,
                 'og_title' => $title,

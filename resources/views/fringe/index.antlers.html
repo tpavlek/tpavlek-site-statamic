@@ -1,6 +1,16 @@
 <div class="pb-8 max-w-4xl mx-auto text-lg">
+    {{ partial:fringe/breadcrumbs }}
+
     <header class="mb-4">
-        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">Edmonton Fringe {{ year }} Reviews</h1>
+        {{# "Edmonton Fringe Reviews (2026)", not "Edmonton Fringe 2026 Reviews". The head
+            term is "edmonton fringe reviews" and the old wording put the year in the middle
+            of it, so the h1 was the one part of this page that didn't carry the phrase — the
+            <title> the controller builds has led with it for a while.
+
+            The year stays, in parentheses, because the archive years need to be told apart
+            from each other and from the current festival. It's never stale on /fringe/reviews:
+            that URL always renders whichever festival is current. #}}
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">Edmonton Fringe Reviews ({{ year }})</h1>
 
         {{ if review_count }}
             <p class="text-sm text-gray-500 mt-2">
@@ -25,7 +35,15 @@
             {{ /if }}
         {{ /taxonomy:fringe_festival }}
 
+        <a href="/fringe/artists" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">Artists</a>
+
         <a href="/fringe" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">About the Fringe &rarr;</a>
+
+        {{# Only on the current festival: an archive year's reviews are finished, so a feed of
+            them would never update again. #}}
+        {{ if feed_url }}
+            <a href="{{ feed_url }}" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors" title="Follow the reviews as they're posted">RSS</a>
+        {{ /if }}
     </nav>
 
     <div class="content">
@@ -136,3 +154,7 @@
 </div>
 
 <script type="application/ld+json">{{ structured_data }}</script>
+
+{{# Separate block, for the same reason as on fringe/review: one invalid half shouldn't take
+    the other down with it. #}}
+<script type="application/ld+json">{{ breadcrumb_schema }}</script>

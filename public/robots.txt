@@ -1,2 +1,57 @@
+# Everything here is meant to be read, by people and by machines alike. The site's whole
+# point is being the place someone lands when they ask what's worth seeing at the Fringe,
+# and increasingly that question gets asked of an assistant rather than a search box.
+#
+# The AI crawlers below were already allowed by the catch-all — they're named explicitly so
+# that staying open to them is a decision on the record rather than an accident of omission,
+# and so that narrowing it later is a deliberate edit to one line rather than a rewrite.
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# OpenAI. GPTBot crawls, OAI-SearchBot builds the search index, and ChatGPT-User fetches a
+# single page because someone in a conversation asked for that page.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Google's AI products read this token rather than Googlebot's rules, which makes ordinary
+# search indexing and AI use two separate decisions. Both are yes.
+User-agent: Google-Extended
+Allow: /
+
+# Apple's equivalent split: Applebot indexes for Siri and Spotlight under the catch-all,
+# Applebot-Extended is the separate training opt-in.
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Absolute, and stated here rather than left to discovery: this is how a crawler arriving at
+# the root finds every URL without having to walk the site to them.
+Sitemap: https://troypavlek.ca/sitemap.xml
