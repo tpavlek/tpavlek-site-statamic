@@ -28,6 +28,20 @@ class SocialCardController extends Controller
         return $this->builder($entry, backUrl: $entry->url(), backLabel: 'Back to review');
     }
 
+    /**
+     * The card builder, for the CP and for the public per-review URL both.
+     *
+     * The response carries `X-Robots-Tag: noindex` as well as the meta tag in the template.
+     * Both, because Search Console's URL inspection reported this page as "Submitted and
+     * indexed" with `indexingState: INDEXING_ALLOWED` — Google last crawled it the day the
+     * meta tag shipped and evidently didn't have it yet, and a header is the directive that
+     * can't be missed by a parser or a truncated response. OgCardController does the same.
+     *
+     * Deliberately noindex rather than canonical-to-the-review. This is a tool, not a copy of
+     * the review, so a canonical would be a claim that isn't true — and Google's own guidance
+     * is not to combine noindex with a canonical, because the conflicting signals can carry
+     * the noindex across to the target. The target here is the review page itself.
+     */
     private function builder(Entry $entry, string $backUrl, string $backLabel)
     {
         $options = collect($entry->value('share_card_options') ?? []);
@@ -35,7 +49,7 @@ class SocialCardController extends Controller
         $stars = $this->starsLabel($entry);
         $canSave = UserFacade::current() !== null;
 
-        return view('fringe.social-card.page', [
+        return response()->view('fringe.social-card.page', [
             'mode' => 'entry',
             'step' => 'build',
             'pageTitle' => 'Share this review — '.$entry->value('title'),
@@ -76,7 +90,7 @@ class SocialCardController extends Controller
                 'downloadName' => $entry->slug(),
                 'ogUrl' => $canSave ? cp_route('fringe-social-card.og', $entry->id()) : null,
             ],
-        ]);
+        ])->header('X-Robots-Tag', 'noindex');
     }
 
     public function save(string $entryId, Request $request)
