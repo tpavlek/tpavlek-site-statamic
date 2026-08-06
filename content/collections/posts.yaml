@@ -8,7 +8,11 @@ taxonomies:
 revisions: false
 route: 'posts/{slug}'
 date: true
-sort_dir: asc
+# Newest first in the CP listing — the post being worked on is nearly always the most recent
+# one, and the oldest-first default meant scrolling past years of archive to reach it.
+# Safe to change: every front-end listing passes its own `sort="date:desc"`.
+sort_by: date
+sort_dir: desc
 date_behavior:
   past: public
   future: private

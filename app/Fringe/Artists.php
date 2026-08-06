@@ -227,9 +227,11 @@ class Artists
      */
     private static function reviewsByArtist(): Collection
     {
-        return self::$cache ??= EntryFacade::query()
-            ->where('collection', 'fringe_reviews')
-            ->get()
+        // Published only, and it matters twice here: an imported lineup entry would both
+        // put a link to a 404 on an artist's page and count toward the two-show gate, so a
+        // company with one review and two unlooked-at imports would earn a page listing two
+        // shows that don't exist. See App\Fringe\Reviews.
+        return self::$cache ??= Reviews::published()
             ->groupBy(fn (EntryContract $review) => (string) self::artistIdOf($review))
             ->forget('');
     }

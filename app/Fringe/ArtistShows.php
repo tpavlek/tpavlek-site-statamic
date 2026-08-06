@@ -2,8 +2,6 @@
 
 namespace App\Fringe;
 
-use Statamic\Facades\Entry as EntryFacade;
-
 /**
  * The other shows a company has brought to the Fringe.
  *
@@ -34,9 +32,9 @@ class ArtistShows
             return collect();
         }
 
-        return EntryFacade::query()
-            ->where('collection', 'fringe_reviews')
-            ->get()
+        // Published only: a "Previously:" line pointing at an imported lineup entry would be
+        // a link to a 404. See App\Fringe\Reviews.
+        return Reviews::published()
             ->filter(fn ($other) => $other->id() !== $entry->id()
                 && self::artist($other) === $artist
                 && ($year = self::festival($other))

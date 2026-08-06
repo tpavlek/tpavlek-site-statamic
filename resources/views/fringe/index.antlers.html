@@ -35,15 +35,12 @@
             {{ /if }}
         {{ /taxonomy:fringe_festival }}
 
-        <a href="/fringe/artists" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">Artists</a>
-
-        <a href="/fringe" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">About the Fringe &rarr;</a>
-
-        {{# Only on the current festival: an archive year's reviews are finished, so a feed of
-            them would never update again. #}}
-        {{ if feed_url }}
-            <a href="{{ feed_url }}" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors" title="Follow the reviews as they're posted">RSS</a>
-        {{ /if }}
+        {{# The artists index and the feed both used to sit here. Neither earns a slot next to
+            the year switcher on the page people arrive at looking for tonight's show: the
+            artist pages are a browse-by-company thing reached from the hub, and the feed is
+            for the handful of people who use a reader — it's in the footer, and readers find
+            it through the <link rel="alternate"> in the layout regardless. #}}
+        <a href="/fringe" class="inline-block text-gray-500 no-underline py-1 px-2 hover:text-teal transition-colors">Fringe Hub &rarr;</a>
     </nav>
 
     <div class="content">

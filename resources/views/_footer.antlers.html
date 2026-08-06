@@ -1,5 +1,13 @@
 <nav class="flex items-center justify-between flex-wrap py-12 lg:py-24 max-w-5xl mx-auto">
-    <div class="text-sm">&copy; {{ now format="Y" }} {{ settings:site_name }}</div>
+    <div class="text-sm flex items-center gap-3">
+        <span>&copy; {{ now format="Y" }} {{ settings:site_name }}</span>
+
+        {{# The page's own feed where it has one — the Fringe reviews index sets `feed_url`,
+            so during the festival this points at the reviews rather than the blog — and the
+            posts feed everywhere else. Down here rather than up in the page: few people use
+            a reader, and the ones who do are served by autodiscovery in the layout. #}}
+        <a href="{{ feed_url ?? '/feed.xml' }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="Subscribe with a feed reader">RSS</a>
+    </div>
     <div class="flex items-center">
         {{ settings:social }}
             <a href="{{ url }}" class="ml-4" aria-label="{{ name }}" rel="noopener">

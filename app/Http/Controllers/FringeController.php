@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Fringe\FestivalUrls;
+use App\Fringe\Reviews;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Intervention\Image\Facades\Image;
@@ -99,9 +100,10 @@ class FringeController extends Controller
 
     private function yearReviews($festival, string $festivalSlug, string $videoCategorySlug)
     {
-        $reviews = EntryFacade::query()
-            ->where('collection', 'fringe_reviews')
-            ->get()
+        // Published only — see App\Fringe\Reviews. This list feeds the visible table, the
+        // review count and the page's JSON-LD ItemList, so a draft leaking in would put a
+        // 404 into structured data.
+        $reviews = Reviews::published()
             ->filter(function (Entry $entry) use ($festivalSlug) {
                 return $entry->festival->slug === $festivalSlug;
             })
@@ -120,6 +122,12 @@ class FringeController extends Controller
                 // show, watchlist first: a show Troy picked out unseen is a better bet than
                 // "it's improv, you get what you get".
                 return match (true) {
+                    // Below everything, including a one-star show. `pending` means the show
+                    // was imported from the ticket site and never looked at, so it carries
+                    // no opinion at all and can't be ranked among ones that do. These are
+                    // drafts and shouldn't reach this list — but if one is ever published by
+                    // accident it sinks rather than floating above the rated shows.
+                    Reviews::isPending($entry) => 0,
                     $entry->recommendation->value() === 'watchlist' => 32,
                     $this->isImprov($entry) => 31,
                     default => 35,

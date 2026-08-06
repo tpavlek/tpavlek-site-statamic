@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Feed\Feed;
 use App\Fringe\FestivalUrls;
+use App\Fringe\Reviews;
 use Illuminate\Http\Response;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
@@ -68,9 +69,9 @@ class FeedController extends Controller
     {
         $current = FestivalUrls::currentSlug();
 
-        $items = EntryFacade::query()
-            ->where('collection', 'fringe_reviews')
-            ->get()
+        // Published only — an imported lineup entry has no review to carry and its link
+        // would 404 in every reader that followed it. See App\Fringe\Reviews.
+        $items = Reviews::published()
             ->filter(fn (Entry $entry) => $entry->festival?->slug() === $current)
             // lastModified, not the entry date: entry dates are date-only and a festival puts
             // a dozen reviews on the same day, so sorting by date leaves the running order of

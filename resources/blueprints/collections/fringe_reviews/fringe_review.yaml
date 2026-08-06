@@ -89,10 +89,14 @@ tabs:
                 -
                   key: watchlist
                   value: Watchlist
+                -
+                  key: pending
+                  value: Pending
               max_items: 1
               default: recommended
               type: select
               display: Recommendation
+              instructions: "**Pending** means the show was imported from the ticket site and hasn't been looked at — it's the lineup, not an opinion. Pending entries are kept unpublished so they don't get a page of their own; publishing one puts a near-empty page on the site. Pick a real recommendation before publishing."
           -
             handle: ticket_link
             field:

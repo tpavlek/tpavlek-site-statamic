@@ -97,8 +97,25 @@ class AppServiceProvider extends ServiceProvider
         // so search relevance survives. Note the key is `last_modified`, not `updated_at` —
         // only the former is queryable on an entry.
         EntriesIndexQuery::hook('query', function ($payload, $next) {
-            if ($payload->collection->handle() === 'fringe_reviews' && ! request('search')) {
+            if ($payload->collection->handle() !== 'fringe_reviews') {
+                return $next($payload);
+            }
+
+            if (! request('search')) {
                 $payload->query->orderBy('last_modified', 'desc');
+            }
+
+            // Default the listing to the festival on now. The lineup import puts every show
+            // at the festival into this collection, so an unfiltered listing is a couple of
+            // hundred entries of which only this year's are being worked on.
+            //
+            // Backs off the moment the search box or any filter is used, so nothing is ever
+            // permanently hidden — looking for a 2024 review still finds it, which wouldn't
+            // be true of a constraint applied unconditionally.
+            $filtered = request('search') || filled(request('filters'));
+
+            if (! $filtered) {
+                $payload->query->where('festival', FestivalUrls::currentSlug());
             }
 
             return $next($payload);

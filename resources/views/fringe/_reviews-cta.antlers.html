@@ -1,0 +1,24 @@
+{{#
+    End-of-post prompt sending Fringe readers to the reviews.
+
+    Shown on any post tagged `fringe`, not just posts about the festival currently on. An old
+    Fringe post is exactly where this earns its place: someone who found "how to Fringe on a
+    budget" from two years ago in August is looking for this year's reviews and has no other
+    route to them from the bottom of an archive page.
+
+    That's also why it names the *current* festival and links the evergreen URL rather than
+    the year the post was written about — it stays true and useful without anyone editing old
+    posts each August, and it points internal links at the URL that's meant to rank.
+
+    Same teal panel as the equivalent prompt on the home page. A block link so the whole panel
+    is a tap target on a phone, which is where most of this reading happens.
+#}}
+{{ if topics | pluck('slug') | contains('fringe') }}
+    <aside class="clear-both mt-12">
+        <a href="{{ fringe:reviews_url }}"
+           class="block border border-teal rounded-lg bg-teal-light bg-opacity-30 hover:bg-opacity-50 transition-colors no-underline px-4 py-3 text-teal-dark">
+            <span class="text-base">Looking for reviews of shows at Edmonton Fringe {{ fringe:current_year }}?</span>
+            <span class="block font-medium mt-0.5">Read Troy's Fringe Reviews &rarr;</span>
+        </a>
+    </aside>
+{{ /if }}

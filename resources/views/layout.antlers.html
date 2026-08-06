@@ -68,9 +68,18 @@
         {{ elseif endorsement_image }}
             <meta property="og:image" content="{{ endorsement_image:permalink ?? endorsement_image:url }}">
             <meta name="twitter:image" content="{{ endorsement_image:permalink ?? endorsement_image:url }}">
+        {{# The last-resort card, for any page that sets no image of its own. Built with
+            `php artisan og:card --headline="Troy Pavlek" --subhead="..."
+            --portrait=troy-fringe-avatar.png --out=og/site-default.png`.
+
+            It replaced /assets/og-image.png, which was a *screenshot of the 2025 election
+            candidate list* — so every post without its own image, whatever it was about, had
+            been sharing since November 2024 with a year-old election page and a stranger's
+            headshot as its preview. A generic card is worth having precisely because it's the
+            one nobody remembers to set. #}}
         {{ else }}
-            <meta property="og:image" content="https://troypavlek.ca/assets/og-image.png">
-            <meta name="twitter:image" content="https://troypavlek.ca/assets/og-image.png">
+            <meta property="og:image" content="https://troypavlek.ca/assets/og/site-default.png">
+            <meta name="twitter:image" content="https://troypavlek.ca/assets/og/site-default.png">
         {{ /if }}
 
 
