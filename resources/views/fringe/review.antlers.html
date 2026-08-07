@@ -154,31 +154,34 @@
         {{ /if }}
     {{ /venue }}
 
+    {{# The same thumbnail-card scroller as the index's "on video" section: cards link to the
+        video's own entry page rather than embedding the short here. #}}
     {{ if companion_videos }}
-    <div class="rounded-lg rounded-l-none border border-grey-300 mb-3">
-        <div class="border-teal border-l-8">
-            <div class="px-4 pb-2">
-                <h2 class="font-semibold pt-2 uppercase text-sm tracking-wide">Companion videos</h2>
+        <section class="clear-both pt-4">
+            <h2 class="text-xl font-bold mb-3">Companion videos</h2>
 
-                    {{ companion_videos as="video" }}
-                    <div class="mt-4 flex space-x-2 items-center">
-                        {{ video }}
-                        <div class="my-2 ">
-                            {{ if youtube }}
-                                <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            {{ else }}
-                                <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ content | strip_tags | safe_truncate:200:... }}</div>
-                            {{ /if }}
-
-                        </div>
-
-                        {{ /video }}
-                    </div>
-                    {{ /companion_videos }}
-
-            </div>
-        </div>
-    </div>
+            <ul class="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
+                {{ companion_videos as="video" }}
+                    {{ video }}
+                        <li class="shrink-0 w-36 sm:w-44">
+                            <a href="{{ url }}" class="block no-underline text-gray-800 group">
+                                {{ if thumbnail }}
+                                    <img src="{{ thumbnail:url }}"
+                                         alt="{{ title }}"
+                                         loading="lazy"
+                                         class="w-full aspect-[9/16] object-cover rounded-lg bg-grey-100 group-hover:opacity-90 transition-opacity">
+                                {{ else }}
+                                    <div class="w-full aspect-[9/16] rounded-lg bg-grey-100 flex items-center justify-center">
+                                        <i class="fas fa-play text-teal text-2xl"></i>
+                                    </div>
+                                {{ /if }}
+                                <p class="text-sm leading-snug mt-2 group-hover:text-teal transition-colors">{{ title }}</p>
+                            </a>
+                        </li>
+                    {{ /video }}
+                {{ /companion_videos }}
+            </ul>
+        </section>
     {{ /if }}
 
     {{# Same quiet aside treatment as the venue notes above: a hairline rule and a tag rather

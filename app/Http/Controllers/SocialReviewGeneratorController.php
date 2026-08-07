@@ -96,6 +96,7 @@ class SocialReviewGeneratorController extends Controller
                 'textSize' => 42,
                 'focalX' => 50,
                 'focalY' => 50,
+                'zoom' => 100,
                 // A rating of null means the source doesn't publish one (12thNight) or we
                 // couldn't read it — start with the switch off rather than showing a made-up
                 // zero, and let them turn it on if they want to set one.
@@ -103,6 +104,11 @@ class SocialReviewGeneratorController extends Controller
                 'starsColour' => 'white',
                 'starsFixedText' => null,
                 'starsValue' => $review->stars ?? 0,
+                // Off by default, but pre-filled from the scraped title so turning it on
+                // does something immediately.
+                'titleEnabled' => false,
+                'titleText' => $review->title ?? '',
+                'titleSize' => 44,
                 'attributionEnabled' => $review->attribution !== null,
                 'attributionText' => $review->attribution ?? '',
                 'attributionSize' => 34,

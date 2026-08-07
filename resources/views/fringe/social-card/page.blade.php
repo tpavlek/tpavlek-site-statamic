@@ -126,13 +126,29 @@
                 @endif
             </div>
 
+            {{-- The drag handlers sit on the frame rather than on .card, because .card is the
+                 node that gets rasterized and nothing should be added inside it that the
+                 capture would have to know to strip. The frame has the card's exact visual
+                 bounds anyway. --}}
             <div class="stage">
-                <div class="preview-frame" :style="`width: ${cardWidth * previewScale}px; height: ${cardHeight * previewScale}px`">
+                <div class="preview-frame"
+                     :class="{ 'is-draggable': canDrag, 'is-dragging': !!drag }"
+                     :style="`width: ${cardWidth * previewScale}px; height: ${cardHeight * previewScale}px`"
+                     @pointerdown="startDrag($event)"
+                     @pointermove="moveDrag($event)"
+                     @pointerup="endDrag($event)"
+                     @pointercancel="endDrag($event)">
                     <div class="preview-scale" :style="`transform: scale(${previewScale})`">
                         @include('fringe.social-card._card')
                     </div>
                 </div>
             </div>
+
+            {{-- Only when there's actually an axis to move along: with an image that fills the
+                 frame exactly, dragging does nothing and saying otherwise is a lie. --}}
+            <p class="stage-hint" x-show="canDrag" x-cloak>
+                Drag the image to reposition it<span x-show="canFocusX && !canFocusY"> left and right</span><span x-show="canFocusY && !canFocusX"> up and down</span>.
+            </p>
 
             <p class="stage-caption" x-text="cardWidth + ' × ' + cardHeight + ' px · PNG'"></p>
         </section>

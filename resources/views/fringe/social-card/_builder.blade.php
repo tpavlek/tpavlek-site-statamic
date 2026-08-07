@@ -18,12 +18,18 @@
             textSize: config.textSize,
             focalX: config.focalX,
             focalY: config.focalY,
+            // Percent, 100 = the plain cover crop. Kept as an integer like the focal
+            // values so it round-trips through share_card_options unchanged.
+            zoom: config.zoom,
             starsEnabled: config.starsEnabled,
             starsColour: config.starsColour,
             // Fixed on an entry (it comes from the review); driven by starsValue in the
             // generator, where the user sets the rating themselves.
             starsFixedText: config.starsFixedText,
             starsValue: config.starsValue,
+            titleEnabled: config.titleEnabled,
+            titleText: config.titleText,
+            titleSize: config.titleSize,
             attributionEnabled: config.attributionEnabled,
             attributionText: config.attributionText,
             attributionSize: config.attributionSize,
@@ -35,6 +41,8 @@
             imageError: '',
             clearImage: false,
             downloading: false,
+            // Drag-to-position state. Null when not dragging — see startDrag.
+            drag: null,
 @if ($canSave)
             settingOg: false,
             ogMessage: '',
@@ -211,6 +219,11 @@
                 return (this.quote || '').trim().length > 0;
             },
 
+            // ---- Show title ----
+            get showTitle() {
+                return this.titleEnabled && (this.titleText || '').trim().length > 0;
+            },
+
             // ---- Format ----
             // Moves the quote size to the new format's default, but only if it's still
             // sitting on the old one's — an untouched size is ours to adjust, a chosen one
@@ -299,16 +312,108 @@
             get canReset() {
                 return !this.usingPoster && this.posterUrl;
             },
+            get zoomFactor() {
+                return Math.max(1, (Number(this.zoom) || 100) / 100);
+            },
+            // Mirrors what renderPng draws: the same scale-around-the-focal-point crop, so
+            // the preview and the download frame the shot identically. object-position puts
+            // the focal point where the cover crop wants it; scaling around that same point
+            // (transform-origin) is exactly the enlarged crop the canvas computes.
+            get bgStyle() {
+                return `object-position: ${this.focalX}% ${this.focalY}%;`
+                    + ` transform: scale(${this.zoomFactor});`
+                    + ` transform-origin: ${this.focalX}% ${this.focalY}%`;
+            },
             // The focus sliders shift the image within the frame's crop, so each axis only
-            // applies when the image overflows the frame along that axis.
+            // applies when the image overflows the frame along that axis — which, zoomed in,
+            // is both of them.
             get canFocusX() {
-                return this.imgAspect === null || this.imgAspect > this.frameAspect + 0.001;
+                return this.imgAspect === null || this.zoomFactor > 1.001
+                    || this.imgAspect > this.frameAspect + 0.001;
             },
             get canFocusY() {
-                return this.imgAspect === null || this.imgAspect < this.frameAspect - 0.001;
+                return this.imgAspect === null || this.zoomFactor > 1.001
+                    || this.imgAspect < this.frameAspect - 0.001;
             },
             measureImage(img) {
                 this.imgAspect = img.naturalHeight ? img.naturalWidth / img.naturalHeight : null;
+            },
+
+            // ---- Drag to position ----
+            //
+            // The focus sliders live below the fold, so setting a crop meant adjusting,
+            // scrolling up to look, and scrolling back down. Dragging the preview does the
+            // same job where you're already looking.
+            //
+            // The sliders stay: they're the keyboard-accessible version of this, and they're
+            // better for a one-percent nudge than a mouse is.
+            get canDrag() {
+                return !!this.bgUrl && (this.canFocusX || this.canFocusY);
+            },
+            // How far the covered image overhangs the card, in card pixels, per axis. This is
+            // the full range the focal percentage moves through, so it's what converts a drag
+            // distance into a percentage.
+            get focusOverflow() {
+                if (!this.imgAspect) return { x: 0, y: 0 };
+
+                const wide = this.imgAspect > this.frameAspect;
+                const coveredWidth = (wide ? this.cardHeight * this.imgAspect : this.cardWidth) * this.zoomFactor;
+                const coveredHeight = (wide ? this.cardHeight : this.cardWidth / this.imgAspect) * this.zoomFactor;
+
+                return {
+                    x: Math.max(0, coveredWidth - this.cardWidth),
+                    y: Math.max(0, coveredHeight - this.cardHeight),
+                };
+            },
+            startDrag(event) {
+                if (!this.canDrag) return;
+
+                // Let the quote picker, buttons and anything else interactive inside the
+                // card keep their own click behaviour.
+                if (event.target.closest('button, a, input, select, textarea')) return;
+
+                this.drag = {
+                    pointer: event.pointerId,
+                    x: event.clientX,
+                    y: event.clientY,
+                    focalX: Number(this.focalX),
+                    focalY: Number(this.focalY),
+                };
+
+                // Keeps the gesture alive if the pointer leaves the card mid-drag, which is
+                // easy to do when the crop is near an edge.
+                event.currentTarget.setPointerCapture?.(event.pointerId);
+            },
+            moveDrag(event) {
+                if (!this.drag || this.drag.pointer !== event.pointerId) return;
+
+                event.preventDefault();
+
+                // Screen pixels to card pixels — the preview is transform: scale()d down.
+                const scale = this.previewScale || 1;
+                const dx = (event.clientX - this.drag.x) / scale;
+                const dy = (event.clientY - this.drag.y) / scale;
+                const overflow = this.focusOverflow;
+
+                // Dragging right reveals more of the image's left side, which is a *lower*
+                // object-position percentage — hence the subtraction. Percentage
+                // object-position places the overflow, not the image.
+                if (this.canFocusX && overflow.x > 0) {
+                    this.focalX = this.clampPercent(this.drag.focalX - (dx / overflow.x) * 100);
+                }
+
+                if (this.canFocusY && overflow.y > 0) {
+                    this.focalY = this.clampPercent(this.drag.focalY - (dy / overflow.y) * 100);
+                }
+            },
+            endDrag(event) {
+                if (!this.drag) return;
+
+                event.currentTarget.releasePointerCapture?.(this.drag.pointer);
+                this.drag = null;
+            },
+            clampPercent(value) {
+                return Math.round(Math.min(100, Math.max(0, value)));
             },
             // A picked file becomes a downscaled JPEG data URL rather than a blob URL, which
             // is what the poster already is. That matters more than it looks: html-to-image
@@ -422,7 +527,7 @@
                 canvas.height = this.cardHeight;
                 const context = canvas.getContext('2d');
 
-                const scale = Math.max(this.cardWidth / photo.naturalWidth, this.cardHeight / photo.naturalHeight);
+                const scale = Math.max(this.cardWidth / photo.naturalWidth, this.cardHeight / photo.naturalHeight) * this.zoomFactor;
                 const width = photo.naturalWidth * scale;
                 const height = photo.naturalHeight * scale;
                 // Percentage object-position places the overflow, not the image: at 0% the

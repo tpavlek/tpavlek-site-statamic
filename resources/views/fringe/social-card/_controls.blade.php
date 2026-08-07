@@ -67,6 +67,34 @@
 </div>
 
 <div class="group">
+    <div class="group-head">
+        <p class="group-title">Show title</p>
+        <label class="switch">
+            <input type="checkbox" x-model="titleEnabled" aria-label="Show the show's title on the card">
+            <span class="switch-track" aria-hidden="true"></span>
+        </label>
+    </div>
+    <input type="hidden" name="title_enabled" :value="titleEnabled ? 1 : 0">
+    <input type="hidden" name="title_text" :value="titleText">
+    <input type="hidden" name="title_size" :value="titleSize">
+    <div x-show="titleEnabled">
+        <div class="field">
+            <label for="title_text">Title text</label>
+            <input type="text" id="title_text" class="text-input" maxlength="120" x-model="titleText">
+        </div>
+        <div class="field">
+            <label for="title_size">Text size</label>
+            <div class="stepper">
+                <button type="button" @click="titleSize = Math.max(20, titleSize - 2)" aria-label="Smaller title text">&minus;</button>
+                <input type="number" id="title_size" min="20" max="100" x-model.number="titleSize" aria-label="Title text size in pixels">
+                <button type="button" @click="titleSize = Math.min(100, titleSize + 2)" aria-label="Larger title text">+</button>
+            </div>
+        </div>
+    </div>
+    <p class="hint" x-show="!titleEnabled">The show's title is left off the card.</p>
+</div>
+
+<div class="group">
     <p class="group-title">Layout</p>
     <div class="row">
         <div class="field">
@@ -135,6 +163,12 @@
          required fields always arrive. --}}
     <input type="hidden" name="focal_x" :value="focalX">
     <input type="hidden" name="focal_y" :value="focalY">
+    <input type="hidden" name="zoom" :value="zoom">
+    <div class="field" x-show="bgUrl">
+        <label for="zoom">Zoom</label>
+        <input type="range" id="zoom" min="100" max="300" step="5" x-model.number="zoom" aria-label="Zoom, 100 percent fills the card, 300 percent is three times closer">
+        <p class="hint">Zooming in past the frame lets you drag the image to reframe it in any direction.</p>
+    </div>
     <div class="row" x-show="bgUrl">
         <div class="field">
             <label for="focal_x">Focus &larr;&rarr;</label>

@@ -76,6 +76,21 @@ class FringeController extends Controller
     }
 
     /**
+     * A review's festival year, read straight off the entry.
+     *
+     * The augmented `$entry->festival->slug` resolves a taxonomy term to get at the same
+     * string, which is fine once and expensive across a collection that now holds every show
+     * at the festival. Stored as a single-value taxonomy field, so it can arrive as either a
+     * string or a one-element array depending on how the entry was written.
+     */
+    private static function festivalSlugOf(Entry $entry): ?string
+    {
+        $slug = $entry->value('festival');
+
+        return is_array($slug) ? ($slug[0] ?? null) : $slug;
+    }
+
+    /**
      * For a returning show, the entry of the review from the year I originally saw it.
      */
     private function originalReview(Entry $entry): ?\Statamic\Contracts\Entries\Entry
@@ -104,8 +119,11 @@ class FringeController extends Controller
         // review count and the page's JSON-LD ItemList, so a draft leaking in would put a
         // 404 into structured data.
         $reviews = Reviews::published()
+            // The raw value, not `$entry->festival->slug`. The augmented form resolves a
+            // taxonomy term per entry to read a year that's already sitting in the file —
+            // 30ms across the collection against 0.2ms, for an identical result.
             ->filter(function (Entry $entry) use ($festivalSlug) {
-                return $entry->festival->slug === $festivalSlug;
+                return self::festivalSlugOf($entry) === $festivalSlug;
             })
             ->sortByDesc(function (Entry $entry) {
                 // We sort by stars on a 0-50 scale. A returning show without a fresh rating
@@ -134,11 +152,21 @@ class FringeController extends Controller
                 };
             });
 
+        // Raw category slugs rather than `$entry->category`, which resolves a taxonomy term
+        // for every video on the site — 109ms against 8ms, and it was the single most
+        // expensive thing on the reviews page despite having nothing to do with reviews.
+        //
+        // Not `whereTaxonomy()`, tempting as it is at 0.4ms: `video_category` isn't declared
+        // on the videos collection, only referenced by a blueprint field, so the taxonomy
+        // index is empty and the query returns **nothing for every category** — silently, and
+        // for fringe-2026 it happens to agree with the correct answer because both are empty.
+        // Declaring the taxonomy on the collection would make it usable; until then this is
+        // the version that returns the right videos.
         $videos = EntryFacade::query()
             ->where('collection', 'videos')
             ->get()
             ->filter(function (Entry $entry) use ($videoCategorySlug) {
-                return $entry->category->contains(fn (LocalizedTerm $term) => $term->slug === $videoCategorySlug);
+                return in_array($videoCategorySlug, (array) ($entry->value('category') ?? []), true);
             });
 
         $posts = $this->posts($festivalSlug);

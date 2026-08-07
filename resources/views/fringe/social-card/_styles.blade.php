@@ -35,8 +35,15 @@
         .format-tabs button.active { background: var(--teal); color: white; }
         .stage { width: 100%; min-height: 620px; background: var(--stage); border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
         .preview-frame { overflow: hidden; border-radius: 4px; box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45); }
+        /* Only when an axis can actually move — a cursor promising a drag that does nothing
+           is worse than no affordance. `touch-action: none` stops a touch drag scrolling the
+           page instead, and is scoped to the draggable case so the preview doesn't become a
+           dead zone on a phone when it isn't. */
+        .preview-frame.is-draggable { cursor: grab; touch-action: none; }
+        .preview-frame.is-dragging { cursor: grabbing; user-select: none; }
         .preview-scale { transform-origin: top left; }
         .stage-caption { margin-top: 0.8rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); }
+        .stage-hint { margin-top: 0.5rem; font-size: 0.8rem; color: var(--ink-soft); text-align: center; }
 
         /* ---- Controls ---- */
         .group { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem 1.35rem; margin-bottom: 1.1rem; }
@@ -123,6 +130,7 @@
         .card .panel { position: absolute; left: 0; width: 100%; padding: 56px 60px; }
         .card .stars { font-size: 72px; color: white; letter-spacing: 6px; line-height: 1; margin-bottom: 28px; }
         .card .watch-heading { display: inline-block; font-size: 34px; font-weight: 700; color: #a6d0cf; text-transform: uppercase; letter-spacing: 5px; line-height: 1; background: rgba(166, 208, 207, 0.3); border: 3px solid #a6d0cf; border-radius: 12px; padding: 16px 30px 14px; margin-bottom: 32px; }
+        .card .show-title { font-weight: 700; color: white; line-height: 1.15; letter-spacing: 0.5px; margin-bottom: 28px; }
         .card .quote { font-family: Georgia, 'Times New Roman', serif; color: white; white-space: pre-line; line-height: 1.25; }
         .card .quote .quote-mark { font-size: 1.5em; line-height: 0; opacity: 0.55; position: relative; top: 0.22em; }
         .card .quote .quote-mark.open { margin-right: 0.08em; }
