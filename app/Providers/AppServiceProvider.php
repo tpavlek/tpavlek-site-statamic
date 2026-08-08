@@ -159,12 +159,21 @@ class AppServiceProvider extends ServiceProvider
                 return $value;
             }
 
+            // A pipe suffix, not a parenthetical: Google strips parentheticals as
+            // boilerplate and rewrote these titles down to the bare show name in the
+            // SERP. No "by Troy Pavlek" either — the site name already renders above
+            // the title in results, so it spent characters saying nothing. The year
+            // is what matches the query ("fringe review 2026") and it goes before the
+            // suffix so truncation eats "Review", not the year.
+            $year = $entry->festival?->slug();
+            $suffix = $year ? "Edmonton Fringe Review ({$year})" : 'Edmonton Fringe Review';
+
             // ->value(), not the Value object itself, which is truthy even when unrated.
             if ($entry->stars?->value()) {
-                return "$entry->title — {$entry->stars->label()} (Edmonton Fringe Review by Troy Pavlek)";
+                return "{$entry->title} — {$entry->stars->label()} | {$suffix}";
             }
 
-            return "{$entry->title} (Edmonton Fringe Review by Troy Pavlek)";
+            return "{$entry->title} | {$suffix}";
         });
 
         Collection::computed('fringe_reviews', 'og_description', function ($entry, $value) {
