@@ -41,6 +41,7 @@ class FringeArtistController extends Controller
                 'title' => $title,
                 'og_title' => $title,
                 'og_description' => $description,
+                'og_image' => ['url' => FestivalUrls::absolute('/assets/og/fringe-reviews.png')],
                 'canonical_url' => FestivalUrls::absolute('/fringe/artists'),
                 'breadcrumbs' => BreadcrumbSchema::trailFor([
                     ['name' => 'Artists', 'path' => '/fringe/artists'],
@@ -89,6 +90,7 @@ class FringeArtistController extends Controller
                 'title' => $title,
                 'og_title' => $title,
                 'og_description' => $this->description($name, $works, $reviews),
+                'og_image' => ['url' => FestivalUrls::absolute('/assets/og/fringe-reviews.png')],
                 'canonical_url' => FestivalUrls::absolute($url),
                 'breadcrumbs' => $breadcrumbs,
                 'breadcrumb_schema' => BreadcrumbSchema::build($breadcrumbs),

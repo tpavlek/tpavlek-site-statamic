@@ -19,7 +19,7 @@ Route::statamic('/fringe', 'fringe/landing', [
     'og_description' => 'Reviews of every show I see at the Edmonton International Fringe Theatre Festival, so you can find a good one.',
     // Without this the layout falls through to the site-wide default, which is a
     // screenshot of the 2025 election candidate list.
-    'og_image' => ['url' => 'https://troypavlek.ca/assets/og-fringe-reviews.jpeg'],
+    'og_image' => ['url' => 'https://troypavlek.ca/assets/og/fringe-reviews.png'],
 ]);
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));

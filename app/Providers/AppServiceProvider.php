@@ -195,7 +195,7 @@ class AppServiceProvider extends ServiceProvider
                 return $value;
             }
 
-            return [ 'url' => "https://troypavlek.ca/assets/og-fringe-reviews.jpeg" ];
+            return [ 'url' => "https://troypavlek.ca/assets/og/fringe-reviews.png" ];
         });
 
         Collection::computed('fringe_reviews', 'review_schema', function ($entry, $value) {
