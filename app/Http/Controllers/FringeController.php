@@ -225,7 +225,7 @@ class FringeController extends Controller
                 'feed_title' => "Edmonton Fringe Reviews ({$festivalSlug})",
                 'breadcrumbs' => $breadcrumbs,
                 'breadcrumb_schema' => \App\Schema\BreadcrumbSchema::build($breadcrumbs),
-                'structured_data' => $this->structuredData($title, $description, $reviews, $festivalSlug, $lastUpdated, $canonical),
+                'structured_data' => $this->structuredData($title, $description, $reviews, $festivalSlug, $festival, $lastUpdated, $canonical),
                 'title' => $title,
                 'og_title' => $title,
                 'og_description' => $description,
@@ -293,7 +293,7 @@ class FringeController extends Controller
      * at the show's own page — the full Review markup (rating, author) lives there,
      * which is the structure Google documents for list-plus-detail pages.
      */
-    private function structuredData(string $title, string $description, Collection $reviews, string $festivalSlug, ?Carbon $lastUpdated, string $canonical): string
+    private function structuredData(string $title, string $description, Collection $reviews, string $festivalSlug, $festival, ?Carbon $lastUpdated, string $canonical): string
     {
         $items = $reviews
             ->values()
@@ -320,14 +320,19 @@ class FringeController extends Controller
                 'name' => 'Troy Pavlek',
                 'url' => 'https://troypavlek.ca',
             ],
-            'about' => [
+            // Festival is an Event subtype, so Google validates it as one and startDate is
+            // required — Search Console flagged this page over it. A term with no dates
+            // emits no `about` at all rather than an Event that can't validate.
+            'about' => $festival?->value('starts_at') ? array_filter([
                 '@type' => 'Festival',
                 'name' => "Edmonton International Fringe Theatre Festival {$festivalSlug}",
+                'startDate' => $festival->value('starts_at'),
+                'endDate' => $festival->value('ends_at'),
                 'location' => [
                     '@type' => 'Place',
                     'name' => 'Edmonton, Alberta',
                 ],
-            ],
+            ]) : null,
             'mainEntity' => [
                 '@type' => 'ItemList',
                 'name' => "Edmonton Fringe {$festivalSlug} reviews",
