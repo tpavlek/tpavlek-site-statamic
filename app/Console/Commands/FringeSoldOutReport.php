@@ -115,6 +115,9 @@ class FringeSoldOutReport extends Command
                 $performances = ShowScraper::performances($eventId, $year, $store[$eventId]['performances'] ?? []);
             } catch (TicketSiteBlocked $e) {
                 // Throttled. Everything pulled so far is already checkpointed; stop cleanly.
+                // Also log it — under the scheduler the console output is easy to lose, and a
+                // WAF block (possibly of the whole server IP range) should be visible.
+                \Illuminate\Support\Facades\Log::warning('Ticket site WAF blocked the sold-out report scrape', ['refreshed_before_block' => $refreshed]);
                 $bar->finish();
                 $this->newLine();
                 $this->warn($e->getMessage());

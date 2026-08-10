@@ -4,15 +4,17 @@ import Alpine from 'alpinejs'
 // Per-show refresh on the sold-out report (admin only). Posts to the refresh endpoint, which
 // scrapes that one show now and returns freshly rendered showtimes + header tags; while it
 // runs the row shows skeleton loaders, then swaps the new markup in.
+// `error` is a short human message ('' when fine) — shown beside the button, so the two
+// failure modes read differently: the ticket site's WAF refusing us vs. anything else.
 Alpine.data('showRefresh', (eventId) => ({
     loading: false,
-    error: false,
+    error: '',
 
     async refresh() {
         if (this.loading) return
 
         this.loading = true
-        this.error = false
+        this.error = ''
 
         try {
             const token = document.querySelector('meta[name="csrf-token"]')?.content
@@ -27,15 +29,20 @@ Alpine.data('showRefresh', (eventId) => ({
                 body: new URLSearchParams({ event: eventId }),
             })
 
-            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            const data = await response.json().catch(() => null)
 
-            const data = await response.json()
+            if (data?.blocked) {
+                this.error = 'ticket site blocked us — try later'
+                return
+            }
+
+            if (!response.ok || !data) throw new Error(`HTTP ${response.status}`)
 
             if (this.$refs.showtimes) this.$refs.showtimes.innerHTML = data.showtimes_html
             if (this.$refs.tags) this.$refs.tags.innerHTML = data.tags_html
             if (this.$refs.checked) this.$refs.checked.textContent = data.checked
         } catch (e) {
-            this.error = true
+            this.error = 'refresh failed'
         } finally {
             this.loading = false
         }

@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -19,8 +20,9 @@ use Illuminate\Support\Facades\Storage;
  * without waiting for the priority-queue cron.
  *
  * Updates only a show already in the snapshot (the button only appears for one that has data),
- * carrying its prior sold-out showtimes forward via ShowScraper. If the ticket site throttles
- * mid-scrape (TicketSiteBlocked) the show is left as-is and the job simply ends.
+ * carrying its prior sold-out showtimes forward via ShowScraper. If the ticket site's WAF
+ * blocks the scrape (TicketSiteBlocked) the show is left as-is and the exception is logged
+ * and rethrown — the caller must not present stale data as a successful refresh.
  *
  * Currently dispatched synchronously from the controller so the request can return the fresh
  * numbers; it implements ShouldQueue so it can be moved to the background later without change.
@@ -53,8 +55,10 @@ class RefreshShowAvailability implements ShouldQueue
 
         try {
             $performances = ShowScraper::performances($this->eventId, $this->year, $shows[$index]['performances'] ?? []);
-        } catch (TicketSiteBlocked) {
-            return;
+        } catch (TicketSiteBlocked $e) {
+            Log::warning('Ticket site WAF blocked the availability refresh', ['event_id' => $this->eventId]);
+
+            throw $e;
         }
 
         $shows[$index]['performances'] = $performances;

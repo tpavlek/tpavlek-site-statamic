@@ -75,7 +75,7 @@
                                         <button type="button" @click="refresh()" :disabled="loading"
                                             class="align-middle ml-1 text-gray-400 hover:text-teal disabled:opacity-60"
                                             :aria-label="loading ? 'Refreshing' : 'Refresh this show'"
-                                            :title="error ? 'Refresh failed — try again' : 'Refresh availability now'">
+                                            :title="error || 'Refresh availability now'">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
                                                 class="inline-block w-3.5 h-3.5" :class="loading && 'animate-spin'">
@@ -83,7 +83,7 @@
                                                 <path d="M21 3v6h-6" />
                                             </svg>
                                         </button>
-                                        <span x-show="error" x-cloak class="text-red-600">refresh failed</span>
+                                        <span x-show="error" x-cloak x-text="error" class="text-red-600"></span>
                                     {{ /if }}
                                 </span>
                             {{ /if }}

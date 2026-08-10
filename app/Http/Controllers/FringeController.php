@@ -10,6 +10,7 @@ use App\Fringe\Reviews;
 use App\Fringe\ShowAvailability;
 use App\Fringe\TicketAvailability;
 use App\Fringe\TicketPage;
+use App\Fringe\TicketSiteBlocked;
 use App\Schema\BreadcrumbSchema;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -276,7 +277,14 @@ class FringeController extends Controller
         $event = (string) $request->input('event');
         abort_unless(preg_match('/^\d+:\d+$/', $event), 422);
 
-        RefreshShowAvailability::dispatchSync($event, FestivalUrls::currentSlug());
+        // The ticket site's WAF can decide it doesn't like our IP and serve a challenge page
+        // instead of JSON. That must not masquerade as a successful refresh — tell the
+        // front-end explicitly so it can say so instead of swapping in the same stale data.
+        try {
+            RefreshShowAvailability::dispatchSync($event, FestivalUrls::currentSlug());
+        } catch (TicketSiteBlocked) {
+            return response()->json(['blocked' => true], 503);
+        }
 
         $data = ShowAvailability::forEventId($event, true);
 
