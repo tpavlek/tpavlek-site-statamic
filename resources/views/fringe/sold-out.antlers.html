@@ -1,0 +1,133 @@
+{{# The sold-out report. Every show we've pulled ticketing data for, with its showtimes, each
+    carrying the ticket site's own traffic light: available / low / sold out. Shows selling
+    out sort to the top — that's the point of the page: what do I need to buy *now*.
+
+    Exact seats-left/capacity are the Fringe's box-office numbers and are shown ONLY to a
+    logged-in user (reveal_numbers). For the public, the controller drops those fields before
+    they reach this template, so there is nothing to leak here — the bucket is all that's
+    rendered. All data comes pre-shaped from FringeController::soldOut; nothing here touches
+    the ticket site. #}}
+<div class="pb-8 max-w-5xl mx-auto text-lg"
+    x-data="{ q: '', matchCount() { return [...this.$refs.list.children].filter(li => this.q.trim() === '' || (li.dataset.title || '').includes(this.q.trim().toLowerCase())).length } }">
+    {{ partial:fringe/breadcrumbs }}
+
+    <header class="mb-6">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-0">Edmonton Fringe {{ year }} ticket availability by show</h1>
+        <p class="text-sm text-gray-500 mt-2 mb-0">
+            {{ show_count }} shows &middot; {{ sold_out_count }} of {{ performance_count }} performances sold out
+            {{ if checked_count < show_count }}&middot; {{ checked_count }} checked so far{{ /if }}
+        </p>
+        {{ if reveal_numbers }}
+            <p class="text-xs text-teal-dark mt-1 mb-0">
+                Seat counts are visible to you as an admin, and hidden from the public.
+                &middot; <a href="/fringe/ticket-availability/leaderboard" class="font-semibold underline hover:no-underline">Sales Leaderboard &rarr;</a>
+            </p>
+        {{ /if }}
+    </header>
+
+    <div class="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-900">
+        <p class="m-0">
+            This page checks each show's ticket availability regularly to flag the ones most likely to
+            sell out. This is a periodic snapshot and can
+            lag behind &mdash; the
+            <a href="https://tickets.fringetheatre.ca" target="_blank" rel="noopener" class="font-semibold text-blue-900 underline hover:no-underline">official Fringe ticketing site</a>
+            is always the authoritative, most up-to-date source.
+        </p>
+    </div>
+
+    <div class="mb-6">
+        <input type="search" x-model="q"
+            placeholder="Filter shows by title&hellip;"
+            aria-label="Filter shows by title"
+            class="w-full sm:max-w-sm rounded-lg border border-gray-200 px-3 py-2 text-base text-gray-800 placeholder-gray-400 focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal">
+    </div>
+
+    <div class="mb-8">
+        {{ partial:fringe/_availability-legend }}
+    </div>
+
+    <ul x-ref="list" class="list-none p-0 m-0 divide-y divide-gray-100 border-t border-b border-gray-100">
+        {{ shows }}
+            <li class="py-5"
+                data-title="{{ title | lower }}"
+                x-show="q.trim() === '' || ($el.dataset.title || '').includes(q.trim().toLowerCase())">
+                {{# The refresh state (admin only) lives on this inner wrapper, not the <li>,
+                    so it doesn't collide with the filter's x-show up there. #}}
+                <div {{ if reveal_numbers && has_data }}x-data="showRefresh('{{ event_id }}')"{{ /if }}>
+                    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        <div class="min-w-0">
+                            <span class="inline-flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                                {{ if review_url }}
+                                    <a href="{{ review_url }}" class="font-bold text-gray-800 no-underline hover:text-teal">{{ title }}</a>
+                                {{ else }}
+                                    <span class="font-bold text-gray-800">{{ title }}</span>
+                                {{ /if }}
+                                <span x-ref="tags" class="contents">{{ partial:fringe/_availability-tags }}</span>
+                            </span>
+                            {{ if venue }}
+                                <span class="block text-sm text-gray-500 mt-0.5">{{ venue }}</span>
+                            {{ /if }}
+                            {{ if checked }}
+                                <span class="block text-xs text-gray-400 mt-0.5">
+                                    Checked <span x-ref="checked">{{ checked }}</span>
+                                    {{ if reveal_numbers && has_data }}
+                                        <button type="button" @click="refresh()" :disabled="loading"
+                                            class="align-middle ml-1 text-gray-400 hover:text-teal disabled:opacity-60"
+                                            :aria-label="loading ? 'Refreshing' : 'Refresh this show'"
+                                            :title="error ? 'Refresh failed — try again' : 'Refresh availability now'">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                                class="inline-block w-3.5 h-3.5" :class="loading && 'animate-spin'">
+                                                <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+                                                <path d="M21 3v6h-6" />
+                                            </svg>
+                                        </button>
+                                        <span x-show="error" x-cloak class="text-red-600">refresh failed</span>
+                                    {{ /if }}
+                                </span>
+                            {{ /if }}
+                        </div>
+                        <a href="{{ ticket_link }}" target="_blank" rel="noopener" class="text-xs text-gray-600 uppercase no-underline whitespace-nowrap">
+                            <i class="fas fa-link text-teal"></i> Tickets
+                        </a>
+                    </div>
+
+                    {{ unless has_data }}
+                        <p class="text-[13px] text-gray-400 italic mt-2 mb-0">No data yet</p>
+                    {{ elseif reveal_numbers }}
+                        {{# Skeleton is an x-if template: it's simply not in the DOM until a
+                            refresh sets loading=true, so it can never show on initial load. On
+                            completion the showRefresh component swaps fresh markup into
+                            x-ref="showtimes". #}}
+                        <template x-if="loading">
+                            <div class="mt-3 grid gap-x-10 gap-y-1.5 sm:grid-cols-2" aria-hidden="true">
+                                <div class="grid content-start gap-y-2.5">
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-11/12"></div>
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-10/12"></div>
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-11/12"></div>
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-9/12"></div>
+                                </div>
+                                <div class="grid content-start gap-y-2.5">
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-10/12"></div>
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-11/12"></div>
+                                    <div class="h-3 rounded bg-gray-100 animate-pulse w-9/12"></div>
+                                </div>
+                            </div>
+                        </template>
+                        <div x-show="!loading" x-ref="showtimes" class="mt-3">
+                            {{ partial:fringe/_availability-showtimes }}
+                        </div>
+                    {{ else }}
+                        <div class="mt-3">
+                            {{ partial:fringe/_availability-showtimes }}
+                        </div>
+                    {{ /unless }}
+                </div>
+            </li>
+        {{ /shows }}
+    </ul>
+
+    <p x-show="q.trim() !== '' && matchCount() === 0" x-cloak class="text-gray-500 mt-6 mb-0">
+        No shows match &ldquo;<span x-text="q.trim()"></span>&rdquo;.
+    </p>
+</div>

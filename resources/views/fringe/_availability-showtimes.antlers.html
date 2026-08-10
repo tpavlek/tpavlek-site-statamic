@@ -1,0 +1,17 @@
+{{# The two-column showtimes grid, shared by the /fringe/ticket-availability list and the review-page
+    "Performance & Availability" card. Expects `performances_left`, `performances_right` and
+    `reveal_numbers` in scope (from App\Fringe\ShowAvailability). First half of the run left,
+    second half right on desktop; a single column on mobile. Each column is its own aligned
+    grid so day/time line up down it. #}}
+<div class="grid gap-x-10 gap-y-1.5 sm:grid-cols-2">
+    <div class="grid content-start items-center gap-x-3 gap-y-1.5 text-[13px]
+        {{ if reveal_numbers }}grid-cols-[auto_auto_1fr_auto]{{ else }}grid-cols-[auto_auto_1fr]{{ /if }}">
+        {{ performances_left }}{{ partial:fringe/_sold-out-showtime }}{{ /performances_left }}
+    </div>
+    {{ if performances_right }}
+        <div class="grid content-start items-center gap-x-3 gap-y-1.5 text-[13px]
+            {{ if reveal_numbers }}grid-cols-[auto_auto_1fr_auto]{{ else }}grid-cols-[auto_auto_1fr]{{ /if }}">
+            {{ performances_right }}{{ partial:fringe/_sold-out-showtime }}{{ /performances_right }}
+        </div>
+    {{ /if }}
+</div>

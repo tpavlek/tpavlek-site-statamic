@@ -5,3 +5,9 @@
    still win over anything in it. Replaces the render-blocking Font Awesome kit script. */
 @import "icons";
 @import "tailwindcss/utilities";
+
+/* Alpine hides [x-cloak] elements until it has initialised, so they don't flash in their
+   pre-hydration state (e.g. the "no matches" line on the sold-out filter). */
+[x-cloak] {
+    display: none !important;
+}

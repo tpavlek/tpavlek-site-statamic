@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 
+use App\Console\Commands\FringeSoldOutReport;
+use App\Jobs\RefreshShowAvailability;
 use App\Fringe\FestivalUrls;
 use App\Fringe\Reviews;
+use App\Fringe\ShowAvailability;
+use App\Fringe\TicketAvailability;
+use App\Fringe\TicketPage;
+use App\Schema\BreadcrumbSchema;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 use Intervention\Image\Facades\Image;
+use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Facades\Term as TermFacade;
@@ -105,12 +113,326 @@ class FringeController extends Controller
     }
 
     /**
+     * The sold-out report: every show in the current lineup, its showtimes, and how many
+     * seats each has left — sorted so the shows selling out land at the top.
+     *
+     * Reads the snapshot `php artisan fringe:sold-out-report` writes rather than hitting
+     * the ticket site live; assembling the numbers takes ~2000 upstream requests. The
+     * "Last checked" line is the snapshot's timestamp, so a stale page says so itself.
+     */
+    public function soldOut()
+    {
+        $report = Storage::exists(FringeSoldOutReport::PATH)
+            ? json_decode(Storage::get(FringeSoldOutReport::PATH), true)
+            : [];
+
+        $year = $report['year'] ?? FestivalUrls::currentSlug();
+
+        // Exact seats-left/capacity are the Fringe's box-office numbers; we get to look at
+        // them, the public doesn't. A logged-in Statamic user sees the real counts; everyone
+        // else gets only the available / low / sold-out bucket, and the raw numbers never
+        // enter the rendered HTML at all — they're dropped here, not merely hidden with CSS.
+        $revealNumbers = auth()->check();
+
+        // Availability we've actually scraped, keyed by event id.
+        $store = collect($report['shows'] ?? [])
+            ->keyBy(fn (array $row) => $row['event_id'] ?? TicketPage::eventId($row['ticket_link'] ?? ''));
+
+        // Every show in the lineup gets a row — we have an entry for all of them. One the
+        // priority queue hasn't reached yet just shows "no data yet" rather than dropping off
+        // the list, so the page is the whole festival from day one, filling in as it scrapes.
+        $venues = [];
+
+        $shows = Reviews::all()
+            ->filter(fn (EntryContract $entry) => (string) $entry->value('festival') === $year)
+            ->filter(fn (EntryContract $entry) => TicketPage::eventId($entry->value('ticket_link')))
+            ->map(function (EntryContract $entry) use ($store, $revealNumbers, &$venues) {
+                $venueId = $entry->value('venue');
+                $venues[$venueId] ??= $venueId ? EntryFacade::find($venueId)?->value('title') : null;
+
+                $eventId = TicketPage::eventId($entry->value('ticket_link'));
+
+                $base = [
+                    'title' => $entry->value('title'),
+                    'ticket_link' => $entry->value('ticket_link'),
+                    'review_url' => $entry->published() ? $entry->url() : null,
+                    'venue' => $venues[$venueId],
+                    // For the admin per-show refresh button — the id the endpoint scrapes.
+                    'event_id' => $eventId,
+                ];
+
+                $record = $store->get($eventId);
+
+                // Never scraped: a placeholder row that sorts to the bottom (sort_pct -1).
+                if (! $record) {
+                    return [
+                        ...$base,
+                        'has_data' => false,
+                        'performances' => [],
+                        'sold_out_count' => 0,
+                        'low_count' => 0,
+                        'reduced_count' => 0,
+                        'performance_count' => 0,
+                        'capacity' => null,
+                        'sold_pct' => null,
+                        'sort_pct' => -1,
+                    ];
+                }
+
+                // Shaping — the tiers, the two-column split, the auth-gated seat figures —
+                // lives in App\Fringe\ShowAvailability so the review-page card renders exactly
+                // the same data from exactly the same code.
+                return [
+                    ...$base,
+                    'has_data' => true,
+                    ...ShowAvailability::shape($record, $revealNumbers),
+                ];
+            })
+            // Admins rank by exact percentage sold. The public rank is deliberately coarser
+            // (see publicSortKey): shows with sold-out performances on top, then 15%-wide
+            // bands of percentage sold, alphabetical within each — so the page never publishes
+            // an exact most-sold ordering of every show.
+            ->sortBy($revealNumbers
+                ? [['sort_pct', 'desc'], ['sold_out_count', 'desc'], ['title', 'asc']]
+                : fn (array $row) => $this->publicSortKey($row))
+            ->values();
+
+        $title = "Edmonton Fringe {$year} Ticket Availability by Show";
+
+        return (new \Statamic\View\View)
+            ->template('fringe/sold-out')
+            ->layout('layout')
+            ->with([
+                'shows' => $shows->all(),
+                'show_count' => $shows->count(),
+                'checked_count' => $shows->where('has_data', true)->count(),
+                'performance_count' => $shows->sum('performance_count'),
+                'sold_out_count' => $shows->sum('sold_out_count'),
+                'reveal_numbers' => $revealNumbers,
+                // Our own reading of the festival's box office — keep it out of search results.
+                'noindex' => true,
+                'year' => $year,
+                'title' => $title,
+                'og_title' => $title,
+                'og_description' => 'Which Edmonton Fringe shows are selling out, showing by showing — seats remaining for every performance in the festival.',
+                // A screenshot of this page (its public view), generated by fringe:og-availability.
+                'og_image' => ['url' => FestivalUrls::absolute('/assets/'.\App\Console\Commands\GenerateAvailabilityOgCard::PATH)],
+                'canonical_url' => FestivalUrls::absolute('/fringe/ticket-availability'),
+                'breadcrumbs' => BreadcrumbSchema::trailFor([
+                    ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
+                ]),
+                'breadcrumb_schema' => BreadcrumbSchema::build(BreadcrumbSchema::trailFor([
+                    ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
+                ])),
+            ]);
+    }
+
+    /**
+     * The public ordering key for one show on the ticket-availability page — deliberately
+     * coarse, so the page never publishes an exact most-sold ranking of every show:
+     *
+     *   1. shows with any sold-out performance, by how many (most first);
+     *   2. then 15%-wide bands of percentage sold — 85%+, 70%+, 55%+, … down to the rest;
+     *   3. alphabetical within every group; not-yet-scraped shows dead last.
+     *
+     * `sort_pct` is the real percentage (computed server-side, never emitted publicly), so the
+     * bands are honest without exposing the number. Returned as one ascending composite string
+     * to keep it a single sort key (Collection::sortBy with an array of closures silently
+     * sorts by only the last).
+     *
+     * @param  array<string, mixed>  $row
+     */
+    private function publicSortKey(array $row): string
+    {
+        $bucket = match (true) {
+            ! $row['has_data'] => 8,
+            $row['sold_out_count'] > 0 => 0,
+            $row['sort_pct'] >= 85 => 1,
+            $row['sort_pct'] >= 70 => 2,
+            $row['sort_pct'] >= 55 => 3,
+            $row['sort_pct'] >= 40 => 4,
+            $row['sort_pct'] >= 25 => 5,
+            $row['sort_pct'] >= 10 => 6,
+            default => 7,
+        };
+
+        // bucket, then most-sold-out first within the top bucket (complement so a higher count
+        // sorts earlier under an ascending sort), then title.
+        return sprintf('%d|%03d|%s', $bucket, 999 - $row['sold_out_count'], mb_strtolower((string) $row['title']));
+    }
+
+    /**
+     * On-demand refresh of one show's availability, for the admin refresh button on
+     * /fringe/ticket-availability. Scrapes the show now (synchronously, so the response can carry the
+     * fresh numbers) and returns the re-rendered showtimes and header tags plus the new
+     * "checked" time, which the page swaps in without a reload.
+     *
+     * Admin only, and it emits exact seat figures, so it must never be reachable logged out.
+     */
+    public function refreshAvailability(\Illuminate\Http\Request $request)
+    {
+        abort_unless(auth()->check(), 403);
+
+        $event = (string) $request->input('event');
+        abort_unless(preg_match('/^\d+:\d+$/', $event), 422);
+
+        RefreshShowAvailability::dispatchSync($event, FestivalUrls::currentSlug());
+
+        $data = ShowAvailability::forEventId($event, true);
+
+        abort_unless($data, 404);
+
+        $data['reveal_numbers'] = true;
+
+        return response()->json([
+            'checked' => $data['checked'],
+            'tags_html' => (new \Statamic\View\View)->template('fringe/_availability-tags')->with($data)->render(),
+            'showtimes_html' => (new \Statamic\View\View)->template('fringe/_availability-showtimes')->with($data)->render(),
+        ]);
+    }
+
+    /**
+     * The sales leaderboard — every scraped show ranked by how it's selling. Admin only: it's
+     * nothing but the Fringe's box-office numbers, so it must never be reachable logged out.
+     *
+     * Rows are rendered in the default "most tickets sold" order with server-side ranks so the
+     * table is sensible without JavaScript; the leaderboard Alpine component re-sorts and
+     * renumbers in place when the selector changes.
+     */
+    public function salesLeaderboard()
+    {
+        abort_unless(auth()->check(), 403);
+
+        $snapshot = ShowAvailability::snapshot();
+        $year = $snapshot['year'] ?? FestivalUrls::currentSlug();
+
+        $rows = collect($snapshot['shows'] ?? [])
+            ->filter(fn (array $show) => ! empty($show['performances']))
+            ->map(function (array $show) {
+                $shaped = ShowAvailability::shape($show, true);
+
+                return [
+                    'title' => $show['title'],
+                    'review_url' => $show['review_url'] ?? null,
+                    'sold_count' => $shaped['sold_count'] ?? 0,
+                    'sold_out_count' => $shaped['sold_out_count'],
+                    // A show with no seating-plan data has no percentage; it sorts last on the
+                    // percentage view (sort value -1) and shows a dash.
+                    'sold_pct' => $shaped['sold_pct'],
+                    'sold_pct_sort' => $shaped['sold_pct'] ?? -1,
+                    'sold_pct_display' => $shaped['sold_pct'] === null ? '—' : $shaped['sold_pct'].'%',
+                ];
+            })
+            ->sortByDesc('sold_count')
+            ->values()
+            ->map(fn (array $row, int $i) => [...$row, 'rank' => $i + 1])
+            ->all();
+
+        $title = "Sales Leaderboard — {$year} Edmonton Fringe";
+
+        return (new \Statamic\View\View)
+            ->template('fringe/sales-leaderboard')
+            ->layout('layout')
+            ->with([
+                'rows' => $rows,
+                'row_count' => count($rows),
+                // Already 403s anyone not logged in; noindex too, in case that ever changes.
+                'noindex' => true,
+                'year' => $year,
+                'title' => $title,
+                'og_title' => $title,
+                'canonical_url' => FestivalUrls::absolute('/fringe/ticket-availability/leaderboard'),
+                'breadcrumbs' => BreadcrumbSchema::trailFor([
+                    ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
+                    ['name' => 'Sales Leaderboard', 'path' => '/fringe/ticket-availability/leaderboard'],
+                ]),
+                'breadcrumb_schema' => BreadcrumbSchema::build(BreadcrumbSchema::trailFor([
+                    ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
+                    ['name' => 'Sales Leaderboard', 'path' => '/fringe/ticket-availability/leaderboard'],
+                ])),
+            ]);
+    }
+
+    /**
      * Whether the show carries the improv category, which is what earns it the "Improv*"
      * badge in fringe/_review-tag when it has no rating of its own.
      */
     private function isImprov(Entry $entry): bool
     {
         return $entry->categories?->contains(fn (LocalizedTerm $term) => $term->slug === 'improv') ?? false;
+    }
+
+    /**
+     * A show-level availability tier for every scraped show, keyed by event id, for the
+     * reviews-index status light. Reads the same sold-out snapshot the report page serves.
+     *
+     * @return array<string, array{tier: string, label: string}>
+     */
+    private function availabilityByEvent(): array
+    {
+        if (! Storage::exists(FringeSoldOutReport::PATH)) {
+            return [];
+        }
+
+        $report = json_decode(Storage::get(FringeSoldOutReport::PATH), true);
+
+        $out = [];
+
+        foreach ($report['shows'] ?? [] as $show) {
+            $eventId = $show['event_id'] ?? TicketPage::eventId($show['ticket_link'] ?? '');
+            $tier = $eventId ? $this->showTier($show['performances'] ?? []) : null;
+
+            if ($tier) {
+                $out[$eventId] = $tier;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Collapse a whole show's performances into one availability tier for the index light.
+     * Sold out only when the entire run is gone; otherwise banded on how sold the run is
+     * overall, with the ticket site's own "low" as a fallback when we lack seat counts.
+     *
+     * @param  array<int, array<string, mixed>>  $performances
+     * @return array{tier: string, label: string}|null  null when there's nothing to show
+     */
+    private function showTier(array $performances): ?array
+    {
+        if ($performances === []) {
+            return null;
+        }
+
+        $perfs = collect($performances);
+
+        // A cancelled showtime isn't a state of the run's availability, so judge the tier on
+        // the showtimes that are actually happening. If none are, the whole run is cancelled.
+        $live = $perfs->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED);
+
+        if ($live->isEmpty()) {
+            return ['tier' => 'cancelled', 'label' => 'Cancelled'];
+        }
+
+        $allSoldOut = $live->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
+
+        $withSeats = $live->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
+        $offered = $withSeats->sum('seats_total');
+        $pctSold = $offered > 0 ? ($offered - $withSeats->sum('seats_free')) / $offered * 100 : null;
+        $anyLow = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
+
+        $tier = match (true) {
+            $allSoldOut => 'sold_out',
+            $pctSold !== null && $pctSold >= 80 => 'low',
+            $pctSold !== null && $pctSold >= 60 => 'reduced',
+            $anyLow => 'low',
+            default => 'available',
+        };
+
+        return [
+            'tier' => $tier,
+            'label' => ['sold_out' => 'Sold out', 'low' => 'Low', 'reduced' => 'Reduced', 'available' => 'Available'][$tier],
+        ];
     }
 
     private function yearReviews($festival, string $festivalSlug, string $videoCategorySlug)
@@ -151,6 +473,24 @@ class FringeController extends Controller
                     default => 35,
                 };
             });
+
+        // A show-level availability light beside each ticket link, from the sold-out scrape.
+        // Current festival only — the snapshot is this year's box office, and a past year's
+        // reviews are an archive whose tickets are long gone; "Available" there is nonsense.
+        // Set as a supplement so the entry stays augmentable; the template reads `availability`
+        // and `availability_label`. Only the bucket crosses over, never seat numbers.
+        if (FestivalUrls::isCurrent($festivalSlug)) {
+            $availability = $this->availabilityByEvent();
+
+            $reviews->each(function (Entry $entry) use ($availability) {
+                $eventId = TicketPage::eventId($entry->value('ticket_link'));
+
+                if ($eventId && isset($availability[$eventId])) {
+                    $entry->setSupplement('availability', $availability[$eventId]['tier']);
+                    $entry->setSupplement('availability_label', $availability[$eventId]['label']);
+                }
+            });
+        }
 
         // Raw category slugs rather than `$entry->category`, which resolves a taxonomy term
         // for every video on the site — 109ms against 8ms, and it was the single most

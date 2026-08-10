@@ -1,0 +1,17 @@
+{{# Admin-only box-office tags for a show: percent sold, capacity, tickets sold. Self-guarding
+    on `reveal_numbers` so the public never gets them. Shared by the sold-out list title and
+    the on-demand refresh response, so a refreshed row re-renders them identically. #}}
+{{ if reveal_numbers }}
+    {{ if sold_pct || sold_pct === 0 }}
+        <span class="text-xs font-semibold rounded px-1.5 py-0.5 whitespace-nowrap
+            {{ if sold_pct >= 90 }} bg-red-100 text-red-800
+            {{ elseif sold_pct >= 60 }} bg-amber-100 text-amber-800
+            {{ else }} bg-grey-100 text-gray-700 {{ /if }}">{{ sold_pct }}% sold</span>
+    {{ /if }}
+    {{ if capacity }}
+        <span class="text-xs text-gray-500 whitespace-nowrap">{{ capacity }} capacity</span>
+    {{ /if }}
+    {{ if sold_count || sold_count === 0 }}
+        <span class="text-xs text-gray-500 whitespace-nowrap">{{ sold_count }} tickets sold</span>
+    {{ /if }}
+{{ /if }}

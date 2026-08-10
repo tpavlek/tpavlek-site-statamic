@@ -58,6 +58,85 @@ class CardRenderer
             throw new RuntimeException("Unknown card format [{$format}].");
         }
 
+        $this->shoot($this->url($params + ['format' => $format], $origin), $destination, $format);
+
+        return $destination;
+    }
+
+    /**
+     * Screenshot any page on the site into public/assets and register it as an asset — for
+     * an OG image that is a picture of a real page rather than the designed /og-card. Chrome
+     * runs with no profile or cookies, so it always gets the logged-out, public view; never
+     * hand it a URL whose content depends on being authenticated.
+     *
+     * @return string the absolute path written
+     */
+    public function capture(string $url, string $path, string $format = 'og', ?string $alt = null): string
+    {
+        if (! isset(self::FORMATS[$format])) {
+            throw new RuntimeException("Unknown card format [{$format}].");
+        }
+
+        $destination = public_path('assets/'.ltrim($path, '/'));
+
+        $this->shoot($url, $destination, $format);
+        $this->register($path, $alt);
+
+        return $destination;
+    }
+
+    /**
+     * Screenshot a page and crop a square region out of it — for using a slice of a real page
+     * (e.g. the availability rows, below the header) as fan artwork on a card. Logged out, like
+     * capture(). Coordinates are in CSS pixels; the file is written at 2x that.
+     */
+    public function captureCrop(string $url, string $destination, int $viewportWidth, int $viewportHeight, int $left, int $top, int $size): void
+    {
+        $chrome = $this->chrome();
+
+        if (! $chrome) {
+            throw new RuntimeException('Could not find Chrome. Set CHROME_BINARY in .env.');
+        }
+
+        @mkdir(dirname($destination), 0755, true);
+
+        $shot = tempnam(sys_get_temp_dir(), 'ogshot').'.png';
+
+        $process = new Process([
+            $chrome,
+            '--headless',
+            '--disable-gpu',
+            '--hide-scrollbars',
+            '--ignore-certificate-errors',
+            '--force-device-scale-factor=2',
+            '--window-size='.$viewportWidth.','.$viewportHeight,
+            '--screenshot='.$shot,
+            $url,
+        ], timeout: 60);
+
+        $process->run();
+
+        if (! is_file($shot) || filesize($shot) === 0) {
+            throw new RuntimeException('Chrome produced no screenshot. '.trim($process->getErrorOutput()));
+        }
+
+        $source = imagecreatefrompng($shot);
+        $side = $size * 2;
+        $out = imagecreatetruecolor($side, $side);
+
+        imagecopy($out, $source, 0, 0, $left * 2, $top * 2, $side, $side);
+        imagepng($out, $destination, 8);
+
+        imagedestroy($out);
+        imagedestroy($source);
+        @unlink($shot);
+    }
+
+    /**
+     * The Chrome side of it: screenshot a URL at the format's dimensions, downsampled from 2x.
+     */
+    private function shoot(string $url, string $destination, string $format): void
+    {
         [$width, $height] = self::FORMATS[$format];
 
         $chrome = $this->chrome();
@@ -82,7 +161,7 @@ class CardRenderer
             '--force-device-scale-factor=2',
             '--window-size='.$width.','.$height,
             '--screenshot='.$shot,
-            $this->url($params + ['format' => $format], $origin),
+            $url,
         ], timeout: 60);
 
         $process->run();
@@ -93,8 +172,6 @@ class CardRenderer
 
         $this->downsample($shot, $destination, $width, $height);
         @unlink($shot);
-
-        return $destination;
     }
 
     public function url(array $params, ?string $origin = null): string

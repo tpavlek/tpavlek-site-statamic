@@ -134,8 +134,9 @@
 
                     {{ if tickets_available }}
                         {{# `relative` lifts this above the stretched link so it stays clickable. #}}
-                        <div class="relative mt-1 sm:mt-0 sm:col-span-2">
+                        <div class="relative mt-1 sm:mt-0 sm:col-span-2 flex flex-wrap items-center gap-x-3 gap-y-1">
                             {{ partial:fringe/ticket-link }}
+                            {{ partial:fringe/availability }}
                         </div>
                     {{ /if }}
                 </li>

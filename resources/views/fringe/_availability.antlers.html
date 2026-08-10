@@ -1,0 +1,13 @@
+{{# Show-level availability light for the reviews index, from `availability` /
+    `availability_label` supplements set in FringeController::yearReviews. A coloured dot plus
+    the word — never colour alone, for accessibility — matching the sold-out page's tiers:
+    green available, yellow reduced, orange low, red sold out. Absent when the show has no
+    scraped data yet. #}}
+{{ if availability }}
+    <span class="inline-flex items-center gap-1 align-middle text-xs font-medium whitespace-nowrap
+        {{ if availability == 'cancelled' }}text-gray-500{{ elseif availability == 'sold_out' }}text-red-700{{ elseif availability == 'low' }}text-orange-700{{ elseif availability == 'reduced' }}text-yellow-700{{ else }}text-green-700{{ /if }}">
+        <span class="inline-block w-2 h-2 rounded-full
+            {{ if availability == 'cancelled' }}bg-gray-400{{ elseif availability == 'sold_out' }}bg-red-500{{ elseif availability == 'low' }}bg-orange-500{{ elseif availability == 'reduced' }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span>
+        {{ availability_label }}
+    </span>
+{{ /if }}

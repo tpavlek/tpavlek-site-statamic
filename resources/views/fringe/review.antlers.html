@@ -134,6 +134,64 @@
         {{ /original_review }}
     {{ /if }}
 
+    {{# Performance & Availability card. Only renders when App\Fringe\ShowAvailability has
+        scraped data for this show; the {{ fringe:availability }} tag applies the same
+        server-side auth gate as the sold-out page, so seat counts and percentages reach the
+        template only for a logged-in viewer. The showtimes and legend come from the same
+        shared partials the sold-out list uses. #}}
+    {{ fringe:availability }}
+        <section class="mt-8 rounded-lg border border-gray-200 overflow-hidden text-base"
+            {{ if reveal_numbers }}x-data="showRefresh('{{ event_id }}')"{{ /if }}>
+            <div class="px-4 py-3 border-b border-gray-100 bg-grey-50 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 class="text-lg font-bold text-gray-800 m-0">Performance &amp; Availability</h2>
+                <span class="text-xs text-gray-500 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span x-ref="tags" class="contents">{{ partial:fringe/_availability-tags }}</span>
+                    {{ if checked }}
+                        <span>
+                            Checked <span x-ref="checked">{{ checked }}</span>
+                            {{ if reveal_numbers }}
+                                <button type="button" @click="refresh()" :disabled="loading"
+                                    class="align-middle ml-0.5 text-gray-400 hover:text-teal disabled:opacity-60"
+                                    :aria-label="loading ? 'Refreshing' : 'Refresh this show'"
+                                    :title="error ? 'Refresh failed — try again' : 'Refresh availability now'">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                                        class="inline-block w-3.5 h-3.5" :class="loading && 'animate-spin'">
+                                        <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+                                        <path d="M21 3v6h-6" />
+                                    </svg>
+                                </button>
+                                <span x-show="error" x-cloak class="text-red-600">refresh failed</span>
+                            {{ /if }}
+                        </span>
+                    {{ /if }}
+                </span>
+            </div>
+            <div class="px-4 py-4">
+                {{ if reveal_numbers }}
+                    <template x-if="loading">
+                        <div class="grid gap-x-10 gap-y-1.5 sm:grid-cols-2" aria-hidden="true">
+                            <div class="grid content-start gap-y-2.5">
+                                <div class="h-3 rounded bg-gray-100 animate-pulse w-11/12"></div>
+                                <div class="h-3 rounded bg-gray-100 animate-pulse w-10/12"></div>
+                                <div class="h-3 rounded bg-gray-100 animate-pulse w-11/12"></div>
+                            </div>
+                            <div class="grid content-start gap-y-2.5">
+                                <div class="h-3 rounded bg-gray-100 animate-pulse w-10/12"></div>
+                                <div class="h-3 rounded bg-gray-100 animate-pulse w-9/12"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="!loading" x-ref="showtimes">
+                        {{ partial:fringe/_availability-showtimes }}
+                    </div>
+                {{ else }}
+                    {{ partial:fringe/_availability-showtimes }}
+                {{ /if }}
+            </div>
+        </section>
+    {{ /fringe:availability }}
+
     {{# Notes about the room rather than the show, written once on the venue and appended to
         every review playing there. Only renders when that venue has notes.
 
