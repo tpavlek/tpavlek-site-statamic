@@ -1,7 +1,12 @@
-{{# Box-office tags for a show. Capacity is public — a venue's room size isn't private. The
-    sales figures (percent sold, tickets sold) self-guard on `reveal_numbers` so the public
-    never gets them. Shared by the sold-out list title and the on-demand refresh response, so
-    a refreshed row re-renders them identically. #}}
+{{# Box-office tags for a show. Duration and capacity are public — a running time and a
+    venue's room size aren't private. The sales figures (percent sold, tickets sold)
+    self-guard on `reveal_numbers` so the public never gets them. Shared by the sold-out
+    list title, the review card header, and the on-demand refresh response, so a refreshed
+    row re-renders them identically — anything added here must also be supplied by
+    FringeController::refreshAvailability. #}}
+{{ if duration_minutes }}
+    <span class="text-xs text-gray-500 whitespace-nowrap">{{ duration_minutes }} min</span>
+{{ /if }}
 {{ if capacity }}
     <span class="text-xs text-gray-500 whitespace-nowrap">{{ capacity }} capacity</span>
 {{ /if }}

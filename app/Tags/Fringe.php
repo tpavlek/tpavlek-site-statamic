@@ -37,7 +37,13 @@ class Fringe extends Tags
 
         $data = ShowAvailability::forEventId($eventId, $reveal);
 
-        return $data ? ['reveal_numbers' => $reveal, 'event_id' => $eventId, ...$data] : false;
+        return $data ? [
+            'reveal_numbers' => $reveal,
+            'event_id' => $eventId,
+            // Running time, from the review entry's own duration field — public, like capacity.
+            'duration_minutes' => (int) $this->context->value('duration') ?: null,
+            ...$data,
+        ] : false;
     }
 
     public function reviewsUrl(): string

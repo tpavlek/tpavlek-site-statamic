@@ -106,6 +106,12 @@ tabs:
               validate:
                 - url
           -
+            handle: duration
+            field:
+              type: integer
+              display: 'Duration (minutes)'
+              instructions: 'Running time as the ticket site lists it. Filled in by the ticket importer and `fringe:durations`.'
+          -
             handle: venue
             field:
               max_items: 1

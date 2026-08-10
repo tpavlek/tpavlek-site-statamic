@@ -2,6 +2,7 @@
 
 namespace App\Fringe;
 
+use Carbon\Carbon;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 
 /**
@@ -11,37 +12,48 @@ use Statamic\Contracts\Entries\Entry as EntryContract;
  * datePublished buried in the JSON-LD, which does nothing for a reader deciding whether a
  * take on a show still running is current.
  *
+ * "Updated" comes from the entry's own `updated_at` field — the unix timestamp Statamic
+ * itself stamps (with `updated_by`) on every CP save. An editorial fact, not a filesystem
+ * one: this used to read file mtime, which changed on every deploy or migration that touched
+ * a file, whether or not a word did. Console writes (imports, backfills) never touch the
+ * stamp; a CP save that shouldn't count can be un-stamped by editing `updated_at` in the
+ * entry's frontmatter.
+ *
  * "Updated" is deliberately hard to earn, because an update stamp that everything wears is
  * worth nothing — to a reader or to Google, which discounts freshness signals that don't
  * track real change. Two gates:
  *
- * Later calendar day. Entry dates come from the filename and so are date-only, meaning a
- * same-day edit always lands a few hours "after" midnight. Comparing raw timestamps would
- * mark every review ever written as updated.
+ * Later calendar day, in the site's timezone. Entry dates come from the filename and are
+ * date-only (midnight America/Edmonton), so the save that publishes a review always lands
+ * hours "after" it — comparing timestamps would mark every review as updated on day one,
+ * and comparing days in mismatched timezones does the same to any evening save.
  *
- * Current festival only. lastModified is a filesystem fact, not an editorial one: a bulk
- * migration touches every file at once. The venue migration alone re-dated all 56 of the
- * 2024 and 2025 reviews to a single day in July 2026, none of which had a word changed.
- * Archive reviews therefore show their review date and nothing else, which is the honest
- * claim; a show still running is where an update means "I revised this take", and where a
- * reader actually needs to know.
+ * Current festival only. Not because the stamp lies — because archive housekeeping is real
+ * and constant: the July 2026 venue/title passes CP-saved dozens of 2024/2025 reviews
+ * without changing a take. An archive review claiming "Updated: July 2026" over a re-linked
+ * venue is exactly the worthless stamp this guards against. A show still running is where
+ * an update means "I revised this take", and where a reader actually needs to know.
  */
 class ReviewFreshness
 {
     public static function for(EntryContract $entry): array
     {
         $reviewed = $entry->date();
-        $modified = $entry->lastModified();
 
-        // Explicitly not FestivalUrls::isCurrent() alone: it reads a null year as "the current
-        // festival", which is right for URL building and wrong here — a review with no
-        // festival term should claim nothing.
+        $stamp = $entry->value('updated_at');
+        $modified = match (true) {
+            ! $stamp => null,
+            is_numeric($stamp) => Carbon::createFromTimestamp($stamp),
+            default => Carbon::parse($stamp),
+        };
+        $modified?->setTimezone(config('app.timezone'));
+
         $festivalSlug = $entry->festival?->slug();
         $isCurrentFestival = $festivalSlug !== null && FestivalUrls::isCurrent($festivalSlug);
 
         $updated = $isCurrentFestival
             && $modified && $reviewed
-            && $modified->startOfDay()->gt($reviewed->copy()->startOfDay())
+            && $modified->toDateString() > $reviewed->copy()->setTimezone(config('app.timezone'))->toDateString()
                 ? $modified
                 : null;
 

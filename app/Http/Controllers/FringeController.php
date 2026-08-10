@@ -160,6 +160,7 @@ class FringeController extends Controller
                     'venue' => $venues[$venueId],
                     // For the admin per-show refresh button — the id the endpoint scrapes.
                     'event_id' => $eventId,
+                    'duration_minutes' => (int) $entry->value('duration') ?: null,
                 ];
 
                 $record = $store->get($eventId);
@@ -291,6 +292,13 @@ class FringeController extends Controller
         abort_unless($data, 404);
 
         $data['reveal_numbers'] = true;
+
+        // The tags partial being re-rendered shows the running time too, and that lives on
+        // the entry, not in the snapshot — without this a refresh would swap the tag away.
+        $show = Reviews::all()->first(
+            fn (EntryContract $entry) => TicketPage::eventId($entry->value('ticket_link')) === $event
+        );
+        $data['duration_minutes'] = (int) $show?->value('duration') ?: null;
 
         return response()->json([
             'checked' => $data['checked'],

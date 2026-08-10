@@ -118,6 +118,10 @@ class TicketPage
             $fields['categories'] = $categories;
         }
 
+        if ($minutes = self::durationMinutes($html)) {
+            $fields['duration'] = $minutes;
+        }
+
         if ($venue = self::venue($html, $create)) {
             $fields['venue'] = $venue;
         }
@@ -208,6 +212,19 @@ class TicketPage
             ->values()
             ->unique()
             ->all();
+    }
+
+    /**
+     * The running time sits in the same schedule list as the genre, marked by the
+     * icon_duration icon, e.g. "60 minutes".
+     */
+    public static function durationMinutes(string $html): ?int
+    {
+        if (! preg_match('~icon_duration\.svg.*?</span>\s*(\d+)\s*minutes~s', $html, $m)) {
+            return null;
+        }
+
+        return (int) $m[1] ?: null;
     }
 
     /**
