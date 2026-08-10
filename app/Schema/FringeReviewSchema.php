@@ -169,28 +169,41 @@ class FringeReviewSchema
      */
     private static function location($entry): array
     {
+        $venue = self::venue($entry);
+
+        // The stored address keeps wayfinding parentheticals like "(NW corner of Arts
+        // Barn)" for readers; streetAddress is machine-readable, so those come off here.
+        $street = $venue?->value('address');
+        $street = $street ? trim(preg_replace('/\s*\(.*\)/', '', $street)) : null;
+
         return array_filter([
             '@type' => 'Place',
-            'name' => self::venueName($entry) ?: 'Edmonton International Fringe Theatre Festival',
-            'address' => [
+            'name' => self::venueName($venue) ?: 'Edmonton International Fringe Theatre Festival',
+            'address' => array_filter([
                 '@type' => 'PostalAddress',
+                'streetAddress' => $street,
                 'addressLocality' => 'Edmonton',
                 'addressRegion' => 'AB',
                 'addressCountry' => 'CA',
-            ],
+            ]),
         ]);
+    }
+
+    private static function venue($entry)
+    {
+        $id = $entry->value('venue');
+        $id = is_array($id) ? ($id[0] ?? null) : $id;
+
+        return $id ? EntryFacade::find($id) : null;
     }
 
     /**
      * "29: Strathcona High School" — the number and name are stored separately on the venue
      * entry, and joined by its display_name computed field.
      */
-    private static function venueName($entry): ?string
+    private static function venueName($venue): ?string
     {
-        $id = $entry->value('venue');
-        $id = is_array($id) ? ($id[0] ?? null) : $id;
-
-        if (! $id || ! ($venue = EntryFacade::find($id))) {
+        if (! $venue) {
             return null;
         }
 

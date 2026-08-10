@@ -97,10 +97,15 @@ class BreadcrumbSchema
     {
         $festivalSlug = $entry->festival?->slug();
 
+        // Computed fields also run on the CP's create screen, where the entry has no title
+        // or URL yet — no page exists, so no leaf rung either.
+        $title = $entry->value('title');
+        $url = $entry->url();
+
         return array_values(array_filter([
             self::hub(),
             $festivalSlug ? self::reviewsIndex($festivalSlug, false) : null,
-            self::crumb($entry->value('title'), $entry->url()),
+            $title && $url ? self::crumb($title, $url) : null,
         ]));
     }
 

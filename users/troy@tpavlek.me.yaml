@@ -36,3 +36,5 @@ preferences:
       view: tree
     artists:
       view: list
+    venues:
+      view: list

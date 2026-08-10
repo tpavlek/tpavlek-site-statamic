@@ -21,6 +21,13 @@ tabs:
               instructions: 'The number Fringers navigate by, e.g. "29". Keep any leading zero.'
               width: 33
           -
+            handle: address
+            field:
+              type: text
+              display: 'Street Address'
+              instructions: 'The street address as the Fringe program lists it, e.g. "10329 83 Ave NW". Keep any wayfinding parenthetical like "(NW corner of Arts Barn)".'
+              width: 66
+          -
             handle: notes
             field:
               type: markdown
