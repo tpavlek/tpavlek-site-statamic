@@ -553,6 +553,9 @@ class FringeController extends Controller
                 'videos' => $videos,
                 'posts' => $posts,
                 'year' => $festivalSlug,
+                // The ticket-availability page only covers the current festival, so the link
+                // to it belongs on the current year's index and nowhere else.
+                'is_current_festival' => FestivalUrls::isCurrent($festivalSlug),
                 'tickets_available' => (bool) $festival?->value('tickets_available'),
                 'review_count' => $reviews->count(),
                 'rated_count' => $ratedCount,

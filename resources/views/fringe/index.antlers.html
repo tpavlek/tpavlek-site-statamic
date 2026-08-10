@@ -47,6 +47,10 @@
         {{ partial:fringe/author-photo }}
 
         {{ partial:fringe/intro }}
+
+        {{ if is_current_festival }}
+            <p><a href="/fringe/ticket-availability">See showtimes &amp; ticket availability for every show &rarr;</a></p>
+        {{ /if }}
     </div>
 
     {{# Posts about this festival. Above the review list on purpose: most people arrive here
