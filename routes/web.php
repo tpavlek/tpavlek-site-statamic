@@ -80,13 +80,22 @@ Route::get('/fringe/ticket-availability', [ FringeController::class, 'soldOut' ]
 // Admin-only sales leaderboard, nested under ticket-availability (auth enforced in the controller).
 Route::get('/fringe/ticket-availability/leaderboard', [ FringeController::class, 'salesLeaderboard' ])->name('fringe.ticket-availability.leaderboard');
 
-// Admin-only on-demand refresh of one show's availability (the refresh button on the report).
-// The event id is posted in the body, not the path — it contains a colon (601:7454), which is
-// awkward in a URL segment. Auth is enforced in the controller; throttled because each call
-// scrapes the ticket site.
-Route::post('/fringe/ticket-availability/refresh', [ FringeController::class, 'refreshAvailability' ])
-    ->middleware('throttle:30,1')
-    ->name('fringe.ticket-availability.refresh');
+// Admin-only on-demand refresh of one show's availability (the refresh button on the report),
+// stepped so no single request outlives PHP's execution limit: start plans the run, then one
+// performance call per pending showtime, then finish stamps freshness and returns the fresh
+// markup. Event/performance ids are posted in the body, not the path — the event id contains
+// a colon (601:7454), which is awkward in a URL segment. Auth is enforced in the controller;
+// throttled because each call scrapes the ticket site (a long show is ~1 start + N steps, so
+// the ceiling is per-minute generous but still a backstop).
+Route::post('/fringe/ticket-availability/refresh/start', [ FringeController::class, 'refreshStart' ])
+    ->middleware('throttle:60,1')
+    ->name('fringe.ticket-availability.refresh.start');
+Route::post('/fringe/ticket-availability/refresh/performance', [ FringeController::class, 'refreshPerformance' ])
+    ->middleware('throttle:60,1')
+    ->name('fringe.ticket-availability.refresh.performance');
+Route::post('/fringe/ticket-availability/refresh/finish', [ FringeController::class, 'refreshFinish' ])
+    ->middleware('throttle:60,1')
+    ->name('fringe.ticket-availability.refresh.finish');
 
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year);

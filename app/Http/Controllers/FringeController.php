@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 
 use App\Console\Commands\FringeSoldOutReport;
-use App\Jobs\RefreshShowAvailability;
 use App\Fringe\FestivalUrls;
 use App\Fringe\Reviews;
 use App\Fringe\ShowAvailability;
+use App\Fringe\ShowScraper;
 use App\Fringe\TicketAvailability;
 use App\Fringe\TicketPage;
 use App\Fringe\TicketSiteBlocked;
@@ -265,27 +265,100 @@ class FringeController extends Controller
 
     /**
      * On-demand refresh of one show's availability, for the admin refresh button on
-     * /fringe/ticket-availability. Scrapes the show now (synchronously, so the response can carry the
-     * fresh numbers) and returns the re-rendered showtimes and header tags plus the new
-     * "checked" time, which the page swaps in without a reload.
+     * /fringe/ticket-availability — step one of three. The refresh is split per performance so no
+     * single request has to survive a whole show's scrape (a 9-showtime show is ~19 ticket-site
+     * calls with pauses, which blows PHP's execution limit): the front-end calls start once,
+     * then performance once per pending showtime, then finish.
      *
-     * Admin only, and it emits exact seat figures, so it must never be reachable logged out.
+     * Start makes the one performances-list call, merges it against the stored records (the
+     * skip rules — sold-out carried forward, cancelled final — live in ShowScraper::plan so
+     * the bulk command and this path agree), saves the merged skeleton, and returns the ids
+     * still needing a scrape. The freshness stamp is finish's job — a half-done refresh must
+     * not claim to be current.
+     *
+     * Admin only, like every step: the responses feed a page that shows exact seat figures.
      */
-    public function refreshAvailability(\Illuminate\Http\Request $request)
+    public function refreshStart(\Illuminate\Http\Request $request)
     {
         abort_unless(auth()->check(), 403);
 
         $event = (string) $request->input('event');
         abort_unless(preg_match('/^\d+:\d+$/', $event), 422);
 
+        [$report, $index] = $this->snapshotShow($event);
+
+        abort_unless($index !== false, 404);
+
         // The ticket site's WAF can decide it doesn't like our IP and serve a challenge page
         // instead of JSON. That must not masquerade as a successful refresh — tell the
         // front-end explicitly so it can say so instead of swapping in the same stale data.
         try {
-            RefreshShowAvailability::dispatchSync($event, FestivalUrls::currentSlug());
+            $plan = ShowScraper::plan($event, FestivalUrls::currentSlug(), $report['shows'][$index]['performances'] ?? []);
         } catch (TicketSiteBlocked) {
             return response()->json(['blocked' => true], 503);
         }
+
+        $report['shows'][$index]['performances'] = $plan['records'];
+        $this->writeSnapshot($report);
+
+        return response()->json(['pending' => $plan['pending']]);
+    }
+
+    /**
+     * Step two: scrape one performance of the show (its status and seat counts, two
+     * ticket-site calls) and merge just that record back into the snapshot. Called once per
+     * id that refreshStart returned as pending; each write lands immediately, so a run that
+     * dies partway keeps the showtimes it did manage.
+     */
+    public function refreshPerformance(\Illuminate\Http\Request $request)
+    {
+        abort_unless(auth()->check(), 403);
+
+        $event = (string) $request->input('event');
+        $performance = (string) $request->input('performance');
+        abort_unless(preg_match('/^\d+:\d+$/', $event), 422);
+        abort_unless(preg_match('/^\d+:\d+$/', $performance), 422);
+
+        [$report, $index] = $this->snapshotShow($event);
+
+        abort_unless($index !== false, 404);
+
+        $records = collect($report['shows'][$index]['performances'] ?? []);
+        $at = $records->search(fn (array $record) => ($record['id'] ?? null) === $performance);
+
+        abort_unless($at !== false, 404);
+
+        try {
+            $records[$at] = ShowScraper::scrape($records[$at]);
+        } catch (TicketSiteBlocked) {
+            return response()->json(['blocked' => true], 503);
+        }
+
+        $report['shows'][$index]['performances'] = $records->all();
+        $this->writeSnapshot($report);
+
+        return response()->json(['ok' => true]);
+    }
+
+    /**
+     * Step three: stamp the show fresh and return the re-rendered showtimes and header tags
+     * plus the new "checked" time, which the page swaps in without a reload. No ticket-site
+     * calls — everything was scraped by the steps before it.
+     */
+    public function refreshFinish(\Illuminate\Http\Request $request)
+    {
+        abort_unless(auth()->check(), 403);
+
+        $event = (string) $request->input('event');
+        abort_unless(preg_match('/^\d+:\d+$/', $event), 422);
+
+        [$report, $index] = $this->snapshotShow($event);
+
+        abort_unless($index !== false, 404);
+
+        $report['shows'][$index]['pulled_at'] = now()->toIso8601String();
+        $report['generated_at'] = collect($report['shows'])->pluck('pulled_at')->filter()->max();
+        $this->writeSnapshot($report);
 
         $data = ShowAvailability::forEventId($event, true);
 
@@ -305,6 +378,28 @@ class FringeController extends Controller
             'tags_html' => (new \Statamic\View\View)->template('fringe/_availability-tags')->with($data)->render(),
             'showtimes_html' => (new \Statamic\View\View)->template('fringe/_availability-showtimes')->with($data)->render(),
         ]);
+    }
+
+    /**
+     * The decoded sold-out snapshot and the index of one show's row in it (false when the
+     * snapshot or the show is missing).
+     *
+     * @return array{0: array<string, mixed>, 1: int|false}
+     */
+    private function snapshotShow(string $event): array
+    {
+        $report = ShowAvailability::snapshot() ?? [];
+
+        $index = collect($report['shows'] ?? [])->search(
+            fn (array $row) => ($row['event_id'] ?? TicketPage::eventId($row['ticket_link'] ?? '')) === $event
+        );
+
+        return [$report, $index];
+    }
+
+    private function writeSnapshot(array $report): void
+    {
+        Storage::put(FringeSoldOutReport::PATH, json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     /**

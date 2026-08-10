@@ -4,8 +4,13 @@ namespace App\Fringe;
 
 /**
  * Scrape one show's performances into stored records — the per-show inner loop shared by the
- * bulk command (App\Console\Commands\FringeSoldOutReport) and the on-demand refresh job
- * (App\Jobs\RefreshShowAvailability), so both apply exactly the same rules.
+ * bulk command (App\Console\Commands\FringeSoldOutReport) and the admin refresh endpoints
+ * (FringeController::refreshStart / refreshPerformance), so both apply exactly the same rules.
+ *
+ * The work is split so a caller can spread it over several short requests: plan() makes the
+ * one performances-list call and decides which showtimes actually need scraping, scrape()
+ * does the two per-showtime calls for a single performance, and performances() runs the whole
+ * thing in one go for the bulk command.
  *
  * Every call still goes one request at a time through TicketAvailability with its pause; this
  * only orchestrates. Throws TicketSiteBlocked if the ticket site starts serving its WAF
@@ -14,24 +19,27 @@ namespace App\Fringe;
 class ShowScraper
 {
     /**
-     * The stored performance records for a show. `$prior` is the show's last-known
-     * performances, keyed on to carry sold-out showtimes forward untouched (they won't
-     * reopen) and skip their two per-showtime queries.
+     * The show's fresh performance list merged against its last-known records, plus which
+     * performance ids still need scraping. One request to the ticket site.
+     *
+     * `$prior` is keyed on to carry sold-out showtimes forward untouched (they won't reopen)
+     * and skip their two per-showtime queries; cancelled showtimes are final immediately (the
+     * list itself is the only honest signal — see TicketAvailability). Everything else keeps
+     * its prior numbers (or a blank placeholder) so the record still renders while it waits
+     * its turn in `pending`, and scrape() replaces it.
      *
      * @param  array<int, array<string, mixed>>  $prior
-     * @return array<int, array<string, mixed>>
+     * @return array{records: array<int, array<string, mixed>>, pending: array<int, string>}
      */
-    public static function performances(string $eventId, string $year, array $prior = []): array
+    public static function plan(string $eventId, string $year, array $prior = []): array
     {
         $known = collect($prior)->keyBy('id');
-        $performances = [];
+        $records = [];
+        $pending = [];
 
         foreach (TicketAvailability::performances($eventId, $year) as $performance) {
-            // Cancelled is known from the performances list itself (its "CANCELLED" title), so
-            // we skip both per-showtime queries — the availability endpoint would only
-            // mislabel it sold out.
             if ($performance['cancelled']) {
-                $performances[] = [
+                $records[] = [
                     ...$performance,
                     'status' => TicketAvailability::CANCELLED,
                     'seats_total' => null,
@@ -44,28 +52,69 @@ class ShowScraper
             $priorRecord = $known->get($performance['id']);
 
             if ($priorRecord && ($priorRecord['status'] ?? null) === TicketAvailability::SOLD_OUT) {
-                $performances[] = $priorRecord;
+                $records[] = $priorRecord;
 
                 continue;
             }
 
-            $status = TicketAvailability::status($performance['id']);
-            $seats = TicketAvailability::seats($performance['id']);
-
-            // A performance whose status call failed outright would read as sold out, which
-            // overstates. Fall back to the seat count when we have one.
-            $status ??= ($seats['free'] ?? 0) > 0
-                ? TicketAvailability::AVAILABLE
-                : TicketAvailability::SOLD_OUT;
-
-            $performances[] = [
+            $records[] = $priorRecord ?? [
                 ...$performance,
-                'status' => $status,
-                'seats_total' => $seats['total'] ?? null,
-                'seats_free' => $seats['free'] ?? null,
+                'status' => null,
+                'seats_total' => null,
+                'seats_free' => null,
             ];
+            $pending[] = $performance['id'];
         }
 
-        return $performances;
+        return ['records' => $records, 'pending' => $pending];
+    }
+
+    /**
+     * Re-scrape one performance record in place: its status and seat counts, two requests.
+     * Cancelled records pass through untouched — the availability endpoint would only
+     * mislabel them sold out.
+     *
+     * @param  array<string, mixed>  $performance
+     * @return array<string, mixed>
+     */
+    public static function scrape(array $performance): array
+    {
+        if (($performance['status'] ?? null) === TicketAvailability::CANCELLED) {
+            return $performance;
+        }
+
+        $status = TicketAvailability::status($performance['id']);
+        $seats = TicketAvailability::seats($performance['id']);
+
+        // A performance whose status call failed outright would read as sold out, which
+        // overstates. Fall back to the seat count when we have one.
+        $status ??= ($seats['free'] ?? 0) > 0
+            ? TicketAvailability::AVAILABLE
+            : TicketAvailability::SOLD_OUT;
+
+        return [
+            ...$performance,
+            'status' => $status,
+            'seats_total' => $seats['total'] ?? null,
+            'seats_free' => $seats['free'] ?? null,
+        ];
+    }
+
+    /**
+     * The stored performance records for a show, scraped in one uninterrupted run — the bulk
+     * command's path. plan() then scrape() for everything pending.
+     *
+     * @param  array<int, array<string, mixed>>  $prior
+     * @return array<int, array<string, mixed>>
+     */
+    public static function performances(string $eventId, string $year, array $prior = []): array
+    {
+        $plan = self::plan($eventId, $year, $prior);
+        $pending = array_flip($plan['pending']);
+
+        return array_map(
+            fn (array $record) => isset($pending[$record['id']]) ? self::scrape($record) : $record,
+            $plan['records']
+        );
     }
 }
