@@ -2,8 +2,9 @@
     carrying the ticket site's own traffic light: available / low / sold out. Shows selling
     out sort to the top — that's the point of the page: what do I need to buy *now*.
 
-    Exact seats-left/capacity are the Fringe's box-office numbers and are shown ONLY to a
-    logged-in user (reveal_numbers). For the public, the controller drops those fields before
+    Exact seats-left/percent-sold are the Fringe's box-office numbers and are shown ONLY to a
+    logged-in user (reveal_numbers); capacity is public — a venue's room size isn't private.
+    For the public, the controller drops the sales fields before
     they reach this template, so there is nothing to leak here — the bucket is all that's
     rendered. All data comes pre-shaped from FringeController::soldOut; nothing here touches
     the ticket site. #}}

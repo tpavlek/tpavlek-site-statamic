@@ -128,7 +128,7 @@ class FringeController extends Controller
 
         $year = $report['year'] ?? FestivalUrls::currentSlug();
 
-        // Exact seats-left/capacity are the Fringe's box-office numbers; we get to look at
+        // Exact seats-left/percent-sold are the Fringe's box-office numbers; we get to look at
         // them, the public doesn't. A logged-in Statamic user sees the real counts; everyone
         // else gets only the available / low / sold-out bucket, and the raw numbers never
         // enter the rendered HTML at all — they're dropped here, not merely hidden with CSS.

@@ -11,10 +11,11 @@ use Illuminate\Support\Facades\Storage;
  * /fringe/ticket-availability list and the "Performance & Availability" card on a review page. Reads the
  * snapshot FringeSoldOutReport writes; never touches the ticket site.
  *
- * The `$revealNumbers` gate is the whole privacy boundary: exact seats and percentages are
- * the Fringe's box-office figures and are dropped here, server-side, for anyone not logged
- * in — so a public template literally never receives them. Everyone still gets the bucket
- * (available / reduced / low / sold out / cancelled). Callers pass `auth()->check()`.
+ * The `$revealNumbers` gate is the whole privacy boundary: exact seats-left and percentages
+ * are the Fringe's box-office figures and are dropped here, server-side, for anyone not
+ * logged in — so a public template literally never receives them. Everyone still gets the
+ * bucket (available / reduced / low / sold out / cancelled), and the show's capacity — a
+ * venue's room size isn't private. Callers pass `auth()->check()`.
  */
 class ShowAvailability
 {
@@ -72,10 +73,11 @@ class ShowAvailability
             'reduced_count' => $performances->where('reduced', true)->count(),
             // Cancelled showtimes aren't part of "N of M performances sold out".
             'performance_count' => $performances->where('cancelled', false)->count(),
+            // Capacity is the venue's published room size, not a sales figure — public.
+            'capacity' => $withSeats->max('seats_total') ?: null,
             // Numeric box-office facts, shown only to a logged-in user. `sort_pct` is kept
             // separately (never emitted) so the public page can share the same most-sold-first
             // order without the number that produced it.
-            'capacity' => $revealNumbers ? $withSeats->max('seats_total') : null,
             'sold_pct' => $revealNumbers ? $soldPct : null,
             // Total tickets sold across the whole run so far (seats offered minus still free,
             // over every performance with plan data). Admin only.
