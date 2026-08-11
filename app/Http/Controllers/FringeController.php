@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Console\Commands\FringeSoldOutReport;
+use App\Fringe\AgendaCalendar;
 use App\Fringe\FestivalUrls;
+use App\Fringe\ReviewRating;
 use App\Fringe\Reviews;
 use App\Fringe\ShowAvailability;
 use App\Fringe\ShowScraper;
@@ -121,6 +123,111 @@ class FringeController extends Controller
      * the ticket site live; assembling the numbers takes ~2000 upstream requests. The
      * "Last checked" line is the snapshot's timestamp, so a stale page says so itself.
      */
+    /**
+     * The /fringe/agenda page: what's booked on Troy's personal Fringe Google Calendar this
+     * festival, as a day-by-day agenda, with each show linked to its review when one is
+     * published. Data comes from the calendar's public iCal feed via AgendaCalendar (cached
+     * briefly); box-office volunteering shifts stay on the list but are labelled as shifts,
+     * not shows.
+     *
+     * Matching an event to a review tries the exact route first — events created from the
+     * ticket site's "add to calendar" carry the show's ticket link, whose event id is the
+     * same one reviews store — then falls back to a normalized title comparison, since
+     * hand-made calendar entries get titles like "Bat Boy: the musical" against the review's
+     * "Bat Boy: The Musical".
+     */
+    public function agenda()
+    {
+        $year = FestivalUrls::currentSlug();
+
+        $reviews = Reviews::published()
+            ->filter(fn (EntryContract $entry) => (string) $entry->value('festival') === $year);
+
+        $byEventId = $reviews->mapWithKeys(
+            fn (EntryContract $entry) => ($id = TicketPage::eventId($entry->value('ticket_link'))) ? [$id => $entry] : []
+        );
+        $byTitle = $reviews->keyBy(fn (EntryContract $entry) => $this->normalizeTitle((string) $entry->value('title')));
+
+        $events = AgendaCalendar::events()
+            ->filter(fn (array $event) => (string) $event['starts']->year === $year)
+            ->map(function (array $event) use ($byEventId, $byTitle) {
+                $review = null;
+
+                if (! $event['volunteering']) {
+                    $title = $this->normalizeTitle($event['summary']);
+                    // Containment both ways covers "Merkin Sisters" against "The Merkin
+                    // Sisters"; the length guard keeps a stubby calendar title from
+                    // swallowing half the lineup.
+                    $review = $byEventId[$event['event_id']]
+                        ?? $byTitle[$title]
+                        ?? (strlen($title) >= 8
+                            ? $byTitle->first(fn (EntryContract $entry, string $key) => str_contains($key, $title) || str_contains($title, $key))
+                            : null);
+                }
+
+                return [
+                    'title' => $review?->value('title') ?? $event['summary'],
+                    'time' => $event['starts']->format('g:i A'),
+                    'end_time' => $event['ends']?->format('g:i A'),
+                    'venue' => $event['venue'],
+                    'volunteering' => $event['volunteering'],
+                    'past' => $event['starts']->isPast(),
+                    'review_url' => $review?->url(),
+                    'rating' => $review ? ReviewRating::for($review) : null,
+                    'starts' => $event['starts'],
+                ];
+            });
+
+        $days = $events
+            ->groupBy(fn (array $event) => $event['starts']->toDateString())
+            ->map(fn (Collection $dayEvents) => [
+                'label' => $dayEvents->first()['starts']->format('l, F j'),
+                'events' => $dayEvents->map(fn (array $event) => collect($event)->except('starts')->all())->values()->all(),
+            ])
+            ->values()
+            ->all();
+
+        $title = "Troy's Edmonton Fringe {$year} agenda";
+
+        return (new \Statamic\View\View)
+            ->template('fringe/agenda')
+            ->layout('layout')
+            ->with([
+                'days' => $days,
+                'show_count' => $events->where('volunteering', false)->count(),
+                'volunteer_count' => $events->where('volunteering', true)->count(),
+                // "Reviewed" means a verdict on *this* staging: stars given this year, not a
+                // rating inherited from an earlier run of a returning show (rows still show
+                // inherited stars — they just don't claim the show has been reviewed yet).
+                'reviewed_count' => $events->filter(
+                    fn (array $event) => $event['rating'] && ! $event['rating']['inherited']
+                )->count(),
+                'calendar_url' => AgendaCalendar::SHARE_URL,
+                // A personal schedule, not something search results need.
+                'noindex' => true,
+                'year' => $year,
+                'title' => $title,
+                'og_title' => $title,
+                'og_description' => "The shows booked on my calendar for this year's Edmonton Fringe, day by day, linked to reviews as they land.",
+                'canonical_url' => FestivalUrls::absolute('/fringe/agenda'),
+                'breadcrumbs' => BreadcrumbSchema::trailFor([
+                    ['name' => 'Agenda', 'path' => '/fringe/agenda'],
+                ]),
+                'breadcrumb_schema' => BreadcrumbSchema::build(BreadcrumbSchema::trailFor([
+                    ['name' => 'Agenda', 'path' => '/fringe/agenda'],
+                ])),
+            ]);
+    }
+
+    /**
+     * Case, punctuation, and spacing collapsed so calendar-event titles and review titles
+     * can meet in the middle.
+     */
+    private function normalizeTitle(string $title): string
+    {
+        return trim(preg_replace('/[^a-z0-9]+/', ' ', mb_strtolower($title)));
+    }
+
     public function soldOut()
     {
         $report = Storage::exists(FringeSoldOutReport::PATH)

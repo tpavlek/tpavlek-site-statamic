@@ -75,6 +75,9 @@ Route::get('/fringe/reviews/feed.xml', [\App\Http\Controllers\FeedController::cl
 Route::get('/fringe/artists', [\App\Http\Controllers\FringeArtistController::class, 'index'])->name('fringe.artists');
 Route::get('/fringe/artists/{slug}', [\App\Http\Controllers\FringeArtistController::class, 'show'])->name('fringe.artist');
 
+// Troy's personal festival schedule, pulled from his public Fringe Google Calendar.
+Route::get('/fringe/agenda', [ FringeController::class, 'agenda' ])->name('fringe.agenda');
+
 Route::get('/fringe/ticket-availability', [ FringeController::class, 'soldOut' ])->name('fringe.ticket-availability');
 
 // Admin-only sales leaderboard, nested under ticket-availability (auth enforced in the controller).
