@@ -28,6 +28,68 @@ use Statamic\Taxonomies\LocalizedTerm;
 class FringeController extends Controller
 {
 
+    /**
+     * The full sold-out snapshot as JSON, exact seat counts included — the numbers
+     * ShowAvailability strips for the public. Shared by unguessable key, not by login:
+     * the audience is a friend with a script, not a browser session. No key configured
+     * or wrong key both 404 (not 403) so the URL's existence isn't confirmable, and the
+     * response is noindexed for the case where the link leaks somewhere crawlable. The
+     * route stays out of the sitemap by construction (controller routes never join it).
+     */
+    public function availabilityExport()
+    {
+        $key = config('fringe.availability_share_key');
+
+        abort_unless($key && hash_equals($key, (string) request('key')), 404);
+
+        $snapshot = ShowAvailability::snapshot();
+
+        abort_unless((bool) $snapshot, 404);
+
+        $shows = collect($snapshot['shows'] ?? [])->map(function (array $row) {
+            $performances = collect($row['performances'] ?? [])->map(function (array $performance) {
+                $total = $performance['seats_total'] ?? null;
+                $free = $performance['seats_free'] ?? null;
+
+                return [
+                    'id' => $performance['id'] ?? null,
+                    // Stored naive-local; stamp the festival's zone so consumers don't guess.
+                    'datetime' => Carbon::parse($performance['datetime'], 'America/Edmonton')->toIso8601String(),
+                    'status' => $performance['status'] ?? null,
+                    'seats_total' => $total,
+                    'seats_free' => $free,
+                    'pct_sold' => $total > 0 && $free !== null ? (int) round(($total - $free) / $total * 100) : null,
+                ];
+            })->values();
+
+            $withSeats = $performances->filter(fn (array $p) => $p['seats_total'] !== null);
+            $offered = $withSeats->sum('seats_total');
+            $free = $withSeats->sum('seats_free');
+
+            return [
+                'title' => $row['title'] ?? null,
+                'event_id' => $row['event_id'] ?? null,
+                'venue' => $row['venue'] ?? null,
+                'ticket_link' => $row['ticket_link'] ?? null,
+                'review_url' => $row['review_url'] ?? null,
+                'checked_at' => $row['pulled_at'] ?? null,
+                'capacity' => $withSeats->max('seats_total') ?: null,
+                'seats_offered' => $offered ?: null,
+                'seats_free' => $offered ? $free : null,
+                'pct_sold' => $offered > 0 ? (int) round(($offered - $free) / $offered * 100) : null,
+                'performances' => $performances->all(),
+            ];
+        })->values();
+
+        return response()->json([
+            'festival' => $snapshot['year'] ?? null,
+            'generated_at' => $snapshot['generated_at'] ?? null,
+            'note' => 'Unofficial data, scraped from tickets.fringetheatre.ca. Per-show freshness is checked_at.',
+            'show_count' => $shows->count(),
+            'shows' => $shows,
+        ])->header('X-Robots-Tag', 'noindex, nofollow');
+    }
+
     public function generateSocialImage(string $entry)
     {
         $entry = EntryFacade::find($entry);
@@ -710,6 +772,27 @@ class FringeController extends Controller
             });
         }
 
+        // The filter bar reads raw slugs off each row, for the same reason as the videos
+        // query below: `{{ categories }}` in the template would resolve a taxonomy term per
+        // entry. The dropdown offers only categories this festival's shows actually use, so
+        // an archive year without category data simply gets no dropdown.
+        $usedCategories = $reviews
+            ->flatMap(fn (Entry $entry) => (array) ($entry->value('categories') ?? []))
+            ->unique()
+            ->all();
+
+        $reviews->each(function (Entry $entry) {
+            $entry->setSupplement('category_slugs', implode(' ', (array) ($entry->value('categories') ?? [])));
+        });
+
+        $categoryOptions = TermFacade::query()
+            ->where('taxonomy', 'fringe_show_categories')
+            ->get()
+            ->filter(fn ($term) => in_array($term->slug(), $usedCategories, true))
+            ->map(fn ($term) => ['slug' => $term->slug(), 'title' => $term->title()])
+            ->sortBy('title')
+            ->values();
+
         // Raw category slugs rather than `$entry->category`, which resolves a taxonomy term
         // for every video on the site — 109ms against 8ms, and it was the single most
         // expensive thing on the reviews page despite having nothing to do with reviews.
@@ -768,6 +851,7 @@ class FringeController extends Controller
             ->layout('layout')
             ->with([
                 'reviews' => $reviews,
+                'category_options' => $categoryOptions,
                 'videos' => $videos,
                 'posts' => $posts,
                 'year' => $festivalSlug,

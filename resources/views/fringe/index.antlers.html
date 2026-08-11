@@ -104,8 +104,36 @@
         <hr class="w-1/2 text-center mx-auto py-4" />
     {{ /if }}
 
-    {{# One list for every screen size: stacked on mobile, aligned columns from `sm` up. #}}
-    <div class="clear-both">
+    {{# One list for every screen size: stacked on mobile, aligned columns from `sm` up.
+
+        The filter bar hides rows client-side; every review is already in the page, so
+        there's nothing to fetch. Rows carry raw category slugs supplemented by the
+        controller — nothing in this loop augments a taxonomy term. Without JS the bar
+        does nothing, so it's x-cloak'd rather than shown broken. #}}
+    <div class="clear-both" x-data="reviewFilter">
+        {{ if review_count > 1 }}
+            <div class="flex flex-wrap items-center gap-2 pb-3" x-cloak>
+                <label for="review-search" class="sr-only">Search shows by name</label>
+                <input id="review-search" type="search" x-model="query" placeholder="Search shows"
+                       class="w-full sm:w-56 text-base border border-gray-200 rounded-lg py-1.5 px-3 focus:border-teal focus:outline-none">
+
+                {{ if category_options | length > 1 }}
+                    <label for="review-category" class="sr-only">Filter by category</label>
+                    <select id="review-category" x-model="category"
+                            class="text-base border border-gray-200 rounded-lg py-1.5 px-2 bg-white focus:border-teal focus:outline-none">
+                        <option value="">All categories</option>
+                        {{ category_options }}
+                            <option value="{{ slug }}">{{ title }}</option>
+                        {{ /category_options }}
+                    </select>
+                {{ /if }}
+
+                <span class="text-sm text-gray-500" aria-live="polite" x-show="filtering">
+                    <span x-text="shown"></span> of {{ review_count }} shows
+                </span>
+            </div>
+        {{ /if }}
+
         <div class="hidden sm:grid sm:grid-cols-12 sm:gap-4 text-xs uppercase tracking-wide text-gray-500 pb-2 border-b border-gray-200">
             <div class="col-span-6">Show</div>
             <div class="{{ if tickets_available }}col-span-4{{ else }}col-span-6{{ /if }}">Rating</div>
@@ -117,7 +145,8 @@
         <ul class="divide-y divide-gray-100 border-b border-gray-100">
             {{ reviews }}
                 {{# `relative` anchors the stretched title link that makes the whole row tappable. #}}
-                <li class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
+                <li data-title="{{ title }}" data-categories="{{ category_slugs }}"
+                    class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
                     <div class="sm:col-span-6 font-light">
                         <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
 
@@ -146,6 +175,12 @@
                 </li>
             {{ /reviews }}
         </ul>
+
+        <p class="text-gray-500 py-4 mb-0" x-show="filtering && shown === 0" x-cloak>
+            No shows match.
+            <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
+                    @click="query = ''; category = ''">Clear filters</button>
+        </p>
     </div>
 
     <hr class="w-1/2 text-center mx-auto py-4" />

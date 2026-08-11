@@ -100,6 +100,10 @@ Route::post('/fringe/ticket-availability/refresh/finish', [ FringeController::cl
     ->middleware('throttle:60,1')
     ->name('fringe.ticket-availability.refresh.finish');
 
+// Key-gated JSON export of the sold-out snapshot, seat counts included — for sharing
+// with a specific person, not for the public. Gate and noindex live in the controller.
+Route::get('/fringe/availability.json', [ FringeController::class, 'availabilityExport' ]);
+
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
 Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year);
 

@@ -97,4 +97,51 @@ Alpine.data('leaderboard', () => ({
     },
 }))
 
+// Reviews index: hide rows that don't match the category dropdown / name search. Rows carry
+// data-title and data-categories (space-separated raw slugs); matching is done here so the
+// template never resolves a taxonomy term per row. Curly apostrophes in titles are folded to
+// straight ones so typing "rodgers and hammerstein's" finds "Hammerstein’s".
+Alpine.data('reviewFilter', () => ({
+    query: '',
+    category: '',
+    shown: 0,
+
+    get filtering() {
+        return this.query.trim() !== '' || this.category !== ''
+    },
+
+    init() {
+        this.$watch('query', () => this.apply())
+        this.$watch('category', () => this.apply())
+    },
+
+    normalize(text) {
+        return text.toLowerCase().replace(/[’‘]/g, "'")
+    },
+
+    apply() {
+        const needle = this.normalize(this.query.trim())
+        let shown = 0
+
+        for (const row of this.$root.querySelectorAll('li[data-title]')) {
+            const matches =
+                (!needle || this.normalize(row.dataset.title).includes(needle)) &&
+                (!this.category || row.dataset.categories.split(' ').includes(this.category))
+
+            // Not a `hidden` class, and not a plain inline style either: the rows carry
+            // `sm:grid`, and the Tailwind config's `important: true` makes that
+            // `display: grid !important`, which beats both a utility class and a normal
+            // inline style. Only an inline declaration marked important outranks it.
+            if (matches) {
+                row.style.removeProperty('display')
+            } else {
+                row.style.setProperty('display', 'none', 'important')
+            }
+            if (matches) shown++
+        }
+
+        this.shown = shown
+    },
+}))
+
 Alpine.start()
