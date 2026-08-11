@@ -143,7 +143,14 @@
         <section class="mt-8 rounded-lg border border-gray-200 overflow-hidden text-base"
             {{ if reveal_numbers }}x-data="showRefresh('{{ event_id }}')"{{ /if }}>
             <div class="px-4 py-3 border-b border-gray-100 bg-grey-50 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 class="text-lg font-bold text-gray-800 m-0">Performance &amp; Availability</h2>
+                {{# The second tickets link on the page, deliberately: someone scanning
+                    showtimes here has decided, and shouldn't scroll back up to act on it.
+                    Same partial as the one up top, so it inherits the "only while tickets
+                    are on sale" gate. #}}
+                <div class="flex items-baseline gap-x-3">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Performance &amp; Availability</h2>
+                    {{ partial:fringe/ticket-link }}
+                </div>
                 <span class="text-xs text-gray-500 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span x-ref="tags" class="contents">{{ partial:fringe/_availability-tags }}</span>
                     {{ if checked }}
