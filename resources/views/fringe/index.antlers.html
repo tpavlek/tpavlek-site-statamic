@@ -82,21 +82,7 @@
 
             <ul class="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0">
                 {{ videos }}
-                    <li class="shrink-0 w-36 sm:w-44">
-                        <a href="{{ url }}" class="block no-underline text-gray-800 group">
-                            {{ if thumbnail }}
-                                <img src="{{ thumbnail:url }}"
-                                     alt="{{ title }}"
-                                     loading="lazy"
-                                     class="w-full aspect-[9/16] object-cover rounded-lg bg-grey-100 group-hover:opacity-90 transition-opacity">
-                            {{ else }}
-                                <div class="w-full aspect-[9/16] rounded-lg bg-grey-100 flex items-center justify-center">
-                                    <i class="fas fa-play text-teal text-2xl"></i>
-                                </div>
-                            {{ /if }}
-                            <p class="text-sm leading-snug mt-2 group-hover:text-teal transition-colors">{{ title }}</p>
-                        </a>
-                    </li>
+                    {{ partial:video-card }}
                 {{ /videos }}
             </ul>
         </section>

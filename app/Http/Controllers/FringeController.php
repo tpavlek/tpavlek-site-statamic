@@ -529,6 +529,23 @@ class FringeController extends Controller
         $report['generated_at'] = collect($report['shows'])->pluck('pulled_at')->filter()->max();
         $this->writeSnapshot($report);
 
+        // Push the snapshot to production, same post-hook as the scheduled refresh in
+        // routes/console.php — a manual refresh is Troy noticing a show needs fresh numbers,
+        // which is exactly the data production should have. Local only for the same reason
+        // as the scheduler: production is the push target, not the pusher. Synchronous on
+        // purpose (a second or two on top of a multi-request scrape), so a failure is known
+        // before the UI says "done"; the script no-ops when the file hasn't changed.
+        if (app()->environment('local')) {
+            $sync = \Illuminate\Support\Facades\Process::path(base_path())->run('bin/sync-sold-out-report.sh');
+
+            if (! $sync->successful()) {
+                \Illuminate\Support\Facades\Log::warning('sold-out-report sync to production failed after manual refresh', [
+                    'event' => $event,
+                    'output' => trim($sync->errorOutput() ?: $sync->output()),
+                ]);
+            }
+        }
+
         $data = ShowAvailability::forEventId($event, true);
 
         abort_unless($data, 404);

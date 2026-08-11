@@ -32,6 +32,7 @@ preferences:
       after_save: continue_editing
     posts:
       view: list
+      after_save: continue_editing
     endorsements:
       view: tree
     artists:

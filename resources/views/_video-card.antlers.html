@@ -1,0 +1,18 @@
+{{# One video entry as a portrait thumbnail card linking to its /video page, not out to
+    YouTube — the entry page is the canonical home of a video. Shared by the fringe reviews
+    index and the post "Related videos" strip; expects a video entry in scope. #}}
+<li class="shrink-0 w-36 sm:w-44">
+    <a href="{{ url }}" class="block no-underline text-gray-800 group">
+        {{ if thumbnail }}
+            <img src="{{ thumbnail:url }}"
+                 alt="{{ title | entities }}"
+                 loading="lazy"
+                 class="w-full aspect-[9/16] object-cover rounded-lg bg-grey-100 group-hover:opacity-90 transition-opacity">
+        {{ else }}
+            <div class="w-full aspect-[9/16] rounded-lg bg-grey-100 flex items-center justify-center">
+                <i class="fas fa-play text-teal text-2xl"></i>
+            </div>
+        {{ /if }}
+        <p class="text-sm leading-snug mt-2 group-hover:text-teal transition-colors">{{ title }}</p>
+    </a>
+</li>
