@@ -49,10 +49,17 @@ class FringeSoldOutReport extends Command
     public const PATH = 'fringe/sold-out-report.json';
 
     /**
-     * How long a show's data stays fresh. Past this, the show is due for a refresh — unless
-     * it's sold out, which is permanent.
+     * How long a show's data stays fresh, tiered by how close it is to selling out: the
+     * scarcer the tickets, the faster the numbers move, so the sooner it's due again.
+     * Fewer than 25% of seats remaining → 8h; fewer than 50% → 16h; otherwise (or with no
+     * seat data yet) → 24h. Past its window a show is due — unless it's sold out, which
+     * is permanent.
      */
-    private const STALE_AFTER_HOURS = 24;
+    private const STALE_HOURS_SCARCE = 8;
+
+    private const STALE_HOURS_SELLING = 16;
+
+    private const STALE_HOURS_DEFAULT = 24;
 
     public function handle(): int
     {
@@ -88,7 +95,7 @@ class FringeSoldOutReport extends Command
 
         if ($due->isEmpty()) {
             $this->write($year, $shows, $store);
-            $this->info("Nothing due — every show has data pulled within ".self::STALE_AFTER_HOURS.'h (or is sold out). Covers '.$this->covered($shows, $store).'/'.$shows->count().'.');
+            $this->info('Nothing due — every show is within its freshness window (or is sold out). Covers '.$this->covered($shows, $store).'/'.$shows->count().'.');
 
             return self::SUCCESS;
         }
@@ -166,6 +173,9 @@ class FringeSoldOutReport extends Command
      *   - pulled within the window → no. Fresh enough; leave the box office alone.
      *   - pulled longer ago        → yes.
      *
+     * The window is per-show — see staleAfterHours(): shows close to selling out go stale
+     * faster than ones with plenty of seats.
+     *
      * @param  array<string, array<string, mixed>>  $store
      */
     private function isDue(string $eventId, array $store): bool
@@ -183,7 +193,35 @@ class FringeSoldOutReport extends Command
             return false;
         }
 
-        return Carbon::parse($record['pulled_at'])->lt(now()->subHours(self::STALE_AFTER_HOURS));
+        return Carbon::parse($record['pulled_at'])->lt(now()->subHours($this->staleAfterHours($performances)));
+    }
+
+    /**
+     * How long this show's last pull stays fresh, from the fraction of seats still free
+     * across the run (cancelled showtimes excluded, mirroring ShowAvailability's math).
+     * No seat data yet → the default window.
+     *
+     * @param  array<int, array<string, mixed>>  $performances
+     */
+    private function staleAfterHours(array $performances): int
+    {
+        $withSeats = collect($performances)
+            ->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)
+            ->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
+
+        $offered = $withSeats->sum('seats_total');
+
+        if ($offered <= 0) {
+            return self::STALE_HOURS_DEFAULT;
+        }
+
+        $remaining = $withSeats->sum('seats_free') / $offered;
+
+        return match (true) {
+            $remaining < 0.25 => self::STALE_HOURS_SCARCE,
+            $remaining < 0.50 => self::STALE_HOURS_SELLING,
+            default => self::STALE_HOURS_DEFAULT,
+        };
     }
 
     /**
