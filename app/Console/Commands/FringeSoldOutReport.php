@@ -51,13 +51,13 @@ class FringeSoldOutReport extends Command
     /**
      * How long a show's data stays fresh, tiered by how close it is to selling out: the
      * scarcer the tickets, the faster the numbers move, so the sooner it's due again.
-     * Fewer than 25% of seats remaining → 8h; fewer than 50% → 16h; otherwise (or with no
+     * Fewer than 25% of seats remaining → 3h; fewer than 50% → 8h; otherwise (or with no
      * seat data yet) → 24h. Past its window a show is due — unless it's sold out, which
      * is permanent.
      */
-    private const STALE_HOURS_SCARCE = 8;
+    private const STALE_HOURS_SCARCE = 3;
 
-    private const STALE_HOURS_SELLING = 16;
+    private const STALE_HOURS_SELLING = 8;
 
     private const STALE_HOURS_DEFAULT = 24;
 
@@ -150,6 +150,15 @@ class FringeSoldOutReport extends Command
             // Checkpoint after every show, so a throttle or crash costs at most one show.
             $this->write($year, $shows, $store);
             $refreshed++;
+
+            $withSeats = collect($performances)->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
+            $offered = $withSeats->sum('seats_total');
+            \Illuminate\Support\Facades\Log::info('Sold-out report: refreshed show', [
+                'title' => $entry->value('title'),
+                'sold_out' => collect($performances)->where('status', TicketAvailability::SOLD_OUT)->count().'/'.count($performances),
+                'pct_sold' => $offered > 0 ? round(100 * (1 - $withSeats->sum('seats_free') / $offered)) : null,
+                'next_check_after' => $this->staleAfterHours($performances).'h',
+            ]);
 
             $bar->advance();
         }
