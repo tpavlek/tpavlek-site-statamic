@@ -1,0 +1,18 @@
+{{# The "View by date" row: one pill per festival day, linking to the by-day availability
+    page. `dates` comes from FringeController::festivalDates (derived from the snapshot's
+    performances); `current_day` highlights the day being viewed, absent on the by-show
+    page. #}}
+{{ if dates }}
+    <div class="mb-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">View by date</p>
+        <div class="flex flex-wrap gap-2">
+            {{ dates }}
+                {{ if day == current_day }}
+                    <span class="inline-block rounded-full bg-teal text-white text-sm font-semibold px-3 py-1 whitespace-nowrap">{{ label }}</span>
+                {{ else }}
+                    <a href="{{ url }}" class="inline-block rounded-full border border-gray-200 text-sm font-medium text-gray-700 no-underline px-3 py-1 whitespace-nowrap hover:border-teal hover:text-teal">{{ label }}</a>
+                {{ /if }}
+            {{ /dates }}
+        </div>
+    </div>
+{{ /if }}

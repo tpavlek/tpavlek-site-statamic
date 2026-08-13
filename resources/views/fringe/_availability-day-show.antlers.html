@@ -1,0 +1,20 @@
+{{# One show's row inside a timeslot card on the by-day availability page: title (linked
+    when a review page exists), venue, then the status — dot immediately beside its label,
+    the pair reading as one token. Sized to match the by-show panel's showtime grid
+    (text-[13px], semibold title), not a heading. Admin additionally sees the exact seat
+    count. Tier fields come from ShowAvailability::shapePerformance. #}}
+<div class="py-1.5 text-[13px]">
+    {{ if review_url }}
+        <a href="{{ review_url }}" class="font-semibold text-gray-800 no-underline hover:text-teal {{ if cancelled }}line-through text-gray-500{{ /if }}">{{ title }}</a>
+    {{ else }}
+        <span class="font-semibold text-gray-800 {{ if cancelled }}line-through text-gray-500{{ /if }}">{{ title }}</span>
+    {{ /if }}
+    <span class="block text-gray-500">
+        {{ if venue }}{{ venue }} &middot; {{ /if }}<span class="inline-flex items-center gap-1.5 align-baseline"><span class="inline-block w-2 h-2 rounded-full shrink-0
+            {{ if cancelled }}bg-gray-400{{ elseif sold_out }}bg-red-500{{ elseif low }}bg-orange-500{{ elseif reduced }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span><span class="font-medium
+            {{ if cancelled }}text-gray-500{{ elseif sold_out }}text-red-700{{ elseif low }}text-orange-700{{ elseif reduced }}text-yellow-700{{ else }}text-green-700{{ /if }}">{{ tier_label }}</span></span>
+        {{ if reveal_numbers && !sold_out && !cancelled && (seats_free || seats_free === 0) }}
+            &middot; {{ seats_free }} left{{ if pct_free || pct_free === 0 }} &middot; {{ pct_free }}%{{ /if }}
+        {{ /if }}
+    </span>
+</div>

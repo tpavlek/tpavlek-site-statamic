@@ -92,7 +92,7 @@ class ShowAvailability
      * @param  array<string, mixed>  $performance
      * @return array<string, mixed>
      */
-    private static function shapePerformance(array $performance, bool $revealNumbers): array
+    public static function shapePerformance(array $performance, bool $revealNumbers): array
     {
         $when = Carbon::parse($performance['datetime']);
         $total = $performance['seats_total'] ?? null;

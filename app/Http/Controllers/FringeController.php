@@ -374,6 +374,7 @@ class FringeController extends Controller
             ->template('fringe/sold-out')
             ->layout('layout')
             ->with([
+                'dates' => $this->festivalDates($report),
                 'shows' => $shows->all(),
                 'show_count' => $shows->count(),
                 'checked_count' => $shows->where('has_data', true)->count(),
@@ -395,6 +396,129 @@ class FringeController extends Controller
                 'breadcrumb_schema' => BreadcrumbSchema::build(BreadcrumbSchema::trailFor([
                     ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
                 ])),
+            ]);
+    }
+
+    /**
+     * Every date the festival plays, from the snapshot's performances — derived rather than
+     * configured, so the row of day links can't disagree with the data behind it.
+     *
+     * @param  array<string, mixed>  $report
+     * @return array<int, array{day: int, label: string, url: string}>
+     */
+    private function festivalDates(array $report): array
+    {
+        return collect($report['shows'] ?? [])
+            ->flatMap(fn (array $show) => array_column($show['performances'] ?? [], 'datetime'))
+            ->map(fn (string $datetime) => substr($datetime, 0, 10))
+            ->unique()
+            ->sort()
+            ->values()
+            ->map(function (string $date) {
+                $when = Carbon::parse($date);
+
+                return [
+                    'day' => $when->day,
+                    'label' => $when->format('D, M j'),
+                    'url' => '/fringe/ticket-availability/day/'.$when->day,
+                ];
+            })
+            ->all();
+    }
+
+    /**
+     * Ticket availability for one festival day, grouped by timeslot — "what could I still
+     * get into at 8 tonight". Same snapshot, same tiers, and the same privacy boundary as
+     * the by-show page: exact seat counts are dropped server-side for the public.
+     */
+    public function soldOutDay(int $day)
+    {
+        $report = Storage::exists(FringeSoldOutReport::PATH)
+            ? json_decode(Storage::get(FringeSoldOutReport::PATH), true)
+            : [];
+
+        $dates = $this->festivalDates($report);
+        $current = collect($dates)->first(fn (array $date) => $date['day'] === $day);
+
+        abort_unless($current, 404);
+
+        $year = $report['year'] ?? FestivalUrls::currentSlug();
+        $revealNumbers = auth()->check();
+
+        $store = collect($report['shows'] ?? [])
+            ->keyBy(fn (array $row) => $row['event_id'] ?? TicketPage::eventId($row['ticket_link'] ?? ''));
+
+        // One row per performance on this day, carrying its show's identity. Only shows the
+        // scraper has reached appear — a not-yet-scraped show has no showtimes to place.
+        $venues = [];
+
+        $performances = Reviews::all()
+            ->filter(fn (EntryContract $entry) => (string) $entry->value('festival') === $year)
+            ->flatMap(function (EntryContract $entry) use ($store, $revealNumbers, $day, &$venues) {
+                $record = $store->get(TicketPage::eventId($entry->value('ticket_link')));
+
+                if (! $record) {
+                    return [];
+                }
+
+                $venueId = $entry->value('venue');
+                $venues[$venueId] ??= $venueId ? EntryFacade::find($venueId)?->value('title') : null;
+
+                return collect($record['performances'] ?? [])
+                    ->filter(fn (array $p) => Carbon::parse($p['datetime'])->day === $day)
+                    ->map(fn (array $p) => [
+                        'datetime' => $p['datetime'],
+                        'title' => $entry->value('title'),
+                        'venue' => $venues[$venueId],
+                        'review_url' => $entry->published() ? $entry->url() : null,
+                        ...ShowAvailability::shapePerformance($p, $revealNumbers),
+                    ]);
+            });
+
+        // Cards, one per distinct start time, chronological; alphabetical within a slot so
+        // the public ordering leaks nothing about sales. Each slot splits into two halves
+        // for the same side-by-side desktop columns the by-show page uses.
+        $slots = $performances
+            ->groupBy(fn (array $p) => substr($p['datetime'], 11, 5))
+            ->sortKeys()
+            ->map(function ($group) {
+                $shows = $group->sortBy('title')->values();
+                $columns = $shows->chunk((int) ceil(max($shows->count(), 1) / 2));
+
+                return [
+                    'time' => $shows->first()['time'],
+                    'show_count' => $shows->count(),
+                    'shows_left' => ($columns->get(0) ?? collect())->values()->all(),
+                    'shows_right' => ($columns->get(1) ?? collect())->values()->all(),
+                ];
+            })
+            ->values();
+
+        $title = "Edmonton Fringe {$year} Ticket Availability — {$current['label']}";
+        $trail = BreadcrumbSchema::trailFor([
+            ['name' => 'Ticket Availability', 'path' => '/fringe/ticket-availability'],
+            ['name' => $current['label'], 'path' => $current['url']],
+        ]);
+
+        return (new \Statamic\View\View)
+            ->template('fringe/sold-out-day')
+            ->layout('layout')
+            ->with([
+                'dates' => $dates,
+                'current_day' => $day,
+                'day_label' => $current['label'],
+                'slots' => $slots->all(),
+                'performance_count' => $performances->where('cancelled', false)->count(),
+                'sold_out_count' => $performances->where('sold_out', true)->count(),
+                'reveal_numbers' => $revealNumbers,
+                'noindex' => true,
+                'year' => $year,
+                'title' => $title,
+                'og_title' => $title,
+                'og_description' => "Which Edmonton Fringe shows still have tickets on {$current['label']}, timeslot by timeslot.",
+                'canonical_url' => FestivalUrls::absolute($current['url']),
+                'breadcrumbs' => $trail,
+                'breadcrumb_schema' => BreadcrumbSchema::build($trail),
             ]);
     }
 

@@ -80,6 +80,11 @@ Route::get('/fringe/agenda', [ FringeController::class, 'agenda' ])->name('fring
 
 Route::get('/fringe/ticket-availability', [ FringeController::class, 'soldOut' ])->name('fringe.ticket-availability');
 
+// The same availability, one festival day at a time, grouped by timeslot.
+Route::get('/fringe/ticket-availability/day/{day}', [ FringeController::class, 'soldOutDay' ])
+    ->whereNumber('day')
+    ->name('fringe.ticket-availability.day');
+
 // Admin-only sales leaderboard, nested under ticket-availability (auth enforced in the controller).
 Route::get('/fringe/ticket-availability/leaderboard', [ FringeController::class, 'salesLeaderboard' ])->name('fringe.ticket-availability.leaderboard');
 
@@ -180,3 +185,4 @@ Route::get('/youtube_oauth_handler', [YouTubeOAuthController::class, 'handle']);
 | the saved PNG from drifting apart. Noindex via a header on the response.
 */
 Route::get('/og-card', \App\Http\Controllers\OgCardController::class)->name('og-card');
+Route::get('/og-carousel/{slide}', \App\Http\Controllers\OgCarouselController::class)->whereNumber('slide')->name('og-carousel');

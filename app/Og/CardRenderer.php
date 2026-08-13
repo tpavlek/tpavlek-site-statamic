@@ -86,6 +86,24 @@ class CardRenderer
     }
 
     /**
+     * Screenshot any page on the site to any path, registering nothing — capture() for a
+     * file that is only ever going to be downloaded (e.g. Instagram carousel slides).
+     * Logged out, like capture().
+     *
+     * @return string the absolute path written
+     */
+    public function captureTo(string $url, string $destination, string $format = 'og'): string
+    {
+        if (! isset(self::FORMATS[$format])) {
+            throw new RuntimeException("Unknown card format [{$format}].");
+        }
+
+        $this->shoot($url, $destination, $format);
+
+        return $destination;
+    }
+
+    /**
      * Screenshot a page and crop a square region out of it — for using a slice of a real page
      * (e.g. the availability rows, below the header) as fan artwork on a card. Logged out, like
      * capture(). Coordinates are in CSS pixels; the file is written at 2x that.
