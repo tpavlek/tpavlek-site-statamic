@@ -10,9 +10,9 @@
         {{ availability_parts }}
             {{ unless first }}<span class="text-gray-400">/</span>{{ /unless }}
             <span class="inline-flex items-center gap-1
-                {{ if tier == 'cancelled' }}text-gray-500{{ elseif tier == 'sold_out' }}text-red-700{{ elseif tier == 'low' }}text-orange-700{{ elseif tier == 'reduced' }}text-yellow-700{{ else }}text-green-700{{ /if }}">
+                {{ if tier == 'cancelled' || tier == 'completed' }}text-gray-500{{ elseif tier == 'sold_out' }}text-red-700{{ elseif tier == 'low' }}text-orange-700{{ elseif tier == 'reduced' }}text-yellow-700{{ else }}text-green-700{{ /if }}">
                 <span class="inline-block w-2 h-2 rounded-full
-                    {{ if tier == 'cancelled' }}bg-gray-400{{ elseif tier == 'sold_out' }}bg-red-500{{ elseif tier == 'low' }}bg-orange-500{{ elseif tier == 'reduced' }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span>
+                    {{ if tier == 'cancelled' }}bg-gray-400{{ elseif tier == 'completed' }}bg-gray-300{{ elseif tier == 'sold_out' }}bg-red-500{{ elseif tier == 'low' }}bg-orange-500{{ elseif tier == 'reduced' }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span>
                 {{ label }}
             </span>
         {{ /availability_parts }}

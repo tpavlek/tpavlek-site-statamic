@@ -9,12 +9,12 @@
 <div class="text-gray-500 tabular-nums whitespace-nowrap">{{ time }}</div>
 <div class="flex items-center gap-2 min-w-0">
     <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0
-        {{ if cancelled }}bg-gray-400{{ elseif sold_out }}bg-red-500{{ elseif low }}bg-orange-500{{ elseif reduced }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span>
+        {{ if cancelled }}bg-gray-400{{ elseif completed }}bg-gray-300{{ elseif sold_out }}bg-red-500{{ elseif low }}bg-orange-500{{ elseif reduced }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span>
     <span class="font-medium whitespace-nowrap
-        {{ if cancelled }}text-gray-500 line-through{{ elseif sold_out }}text-red-700{{ elseif low }}text-orange-700{{ elseif reduced }}text-yellow-700{{ else }}text-green-700{{ /if }}">{{ tier_label }}</span>
+        {{ if cancelled }}text-gray-500 line-through{{ elseif completed }}text-gray-500{{ elseif sold_out }}text-red-700{{ elseif low }}text-orange-700{{ elseif reduced }}text-yellow-700{{ else }}text-green-700{{ /if }}">{{ tier_label }}</span>
 </div>
 {{ if reveal_numbers }}
     <div class="text-gray-500 tabular-nums whitespace-nowrap text-right">
-        {{ if sold_out || cancelled }}&mdash;{{ else }}{{ seats_free }} left{{ if pct_free || pct_free === 0 }} &middot; {{ pct_free }}%{{ /if }}{{ /if }}
+        {{ if sold_out || cancelled || completed }}&mdash;{{ else }}{{ seats_free }} left{{ if pct_free || pct_free === 0 }} &middot; {{ pct_free }}%{{ /if }}{{ /if }}
     </div>
 {{ /if }}

@@ -843,15 +843,26 @@ class FringeController extends Controller
             return self::tierResult([['tier' => 'cancelled', 'label' => 'Cancelled']]);
         }
 
-        if ($live->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT)) {
+        // The light is a buying signal, so it judges only performances someone could still
+        // attend — a sold-out Tuesday matinee shouldn't advertise scarcity for the rest of
+        // the run once it's over. (The show PAGE keeps past sold-outs visible as artist
+        // cred; this is only the index rollup.) A minute past curtain a performance stops
+        // counting, mirroring ShowAvailability's Completed transition.
+        $upcoming = $live->reject(fn (array $p) => Carbon::parse($p['datetime'])->addMinute()->lte(Carbon::now()));
+
+        if ($upcoming->isEmpty()) {
+            return self::tierResult([['tier' => 'completed', 'label' => 'Completed']]);
+        }
+
+        if ($upcoming->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT)) {
             return self::tierResult([['tier' => 'sold_out', 'label' => 'Sold out']]);
         }
 
-        $anySoldOut = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
-        $anyLow = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
+        $anySoldOut = $upcoming->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
+        $anyLow = $upcoming->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
         $scarcest = $anySoldOut ? 'sold_out' : ($anyLow ? 'low' : null);
 
-        $withSeats = $live->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
+        $withSeats = $upcoming->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
         $offered = $withSeats->sum('seats_total');
         $pctSold = $offered > 0 ? ($offered - $withSeats->sum('seats_free')) / $offered * 100 : null;
 

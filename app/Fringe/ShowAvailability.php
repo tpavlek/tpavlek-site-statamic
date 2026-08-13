@@ -101,16 +101,25 @@ class ShowAvailability
 
         $cancelled = $performance['status'] === TicketAvailability::CANCELLED;
         $soldOut = $performance['status'] === TicketAvailability::SOLD_OUT;
-        $low = $performance['status'] === TicketAvailability::LOW;
+
+        // A minute past curtain (datetimes are stored naive America/Edmonton, which is also
+        // the app timezone) the availability question is moot — the show happened. Sold out
+        // deliberately survives this transition: a show that sold out stays "Sold out"
+        // forever, because selling out is the artist's cred, not a ticketing state. Cancelled
+        // survives too — "completed" would claim a show happened that didn't.
+        $completed = ! $soldOut && ! $cancelled && $when->copy()->addMinute()->lte(Carbon::now());
+
+        $low = ! $completed && $performance['status'] === TicketAvailability::LOW;
         // Our own tier between available and low: a showtime the ticket site still calls
         // available, but where 40% or fewer seats remain (at least 60% sold). Derived from the
         // seat count, so it's a bucket the public can see without the raw number. Only upgrades
         // an "available" showtime — low/sold-out already outrank it.
-        $reduced = ! $soldOut && ! $low && ! $cancelled && $pctSold !== null && $pctSold >= 60;
+        $reduced = ! $soldOut && ! $low && ! $cancelled && ! $completed && $pctSold !== null && $pctSold >= 60;
 
         $tier = match (true) {
             $cancelled => 'cancelled',
             $soldOut => 'sold_out',
+            $completed => 'completed',
             $low => 'low',
             $reduced => 'reduced',
             default => 'available',
@@ -121,9 +130,10 @@ class ShowAvailability
             'time' => $when->format('g:i A'),
             'status' => $performance['status'],
             'tier' => $tier,
-            'tier_label' => ['cancelled' => 'Cancelled', 'sold_out' => 'Sold out', 'low' => 'Low', 'reduced' => 'Reduced availability', 'available' => 'Available'][$tier],
+            'tier_label' => ['cancelled' => 'Cancelled', 'sold_out' => 'Sold out', 'completed' => 'Completed', 'low' => 'Low', 'reduced' => 'Reduced availability', 'available' => 'Available'][$tier],
             'cancelled' => $cancelled,
             'sold_out' => $soldOut,
+            'completed' => $completed,
             'low' => $low,
             'reduced' => $reduced,
             // Seats available and what share of the room that is — admin only.
