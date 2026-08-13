@@ -131,7 +131,7 @@
         <ul class="divide-y divide-gray-100 border-b border-gray-100">
             {{ reviews }}
                 {{# `relative` anchors the stretched title link that makes the whole row tappable. #}}
-                <li data-title="{{ title }}" data-categories="{{ category_slugs }}"
+                <li data-title="{{ title | sanitize }}" data-categories="{{ category_slugs }}"
                     class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
                     <div class="sm:col-span-6 font-light">
                         <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
