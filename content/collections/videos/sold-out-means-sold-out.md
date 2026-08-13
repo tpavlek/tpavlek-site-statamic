@@ -8,7 +8,8 @@ publish_date: '2026-08-12 00:00'
 category:
   - fringe-2026
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1786659793
+updated_at: 1786659995
+youtube: jUEwy7OyH1w
 ---
 In past years at #yegfringe some tickets would be released just before the show, so you could still get in to sold out shows if you tried really hard and acted fast.
 
