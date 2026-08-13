@@ -92,11 +92,14 @@ tabs:
                 -
                   key: pending
                   value: Pending
+                -
+                  key: exists
+                  value: Exists
               max_items: 1
               default: recommended
               type: select
               display: Recommendation
-              instructions: "**Pending** means the show was imported from the ticket site and hasn't been looked at — it's the lineup, not an opinion. Pending entries are kept unpublished so they don't get a page of their own; publishing one puts a near-empty page on the site. Pick a real recommendation before publishing."
+              instructions: "**Pending** means the show was imported from the ticket site and hasn't been looked at — it's the lineup, not an opinion. Pending entries are kept unpublished so they don't get a page of their own; publishing one puts a near-empty page on the site. Pick a real recommendation before publishing. **Exists** is for a show that needs a live, linkable page (availability card, agenda links) but that Troy isn't reviewing and isn't vouching for — publish it, and it stays out of the reviews index, the feed, and artist pages."
           -
             handle: ticket_link
             field:

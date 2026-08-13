@@ -37,6 +37,7 @@ tabs:
             handle: commentary
             field:
               type: markdown
+              listable: false
               display: commentary
   sidebar:
     display: Sidebar

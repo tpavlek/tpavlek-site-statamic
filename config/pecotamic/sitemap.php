@@ -21,7 +21,12 @@ return [
         '~^/topics(/|$)~',
     ],
 
-    'filter' => null,
+    /**
+     * `exists` fringe pages are live so other pages can link them, but they're thin
+     * near-empty pages that shouldn't be offered to crawlers. A static-method callable
+     * rather than a closure so `config:cache` can serialize this file.
+     */
+    'filter' => [\App\Fringe\Reviews::class, 'sitemapFilter'],
 
     /**
      * The /fringe/{year}/reviews pages are controller routes, not entries, so they're

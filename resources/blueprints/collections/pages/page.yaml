@@ -19,6 +19,7 @@ tabs:
             field:
               escape_markup: true
               type: markdown
+              listable: false
               display: Content
           -
             handle: template
@@ -29,6 +30,7 @@ tabs:
             handle: after_content
             field:
               type: markdown
+              listable: false
               display: 'After Content'
   sidebar:
     display: Sidebar

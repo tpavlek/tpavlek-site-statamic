@@ -15,6 +15,7 @@ tabs:
             handle: content
             field:
               type: markdown
+              listable: false
               localizable: true
           -
             handle: video_file

@@ -43,6 +43,14 @@
                 <span class="inline-block border border-teal text-teal rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Watchlist</span>
             </div>
 
+        {{# An `exists` page only exists to be linkable — no coverage stance, so it must
+            outrank the improv branch. Reads "Not reviewed" because "Exists" means nothing
+            to a visitor. #}}
+        {{ elseif recommendation:value == "exists" }}
+            <div class="flex items-center">
+                <span class="inline-block bg-grey-200 text-gray-600 rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Not reviewed</span>
+            </div>
+
         {{# Same branch order as fringe/_review-tag, so a show's badge reads the same here as
             it does in the review list. The asterisk is explained on the ratings page. #}}
         {{ elseif categories|pluck('slug')|contains('improv') }}

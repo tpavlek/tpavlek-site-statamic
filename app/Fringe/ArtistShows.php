@@ -32,9 +32,9 @@ class ArtistShows
             return collect();
         }
 
-        // Published only: a "Previously:" line pointing at an imported lineup entry would be
-        // a link to a 404. See App\Fringe\Reviews.
-        return Reviews::published()
+        // Reviews only: a "Previously:" line pointing at an imported lineup entry would be a
+        // link to a 404, and an `exists` page is not a prior review. See App\Fringe\Reviews.
+        return Reviews::reviewed()
             ->filter(fn ($other) => $other->id() !== $entry->id()
                 && self::artist($other) === $artist
                 && ($year = self::festival($other))

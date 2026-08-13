@@ -26,6 +26,7 @@ sections:
           escape_markup: true
           smartypants: false
           type: markdown
+          listable: false
           localizable: false
           display: Content
       -

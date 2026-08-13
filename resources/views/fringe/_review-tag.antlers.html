@@ -10,6 +10,12 @@
     {{ /original_review }}
 {{ elseif recommendation:value == "watchlist" }}
     <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Watchlist</span>
+{{# An `exists` page is a show Troy isn't seeing or vouching for — it only exists to be
+    linkable. "Not reviewed" beats the CP's "Exists", which means nothing to a visitor.
+    Before the improv branch on purpose: Improv* implies a coverage stance this show
+    doesn't have. #}}
+{{ elseif recommendation:value == "exists" }}
+    <span class="inline-block bg-grey-200 text-gray-600 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Not reviewed</span>
 {{ elseif categories|pluck('slug')|contains('improv') }}
     <span class="inline-block bg-grey-200 rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Improv*</span>
 {{ else }}

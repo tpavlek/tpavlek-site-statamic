@@ -69,9 +69,10 @@ class FeedController extends Controller
     {
         $current = FestivalUrls::currentSlug();
 
-        // Published only — an imported lineup entry has no review to carry and its link
-        // would 404 in every reader that followed it. See App\Fringe\Reviews.
-        $items = Reviews::published()
+        // Reviews only — an imported lineup entry has no review to carry and its link would
+        // 404 in every reader that followed it, and an `exists` page has no review either.
+        // See App\Fringe\Reviews.
+        $items = Reviews::reviewed()
             ->filter(fn (Entry $entry) => $entry->festival?->slug() === $current)
             // lastModified, not the entry date: entry dates are date-only and a festival puts
             // a dozen reviews on the same day, so sorting by date leaves the running order of

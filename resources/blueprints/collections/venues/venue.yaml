@@ -31,6 +31,7 @@ tabs:
             handle: notes
             field:
               type: markdown
+              listable: false
               display: 'Venue Notes'
               instructions: 'Tips about the room itself — sightlines, seating, accessibility, where to sit. Appended to the end of every review of a show playing here, so write it about the venue and not about any one show.'
   sidebar:

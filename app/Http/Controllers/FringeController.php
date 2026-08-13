@@ -688,9 +688,17 @@ class FringeController extends Controller
     }
 
     /**
-     * Collapse a whole show's performances into one availability tier for the index light.
-     * Sold out only when the entire run is gone; otherwise banded on how sold the run is
-     * overall, with the ticket site's own "low" as a fallback when we lack seat counts.
+     * Collapse a whole show's performances into an availability status for the index light.
+     *
+     * The label is a "slash status" reading scarcest-first: the part before the slash is the
+     * worst single showtime (any performance sold out, else any the ticket site calls low),
+     * the part after is the run as a whole, banded on overall %-sold. "Low / Available" is a
+     * show with one nearly-gone matinee and plenty of seats otherwise — the old single tier
+     * called that whole run "Low", which overstated it. When the two parts agree (or there's
+     * no scarce showtime, or no seat data for the run half) the label collapses to one word.
+     * All showtimes gone is just "Sold out".
+     *
+     * The dot takes the scarcest part's colour, matching the label's leading word.
      *
      * @param  array<int, array<string, mixed>>  $performances
      * @return array{tier: string, label: string}|null  null when there's nothing to show
@@ -708,36 +716,66 @@ class FringeController extends Controller
         $live = $perfs->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED);
 
         if ($live->isEmpty()) {
-            return ['tier' => 'cancelled', 'label' => 'Cancelled'];
+            return self::tierResult([['tier' => 'cancelled', 'label' => 'Cancelled']]);
         }
 
-        $allSoldOut = $live->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
+        if ($live->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT)) {
+            return self::tierResult([['tier' => 'sold_out', 'label' => 'Sold out']]);
+        }
+
+        $anySoldOut = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
+        $anyLow = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
+        $scarcest = $anySoldOut ? 'sold_out' : ($anyLow ? 'low' : null);
 
         $withSeats = $live->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
         $offered = $withSeats->sum('seats_total');
         $pctSold = $offered > 0 ? ($offered - $withSeats->sum('seats_free')) / $offered * 100 : null;
-        $anyLow = $live->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
 
-        $tier = match (true) {
-            $allSoldOut => 'sold_out',
-            $pctSold !== null && $pctSold >= 80 => 'low',
-            $pctSold !== null && $pctSold >= 60 => 'reduced',
-            $anyLow => 'low',
+        // The run half needs seat data; without it the scarcest showtime is all we know.
+        $run = match (true) {
+            $pctSold === null => null,
+            $pctSold >= 80 => 'low',
+            $pctSold >= 60 => 'reduced',
             default => 'available',
         };
 
+        $labels = ['sold_out' => 'Sold out', 'low' => 'Low', 'reduced' => 'Reduced', 'available' => 'Available'];
+
+        if ($scarcest === null || $run === null || $scarcest === $run) {
+            $tier = $run ?? $scarcest ?? 'available';
+
+            return self::tierResult([['tier' => $tier, 'label' => $labels[$tier]]]);
+        }
+
+        return self::tierResult([
+            ['tier' => $scarcest, 'label' => $labels[$scarcest]],
+            ['tier' => $run, 'label' => $labels[$run]],
+        ]);
+    }
+
+    /**
+     * `tier`/`label` summarize the whole thing (scarcest part, slash-joined label);
+     * `parts` is what the index partial renders, one dot per part.
+     *
+     * @param  array<int, array{tier: string, label: string}>  $parts
+     * @return array{tier: string, label: string, parts: array<int, array{tier: string, label: string}>}
+     */
+    private static function tierResult(array $parts): array
+    {
         return [
-            'tier' => $tier,
-            'label' => ['sold_out' => 'Sold out', 'low' => 'Low', 'reduced' => 'Reduced', 'available' => 'Available'][$tier],
+            'tier' => $parts[0]['tier'],
+            'label' => implode(' / ', array_column($parts, 'label')),
+            'parts' => $parts,
         ];
     }
 
     private function yearReviews($festival, string $festivalSlug, string $videoCategorySlug)
     {
-        // Published only — see App\Fringe\Reviews. This list feeds the visible table, the
+        // Reviews only — see App\Fringe\Reviews. This list feeds the visible table, the
         // review count and the page's JSON-LD ItemList, so a draft leaking in would put a
-        // 404 into structured data.
-        $reviews = Reviews::published()
+        // 404 into structured data, and an `exists` page would list a show Troy isn't
+        // covering as though it were coverage.
+        $reviews = Reviews::reviewed()
             // The raw value, not `$entry->festival->slug`. The augmented form resolves a
             // taxonomy term per entry to read a year that's already sitting in the file —
             // 30ms across the collection against 0.2ms, for an identical result.
@@ -785,6 +823,7 @@ class FringeController extends Controller
                 if ($eventId && isset($availability[$eventId])) {
                     $entry->setSupplement('availability', $availability[$eventId]['tier']);
                     $entry->setSupplement('availability_label', $availability[$eventId]['label']);
+                    $entry->setSupplement('availability_parts', $availability[$eventId]['parts']);
                 }
             });
         }

@@ -231,7 +231,7 @@ class Artists
         // put a link to a 404 on an artist's page and count toward the two-show gate, so a
         // company with one review and two unlooked-at imports would earn a page listing two
         // shows that don't exist. See App\Fringe\Reviews.
-        return self::$cache ??= Reviews::published()
+        return self::$cache ??= Reviews::reviewed()
             ->groupBy(fn (EntryContract $review) => (string) self::artistIdOf($review))
             ->forget('');
     }

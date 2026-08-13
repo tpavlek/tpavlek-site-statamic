@@ -9,9 +9,15 @@ use Statamic\Facades\Entry as EntryFacade;
 /**
  * Which fringe_reviews entries the public site is allowed to see.
  *
- * The collection holds two very different things since the lineup import:
+ * The collection holds three very different things since the lineup import:
  *
  *   published            a review Troy wrote. Has a page, belongs everywhere.
+ *   published + `exists` a show Troy is NOT reviewing but wants a live page for — so other
+ *                        pages can link it and its availability card renders. It is not a
+ *                        review and not an endorsement, so it belongs on its own page and
+ *                        nowhere else: not the reviews index, not the feed, not artist
+ *                        pages, not the sitemap (see sitemapFilter), and its page is
+ *                        noindexed (computed `noindex` in AppServiceProvider).
  *   draft + `pending`    a show imported from the ticket site and not looked at. It is the
  *                        festival lineup, not an opinion. Its URL 404s (Statamic does that
  *                        for drafts) and the sitemap skips it (the generator filters on
@@ -44,6 +50,45 @@ class Reviews
             ->where('collection', 'fringe_reviews')
             ->where('published', true)
             ->get();
+    }
+
+    /**
+     * Reviews the public listings should carry: published, minus `exists` pages.
+     *
+     * This is what the reviews index, the RSS feed and the artist pages want. An `exists`
+     * entry has a perfectly good page — that's its whole point — but it isn't a review,
+     * so listing it anywhere would present "I'm not covering this" as coverage.
+     *
+     * @return Collection<int, EntryContract>
+     */
+    public static function reviewed(): Collection
+    {
+        return self::published()
+            ->reject(fn (EntryContract $entry) => self::isExists($entry))
+            ->values();
+    }
+
+    public static function isExists(EntryContract $entry): bool
+    {
+        $value = $entry->value('recommendation');
+        $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+        return $value === 'exists';
+    }
+
+    /**
+     * pecotamic/sitemap `filter` callback (configured as a static-method callable so
+     * `config:cache` can serialize it). Keeps everything except `exists` pages — they're
+     * live and linkable, but they're thin near-empty pages and shouldn't be offered to
+     * crawlers. Non-fringe entries pass straight through.
+     */
+    public static function sitemapFilter($entry): bool
+    {
+        if (! $entry instanceof EntryContract || $entry->collectionHandle() !== 'fringe_reviews') {
+            return true;
+        }
+
+        return ! self::isExists($entry);
     }
 
     /**

@@ -152,10 +152,13 @@
                     </div>
 
                     {{ if tickets_available }}
-                        {{# `relative` lifts this above the stretched link so it stays clickable. #}}
-                        <div class="relative mt-1 sm:mt-0 sm:col-span-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            {{ partial:fringe/ticket-link }}
-                            {{ partial:fringe/availability }}
+                        {{# `relative` lifts this above the stretched link so it stays clickable.
+                            Stacked, not wrapped: the slash statuses ("Sold out / Reduced") are
+                            wide enough that inline flow put them beside tickets on some rows and
+                            below on others, so the status always gets its own line. #}}
+                        <div class="relative mt-1 sm:mt-0 sm:col-span-2">
+                            <div>{{ partial:fringe/ticket-link }}</div>
+                            <div class="mt-1">{{ partial:fringe/availability }}</div>
                         </div>
                     {{ /if }}
                 </li>
