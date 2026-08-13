@@ -57,6 +57,21 @@ class ShowScraper
                 continue;
             }
 
+            // A performance that has already played is final: keep whatever we knew about it
+            // (a pre-curtain sold-out is the artist's cred and must survive), and never query
+            // one we missed — the ticket site reports a closed sale as "no-availability",
+            // which would fabricate a sold-out after the fact.
+            if (TicketAvailability::isPast($performance)) {
+                $records[] = $priorRecord ?? [
+                    ...$performance,
+                    'status' => null,
+                    'seats_total' => null,
+                    'seats_free' => null,
+                ];
+
+                continue;
+            }
+
             $records[] = $priorRecord ?? [
                 ...$performance,
                 'status' => null,

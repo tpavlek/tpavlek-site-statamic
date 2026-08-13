@@ -29,6 +29,21 @@ class TicketAvailability
 {
     public const ENDPOINT = TicketPage::HOST.'/wp-admin/admin-ajax.php';
 
+    /**
+     * A performance that has already started (a minute past curtain, and datetimes are
+     * naive America/Edmonton — the app timezone). Once true, its availability can never
+     * change again, so scraping it is wasted requests — and actively wrong for a showtime
+     * we never scraped before it played: the ticket site reports a closed sale as
+     * "no-availability", which would fabricate a sold-out after the fact.
+     *
+     * @param  array<string, mixed>  $performance
+     */
+    public static function isPast(array $performance): bool
+    {
+        return isset($performance['datetime'])
+            && \Carbon\Carbon::parse($performance['datetime'])->addMinute()->lte(\Carbon\Carbon::now());
+    }
+
     public const AVAILABLE = 'available';
     public const LOW = 'low-availability';
     public const SOLD_OUT = 'no-availability';

@@ -198,7 +198,11 @@ class FringeSoldOutReport extends Command
         $performances = $record['performances'] ?? [];
         $terminal = [TicketAvailability::SOLD_OUT, TicketAvailability::CANCELLED];
 
-        if ($performances !== [] && collect($performances)->every(fn (array $p) => in_array($p['status'] ?? null, $terminal, true))) {
+        // A played performance is as final as a sold-out one — nothing about it can change,
+        // so a run that's entirely sold out, cancelled, or over is never touched again.
+        if ($performances !== [] && collect($performances)->every(
+            fn (array $p) => in_array($p['status'] ?? null, $terminal, true) || TicketAvailability::isPast($p)
+        )) {
             return false;
         }
 
@@ -216,6 +220,9 @@ class FringeSoldOutReport extends Command
     {
         $withSeats = collect($performances)
             ->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)
+            // Played performances excluded too: only seats someone can still buy should
+            // decide how urgently the remainder of the run gets re-checked.
+            ->reject(fn (array $p) => TicketAvailability::isPast($p))
             ->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
 
         $offered = $withSeats->sum('seats_total');
