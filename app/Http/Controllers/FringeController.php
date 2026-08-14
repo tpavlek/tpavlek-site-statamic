@@ -749,6 +749,29 @@ class FringeController extends Controller
             ->map(fn (array $row, int $i) => [...$row, 'rank' => $i + 1])
             ->all();
 
+        // Festival-wide totals, summed over every performance in the snapshot that has
+        // seating-plan data — deliberately including showtimes that have already played:
+        // their records are final (carried forward, never re-queried after curtain), so their
+        // last pre-curtain scrape is the closest thing to a final sales figure we hold. A
+        // cancelled showtime stores null seats and so never counts as sellable inventory;
+        // the remainder without seat data (never scraped before playing, or still waiting in
+        // the queue) can't be counted either, so the card says how many were left out.
+        $performances = collect($snapshot['shows'] ?? [])
+            ->flatMap(fn (array $show) => $show['performances'] ?? []);
+        $withSeats = $performances->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
+        $offered = $withSeats->sum('seats_total');
+        $free = $withSeats->sum('seats_free');
+        $cancelled = $performances->filter(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)->count();
+
+        $totals = [
+            'sold' => number_format($offered - $free),
+            'seats' => number_format($offered),
+            'pct' => $offered > 0 ? round(($offered - $free) / $offered * 100, 1).'%' : '—',
+            'counted' => $withSeats->count(),
+            'cancelled' => $cancelled,
+            'unscraped' => $performances->count() - $withSeats->count() - $cancelled,
+        ];
+
         $title = "Sales Leaderboard — {$year} Edmonton Fringe";
 
         return (new \Statamic\View\View)
@@ -757,6 +780,7 @@ class FringeController extends Controller
             ->with([
                 'rows' => $rows,
                 'row_count' => count($rows),
+                'totals' => $totals,
                 // Already 403s anyone not logged in; noindex too, in case that ever changes.
                 'noindex' => true,
                 'year' => $year,

@@ -22,11 +22,13 @@ class CardRenderer
 {
     /**
      * The sizes worth having. `og` is the 1.91:1 that Facebook, LinkedIn, Slack and X all
-     * crop toward; `square` is Instagram's feed post.
+     * crop toward; `square` is Instagram's feed post; `story` is the 9:16 vertical that
+     * Reels, Shorts and TikTok share.
      */
     public const FORMATS = [
         'og' => [1200, 630],
         'square' => [1080, 1080],
+        'story' => [1080, 1920],
     ];
 
     /**

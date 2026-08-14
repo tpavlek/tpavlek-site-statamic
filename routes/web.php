@@ -186,3 +186,4 @@ Route::get('/youtube_oauth_handler', [YouTubeOAuthController::class, 'handle']);
 */
 Route::get('/og-card', \App\Http\Controllers\OgCardController::class)->name('og-card');
 Route::get('/og-carousel/{slide}', \App\Http\Controllers\OgCarouselController::class)->whereNumber('slide')->name('og-carousel');
+Route::get('/og-story', \App\Http\Controllers\OgStoryController::class)->name('og-story');
