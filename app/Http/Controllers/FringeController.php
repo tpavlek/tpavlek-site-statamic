@@ -1036,7 +1036,13 @@ class FringeController extends Controller
             ->get()
             ->filter(function (Entry $entry) use ($videoCategorySlug) {
                 return in_array($videoCategorySlug, (array) ($entry->value('category') ?? []), true);
-            });
+            })
+            // Newest first, so the freshest video sits leftmost in the row. Videos aren't a
+            // dated collection — order comes from their `publish_date` field (the collection's
+            // own sort key), read raw for the usual augmentation reason. Y-m-d strings compare
+            // correctly as strings; a missing date sorts last.
+            ->sortByDesc(fn (Entry $entry) => (string) $entry->value('publish_date'))
+            ->values();
 
         $posts = $this->posts($festivalSlug);
 
