@@ -923,25 +923,38 @@ class FringeController extends Controller
                 $stars = $entry->stars->value() ?: $this->originalReview($entry)?->stars->value();
 
                 if ($stars) {
-                    return (float) $stars * 10;
+                    $score = (float) $stars * 10;
+                } else {
+                    // Unrated shows slot onto the same scale. The buckets mirror the badges in
+                    // fringe/_review-tag, and are checked in the same order, so the list reads the
+                    // way the badges suggest. Watchlist and improv both sit just above a 3-star
+                    // show, watchlist first: a show Troy picked out unseen is a better bet than
+                    // "it's improv, you get what you get".
+                    $score = match (true) {
+                        // Below everything, including a one-star show. `pending` means the show
+                        // was imported from the ticket site and never looked at, so it carries
+                        // no opinion at all and can't be ranked among ones that do. These are
+                        // drafts and shouldn't reach this list — but if one is ever published by
+                        // accident it sinks rather than floating above the rated shows.
+                        Reviews::isPending($entry) => 0,
+                        $entry->recommendation->value() === 'watchlist' => 32,
+                        $this->isImprov($entry) => 31,
+                        default => 35,
+                    };
                 }
 
-                // Unrated shows slot onto the same scale. The buckets mirror the badges in
-                // fringe/_review-tag, and are checked in the same order, so the list reads the
-                // way the badges suggest. Watchlist and improv both sit just above a 3-star
-                // show, watchlist first: a show Troy picked out unseen is a better bet than
-                // "it's improv, you get what you get".
-                return match (true) {
-                    // Below everything, including a one-star show. `pending` means the show
-                    // was imported from the ticket site and never looked at, so it carries
-                    // no opinion at all and can't be ranked among ones that do. These are
-                    // drafts and shouldn't reach this list — but if one is ever published by
-                    // accident it sinks rather than floating above the rated shows.
-                    Reviews::isPending($entry) => 0,
-                    $entry->recommendation->value() === 'watchlist' => 32,
-                    $this->isImprov($entry) => 31,
-                    default => 35,
+                // Within a star band, most recently touched first: the `updated_at` stamp
+                // Statamic writes on CP saves (what ReviewFreshness reads), else the review's
+                // own date. One composite number rather than a second closure — sortBy with an
+                // array of closures silently sorts by only the last (see publicSortKey).
+                $stamp = $entry->value('updated_at');
+                $touched = match (true) {
+                    ! $stamp => $entry->date()?->getTimestamp() ?? 0,
+                    is_numeric($stamp) => (int) $stamp,
+                    default => Carbon::parse($stamp)->getTimestamp(),
                 };
+
+                return $score * 1e10 + $touched;
             });
 
         // A show-level availability light beside each ticket link, from the sold-out scrape.
