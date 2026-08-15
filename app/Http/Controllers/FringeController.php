@@ -947,7 +947,9 @@ class FringeController extends Controller
                 $stars = $entry->stars->value() ?: $this->originalReview($entry)?->stars->value();
 
                 if ($stars) {
-                    $score = (float) $stars * 10;
+                    // Capped at 5: six-of-five stars is a display gag, not a rank above the
+                    // genuine five-star shows — it ties into the 5-star band.
+                    $score = min((float) $stars, 5) * 10;
                 } else {
                     // Unrated shows slot onto the same scale. The buckets mirror the badges in
                     // fringe/_review-tag, and are checked in the same order, so the list reads the

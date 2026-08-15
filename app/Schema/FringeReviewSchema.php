@@ -135,7 +135,15 @@ class FringeReviewSchema
             $rating = self::originalReview($entry)?->value('stars');
         }
 
-        return ($rating === null || $rating === '') ? null : (string) $rating;
+        if ($rating === null || $rating === '') {
+            return null;
+        }
+
+        // Six stars out of five exists as a site gag (Fear Fables 2026), but a ratingValue
+        // above bestRating is invalid to Google and would cost the page its review snippet.
+        // 5 is the honest clamp onto the declared scale; the visible 6 is explained in the
+        // review text itself.
+        return (string) (float) min((float) $rating, 5);
     }
 
     private static function isRecommended($entry): bool

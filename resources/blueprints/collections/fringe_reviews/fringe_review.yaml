@@ -70,6 +70,9 @@ tabs:
                 -
                   key: '4.5'
                   value: ★★★★½
+                -
+                  key: 6
+                  value: ★★★★★★
               type: select
               display: Stars
               clearable: true
