@@ -296,6 +296,32 @@
         {{ /collection:fringe_reviews }}
     {{ /if }}
 
+    {{# A collaboration's members cross-promote: an artist entry can name related artists
+        (The Merkin Sisters ↔ Ingrid Hansen, on either entry), and each related artist gets
+        the same quiet aside treatment listing their shows — a duo's member being someone
+        you've seen solo is exactly the kind of thing that sells a ticket. Sections come
+        from App\Fringe\Artists::relatedSections, which also decides the label: "Also from"
+        when the section stands alone, "And from" when it follows other shows. #}}
+    {{ if related_artist_sections }}
+        {{ related_artist_sections }}
+            <aside class="mt-10 border-t border-grey-200 pt-4" aria-label="Shows from {{ name }}">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span class="inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">{{ label }}</span>
+                    {{ if url }}
+                        <a href="{{ url }}" class="text-sm text-gray-700 no-underline hover:text-teal transition-colors">{{ name }}</a>
+                    {{ else }}
+                        <span class="text-sm text-gray-700">{{ name }}</span>
+                    {{ /if }}
+                </div>
+                <ul class="mt-3 space-y-1.5">
+                    {{ shows }}
+                        {{ partial:fringe/other-show }}
+                    {{ /shows }}
+                </ul>
+            </aside>
+        {{ /related_artist_sections }}
+    {{ /if }}
+
     <div class="mt-8 text-center">
         <a href="{{ url }}/share-card" class="inline-block border border-teal rounded-lg bg-teal-light bg-opacity-30 hover:bg-opacity-50 transition-colors px-4 py-3 text-base text-teal-dark no-underline font-medium">
             <i class="fas fa-image mr-1"></i> Generate a social image with this review &rarr;

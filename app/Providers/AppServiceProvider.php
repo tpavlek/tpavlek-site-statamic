@@ -238,6 +238,13 @@ class AppServiceProvider extends ServiceProvider
                 : null;
         });
 
+        // "And from {name}" sections under a review: the shows of artists related to this
+        // one (a collaboration's members, linked on either artist entry). Null for the
+        // many artists with no relations, so the template stays quiet. See App\Fringe\Artists.
+        Collection::computed('fringe_reviews', 'related_artist_sections', function ($entry, $value) {
+            return \App\Fringe\Artists::relatedSections($entry);
+        });
+
         // Publication date, and an update stamp only when there really was a later edit —
         // see App\Fringe\ReviewFreshness.
         Collection::computed('fringe_reviews', 'freshness', function ($entry, $value) {

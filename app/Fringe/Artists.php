@@ -207,6 +207,73 @@ class Artists
     }
 
     /**
+     * Artists linked to this one through the `related_artists` field, read in both
+     * directions — The Merkin Sisters naming Ingrid Hansen as a member is the same fact
+     * as Ingrid being in The Merkin Sisters, so it only has to be recorded on one entry.
+     *
+     * Only artists with a real name and at least one reviewed show come back: a section
+     * headed by an Instagram handle, or with nothing to list under it, helps nobody.
+     *
+     * @return Collection<int, EntryContract>
+     */
+    public static function related(EntryContract $artist): Collection
+    {
+        return EntryFacade::query()
+            ->where('collection', 'artists')
+            ->get()
+            ->filter(fn (EntryContract $other) => $other->id() !== $artist->id()
+                && (in_array($other->id(), self::relatedIds($artist), true)
+                    || in_array($artist->id(), self::relatedIds($other), true)))
+            ->filter(fn (EntryContract $other) => self::hasRealName($other)
+                && self::reviews($other)->isNotEmpty())
+            ->sortBy(fn (EntryContract $other) => mb_strtolower((string) $other->value('title')))
+            ->values();
+    }
+
+    /**
+     * The "And from {name}" sections under a review — one per related artist, each with
+     * that artist's reviewed shows. Null when there are none, so the template stays quiet.
+     *
+     * The label downgrades "And" to "Also" when the section stands alone: a duo's only
+     * show has no "Also from this artist" list above it, and "And from Ingrid Hansen"
+     * with nothing before it reads like a typo. The stand-alone test mirrors the
+     * template's own exclusions (`:id:isnt` / `:title:isnt`), so another staging of the
+     * same-titled show doesn't count as company.
+     */
+    public static function relatedSections(EntryContract $review): ?array
+    {
+        $artist = self::artistIdOf($review) ? EntryFacade::find(self::artistIdOf($review)) : null;
+
+        if (! $artist) {
+            return null;
+        }
+
+        $hasOwn = self::reviews($artist)
+            ->reject(fn (EntryContract $other) => $other->id() === $review->id()
+                || (string) $other->value('title') === (string) $review->value('title'))
+            ->isNotEmpty();
+
+        $sections = self::related($artist)
+            ->map(fn (EntryContract $related, int $i) => [
+                'label' => ($hasOwn || $i > 0) ? 'And from' : 'Also from',
+                'name' => (string) $related->value('title'),
+                'url' => self::find(self::slug($related)) ? self::url($related) : null,
+                'shows' => self::reviews($related),
+            ])
+            ->values()
+            ->all();
+
+        return $sections !== [] ? $sections : null;
+    }
+
+    private static function relatedIds(EntryContract $artist): array
+    {
+        $ids = $artist->value('related_artists');
+
+        return array_values(array_filter(is_array($ids) ? $ids : [$ids]));
+    }
+
+    /**
      * The importer's placeholder is the Instagram handle, so a title equal to the handle
      * means nobody has filled a name in yet.
      */

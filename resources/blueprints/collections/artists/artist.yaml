@@ -26,6 +26,14 @@ tabs:
               display: Website
               validate:
                 - url
+          -
+            handle: related_artists
+            field:
+              type: entries
+              display: 'Related artists'
+              collections:
+                - artists
+              instructions: 'Members or collaborations this artist is part of — The Merkin Sisters lists Ingrid Hansen. Read in both directions: set it on either entry and each one''s review pages cross-promote the other''s shows in an "And from …" section.'
   sidebar:
     display: Sidebar
     sections:
