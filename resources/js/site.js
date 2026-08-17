@@ -29,6 +29,7 @@ Alpine.data('showRefresh', (eventId) => ({
         const data = await response.json().catch(() => null)
 
         if (data?.blocked) throw { blocked: true }
+        if (data?.vanished) throw { vanished: true }
         if (!response.ok || !data) throw new Error(`HTTP ${response.status}`)
 
         return data
@@ -62,7 +63,9 @@ Alpine.data('showRefresh', (eventId) => ({
         } catch (e) {
             this.error = e?.blocked
                 ? (scraped ? `ticket site blocked us after ${scraped} of ${total} — try later` : 'ticket site blocked us — try later')
-                : 'refresh failed'
+                : e?.vanished
+                    ? 'ticket site returned no showtimes — kept the last data, try later'
+                    : 'refresh failed'
         } finally {
             this.loading = false
             this.progress = ''

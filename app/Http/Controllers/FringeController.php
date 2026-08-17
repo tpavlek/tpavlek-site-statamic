@@ -594,6 +594,10 @@ class FringeController extends Controller
             $plan = ShowScraper::plan($event, FestivalUrls::currentSlug(), $report['shows'][$index]['performances'] ?? []);
         } catch (TicketSiteBlocked) {
             return response()->json(['blocked' => true], 503);
+        } catch (\App\Fringe\PerformanceListVanished) {
+            // A failed list request dressed as an empty run — refuse to wipe the stored
+            // showtimes; the front-end reports it instead of swapping in nothing.
+            return response()->json(['vanished' => true], 502);
         }
 
         $report['shows'][$index]['performances'] = $plan['records'];

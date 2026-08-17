@@ -33,11 +33,19 @@ class ShowScraper
      */
     public static function plan(string $eventId, string $year, array $prior = []): array
     {
+        $fresh = TicketAvailability::performances($eventId, $year);
+
+        // An empty list for a show we hold showtimes for is a failed request, not a show
+        // that lost its run — see PerformanceListVanished. Refuse to wipe.
+        if ($fresh === [] && $prior !== []) {
+            throw new PerformanceListVanished;
+        }
+
         $known = collect($prior)->keyBy('id');
         $records = [];
         $pending = [];
 
-        foreach (TicketAvailability::performances($eventId, $year) as $performance) {
+        foreach ($fresh as $performance) {
             if ($performance['cancelled']) {
                 $records[] = [
                     ...$performance,

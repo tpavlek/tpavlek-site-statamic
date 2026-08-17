@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Fringe\FestivalUrls;
+use App\Fringe\PerformanceListVanished;
 use App\Fringe\Reviews;
 use App\Fringe\ShowScraper;
 use App\Fringe\TicketAvailability;
@@ -107,6 +108,7 @@ class FringeSoldOutReport extends Command
 
         $venues = [];
         $refreshed = 0;
+        $vanished = 0;
 
         $bar = $this->output->createProgressBar($toRun->count());
         $bar->setFormat(' %current%/%max% [%bar%] %message%');
@@ -131,6 +133,16 @@ class FringeSoldOutReport extends Command
                 $this->warn("Refreshed {$refreshed} shows before being throttled. Wait a while, then re-run — the queue resumes with whatever's now stalest.");
 
                 return self::FAILURE;
+            } catch (PerformanceListVanished) {
+                // A failed list request dressed as an empty run — storing it would wipe the
+                // show's real showtimes (which happened: 13 shows on 2026-08-16). Keep the
+                // record and its pulled_at untouched, so the show stays stalest and is
+                // retried next run; move on to the rest of the batch.
+                \Illuminate\Support\Facades\Log::warning('Sold-out report: empty performance list, kept prior data', ['title' => $entry->value('title')]);
+                $vanished++;
+                $bar->advance();
+
+                continue;
             }
 
             $venueId = $entry->value('venue');
@@ -169,6 +181,10 @@ class FringeSoldOutReport extends Command
         $this->write($year, $shows, $store);
         $this->info("Refreshed {$refreshed} shows. ".self::PATH.' now covers '.$this->covered($shows, $store).'/'.$shows->count().' of the lineup.');
 
+        if ($vanished > 0) {
+            $this->warn("{$vanished} show(s) returned an empty performance list — prior data kept, they'll retry next run.");
+        }
+
         return self::SUCCESS;
     }
 
@@ -196,11 +212,19 @@ class FringeSoldOutReport extends Command
         }
 
         $performances = $record['performances'] ?? [];
+
+        // A pulled record with no performances at all is a wiped one — mid-festival no show
+        // loses its entire run, so don't let it sit out a freshness window looking "fresh":
+        // it's due until a pull brings its showtimes back.
+        if ($performances === []) {
+            return true;
+        }
+
         $terminal = [TicketAvailability::SOLD_OUT, TicketAvailability::CANCELLED];
 
         // A played performance is as final as a sold-out one — nothing about it can change,
         // so a run that's entirely sold out, cancelled, or over is never touched again.
-        if ($performances !== [] && collect($performances)->every(
+        if (collect($performances)->every(
             fn (array $p) => in_array($p['status'] ?? null, $terminal, true) || TicketAvailability::isPast($p)
         )) {
             return false;
