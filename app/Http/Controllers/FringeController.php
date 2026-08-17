@@ -476,6 +476,12 @@ class FringeController extends Controller
                         'title' => $entry->value('title'),
                         'venue' => $venues[$venueId],
                         'review_url' => $entry->published() ? $entry->url() : null,
+                        // This showtime's own ticket page (/event/{event}/{performance}/),
+                        // so the buyer lands with the right performance preselected.
+                        'ticket_link' => TicketPage::performanceUrl(
+                            $record['event_id'] ?? TicketPage::eventId($entry->value('ticket_link')),
+                            $p['id']
+                        ),
                         ...ShowAvailability::shapePerformance($p, $revealNumbers),
                     ]);
             });

@@ -28,6 +28,13 @@ class ShowScraper
      * its prior numbers (or a blank placeholder) so the record still renders while it waits
      * its turn in `pending`, and scrape() replaces it.
      *
+     * The merge is a UNION, not a replace: a prior performance missing from the fresh list
+     * is kept with its last-known state. The schedule is the stable half of this data — the
+     * day pages place shows by it — and a flaky response must not shrink it; the site marks
+     * a cancelled showtime rather than removing it, so a disappearance is far more likely a
+     * partial response than a real deletion. (A truly deleted showtime would linger; accepted
+     * — cancellation is the honest signal and it survives the union.)
+     *
      * @param  array<int, array<string, mixed>>  $prior
      * @return array{records: array<int, array<string, mixed>>, pending: array<int, string>}
      */
@@ -88,6 +95,16 @@ class ShowScraper
             ];
             $pending[] = $performance['id'];
         }
+
+        $seen = array_flip(array_column($records, 'id'));
+
+        foreach ($prior as $priorRecord) {
+            if (! isset($seen[$priorRecord['id']])) {
+                $records[] = $priorRecord;
+            }
+        }
+
+        $records = collect($records)->sortBy('datetime')->values()->all();
 
         return ['records' => $records, 'pending' => $pending];
     }

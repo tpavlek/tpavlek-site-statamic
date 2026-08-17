@@ -16,5 +16,11 @@
         {{ if reveal_numbers && !sold_out && !cancelled && !completed && (seats_free || seats_free === 0) }}
             &middot; {{ seats_free }} left{{ if pct_free || pct_free === 0 }} &middot; {{ pct_free }}%{{ /if }}
         {{ /if }}
+        {{# The show's ticket page — the ticket site has no per-performance deep link, so
+            this is as close as a buyer can land. Pointless once the showtime is cancelled
+            or has played. #}}
+        {{ if ticket_link && !cancelled && !completed }}
+            &middot; <a href="{{ ticket_link }}" target="_blank" rel="noopener" class="text-teal no-underline hover:underline whitespace-nowrap">Tickets</a>
+        {{ /if }}
     </span>
 </div>

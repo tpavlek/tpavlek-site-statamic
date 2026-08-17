@@ -76,6 +76,16 @@ class TicketPage
         return $m[1];
     }
 
+    /**
+     * The ticket page for one specific showtime — `/event/{eventId}/{performanceId}/`
+     * lands the buyer with that performance preselected. Undocumented but stable; the
+     * pattern came from a link the site itself produced.
+     */
+    public static function performanceUrl(string $eventId, string $performanceId): string
+    {
+        return self::HOST.'/event/'.$eventId.'/'.$performanceId.'/';
+    }
+
     public static function fetch(string $url): ?string
     {
         try {
