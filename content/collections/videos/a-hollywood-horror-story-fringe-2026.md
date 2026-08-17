@@ -8,9 +8,11 @@ publish_date: '2026-08-17 00:00'
 category:
   - fringe-2026
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1786982310
+updated_at: 1786982763
 instagram: DcJaHFPMB98
 ---
-Go see this one. @ingridhansen is absolutely captivating as she plays Vampira in this show. It is so obviously borne out of intense passion (and research). You'll come out of it much richer than when you sat down.
+Go see this one. 
+
+@ingridhansen is absolutely captivating as she plays Vampira in this show. It is so obviously borne out of intense passion (and research). You'll come out of it much richer than when you sat down.
 
 Tickets still available for a couple shows! #yegfringe
