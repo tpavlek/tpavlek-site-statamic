@@ -4,6 +4,7 @@ namespace App\Fringe;
 
 use Carbon\Carbon;
 use Statamic\Contracts\Entries\Entry as EntryContract;
+use Statamic\Facades\Entry as EntryFacade;
 
 /**
  * When a review was written, and whether it has been touched since.
@@ -38,6 +39,20 @@ class ReviewFreshness
 {
     public static function for(EntryContract $entry): array
     {
+        // An `exists` entry was never reviewed — the collection being dated forces a date
+        // on it, but "Reviewed on" over a page with no take is a lie. A returning show
+        // linked to its original review borrows that review's date, since that's when the
+        // take it displays was actually written; no update stamp either way, because there
+        // is no current-year take to have revised.
+        if (self::isExists($entry)) {
+            $reviewed = self::originalReview($entry)?->date();
+
+            return array_filter([
+                'reviewed_display' => $reviewed?->format('F j, Y'),
+                'reviewed_iso' => $reviewed?->toIso8601String(),
+            ]);
+        }
+
         $reviewed = $entry->date();
 
         $stamp = $entry->value('updated_at');
@@ -63,5 +78,24 @@ class ReviewFreshness
             'updated_display' => $updated?->format('F j, Y'),
             'updated_iso' => $updated?->toIso8601String(),
         ]);
+    }
+
+    private static function isExists(EntryContract $entry): bool
+    {
+        $value = $entry->value('recommendation');
+        $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+        return $value === 'exists';
+    }
+
+    private static function originalReview(EntryContract $entry): ?EntryContract
+    {
+        $id = $entry->value('original_review');
+
+        if (is_array($id)) {
+            $id = $id[0] ?? null;
+        }
+
+        return $id ? EntryFacade::find($id) : null;
     }
 }
