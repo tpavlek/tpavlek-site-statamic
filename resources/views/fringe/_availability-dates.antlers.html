@@ -1,18 +1,38 @@
 {{# The "View by date" row: one pill per festival day, linking to the by-day availability
     page. `dates` comes from FringeController::festivalDates (derived from the snapshot's
     performances); `current_day` highlights the day being viewed, absent on the by-show
-    page. #}}
+    page.
+
+    Days already behind us collapse behind a disclosure — a reader planning tickets cares
+    about today onward — but stay reachable, and the fold opens itself when the day being
+    viewed is one of them so the highlighted pill can't hide. #}}
 {{ if dates }}
+    {{ upcoming = dates | where('past', false) }}
+    {{ gone_by = dates | where('past', true) }}
     <div class="mb-6">
         <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">View by date</p>
         <div class="flex flex-wrap gap-2">
-            {{ dates }}
+            {{ upcoming }}
                 {{ if day == current_day }}
                     <span class="inline-block rounded-full bg-teal text-white text-sm font-semibold px-3 py-1 whitespace-nowrap">{{ label }}</span>
                 {{ else }}
                     <a href="{{ url }}" class="inline-block rounded-full border border-gray-200 text-sm font-medium text-gray-700 no-underline px-3 py-1 whitespace-nowrap hover:border-teal hover:text-teal">{{ label }}</a>
                 {{ /if }}
-            {{ /dates }}
+            {{ /upcoming }}
         </div>
+        {{ if gone_by }}
+            <details class="mt-2"{{ if gone_by | where('day', current_day) }} open{{ /if }}>
+                <summary class="text-sm text-gray-500 cursor-pointer select-none hover:text-teal">Earlier dates</summary>
+                <div class="flex flex-wrap gap-2 mt-2">
+                    {{ gone_by }}
+                        {{ if day == current_day }}
+                            <span class="inline-block rounded-full bg-teal text-white text-sm font-semibold px-3 py-1 whitespace-nowrap">{{ label }}</span>
+                        {{ else }}
+                            <a href="{{ url }}" class="inline-block rounded-full border border-gray-200 text-sm font-medium text-gray-700 no-underline px-3 py-1 whitespace-nowrap hover:border-teal hover:text-teal">{{ label }}</a>
+                        {{ /if }}
+                    {{ /gone_by }}
+                </div>
+            </details>
+        {{ /if }}
     </div>
 {{ /if }}

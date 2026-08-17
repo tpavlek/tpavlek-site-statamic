@@ -403,8 +403,12 @@ class FringeController extends Controller
      * Every date the festival plays, from the snapshot's performances — derived rather than
      * configured, so the row of day links can't disagree with the data behind it.
      *
+     * Days already behind us are flagged `past` so the pill row can collapse them —
+     * a reader planning tickets only cares about today onward, but the by-day pages
+     * themselves stay reachable.
+     *
      * @param  array<string, mixed>  $report
-     * @return array<int, array{day: int, label: string, url: string}>
+     * @return array<int, array{day: int, label: string, url: string, past: bool}>
      */
     private function festivalDates(array $report): array
     {
@@ -421,6 +425,7 @@ class FringeController extends Controller
                     'day' => $when->day,
                     'label' => $when->format('D, M j'),
                     'url' => '/fringe/ticket-availability/day/'.$when->day,
+                    'past' => $when->lt(Carbon::today()),
                 ];
             })
             ->all();
