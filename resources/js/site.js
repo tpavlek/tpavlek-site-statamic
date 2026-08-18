@@ -109,6 +109,7 @@ Alpine.data('reviewFilter', () => ({
     category: '',
     hideSoldOut: false,
     shown: 0,
+    vibesShown: 0,
 
     get filtering() {
         return this.query.trim() !== '' || this.category !== '' || this.hideSoldOut
@@ -127,6 +128,7 @@ Alpine.data('reviewFilter', () => ({
     apply() {
         const needle = this.normalize(this.query.trim())
         let shown = 0
+        let vibesShown = 0
 
         for (const row of this.$root.querySelectorAll('li[data-title]')) {
             const matches =
@@ -143,10 +145,14 @@ Alpine.data('reviewFilter', () => ({
             } else {
                 row.style.setProperty('display', 'none', 'important')
             }
-            if (matches) shown++
+            // Vibes rows (the good-vibes list under the main table) filter with the same
+            // rules but count separately: the "N of M shows" counter describes the review
+            // table, and vibesShown only decides whether the vibes section shows at all.
+            if (matches) row.dataset.vibes === '1' ? vibesShown++ : shown++
         }
 
         this.shown = shown
+        this.vibesShown = vibesShown
     },
 }))
 

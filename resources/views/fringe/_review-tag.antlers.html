@@ -10,6 +10,10 @@
     {{ /original_review }}
 {{ elseif recommendation:value == "watchlist" }}
     <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Watchlist</span>
+{{# A `vibes` show is one Troy hasn't seen but has heard good things about — secondhand
+    word, not coverage, so like `exists` it must outrank the improv branch. #}}
+{{ elseif recommendation:value == "vibes" }}
+    <span class="inline-block border border-teal text-teal rounded-lg text-xs font-medium uppercase py-0.5 px-2 whitespace-nowrap">Good vibes</span>
 {{# An `exists` page is a show Troy isn't seeing or vouching for — it only exists to be
     linkable. "Not reviewed" beats the CP's "Exists", which means nothing to a visitor.
     Before the improv branch on purpose: Improv* implies a coverage stance this show

@@ -177,11 +177,51 @@
             {{ /reviews }}
         </ul>
 
-        <p class="text-gray-500 py-4 mb-0" x-show="filtering && shown === 0" x-cloak>
+        <p class="text-gray-500 py-4 mb-0" x-show="filtering && shown === 0 && vibesShown === 0" x-cloak>
             No shows match.
             <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
                     @click="query = ''; category = ''; hideSoldOut = false">Clear filters</button>
         </p>
+
+        {{# Shows Troy hasn't seen but has heard good things about — published + `vibes`,
+            listed here and nowhere else (not the ItemList JSON-LD above: it's a list of
+            reviews, and these aren't coverage). Rows carry the same data attributes as the
+            main table, so the search box, category dropdown and hide-sold-out toggle apply
+            here too; data-vibes keeps them out of the "N of M shows" counter, and the whole
+            section steps aside when filtering leaves it empty. #}}
+        {{ if vibes | length }}
+            <section class="mt-10" x-show="!filtering || vibesShown > 0">
+                <h2 class="text-xl font-bold mb-1">Good vibes</h2>
+                <p class="text-sm text-gray-600 mt-0 mb-3">Also, some shows I haven't seen that have been getting good vibes around the festival&hellip;</p>
+
+                <ul class="divide-y divide-gray-100 border-t border-b border-gray-100">
+                    {{ vibes }}
+                        <li data-title="{{ title | sanitize }}" data-categories="{{ category_slugs }}" data-vibes="1"
+                            data-sold-out="{{ if availability == 'sold_out' && (availability_parts | length) == 1 }}1{{ /if }}"
+                            class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
+                            <div class="sm:col-span-6 font-light">
+                                <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
+
+                                {{ if venue }}
+                                    <div class="text-xs text-gray-500 mt-0.5">{{ venue:display_name }}</div>
+                                {{ /if }}
+                            </div>
+
+                            <div class="mt-1 sm:mt-0 {{ if tickets_available }}sm:col-span-4{{ else }}sm:col-span-6{{ /if }}">
+                                {{ partial:fringe/review-tag }}
+                            </div>
+
+                            {{ if tickets_available }}
+                                <div class="relative mt-1 sm:mt-0 sm:col-span-2">
+                                    <div>{{ partial:fringe/ticket-link }}</div>
+                                    <div class="mt-1">{{ partial:fringe/availability }}</div>
+                                </div>
+                            {{ /if }}
+                        </li>
+                    {{ /vibes }}
+                </ul>
+            </section>
+        {{ /if }}
     </div>
 
     <hr class="w-1/2 text-center mx-auto py-4" />

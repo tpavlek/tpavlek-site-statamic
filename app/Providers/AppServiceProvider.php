@@ -202,12 +202,13 @@ class AppServiceProvider extends ServiceProvider
             return \App\Schema\FringeReviewSchema::build($entry);
         });
 
-        // An `exists` page is published so it can be linked (availability card, agenda),
-        // but it's a thin page Troy isn't vouching for — layout.antlers reads `noindex`
-        // from the cascade, so computing it here keeps crawlers off without a manual
-        // frontmatter flag. Also kept out of the sitemap via config/pecotamic/sitemap.php.
+        // An `exists` or `vibes` page is published so it can be linked (availability card,
+        // agenda, the good-vibes list), but it's a thin page without a review behind it —
+        // layout.antlers reads `noindex` from the cascade, so computing it here keeps
+        // crawlers off without a manual frontmatter flag. Also kept out of the sitemap via
+        // config/pecotamic/sitemap.php.
         Collection::computed('fringe_reviews', 'noindex', function ($entry, $value) {
-            return $value ?? \App\Fringe\Reviews::isExists($entry);
+            return $value ?? (\App\Fringe\Reviews::isExists($entry) || \App\Fringe\Reviews::isVibes($entry));
         });
 
         // The trail rendered by fringe/_breadcrumbs, and the BreadcrumbList markup that

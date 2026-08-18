@@ -43,6 +43,13 @@
                 <span class="inline-block border border-teal text-teal rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Watchlist</span>
             </div>
 
+        {{# A `vibes` show is one Troy hasn't seen but has heard good things about —
+            secondhand word, not coverage, so like `exists` it outranks the improv branch. #}}
+        {{ elseif recommendation:value == "vibes" }}
+            <div class="flex items-center">
+                <span class="inline-block border border-teal text-teal rounded-lg text-sm font-medium uppercase py-1 px-3 mr-2">Good vibes</span>
+            </div>
+
         {{# An `exists` page only exists to be linkable — no coverage stance, so it must
             outrank the improv branch. Reads "Not reviewed" because "Exists" means nothing
             to a visitor. #}}
@@ -104,6 +111,9 @@
         "Updated" only appears when there really was a later edit — App\Fringe\ReviewFreshness
         has the reasoning, but in short: entry dates are date-only, so a naive comparison
         would stamp every review as updated and the stamp would mean nothing. #}}
+    {{# A vibes page never shows "Reviewed <date>" — there is no review, even when the page
+        carries a short note as its content. #}}
+    {{ unless recommendation:value == "vibes" }}
     {{ freshness }}
         {{ if reviewed_display }}
             <p class="text-sm text-gray-500 mt-2 mb-0">
@@ -114,10 +124,17 @@
             </p>
         {{ /if }}
     {{ /freshness }}
+    {{ /unless }}
 
     <div class="content mt-4">
         {{ if content }}
             {{ content }}
+        {{ elseif recommendation:value == "vibes" }}
+            {{# The standing copy for a vibes show without a note. When Troy writes one, the
+                content above replaces this — the note is the vibes. #}}
+            <p>I haven't seen this show and there's no review yet — but the word around the
+                festival is good. Check out the schedule and availability below to see if it
+                fits your Fringe.</p>
         {{ elseif original_review }}
             {{ original_review }}
                 {{ content }}

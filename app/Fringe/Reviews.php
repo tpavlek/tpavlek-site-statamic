@@ -9,9 +9,14 @@ use Statamic\Facades\Entry as EntryFacade;
 /**
  * Which fringe_reviews entries the public site is allowed to see.
  *
- * The collection holds three very different things since the lineup import:
+ * The collection holds four very different things since the lineup import:
  *
  *   published            a review Troy wrote. Has a page, belongs everywhere.
+ *   published + `vibes`  a show Troy hasn't seen but has heard good things about. Has a live
+ *                        page (availability card, optional short note as its content) and a
+ *                        row in the reviews index's good-vibes list — but it is not a review,
+ *                        so it stays out of the main table, the feed, artist pages, and the
+ *                        sitemap, and its page is noindexed, same as `exists`.
  *   published + `exists` a show Troy is NOT reviewing but wants a live page for — so other
  *                        pages can link it and its availability card renders. It is not a
  *                        review and not an endorsement, so it belongs on its own page and
@@ -53,34 +58,57 @@ class Reviews
     }
 
     /**
-     * Reviews the public listings should carry: published, minus `exists` pages.
+     * Reviews the public listings should carry: published, minus `exists` and `vibes` pages.
      *
      * This is what the reviews index, the RSS feed and the artist pages want. An `exists`
-     * entry has a perfectly good page — that's its whole point — but it isn't a review,
-     * so listing it anywhere would present "I'm not covering this" as coverage.
+     * or `vibes` entry has a perfectly good page — that's its whole point — but it isn't a
+     * review, so listing it anywhere would present secondhand word (or "I'm not covering
+     * this") as coverage.
      *
      * @return Collection<int, EntryContract>
      */
     public static function reviewed(): Collection
     {
         return self::published()
-            ->reject(fn (EntryContract $entry) => self::isExists($entry))
+            ->reject(fn (EntryContract $entry) => self::isExists($entry) || self::isVibes($entry))
+            ->values();
+    }
+
+    /**
+     * The good-vibes list: shows Troy hasn't seen but has heard good things about. Live
+     * pages, listed only in the reviews index's vibes table.
+     *
+     * @return Collection<int, EntryContract>
+     */
+    public static function vibes(): Collection
+    {
+        return self::published()
+            ->filter(fn (EntryContract $entry) => self::isVibes($entry))
             ->values();
     }
 
     public static function isExists(EntryContract $entry): bool
     {
-        $value = $entry->value('recommendation');
-        $value = is_array($value) ? ($value[0] ?? null) : $value;
+        return self::recommendation($entry) === 'exists';
+    }
 
-        return $value === 'exists';
+    public static function isVibes(EntryContract $entry): bool
+    {
+        return self::recommendation($entry) === 'vibes';
+    }
+
+    private static function recommendation(EntryContract $entry): ?string
+    {
+        $value = $entry->value('recommendation');
+
+        return is_array($value) ? ($value[0] ?? null) : $value;
     }
 
     /**
      * pecotamic/sitemap `filter` callback (configured as a static-method callable so
-     * `config:cache` can serialize it). Keeps everything except `exists` pages — they're
-     * live and linkable, but they're thin near-empty pages and shouldn't be offered to
-     * crawlers. Non-fringe entries pass straight through.
+     * `config:cache` can serialize it). Keeps everything except `exists` and `vibes`
+     * pages — they're live and linkable, but they're thin pages and shouldn't be offered
+     * to crawlers. Non-fringe entries pass straight through.
      */
     public static function sitemapFilter($entry): bool
     {
@@ -88,7 +116,7 @@ class Reviews
             return true;
         }
 
-        return ! self::isExists($entry);
+        return ! self::isExists($entry) && ! self::isVibes($entry);
     }
 
     /**
@@ -108,10 +136,7 @@ class Reviews
 
     public static function isPending(EntryContract $entry): bool
     {
-        $value = $entry->value('recommendation');
-        $value = is_array($value) ? ($value[0] ?? null) : $value;
-
-        return $value === 'pending';
+        return self::recommendation($entry) === 'pending';
     }
 
     /**

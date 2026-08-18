@@ -998,6 +998,14 @@ class FringeController extends Controller
                 return $score * 1e10 + $touched;
             });
 
+        // The good-vibes list under the main table: shows Troy hasn't seen but has heard
+        // good things about. Alphabetical — there's no rating to rank them by, and ordering
+        // an unranked list any other way would imply one.
+        $vibes = Reviews::vibes()
+            ->filter(fn (Entry $entry) => self::festivalSlugOf($entry) === $festivalSlug)
+            ->sortBy(fn (Entry $entry) => mb_strtolower((string) $entry->value('title')))
+            ->values();
+
         // A show-level availability light beside each ticket link, from the sold-out scrape.
         // Current festival only — the snapshot is this year's box office, and a past year's
         // reviews are an archive whose tickets are long gone; "Available" there is nonsense.
@@ -1006,7 +1014,7 @@ class FringeController extends Controller
         if (FestivalUrls::isCurrent($festivalSlug)) {
             $availability = $this->availabilityByEvent();
 
-            $reviews->each(function (Entry $entry) use ($availability) {
+            $reviews->concat($vibes)->each(function (Entry $entry) use ($availability) {
                 $eventId = TicketPage::eventId($entry->value('ticket_link'));
 
                 if ($eventId && isset($availability[$eventId])) {
@@ -1026,7 +1034,7 @@ class FringeController extends Controller
             ->unique()
             ->all();
 
-        $reviews->each(function (Entry $entry) {
+        $reviews->concat($vibes)->each(function (Entry $entry) {
             $entry->setSupplement('category_slugs', implode(' ', (array) ($entry->value('categories') ?? [])));
         });
 
@@ -1102,6 +1110,9 @@ class FringeController extends Controller
             ->layout('layout')
             ->with([
                 'reviews' => $reviews,
+                // Deliberately absent from structured_data below: the ItemList is a list of
+                // reviews, and a vibes row is secondhand word, not coverage.
+                'vibes' => $vibes,
                 'category_options' => $categoryOptions,
                 'videos' => $videos,
                 'posts' => $posts,
