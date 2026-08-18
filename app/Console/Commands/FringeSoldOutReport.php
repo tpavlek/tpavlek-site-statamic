@@ -86,12 +86,14 @@ class FringeSoldOutReport extends Command
         // Only shows that are actually due — never pulled, or pulled more than STALE_AFTER
         // hours ago — and never a show that's already completely sold out (it won't reopen).
         // The queue is stalest first: a composite sort key of "pulled_at|title" puts the
-        // never-pulled (empty timestamp) ahead of everything, then oldest data, then title.
+        // never-pulled ahead of everything, then oldest data, then title. Never-pulled must
+        // stand in as '0', not '' — an empty timestamp makes the key start with '|', which
+        // sorts AFTER every digit-leading timestamp, i.e. never-pulled dead last.
         // A plain single-key sort, deliberately — Collection::sortBy with an array of
         // closures silently sorts by the last one only, which had it ignoring staleness.
         $due = $shows->keys()
             ->filter(fn (string $eventId) => $this->isDue($eventId, $store))
-            ->sortBy(fn (string $eventId) => ($store[$eventId]['pulled_at'] ?? '').'|'.$shows[$eventId]->value('title'))
+            ->sortBy(fn (string $eventId) => (($store[$eventId]['pulled_at'] ?? null) ?: '0').'|'.$shows[$eventId]->value('title'))
             ->values();
 
         if ($due->isEmpty()) {

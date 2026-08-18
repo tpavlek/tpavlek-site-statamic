@@ -56,6 +56,18 @@ class ShowAvailability
 
         $performances = $raw->map(fn (array $p) => self::shapePerformance($p, $revealNumbers));
 
+        // Whether there's nothing left to buy: at least one performance is still to come and
+        // every one of them is sold out. Judged on the raw statuses with the same time rule as
+        // shapePerformance (a minute past curtain a showtime stops counting), because the
+        // shaped rows keep past sold-outs as "Sold out" — artist cred, not a buying signal.
+        // Cancelled showtimes count neither way, and a run that's simply over isn't "sold
+        // out". Powers the hide-sold-out toggles.
+        $upcoming = $raw
+            ->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)
+            ->reject(fn (array $p) => Carbon::parse($p['datetime'])->addMinute()->lte(Carbon::now()));
+        $runSoldOut = $upcoming->isNotEmpty()
+            && $upcoming->every(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::SOLD_OUT);
+
         // Split chronologically into two halves so the desktop layout can show them as two
         // side-by-side columns — first half left, second half right. `chunk(ceil(n/2))` yields
         // [first half],[rest].
@@ -69,6 +81,7 @@ class ShowAvailability
             'performances_left' => ($columns->get(0) ?? collect())->values()->all(),
             'performances_right' => ($columns->get(1) ?? collect())->values()->all(),
             'sold_out_count' => $performances->where('sold_out', true)->count(),
+            'run_sold_out' => $runSoldOut,
             'low_count' => $performances->where('low', true)->count(),
             'reduced_count' => $performances->where('reduced', true)->count(),
             // Cancelled showtimes aren't part of "N of M performances sold out".

@@ -107,15 +107,17 @@ Alpine.data('leaderboard', () => ({
 Alpine.data('reviewFilter', () => ({
     query: '',
     category: '',
+    hideSoldOut: false,
     shown: 0,
 
     get filtering() {
-        return this.query.trim() !== '' || this.category !== ''
+        return this.query.trim() !== '' || this.category !== '' || this.hideSoldOut
     },
 
     init() {
         this.$watch('query', () => this.apply())
         this.$watch('category', () => this.apply())
+        this.$watch('hideSoldOut', () => this.apply())
     },
 
     normalize(text) {
@@ -129,7 +131,8 @@ Alpine.data('reviewFilter', () => ({
         for (const row of this.$root.querySelectorAll('li[data-title]')) {
             const matches =
                 (!needle || this.normalize(row.dataset.title).includes(needle)) &&
-                (!this.category || row.dataset.categories.split(' ').includes(this.category))
+                (!this.category || row.dataset.categories.split(' ').includes(this.category)) &&
+                (!this.hideSoldOut || row.dataset.soldOut !== '1')
 
             // Not a `hidden` class, and not a plain inline style either: the rows carry
             // `sm:grid`, and the Tailwind config's `important: true` makes that

@@ -114,6 +114,13 @@
                     </select>
                 {{ /if }}
 
+                {{ if tickets_available }}
+                    <label class="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer select-none">
+                        <input type="checkbox" x-model="hideSoldOut" class="accent-teal">
+                        Hide sold out runs
+                    </label>
+                {{ /if }}
+
                 <span class="text-sm text-gray-500" aria-live="polite" x-show="filtering">
                     <span x-text="shown"></span> of {{ review_count }} shows
                 </span>
@@ -131,7 +138,12 @@
         <ul class="divide-y divide-gray-100 border-b border-gray-100">
             {{ reviews }}
                 {{# `relative` anchors the stretched title link that makes the whole row tappable. #}}
+                {{# data-sold-out marks a run with nothing left to buy: the availability
+                    collapsed to a single "Sold out" part. A show with one sold-out showtime
+                    but seats elsewhere ("Sold out / Available") stays visible under the
+                    hide-sold-out toggle. #}}
                 <li data-title="{{ title | sanitize }}" data-categories="{{ category_slugs }}"
+                    data-sold-out="{{ if availability == 'sold_out' && (availability_parts | length) == 1 }}1{{ /if }}"
                     class="relative py-3 sm:grid sm:grid-cols-12 sm:gap-4 sm:items-baseline hover:bg-grey-50 transition-colors">
                     <div class="sm:col-span-6 font-light">
                         <a href="{{ url }}" class="text-gray-800 no-underline before:absolute before:inset-0">{{ title }}</a>
@@ -168,7 +180,7 @@
         <p class="text-gray-500 py-4 mb-0" x-show="filtering && shown === 0" x-cloak>
             No shows match.
             <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
-                    @click="query = ''; category = ''">Clear filters</button>
+                    @click="query = ''; category = ''; hideSoldOut = false">Clear filters</button>
         </p>
     </div>
 

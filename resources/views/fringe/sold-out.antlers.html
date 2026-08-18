@@ -9,7 +9,9 @@
     rendered. All data comes pre-shaped from FringeController::soldOut; nothing here touches
     the ticket site. #}}
 <div class="pb-8 max-w-5xl mx-auto text-lg"
-    x-data="{ q: '', matchCount() { return [...this.$refs.list.children].filter(li => this.q.trim() === '' || (li.dataset.title || '').includes(this.q.trim().toLowerCase())).length } }">
+    x-data="{ q: '', hideSoldOut: false,
+        matches(el) { return (!this.hideSoldOut || el.dataset.soldOut !== '1') && (this.q.trim() === '' || (el.dataset.title || '').includes(this.q.trim().toLowerCase())) },
+        matchCount() { return [...this.$refs.list.children].filter(li => this.matches(li)).length } }">
     {{ partial:fringe/breadcrumbs }}
 
     <header class="mb-6">
@@ -38,11 +40,16 @@
 
     {{ partial:fringe/_availability-dates }}
 
-    <div class="mb-6">
+    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
         <input type="search" x-model="q"
             placeholder="Filter shows by title&hellip;"
             aria-label="Filter shows by title"
             class="w-full sm:max-w-sm rounded-lg border border-gray-200 px-3 py-2 text-base text-gray-800 placeholder-gray-400 focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal">
+
+        <label class="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer select-none">
+            <input type="checkbox" x-model="hideSoldOut" class="accent-teal">
+            Hide sold out runs
+        </label>
     </div>
 
     <div class="mb-8">
@@ -51,9 +58,12 @@
 
     <ul x-ref="list" class="list-none p-0 m-0 divide-y divide-gray-100 border-t border-b border-gray-100">
         {{ shows }}
+            {{# data-sold-out marks a run with nothing left to buy — every upcoming showtime
+                sold out. One sold-out matinee with seats elsewhere doesn't hide the show. #}}
             <li class="py-5"
                 data-title="{{ title | lower | sanitize }}"
-                x-show="q.trim() === '' || ($el.dataset.title || '').includes(q.trim().toLowerCase())">
+                data-sold-out="{{ if run_sold_out }}1{{ /if }}"
+                x-show="matches($el)">
                 {{# The refresh state (admin only) lives on this inner wrapper, not the <li>,
                     so it doesn't collide with the filter's x-show up there. #}}
                 <div {{ if reveal_numbers && has_data }}x-data="showRefresh('{{ event_id }}')"{{ /if }}>

@@ -341,6 +341,7 @@ class FringeController extends Controller
                         'has_data' => false,
                         'performances' => [],
                         'sold_out_count' => 0,
+                        'run_sold_out' => false,
                         'low_count' => 0,
                         'reduced_count' => 0,
                         'performance_count' => 0,
@@ -855,11 +856,12 @@ class FringeController extends Controller
      *
      * The label is a "slash status" reading scarcest-first: the part before the slash is the
      * worst single showtime (any performance sold out, else any the ticket site calls low),
-     * the part after is the run as a whole, banded on overall %-sold. "Low / Available" is a
-     * show with one nearly-gone matinee and plenty of seats otherwise — the old single tier
-     * called that whole run "Low", which overstated it. When the two parts agree (or there's
-     * no scarce showtime, or no seat data for the run half) the label collapses to one word.
-     * All showtimes gone is just "Sold out".
+     * the part after is the median per-showtime tier of what's still buyable. Sold-out
+     * showtimes already speak through the first half, so they're excluded from the median —
+     * the second half answers "if I can still get in, how easily?" — and even counts round
+     * toward the more available of the two middle showtimes, so real remaining seats are
+     * never overstated as scarcity. When the two parts agree (or there's no scarce showtime)
+     * the label collapses to one word. All showtimes gone is just "Sold out".
      *
      * The dot takes the scarcest part's colour, matching the label's leading word.
      *
@@ -901,22 +903,20 @@ class FringeController extends Controller
         $anyLow = $upcoming->contains(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::LOW);
         $scarcest = $anySoldOut ? 'sold_out' : ($anyLow ? 'low' : null);
 
-        $withSeats = $upcoming->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
-        $offered = $withSeats->sum('seats_total');
-        $pctSold = $offered > 0 ? ($offered - $withSeats->sum('seats_free')) / $offered * 100 : null;
-
-        // The run half needs seat data; without it the scarcest showtime is all we know.
-        $run = match (true) {
-            $pctSold === null => null,
-            $pctSold >= 80 => 'low',
-            $pctSold >= 60 => 'reduced',
-            default => 'available',
-        };
+        // Median of the still-buyable showtimes' tiers (shapePerformance owns the per-showtime
+        // rules, including the 60%-sold "reduced" upgrade). Sorted scarcest-first, the upper
+        // middle element is the median, which on even counts is the more available of the two.
+        $buyable = $upcoming
+            ->map(fn (array $p) => ShowAvailability::shapePerformance($p, false)['tier'])
+            ->reject(fn (string $tier) => $tier === 'sold_out')
+            ->sortBy(fn (string $tier) => ['low' => 0, 'reduced' => 1, 'available' => 2][$tier])
+            ->values();
+        $run = $buyable->get(intdiv($buyable->count(), 2));
 
         $labels = ['sold_out' => 'Sold out', 'low' => 'Low', 'reduced' => 'Reduced', 'available' => 'Available'];
 
-        if ($scarcest === null || $run === null || $scarcest === $run) {
-            $tier = $run ?? $scarcest ?? 'available';
+        if ($scarcest === null || $scarcest === $run) {
+            $tier = $run;
 
             return self::tierResult([['tier' => $tier, 'label' => $labels[$tier]]]);
         }
