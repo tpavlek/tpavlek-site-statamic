@@ -138,6 +138,12 @@
                     word around the festival is good. Check out the schedule and availability
                     below to see if it fits your Fringe.</p>
             </div>
+        {{ elseif recommendation:value == "exists" }}
+            {{# The `exists` counterpart: no stance at all, just why the page is here. #}}
+            <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-900">
+                <p class="m-0">I haven't reviewed this show, but it's playing at the
+                    {{ festival:slug }} Fringe. Check out the schedule and availability below.</p>
+            </div>
         {{ elseif original_review }}
             {{ original_review }}
                 {{ content }}
