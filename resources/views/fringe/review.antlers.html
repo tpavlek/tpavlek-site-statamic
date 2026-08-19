@@ -130,11 +130,14 @@
         {{ if content }}
             {{ content }}
         {{ elseif recommendation:value == "vibes" }}
-            {{# The standing copy for a vibes show without a note. When Troy writes one, the
-                content above replaces this — the note is the vibes. #}}
-            <p>I haven't seen this show and there's no review yet — but the word around the
-                festival is good. Check out the schedule and availability below to see if it
-                fits your Fringe.</p>
+            {{# The standing copy for a vibes show without a note, in the same card style as
+                the sold-out page's advisory so it reads as a system message rather than a
+                written review. When Troy writes a note, the content above replaces this. #}}
+            <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-900">
+                <p class="m-0">I haven't seen this show and there's no review yet &mdash; but the
+                    word around the festival is good. Check out the schedule and availability
+                    below to see if it fits your Fringe.</p>
+            </div>
         {{ elseif original_review }}
             {{ original_review }}
                 {{ content }}
