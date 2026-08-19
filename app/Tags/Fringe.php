@@ -2,6 +2,7 @@
 
 namespace App\Tags;
 
+use App\Fringe\AgendaCalendar;
 use App\Fringe\FestivalUrls;
 use App\Fringe\ShowAvailability;
 use App\Fringe\TicketPage;
@@ -43,6 +44,34 @@ class Fringe extends Tags
             // Running time, from the review entry's own duration field — public, like capacity.
             'duration_minutes' => (int) $this->context->value('duration') ?: null,
             ...$data,
+        ] : false;
+    }
+
+    /**
+     * When Troy's calendar has this show booked — for the watchlist card on a review page.
+     * Matches the current review against the agenda calendar the same two ways the agenda
+     * page does (ticket-site event id, then normalized-title containment), restricted to the
+     * current festival year. Prefers the next upcoming booking; if the only match already
+     * happened, says so via `upcoming` false so the copy can shift to "review on the way".
+     *
+     * Renders nothing when the show isn't on the calendar at all.
+     *
+     * @return array<string, mixed>|false
+     */
+    public function agendaSlot(): array|false
+    {
+        $events = AgendaCalendar::eventsForShow(
+            TicketPage::eventId((string) $this->context->get('ticket_link')),
+            (string) $this->context->get('title'),
+        )->filter(fn (array $event) => (string) $event['starts']->year === FestivalUrls::currentSlug());
+
+        $slot = $events->first(fn (array $event) => $event['starts']->isFuture())
+            ?? $events->last();
+
+        return $slot ? [
+            'upcoming' => $slot['starts']->isFuture(),
+            'slot_display' => $slot['starts']->format('l, F j \a\t g:i A'),
+            'slot_iso' => $slot['starts']->toIso8601String(),
         ] : false;
     }
 

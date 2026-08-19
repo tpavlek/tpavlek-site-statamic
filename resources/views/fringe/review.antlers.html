@@ -127,6 +127,28 @@
     {{ /unless }}
 
     <div class="content mt-4">
+        {{# A watchlist show Troy has actually booked gets a system-style card (same styling
+            as the vibes/exists advisories) saying when he's scheduled to see it, pulled from
+            the agenda calendar. If the booking already happened but the review hasn't landed,
+            the copy shifts rather than claiming a past date is a plan. No calendar match →
+            no card; the Watchlist badge already says the rest.
+
+            The stars guard matches the badge branch order: a reviewed show can still carry
+            recommendation: watchlist from before it was seen (Merkin Sisters does), and a
+            card claiming "I haven't seen it yet" above a starred review would be nonsense. #}}
+        {{ if recommendation:value == "watchlist" && !stars }}
+            {{ fringe:agenda_slot }}
+                <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-900 mb-4">
+                    <p class="m-0">This show is on my watchlist &mdash; I haven't seen it yet.
+                        {{ if upcoming }}
+                            I'm scheduled to see it on <time datetime="{{ slot_iso }}">{{ slot_display }}</time>.
+                        {{ else }}
+                            I saw it on <time datetime="{{ slot_iso }}">{{ slot_display }}</time> &mdash; a review is on the way.
+                        {{ /if }}
+                    </p>
+                </div>
+            {{ /fringe:agenda_slot }}
+        {{ /if }}
         {{ if content }}
             {{ content }}
         {{ elseif recommendation:value == "vibes" }}

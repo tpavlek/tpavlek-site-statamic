@@ -56,6 +56,46 @@ class AgendaCalendar
             ->values();
     }
 
+    /**
+     * The calendar events that look like a given show — the reverse of the agenda page's
+     * event→review matching, for a review page asking "when am I seeing this?". Same two
+     * routes: the exact ticket-site event id when the calendar event carries one, otherwise
+     * two-way containment on normalized titles (with the same 8-character guard, so a stubby
+     * calendar title can't swallow half the lineup). Volunteering shifts never match.
+     *
+     * @return Collection<int, array{summary: string, starts: Carbon, ends: Carbon|null, description: string, volunteering: bool, event_id: string|null, venue: string|null}>
+     */
+    public static function eventsForShow(?string $eventId, string $title): Collection
+    {
+        $normalized = self::normalizeTitle($title);
+
+        return self::events()
+            ->filter(function (array $event) use ($eventId, $normalized) {
+                if ($event['volunteering']) {
+                    return false;
+                }
+
+                if ($eventId && $event['event_id'] === $eventId) {
+                    return true;
+                }
+
+                $summary = self::normalizeTitle($event['summary']);
+
+                return strlen($summary) >= 8 && strlen($normalized) >= 8
+                    && (str_contains($summary, $normalized) || str_contains($normalized, $summary));
+            })
+            ->values();
+    }
+
+    /**
+     * Case, punctuation, and spacing collapsed so calendar-event titles and review titles
+     * can meet in the middle.
+     */
+    public static function normalizeTitle(string $title): string
+    {
+        return trim(preg_replace('/[^a-z0-9]+/', ' ', mb_strtolower($title)));
+    }
+
     private static function fetch(): ?string
     {
         try {

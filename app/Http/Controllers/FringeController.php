@@ -208,7 +208,7 @@ class FringeController extends Controller
         $byEventId = $reviews->mapWithKeys(
             fn (EntryContract $entry) => ($id = TicketPage::eventId($entry->value('ticket_link'))) ? [$id => $entry] : []
         );
-        $byTitle = $reviews->keyBy(fn (EntryContract $entry) => $this->normalizeTitle((string) $entry->value('title')));
+        $byTitle = $reviews->keyBy(fn (EntryContract $entry) => AgendaCalendar::normalizeTitle((string) $entry->value('title')));
 
         $events = AgendaCalendar::events()
             ->filter(fn (array $event) => (string) $event['starts']->year === $year)
@@ -216,7 +216,7 @@ class FringeController extends Controller
                 $review = null;
 
                 if (! $event['volunteering']) {
-                    $title = $this->normalizeTitle($event['summary']);
+                    $title = AgendaCalendar::normalizeTitle($event['summary']);
                     // Containment both ways covers "Merkin Sisters" against "The Merkin
                     // Sisters"; the length guard keeps a stubby calendar title from
                     // swallowing half the lineup.
@@ -279,15 +279,6 @@ class FringeController extends Controller
                     ['name' => 'Agenda', 'path' => '/fringe/agenda'],
                 ])),
             ]);
-    }
-
-    /**
-     * Case, punctuation, and spacing collapsed so calendar-event titles and review titles
-     * can meet in the middle.
-     */
-    private function normalizeTitle(string $title): string
-    {
-        return trim(preg_replace('/[^a-z0-9]+/', ' ', mb_strtolower($title)));
     }
 
     public function soldOut()
