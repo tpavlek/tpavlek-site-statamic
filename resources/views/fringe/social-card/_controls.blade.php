@@ -33,6 +33,7 @@
     </div>
     <input type="hidden" name="stars_enabled" :value="starsEnabled ? 1 : 0">
     <input type="hidden" name="stars_colour" :value="starsColour">
+    <input type="hidden" name="stars_size" :value="starsSize">
     <div class="field" x-show="starsEnabled">
         <label>Star colour</label>
         <div class="swatches" role="radiogroup" aria-label="Star colour">
@@ -44,6 +45,15 @@
                         @click="starsColour = '{{ $key }}'"
                         title="{{ $label }}"><span aria-hidden="true">★</span><span class="sr-only">{{ $label }}</span></button>
             @endforeach
+        </div>
+    </div>
+    {{-- ±4 where the text steppers use ±2: at 72px a two-pixel nudge is invisible. --}}
+    <div class="field" x-show="starsEnabled">
+        <label for="stars_size">Star size</label>
+        <div class="stepper">
+            <button type="button" @click="starsSize = Math.max(24, starsSize - 4)" aria-label="Smaller stars">&minus;</button>
+            <input type="number" id="stars_size" min="24" max="150" x-model.number="starsSize" aria-label="Star size in pixels">
+            <button type="button" @click="starsSize = Math.min(150, starsSize + 4)" aria-label="Larger stars">+</button>
         </div>
     </div>
     @if ($starsEditable ?? false)

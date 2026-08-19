@@ -14,6 +14,10 @@
             excerpt: '',
             selectedSentences: [],
             snapToSentences: true,
+            // True while the selection is a set of cmd/ctrl-clicked sentences rather than
+            // the browser's own. The native selection is empty in that state, so
+            // readSelection must not treat "no selection" as "clear everything".
+            multiPick: false,
             position: config.position,
             textSize: config.textSize,
             focalX: config.focalX,
@@ -23,6 +27,7 @@
             zoom: config.zoom,
             starsEnabled: config.starsEnabled,
             starsColour: config.starsColour,
+            starsSize: config.starsSize,
             // Fixed on an entry (it comes from the review); driven by starsValue in the
             // generator, where the user sets the rating themselves.
             starsFixedText: config.starsFixedText,
@@ -101,6 +106,7 @@
                 window.getSelection().removeAllRanges();
                 this.excerpt = '';
                 this.selectedSentences = [];
+                this.multiPick = false;
                 this.$nextTick(() => this.$refs.pickerClose?.focus());
             },
             closePicker() {
@@ -116,6 +122,21 @@
             // drag would otherwise collapse it back to one sentence, so leave those alone —
             // and let shift-click through to the browser, which extends the selection itself.
             selectSentence(el, event) {
+                // Cmd/Ctrl-click toggles a sentence in and out of a non-contiguous pick.
+                // This takes over from the browser selection entirely: the native selection
+                // is cleared, and the multiPick flag stops readSelection from mistaking
+                // that empty selection for "clear everything".
+                if (event.metaKey || event.ctrlKey) {
+                    const index = Number(el.dataset.sentence);
+                    this.multiPick = true;
+                    window.getSelection().removeAllRanges();
+                    this.selectedSentences = this.selectedSentences.includes(index)
+                        ? this.selectedSentences.filter((i) => i !== index)
+                        : [...this.selectedSentences, index].sort((a, b) => a - b);
+                    this.excerpt = this.joinIndices(this.selectedSentences);
+                    return;
+                }
+
                 if (event.shiftKey) return;
 
                 const selection = window.getSelection();
@@ -135,6 +156,10 @@
                 const selection = window.getSelection();
 
                 if (!prose || !selection || !selection.rangeCount || selection.isCollapsed) {
+                    // A cmd-click pick owns the state precisely while the native selection
+                    // is empty — clearing here would wipe the toggles the instant
+                    // removeAllRanges() fires its selectionchange.
+                    if (this.multiPick) return;
                     this.excerpt = '';
                     this.selectedSentences = [];
                     return;
@@ -148,10 +173,14 @@
                     .map((el) => Number(el.dataset.sentence));
 
                 if (!hits.length) {
+                    if (this.multiPick) return;
                     this.excerpt = '';
                     this.selectedSentences = [];
                     return;
                 }
+
+                // A real drag or shift-click supersedes a cmd-click pick.
+                this.multiPick = false;
 
                 if (!this.snapToSentences) {
                     this.selectedSentences = [];
@@ -163,22 +192,29 @@
                 const first = Math.min(...hits);
                 const last = Math.max(...hits);
                 this.selectedSentences = Array.from({ length: last - first + 1 }, (_, i) => first + i);
-                this.excerpt = this.joinSentences(first, last);
+                this.excerpt = this.joinIndices(this.selectedSentences);
             },
 
             // Sentences within a paragraph join with a space; a new paragraph starts a new
             // line. The card renders the quote with white-space: pre-line, so the break
-            // survives all the way onto the image.
-            joinSentences(first, last) {
+            // survives all the way onto the image. A cmd-click pick can skip sentences, and
+            // the gap gets an ellipsis so the card never silently splices two lines into one.
+            joinIndices(indices) {
                 const sentences = this.flatSentences;
                 let out = '';
 
-                for (let i = first; i <= last; i++) {
-                    if (i > first) {
-                        out += sentences[i].paragraph === sentences[i - 1].paragraph ? ' ' : '\n\n';
+                indices.forEach((index, n) => {
+                    if (n > 0) {
+                        const previous = indices[n - 1];
+                        const sameParagraph = sentences[index].paragraph === sentences[previous].paragraph;
+                        if (index > previous + 1) {
+                            out += sameParagraph ? ' … ' : ' …\n\n';
+                        } else {
+                            out += sameParagraph ? ' ' : '\n\n';
+                        }
                     }
-                    out += sentences[i].text;
-                }
+                    out += sentences[index].text;
+                });
 
                 return out;
             },

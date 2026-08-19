@@ -203,6 +203,7 @@ class PostPresentationTest extends TestCase
                     'text_size' => 42,
                     'stars_enabled' => 1,
                     'stars_colour' => 'gold',
+                    'stars_size' => 96,
                     'title_enabled' => 1,
                     'title_text' => 'Share card options test',
                     'title_size' => 44,
@@ -216,6 +217,7 @@ class PostPresentationTest extends TestCase
 
             $this->assertSame('gold', $options['stars_colour']);
             $this->assertTrue($options['stars_enabled']);
+            $this->assertSame(96, $options['stars_size']);
         } finally {
             EntryFacade::find($review->id())?->delete();
         }

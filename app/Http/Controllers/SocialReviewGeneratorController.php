@@ -102,6 +102,7 @@ class SocialReviewGeneratorController extends Controller
                 // zero, and let them turn it on if they want to set one.
                 'starsEnabled' => $review->stars !== null,
                 'starsColour' => 'white',
+                'starsSize' => 72,
                 'starsFixedText' => null,
                 'starsValue' => $review->stars ?? 0,
                 // Off by default, but pre-filled from the scraped title so turning it on

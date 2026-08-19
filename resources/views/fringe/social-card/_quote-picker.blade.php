@@ -6,7 +6,13 @@
     behaviour people already have, and it works with touch selection handles on mobile for
     free. `snapToSentences` then rounds whatever was highlighted out to whole sentences, so a
     sloppy drag still yields clean prose; turning it off keeps the highlight exactly, which is
-    how you drop a clause.
+    how you drop a clause. The one thing the native selection can't express — a
+    non-contiguous pick — is cmd/ctrl-click, which toggles sentences in and out and marks
+    each gap with an ellipsis.
+
+    An over-long excerpt loads anyway ("Use anyway"): the length meter goes red as a warning,
+    but the real editing surface is the textarea behind this dialog, so the picker shouldn't
+    be the thing that blocks a quote someone intends to trim there.
 --}}
 <div class="picker-backdrop" x-show="pickerOpen" x-cloak
      @click="if ($event.target === $el) closePicker()"
@@ -43,7 +49,7 @@
             {{-- pre-line so an excerpt that crosses a paragraph shows the break here exactly
                  as the card will render it. --}}
             <div class="excerpt" :class="!excerpt && 'empty'"
-                 x-text="excerpt || 'Tap a sentence, or drag to select any part of the review.'"></div>
+                 x-text="excerpt || 'Tap a sentence, drag to select any part of the review, or ⌘/Ctrl-click to combine separate sentences.'"></div>
             <div class="picker-actions">
                 <span class="excerpt-count" :class="excerptTooLong && 'over'"
                       x-text="excerpt.length + '/280'"></span>
@@ -54,9 +60,10 @@
                 <span class="picker-spacer"></span>
                 <button type="button" class="btn btn-link" @click="closePicker">Cancel</button>
                 <button type="button" class="btn btn-primary"
-                        :disabled="!excerpt || excerptTooLong"
+                        :disabled="!excerpt"
+                        :title="excerptTooLong ? 'Over 280 characters — trim it in the editor after loading' : null"
                         @click="useExcerpt"
-                        x-text="excerptTooLong ? 'Too long for the card' : 'Use this excerpt'"></button>
+                        x-text="excerptTooLong ? 'Use anyway' : 'Use this excerpt'"></button>
             </div>
         </div>
     </div>

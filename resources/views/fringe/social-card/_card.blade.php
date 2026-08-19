@@ -12,7 +12,7 @@
     <img class="bg" :src="bgUrl" x-show="bgUrl" :style="bgStyle" @load="measureImage($event.target)" alt="">
     <div class="overlay" :style="scrimStyle">
         <div class="panel" x-ref="panel" :style="`top: ${position}%; transform: translateY(-${position}%)`">
-            <div class="stars" x-show="showStars" :style="`color: ${starsColour}`" x-text="starsText"></div>
+            <div class="stars" x-show="showStars" :style="`color: ${starsColour}; font-size: ${starsSize}px`" x-text="starsText"></div>
             @if ($watchlist ?? false)
                 <div class="watch-heading" x-show="!showStars">Show to watch</div>
             @endif
