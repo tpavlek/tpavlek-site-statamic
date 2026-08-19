@@ -1,20 +1,67 @@
-<div class="pb-8 max-w-4xl mx-auto text-lg">
+<div class="max-w-4xl mx-auto px-4 py-8">
+
+    {{# Hero, in the shape of the fringe landing page: title, then the page entry's own
+        body as the subhead so the intro is editable in the CP. #}}
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">{{ title }}</h1>
+        <div class="text-xl text-gray-500 leading-relaxed">{{ content }}</div>
+    </div>
+
     {{ collection:posts as="posts" sort="date:desc" }}
-        {{ posts }}
-        {{ if yegvote_2025_update_types | pluck('title') | contains_any('Update', 'Analysis', 'Context') }}
-            <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
-                <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50 mb-3">
-                    <div class="border-teal border-l-8">
-                        <div class="px-4 py-2">
-                            <div class="text-normal font-light flex items-center">{{ partial:yegvote-2025/update-badge }} <span>{{ title }}</span></div>
-                            <span class="text-xs text-gray-600 uppercase">{{ date }}</span>
+    <div x-data="postFilter">
+        {{# One pill per topic, one active at a time, click again to clear. Purely
+            client-side — every post is already in the page — so without JS the bar is
+            x-cloak'd away rather than shown broken. Pills come from the taxonomy, not the
+            posts, so an unused term shows an empty state; the taxonomy is curated enough
+            that this is a non-problem. #}}
+        <div class="flex flex-wrap items-center gap-2 pb-6" x-cloak>
+            <button type="button"
+                    class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
+                    :class="topic === '' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
+                    @click="topic = ''">
+                All posts
+            </button>
+            {{ taxonomy:topics sort="title" }}
+                <button type="button"
+                        class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
+                        :class="topic === '{{ slug }}' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
+                        @click="topic = topic === '{{ slug }}' ? '' : '{{ slug }}'">
+                    {{ title }}
+                </button>
+            {{ /taxonomy:topics }}
 
-                        </div>
-                    </div>
-                </div>
-            </a>
-        {{ /if }}
+            <span class="text-sm text-gray-500 ml-auto" aria-live="polite" x-show="topic !== ''">
+                <span x-text="shown"></span> of {{ posts | length }} posts
+            </span>
+        </div>
 
-        {{ /posts }}
+        <ul class="list-none p-0 m-0 divide-y divide-gray-200 border-t border-b border-gray-200">
+            {{ posts }}
+                {{# `relative` anchors the stretched title link that makes the whole row
+                    tappable, same as the fringe landing's post list. data-topics carries
+                    raw term slugs for the filter. #}}
+                <li data-topics="{{ topics }}{{ slug }} {{ /topics }}"
+                    class="relative py-4 hover:bg-grey-50 transition-colors">
+                    <p class="mb-1 text-xs text-gray-500 uppercase tracking-wide">
+                        <time datetime="{{ date format="Y-m-d" }}">{{ date format="F j, Y" }}</time>
+                        {{ topics }}
+                            <span class="ml-2 inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">{{ title }}</span>
+                        {{ /topics }}
+                    </p>
+                    <a href="{{ url }}" class="text-lg font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
+                    {{ if og_description }}
+                        <p class="text-sm text-gray-600 mt-1 mb-0">{{ og_description }}</p>
+                    {{ /if }}
+                </li>
+            {{ /posts }}
+        </ul>
+
+        <p class="text-gray-500 py-4 mb-0" x-show="topic !== '' && shown === 0" x-cloak>
+            No posts under that topic yet.
+            <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
+                    @click="topic = ''">Show all posts</button>
+        </p>
+    </div>
     {{ /collection:posts }}
+
 </div>

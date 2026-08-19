@@ -156,4 +156,36 @@ Alpine.data('reviewFilter', () => ({
     },
 }))
 
+// Posts hub: show only the rows tagged with the selected topic pill. Rows carry
+// data-topics (space-separated term slugs); one topic at a time, empty string means all.
+Alpine.data('postFilter', () => ({
+    topic: '',
+    shown: 0,
+
+    init() {
+        this.$watch('topic', () => this.apply())
+    },
+
+    apply() {
+        let shown = 0
+
+        for (const row of this.$root.querySelectorAll('li[data-topics]')) {
+            const matches = !this.topic ||
+                row.dataset.topics.split(/\s+/).includes(this.topic)
+
+            // Inline important, for the same reason as reviewFilter above: the Tailwind
+            // config's `important: true` means only an inline declaration marked
+            // important reliably wins over utility classes.
+            if (matches) {
+                row.style.removeProperty('display')
+                shown++
+            } else {
+                row.style.setProperty('display', 'none', 'important')
+            }
+        }
+
+        this.shown = shown
+    },
+}))
+
 Alpine.start()
