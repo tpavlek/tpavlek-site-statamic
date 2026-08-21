@@ -1,0 +1,9 @@
+{{#
+    "Held over" — the show earned a post-festival encore run (the Westbury, Varscona, or
+    Rapid Fire holdover series). Driven purely by the entry's holdover_ticket_link, the same
+    field that gets the holdover showtimes scraped into the availability page.
+
+    Expects a fringe_reviews entry in scope. Renders nothing unless holdover_ticket_link is
+    set. `size` overrides the text size.
+#}}
+{{ if holdover_ticket_link }}<span class="inline-block border border-teal text-teal rounded-lg {{ size ?? 'text-[10px]' }} font-medium uppercase py-0 px-1.5 ml-1 leading-loose whitespace-nowrap align-middle">Held over</span>{{ /if }}

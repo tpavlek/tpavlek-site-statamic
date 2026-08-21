@@ -110,6 +110,46 @@ class ShowScraper
     }
 
     /**
+     * plan() for a show that was held over past the festival: the holdover run is a separate
+     * event on the ticket site, so it takes its own performances-list call, and its records
+     * are merged into the same show chronologically, each flagged `holdover` (and carrying
+     * its own `event_id`, so per-showtime ticket links land on the holdover event). Prior
+     * records are split by that flag so each event's plan sees only its own history.
+     *
+     * A vanished holdover list (empty response with prior holdover records) keeps the prior
+     * records rather than failing the whole show — the festival run is the primary data.
+     *
+     * @param  array<int, array<string, mixed>>  $prior
+     * @return array{records: array<int, array<string, mixed>>, pending: array<int, string>}
+     */
+    public static function planWithHoldover(string $eventId, ?string $holdoverEventId, string $year, array $prior = []): array
+    {
+        [$holdoverPrior, $mainPrior] = collect($prior)->partition(fn (array $p) => $p['holdover'] ?? false);
+
+        $plan = self::plan($eventId, $year, $mainPrior->values()->all());
+
+        if (! $holdoverEventId || $holdoverEventId === $eventId) {
+            return $plan;
+        }
+
+        try {
+            $holdover = self::plan($holdoverEventId, $year, $holdoverPrior->values()->all());
+        } catch (PerformanceListVanished) {
+            $holdover = ['records' => $holdoverPrior->values()->all(), 'pending' => []];
+        }
+
+        $records = collect([
+            ...$plan['records'],
+            ...array_map(
+                fn (array $record) => [...$record, 'holdover' => true, 'event_id' => $holdoverEventId],
+                $holdover['records']
+            ),
+        ])->sortBy('datetime')->values()->all();
+
+        return ['records' => $records, 'pending' => [...$plan['pending'], ...$holdover['pending']]];
+    }
+
+    /**
      * Re-scrape one performance record in place: its status and seat counts, two requests.
      * Cancelled records pass through untouched — the availability endpoint would only
      * mislabel them sold out.
@@ -147,9 +187,9 @@ class ShowScraper
      * @param  array<int, array<string, mixed>>  $prior
      * @return array<int, array<string, mixed>>
      */
-    public static function performances(string $eventId, string $year, array $prior = []): array
+    public static function performances(string $eventId, string $year, array $prior = [], ?string $holdoverEventId = null): array
     {
-        $plan = self::plan($eventId, $year, $prior);
+        $plan = self::planWithHoldover($eventId, $holdoverEventId, $year, $prior);
         $pending = array_flip($plan['pending']);
 
         return array_map(

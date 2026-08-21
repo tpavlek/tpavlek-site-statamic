@@ -12,7 +12,7 @@
     <span class="block text-gray-500">
         {{ if venue }}{{ venue }} &middot; {{ /if }}<span class="inline-flex items-center gap-1.5 align-baseline"><span class="inline-block w-2 h-2 rounded-full shrink-0
             {{ if cancelled }}bg-gray-400{{ elseif completed }}bg-gray-300{{ elseif sold_out }}bg-red-500{{ elseif low }}bg-orange-500{{ elseif reduced }}bg-yellow-500{{ else }}bg-green-500{{ /if }}"></span><span class="font-medium
-            {{ if cancelled }}text-gray-500{{ elseif completed }}text-gray-500{{ elseif sold_out }}text-red-700{{ elseif low }}text-orange-700{{ elseif reduced }}text-yellow-700{{ else }}text-green-700{{ /if }}">{{ tier_label }}</span></span>
+            {{ if cancelled }}text-gray-500{{ elseif completed }}text-gray-500{{ elseif sold_out }}text-red-700{{ elseif low }}text-orange-700{{ elseif reduced }}text-yellow-700{{ else }}text-green-700{{ /if }}">{{ tier_label }}</span></span>{{ if holdover }} <span class="inline-block border border-teal text-teal rounded text-[10px] font-medium uppercase px-1 align-middle" title="A post-festival holdover performance">Holdover</span>{{ /if }}
         {{ if reveal_numbers && !sold_out && !cancelled && !completed && (seats_free || seats_free === 0) }}
             &middot; {{ seats_free }} left{{ if pct_free || pct_free === 0 }} &middot; {{ pct_free }}%{{ /if }}
         {{ /if }}

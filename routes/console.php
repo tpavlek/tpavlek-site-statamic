@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 
 // Keep the /fringe/sold-out report current by refreshing a few of the stalest shows every
 // five minutes — the priority queue in fringe:sold-out-report picks never-pulled shows first,
-// then oldest data, with per-show freshness windows tiered by scarcity (3h/8h/24h). A small
+// then oldest data, with per-show freshness windows tiered by scarcity (1h/3h/6h). A small
 // batch keeps each run well under the ticket site's WAF threshold, and small-but-frequent
 // (rather than one big batch) spreads a backlog out naturally — e.g. everything that came
 // due while the laptop was closed overnight drains gradually instead of in one bot-shaped

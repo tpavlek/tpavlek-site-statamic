@@ -80,6 +80,9 @@ class ShowAvailability
             'performances' => $performances->all(),
             'performances_left' => ($columns->get(0) ?? collect())->values()->all(),
             'performances_right' => ($columns->get(1) ?? collect())->values()->all(),
+            // Whether any of the run's showtimes belong to a post-festival holdover event —
+            // powers the "Held over" chip beside the show's tags.
+            'held_over' => $raw->contains(fn (array $p) => $p['holdover'] ?? false),
             'sold_out_count' => $performances->where('sold_out', true)->count(),
             'run_sold_out' => $runSoldOut,
             'low_count' => $performances->where('low', true)->count(),
@@ -146,6 +149,10 @@ class ShowAvailability
             'tier_label' => ['cancelled' => 'Cancelled', 'sold_out' => 'Sold out', 'completed' => 'Completed', 'low' => 'Low', 'reduced' => 'Reduced availability', 'available' => 'Available'][$tier],
             'cancelled' => $cancelled,
             'sold_out' => $soldOut,
+            // A post-festival holdover showtime — a separate event on the ticket site, scraped
+            // into the same show record. Labelled so a reader doesn't take late-August dates
+            // for festival performances.
+            'holdover' => (bool) ($performance['holdover'] ?? false),
             'completed' => $completed,
             'low' => $low,
             'reduced' => $reduced,

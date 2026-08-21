@@ -4,6 +4,9 @@
     list title, the review card header, and the on-demand refresh response, so a refreshed
     row re-renders them identically — anything added here must also be supplied by
     FringeController::refreshAvailability. #}}
+{{ if held_over }}
+    <span class="text-xs font-medium uppercase border border-teal text-teal rounded px-1.5 whitespace-nowrap" title="This show earned a post-festival holdover run — its holdover showtimes are in the grid below">Held over</span>
+{{ /if }}
 {{ if duration_minutes }}
     <span class="text-xs text-gray-500 whitespace-nowrap">{{ duration_minutes }} min</span>
 {{ /if }}

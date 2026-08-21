@@ -5,7 +5,7 @@
     carries the exact "{N} left · {pct}%" alongside, which says how full more precisely, and
     a bar for the public would leak roughly how sold each showtime is. Label always present,
     so the tier is never colour-only. #}}
-<div class="font-semibold text-gray-800 tabular-nums whitespace-nowrap">{{ day }}</div>
+<div class="font-semibold text-gray-800 tabular-nums whitespace-nowrap">{{ day }}{{ if holdover }} <span class="inline-block border border-teal text-teal rounded text-[10px] font-medium uppercase px-1 align-middle" title="A post-festival holdover performance">Holdover</span>{{ /if }}</div>
 <div class="text-gray-500 tabular-nums whitespace-nowrap">{{ time }}</div>
 <div class="flex items-center gap-2 min-w-0">
     <span class="inline-block w-2.5 h-2.5 rounded-full shrink-0

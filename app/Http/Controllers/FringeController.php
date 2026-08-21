@@ -470,8 +470,10 @@ class FringeController extends Controller
                         'review_url' => $entry->published() ? $entry->url() : null,
                         // This showtime's own ticket page (/event/{event}/{performance}/),
                         // so the buyer lands with the right performance preselected.
+                        // Holdover showtimes carry their own event id — the holdover run is
+                        // a separate event on the ticket site.
                         'ticket_link' => TicketPage::performanceUrl(
-                            $record['event_id'] ?? TicketPage::eventId($entry->value('ticket_link')),
+                            $p['event_id'] ?? $record['event_id'] ?? TicketPage::eventId($entry->value('ticket_link')),
                             $p['id']
                         ),
                         ...ShowAvailability::shapePerformance($p, $revealNumbers),
@@ -588,8 +590,20 @@ class FringeController extends Controller
         // The ticket site's WAF can decide it doesn't like our IP and serve a challenge page
         // instead of JSON. That must not masquerade as a successful refresh — tell the
         // front-end explicitly so it can say so instead of swapping in the same stale data.
+        // A held-over show has a second event on the ticket site; its showtimes live in the
+        // same record (flagged `holdover`), so the refresh must plan both events — the same
+        // merge the bulk command does.
+        $show = Reviews::all()->first(
+            fn (EntryContract $entry) => TicketPage::eventId($entry->value('ticket_link')) === $event
+        );
+
         try {
-            $plan = ShowScraper::plan($event, FestivalUrls::currentSlug(), $report['shows'][$index]['performances'] ?? []);
+            $plan = ShowScraper::planWithHoldover(
+                $event,
+                TicketPage::eventId($show?->value('holdover_ticket_link')),
+                FestivalUrls::currentSlug(),
+                $report['shows'][$index]['performances'] ?? []
+            );
         } catch (TicketSiteBlocked) {
             return response()->json(['blocked' => true], 503);
         } catch (\App\Fringe\PerformanceListVanished) {

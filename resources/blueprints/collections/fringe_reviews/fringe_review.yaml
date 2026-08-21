@@ -115,6 +115,15 @@ tabs:
               validate:
                 - url
           -
+            handle: holdover_ticket_link
+            field:
+              input_type: url
+              type: text
+              display: 'Holdover ticket link'
+              instructions: 'The post-festival holdover run''s own event page on the ticket site (Westbury, Varscona, or Rapid Fire holdover series). Setting it puts a "Held over" badge on the review and gets the holdover showtimes scraped into the ticket-availability page, labelled as holdovers.'
+              validate:
+                - url
+          -
             handle: duration
             field:
               type: integer

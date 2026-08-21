@@ -52,15 +52,17 @@ class FringeSoldOutReport extends Command
     /**
      * How long a show's data stays fresh, tiered by how close it is to selling out: the
      * scarcer the tickets, the faster the numbers move, so the sooner it's due again.
-     * Fewer than 25% of seats remaining → 3h; fewer than 50% → 8h; otherwise (or with no
-     * seat data yet) → 24h. Past its window a show is due — unless it's sold out, which
-     * is permanent.
+     * Fewer than 25% of seats remaining → 1h; fewer than 50% → 3h; otherwise (or with no
+     * seat data yet) → 6h. Past its window a show is due — unless it's sold out, which
+     * is permanent. Tightened for the final festival weekend: with only a couple of
+     * performances left per show, a hot show can sell out inside the old 3h window, and
+     * the 24h default sized for a 10-day run would mean one check ever in the time left.
      */
-    private const STALE_HOURS_SCARCE = 3;
+    private const STALE_HOURS_SCARCE = 1;
 
-    private const STALE_HOURS_SELLING = 8;
+    private const STALE_HOURS_SELLING = 3;
 
-    private const STALE_HOURS_DEFAULT = 24;
+    private const STALE_HOURS_DEFAULT = 6;
 
     public function handle(): int
     {
@@ -72,6 +74,10 @@ class FringeSoldOutReport extends Command
             ->filter(fn (EntryContract $entry) => (string) $entry->value('festival') === $year)
             ->filter(fn (EntryContract $entry) => TicketPage::eventId($entry->value('ticket_link')))
             ->keyBy(fn (EntryContract $entry) => TicketPage::eventId($entry->value('ticket_link')));
+
+        // Shows held over past the festival carry a second event id whose performances are
+        // scraped into the same record, flagged `holdover` — see ShowScraper::planWithHoldover.
+        $holdovers = $shows->map(fn (EntryContract $entry) => TicketPage::eventId($entry->value('holdover_ticket_link')));
 
         if ($shows->isEmpty()) {
             $this->error("No {$year} entries with ticket links.");
@@ -92,7 +98,7 @@ class FringeSoldOutReport extends Command
         // A plain single-key sort, deliberately — Collection::sortBy with an array of
         // closures silently sorts by the last one only, which had it ignoring staleness.
         $due = $shows->keys()
-            ->filter(fn (string $eventId) => $this->isDue($eventId, $store))
+            ->filter(fn (string $eventId) => $this->isDue($eventId, $store, $holdovers[$eventId] ?? null))
             ->sortBy(fn (string $eventId) => (($store[$eventId]['pulled_at'] ?? null) ?: '0').'|'.$shows[$eventId]->value('title'))
             ->values();
 
@@ -123,7 +129,7 @@ class FringeSoldOutReport extends Command
             try {
                 // Carries sold-out showtimes forward from the last pull and skips cancelled
                 // queries — see App\Fringe\ShowScraper.
-                $performances = ShowScraper::performances($eventId, $year, $store[$eventId]['performances'] ?? []);
+                $performances = ShowScraper::performances($eventId, $year, $store[$eventId]['performances'] ?? [], $holdovers[$eventId] ?? null);
             } catch (TicketSiteBlocked $e) {
                 // Throttled. Everything pulled so far is already checkpointed; stop cleanly.
                 // Also log it — under the scheduler the console output is easy to lose, and a
@@ -205,7 +211,7 @@ class FringeSoldOutReport extends Command
      *
      * @param  array<string, array<string, mixed>>  $store
      */
-    private function isDue(string $eventId, array $store): bool
+    private function isDue(string $eventId, array $store, ?string $holdoverEventId = null): bool
     {
         $record = $store[$eventId] ?? null;
 
@@ -219,6 +225,15 @@ class FringeSoldOutReport extends Command
         // loses its entire run, so don't let it sit out a freshness window looking "fresh":
         // it's due until a pull brings its showtimes back.
         if ($performances === []) {
+            return true;
+        }
+
+        // A holdover event we hold no performances for means the run just grew showtimes the
+        // record doesn't know about — due regardless of freshness, and checked before the
+        // terminal rule below, since a fully-played festival run would otherwise be final
+        // and the holdover would never be scraped at all.
+        if ($holdoverEventId && $holdoverEventId !== $eventId
+            && ! collect($performances)->contains(fn (array $p) => $p['holdover'] ?? false)) {
             return true;
         }
 
