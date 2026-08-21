@@ -146,7 +146,7 @@ class ShowAvailability
             'time' => $when->format('g:i A'),
             'status' => $performance['status'],
             'tier' => $tier,
-            'tier_label' => ['cancelled' => 'Cancelled', 'sold_out' => 'Sold out', 'completed' => 'Completed', 'low' => 'Low', 'reduced' => 'Reduced availability', 'available' => 'Available'][$tier],
+            'tier_label' => ['cancelled' => 'Cancelled', 'sold_out' => 'Sold out', 'completed' => 'Completed', 'low' => 'Low', 'reduced' => 'Reduced', 'available' => 'Available'][$tier],
             'cancelled' => $cancelled,
             'sold_out' => $soldOut,
             // A post-festival holdover showtime — a separate event on the ticket site, scraped

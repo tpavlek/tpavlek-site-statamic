@@ -57,12 +57,18 @@ class FringeSoldOutReport extends Command
      * is permanent. Tightened for the final festival weekend: with only a couple of
      * performances left per show, a hot show can sell out inside the old 3h window, and
      * the 24h default sized for a 10-day run would mean one check ever in the time left.
+     *
+     * A show with a holdover performance still on sale outranks all of that at 30 minutes:
+     * the holdover series is a handful of single showtimes selling on a few days' notice,
+     * so they move faster than any scarcity tier predicts.
      */
-    private const STALE_HOURS_SCARCE = 1;
+    private const STALE_MINUTES_HOLDOVER = 30;
 
-    private const STALE_HOURS_SELLING = 3;
+    private const STALE_MINUTES_SCARCE = 60;
 
-    private const STALE_HOURS_DEFAULT = 6;
+    private const STALE_MINUTES_SELLING = 180;
+
+    private const STALE_MINUTES_DEFAULT = 360;
 
     public function handle(): int
     {
@@ -177,7 +183,7 @@ class FringeSoldOutReport extends Command
                 'title' => $entry->value('title'),
                 'sold_out' => collect($performances)->where('status', TicketAvailability::SOLD_OUT)->count().'/'.count($performances),
                 'pct_sold' => $offered > 0 ? round(100 * (1 - $withSeats->sum('seats_free') / $offered)) : null,
-                'next_check_after' => $this->staleAfterHours($performances).'h',
+                'next_check_after' => $this->staleAfterMinutes($performances).'m',
             ]);
 
             $bar->advance();
@@ -206,7 +212,7 @@ class FringeSoldOutReport extends Command
      *   - pulled within the window → no. Fresh enough; leave the box office alone.
      *   - pulled longer ago        → yes.
      *
-     * The window is per-show — see staleAfterHours(): shows close to selling out go stale
+     * The window is per-show — see staleAfterMinutes(): shows close to selling out go stale
      * faster than ones with plenty of seats.
      *
      * @param  array<string, array<string, mixed>>  $store
@@ -247,37 +253,46 @@ class FringeSoldOutReport extends Command
             return false;
         }
 
-        return Carbon::parse($record['pulled_at'])->lt(now()->subHours($this->staleAfterHours($performances)));
+        return Carbon::parse($record['pulled_at'])->lt(now()->subMinutes($this->staleAfterMinutes($performances)));
     }
 
     /**
      * How long this show's last pull stays fresh, from the fraction of seats still free
      * across the run (cancelled showtimes excluded, mirroring ShowAvailability's math).
-     * No seat data yet → the default window.
+     * No seat data yet → the default window. A holdover showtime still on sale overrides
+     * every tier — those handful of performances sell on days of notice.
      *
      * @param  array<int, array<string, mixed>>  $performances
      */
-    private function staleAfterHours(array $performances): int
+    private function staleAfterMinutes(array $performances): int
     {
-        $withSeats = collect($performances)
-            ->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)
+        $buyable = collect($performances)
+            ->reject(fn (array $p) => in_array($p['status'] ?? null, [TicketAvailability::CANCELLED, TicketAvailability::SOLD_OUT], true))
             // Played performances excluded too: only seats someone can still buy should
             // decide how urgently the remainder of the run gets re-checked.
+            ->reject(fn (array $p) => TicketAvailability::isPast($p));
+
+        if ($buyable->contains(fn (array $p) => $p['holdover'] ?? false)) {
+            return self::STALE_MINUTES_HOLDOVER;
+        }
+
+        $withSeats = collect($performances)
+            ->reject(fn (array $p) => ($p['status'] ?? null) === TicketAvailability::CANCELLED)
             ->reject(fn (array $p) => TicketAvailability::isPast($p))
             ->filter(fn (array $p) => ($p['seats_total'] ?? null) !== null);
 
         $offered = $withSeats->sum('seats_total');
 
         if ($offered <= 0) {
-            return self::STALE_HOURS_DEFAULT;
+            return self::STALE_MINUTES_DEFAULT;
         }
 
         $remaining = $withSeats->sum('seats_free') / $offered;
 
         return match (true) {
-            $remaining < 0.25 => self::STALE_HOURS_SCARCE,
-            $remaining < 0.50 => self::STALE_HOURS_SELLING,
-            default => self::STALE_HOURS_DEFAULT,
+            $remaining < 0.25 => self::STALE_MINUTES_SCARCE,
+            $remaining < 0.50 => self::STALE_MINUTES_SELLING,
+            default => self::STALE_MINUTES_DEFAULT,
         };
     }
 
