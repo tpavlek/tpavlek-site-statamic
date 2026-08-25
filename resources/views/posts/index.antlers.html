@@ -13,7 +13,9 @@
             client-side — every post is already in the page — so without JS the bar is
             x-cloak'd away rather than shown broken. Pills come from the taxonomy, not the
             posts, so an unused term shows an empty state; the taxonomy is curated enough
-            that this is a non-problem. #}}
+            that this is a non-problem. Ordered by how many posts carry the topic, most
+            first, so the pills that matter sit next to "All posts"; `collection="posts"`
+            scopes that count to this collection. #}}
         <div class="flex flex-wrap items-center gap-2 pb-6" x-cloak>
             <button type="button"
                     class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
@@ -21,7 +23,7 @@
                     @click="topic = ''">
                 All posts
             </button>
-            {{ taxonomy:topics sort="title" }}
+            {{ taxonomy:topics collection="posts" sort="entries_count:desc|title" }}
                 <button type="button"
                         class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
                         :class="topic === '{{ slug }}' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
