@@ -1,0 +1,37 @@
+{{#
+    /projects — a timeline of everything, newest first. Rows are entries in the `projects`
+    collection; the page's own content is the intro. Markers are coloured by `kind`.
+#}}
+<div class="pb-8 max-w-4xl mx-auto">
+    <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-4">{{ title }}</h1>
+    <div class="content text-lg mb-10">{{ content | widont }}</div>
+
+    <ol class="tl">
+        {{ collection:projects sort="started:desc" }}
+            <li class="tl__item tl__item--{{ kind }}">
+                {{ start_year = started | format('Y') }}
+                {{ end_year = ended ? (ended | format('Y')) : '' }}
+                <div class="tl__when">
+                    <span class="tl__year">{{ start_year }}</span>
+                    <span class="tl__until">{{ if !ended }}– now{{ elseif end_year != start_year }}– {{ end_year }}{{ /if }}</span>
+                </div>
+                <div class="tl__card">
+                    {{ if image }}
+                        <div class="tl__image">
+                            {{ if link }}<a href="{{ link }}" tabindex="-1" aria-hidden="true">{{ /if }}
+                            <img src="{{ image:url }}" alt="" loading="{{ index < 3 ? 'eager' : 'lazy' }}" />
+                            {{ if link }}</a>{{ /if }}
+                        </div>
+                    {{ /if }}
+                    <div class="tl__body">
+                        <h2 class="tl__title">{{ if link }}<a href="{{ link }}">{{ title }}</a>{{ else }}{{ title }}{{ /if }}</h2>
+                        <div class="tl__blurb">{{ blurb }}</div>
+                        {{ if link }}
+                            <a href="{{ link }}" class="tl__link">{{ link_label ?: 'Learn more' }} &rarr;</a>
+                        {{ /if }}
+                    </div>
+                </div>
+            </li>
+        {{ /collection:projects }}
+    </ol>
+</div>

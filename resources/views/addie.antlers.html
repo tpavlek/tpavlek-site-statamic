@@ -1,0 +1,53 @@
+<div class="pb-8 max-w-4xl mx-auto">
+    <header class="page-hero page-hero--tall" style="background-image:url('{{ og_image:url }}'); background-position: top;">
+        <div class="page-hero__text"><h1 class="page-hero__title">{{ title }}</h1><p class="page-hero__sub page-hero__sub--prose">{{ og_description }}</p></div>
+    </header>
+
+    {{ if video }}<video src="/assets/{{ video }}" controls preload="metadata" playsinline class="w-full rounded-lg mb-10"></video>{{ /if }}
+
+    <h2 class="text-2xl font-bold mb-4">Cancer sucks</h2>
+    <div class="md:flex md:gap-8 items-start mb-12">
+        <div class="content text-lg md:w-1/2">{{ content | widont }}</div>
+        <div class="md:w-1/2"><img src="/assets/addie/addie-headshot.jpg" alt="Addie" class="rounded-lg shadow-md my-0" loading="lazy" /></div>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4">Forever my President</h2>
+    <div class="md:flex md:gap-8 items-start mb-12">
+        <div class="md:w-1/3 mb-4 md:mb-0"><img src="/assets/addie/vote-addie.png" alt="Vote Addie campaign poster" class="rounded-lg shadow-md my-0 mx-auto" loading="lazy" /></div>
+        <div class="md:w-2/3 content text-lg">
+            <p>In 2020, during the <a href="https://edmonton.ctvnews.ca/edmonton-s-gone-paws-itively-nuts-off-leash-park-holds-pet-election-1.4938274">Mill Creek Off Leash Election</a>, Addie was able to bring many in Edmonton the joy he's brought to me every day since I adopted him.</p>
+            <p>In a time when we were all uncertain about our futures, he brought a much needed laugh and an opportunity to relax and lean in, hard, to something exceptionally silly.</p>
+            {{ if election_video }}
+                <video src="/assets/{{ election_video }}" controls preload="metadata" playsinline class="w-full rounded-lg"></video>
+            {{ else }}
+                {{# The CBC Edmonton clip that used to sit here was embedded from Facebook and is gone. #}}
+                <p class="text-gray-600 text-base">CBC Edmonton covered the race: <a href="https://www.cbc.ca/news/canada/edmonton/fetch-ballots-mill-creek-ravine-off-leash-dog-election-1.5564891">Fetch the ballots: meet the 9 dogs and 3 cats in the ravine race for off-leash president</a>.</p>
+            {{ /if }}
+            <p>He was the cat we all needed, at just the right time.</p>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4">Donate</h2>
+    <div class="content text-lg mb-6">
+        <p>Addie was adopted from the Edmonton Humane Society. His sister was adopted from SCARS.</p>
+        <p>Before Addie was adopted he lost some of his ear to frostbite, his fur was matted and unkempt and he was bullied by other cats, leaving him scared and alone. His previous owners had him declawed, leaving him not only feeling incomplete and in pain, but unable to defend himself effectively.</p>
+        <p>He's now the elected President of the Mill Creek Off Leash Area. Kittens can do anything when they find their forever home, and Addie wants to see as many kittens succeed as possible. He's asking everyone to donate (only what they can) to SCARS, the Humane Society, or any other registered cat shelter or rescue. After donating, email <a href="mailto:addie@tpavlek.me">addie@tpavlek.me</a> with the total so we can share how far we've gotten to his goal of helping every cat in need.</p>
+    </div>
+    <div class="rounded-lg border border-gray-200 p-6 mb-8 flex flex-col sm:flex-row sm:items-center gap-6">
+        <div class="flex gap-3 flex-wrap">
+            <a href="https://www.edmontonhumanesociety.com/how-to-help/donate/donate-now/" class="inline-block rounded-full bg-teal text-white no-underline px-5 py-2 hover:bg-teal-dark transition-colors">Edmonton Humane Society</a>
+            <a href="https://www.scarscare.ca/donate/" class="inline-block rounded-full bg-teal text-white no-underline px-5 py-2 hover:bg-teal-dark transition-colors">SCARS</a>
+        </div>
+        <div class="sm:ml-auto text-center sm:text-right">
+            <p class="text-xs uppercase tracking-widest text-gray-500 mb-0">Raised so far</p>
+            <p class="text-4xl font-black text-teal mb-0 leading-none">{{ total_raised }}</p>
+            <p class="text-sm text-gray-500 mb-0">from {{ donors }} donors</p>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4">Photos</h2>
+    <p class="mb-4"><a href="{{ album }}">View Addie's full album &rarr;</a></p>
+    <div class="columns-2 md:columns-3 gap-3">
+        {{ photos }}<img src="/assets/{{ value }}" alt="Addie" loading="lazy" class="w-full rounded-lg mb-3 mt-0 break-inside-avoid" />{{ /photos }}
+    </div>
+</div>

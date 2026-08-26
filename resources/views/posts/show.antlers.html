@@ -2,7 +2,21 @@
 <article class="py-8 lg:py-16 max-w-4xl mx-auto">
     {{# mb-5 overrides the global `h1 { mb-16 }`, which is four rems of air between a title
         and its own byline. #}}
+    {{# Dessert People posts open on their banner photo with the title set over it, the way
+        the old sub-site did; every other post keeps the plain heading. Keyed on the topic
+        rather than a field because the banner is part of that series' house style, not a
+        per-post choice. The gradient is what keeps white text readable over a photo of
+        whatever came out of the oven. #}}
+    {{ if (topics | pluck('slug') | contains('dessert-people')) && og_image }}
+        <header class="dp-hero" style="background-image:url('{{ og_image:url }}')">
+            <div class="dp-hero__text">
+                <h1 class="dp-hero__title">{{ title }}</h1>
+                <p class="dp-hero__date"><time datetime="{{ date format="Y-m-d" }}">{{ date format="F jS, Y" }}</time></p>
+            </div>
+        </header>
+    {{ else }}
     <h1 class="mb-5">{{ title }}</h1>
+    {{ /if }}
     {{# Square left, rounded right. The byline used to earn that shape by bleeding out past
         the column with `pl-16 -ml-16`, so the flat edge sat off-page; it keeps the shape but
         starts where the text starts. The right side gets more padding than the left because
@@ -101,6 +115,15 @@
                     {{ instagram }}
                 {{ /if }}
             {{ /if }}
+
+            {{# The Dessert People sets. Each is one partial; the styles are the `.dp-*`
+                block in style.css. #}}
+            {{ if type == "verdict" }}{{ partial:posts/dessert-verdict }}{{ /if }}
+            {{ if type == "pro_tip" }}{{ partial:posts/dessert-pro-tip }}{{ /if }}
+            {{ if type == "photo_beside" }}{{ partial:posts/dessert-photo-beside }}{{ /if }}
+            {{ if type == "gallery" }}{{ partial:posts/dessert-gallery }}{{ /if }}
+            {{ if type == "progress" }}{{ partial:posts/dessert-progress }}{{ /if }}
+            {{ if type == "pull_quote" }}{{ partial:posts/pull-quote }}{{ /if }}
         {{ /content }}
     </div>
     {{# Heading lives inside the check so a post with no videos doesn't announce a section

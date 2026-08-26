@@ -39,3 +39,5 @@ preferences:
       view: list
     venues:
       view: list
+    projects:
+      view: list

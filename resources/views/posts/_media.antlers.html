@@ -1,0 +1,10 @@
+{{#
+    One asset from a dessert-people set: a photo, a gif, or a short clip. Clips are the
+    muted autoplaying loops the old site used for "action shots", so they play inline the
+    same way rather than as a player. Expects the asset in scope.
+#}}
+{{ if is_video }}
+    <video src="{{ url }}" autoplay loop muted playsinline class="{{ class ?? '' }}"></video>
+{{ else }}
+    <img src="{{ url }}" alt="{{ alt | entities }}" loading="lazy" class="{{ class ?? '' }}" />
+{{ /if }}

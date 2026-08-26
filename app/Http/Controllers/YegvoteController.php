@@ -21,7 +21,9 @@ class YegvoteController
             ->get()
             ->filter(function (Entry $entry) {
                 return $entry->category->contains(fn (LocalizedTerm $term) => $term->slug === 'yegvote-2025');
-            });
+            })
+            ->sortByDesc(fn (Entry $entry) => $entry->get('publish_date'))
+            ->values();
 
         return (new \Statamic\View\View)
             ->template('yegvote-2025/index')

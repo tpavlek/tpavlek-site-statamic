@@ -1,0 +1,5 @@
+{{# "13 of 89" — a fraction beside a bar, brick red, with the numbers also in text. #}}
+<div class="dp-progress" role="img" aria-label="{{ progress }} of {{ total }} recipes baked">
+    <div class="dp-progress__fraction"><span class="dp-progress__done">{{ progress }}</span><span>{{ total }}</span></div>
+    <div class="dp-progress__track"><div class="dp-progress__bar" style="width:{{ (progress / total) * 100 }}%"></div></div>
+</div>

@@ -1,0 +1,76 @@
+title: Project
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: started
+            field:
+              type: date
+              display: Started
+              width: 33
+              required: true
+              instructions: 'Orders the timeline. Only the year is shown.'
+              validate:
+                - required
+          -
+            handle: ended
+            field:
+              type: date
+              display: Ended
+              width: 33
+              instructions: 'Leave empty for something still going — it shows as "now".'
+          -
+            handle: kind
+            field:
+              type: select
+              display: Kind
+              width: 33
+              clearable: false
+              default: civic
+              instructions: 'Colours the marker on the timeline.'
+              options:
+                civic: 'Civic / politics'
+                software: Software
+                media: 'Podcasts & video'
+                gaming: 'StarCraft era'
+                life: 'Everything else'
+          -
+            handle: blurb
+            field:
+              type: markdown
+              display: Blurb
+              instructions: 'A paragraph or two. Links welcome.'
+          -
+            handle: image
+            field:
+              type: assets
+              container: assets
+              folder: projects
+              max_files: 1
+              display: Image
+              width: 50
+          -
+            handle: link
+            field:
+              type: text
+              input_type: url
+              display: Link
+              width: 25
+              instructions: 'Where the work lives, if it still lives anywhere.'
+          -
+            handle: link_label
+            field:
+              type: text
+              display: 'Link label'
+              width: 25
+              instructions: 'e.g. "Listen", "Visit", "Read the reviews". Defaults to "Learn more".'

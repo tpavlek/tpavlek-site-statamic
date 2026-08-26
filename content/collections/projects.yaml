@@ -1,0 +1,6 @@
+title: Projects
+# No route: projects have no page of their own. They are the rows of the timeline on
+# /projects (resources/views/projects/index) and link out to wherever the work lives.
+revisions: false
+sort_field: started
+sort_dir: desc

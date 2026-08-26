@@ -1,0 +1,23 @@
+<div class="pb-8 max-w-4xl mx-auto">
+    <header class="page-hero" style="background-image:url('{{ og_image:url }}')">
+        <div class="page-hero__text"><h1 class="page-hero__title">{{ title }}</h1><p class="page-hero__sub">2013 – 2016</p></div>
+    </header>
+    <div class="content text-lg mb-10">{{ content | widont }}</div>
+
+    <h2 class="text-2xl font-bold mb-6">History</h2>
+    <ol class="tl tl--events">
+        {{ timeline }}
+            <li class="tl__item tl__item--gaming">
+                <div class="tl__when"><span class="tl__year tl__year--sm">{{ date }}</span></div>
+                <div class="tl__card tl__card--event">
+                    <div class="tl__icon" aria-hidden="true"><img src="/assets/sc2ctl/{{ icon }}.svg" alt="" /></div>
+                    <div class="tl__body">
+                        <h3 class="tl__title tl__title--sm">{{ title }}</h3>
+                        <div class="tl__blurb">{{ text | markdown }}</div>
+                    </div>
+                </div>
+            </li>
+        {{ /timeline }}
+    </ol>
+    <p class="text-lg text-gray-600 mt-8">SC2CTL is done now, but I'm <a href="/projects">still doing lots</a>.</p>
+</div>

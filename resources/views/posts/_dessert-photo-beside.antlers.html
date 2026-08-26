@@ -1,0 +1,7 @@
+{{# Media on one side, prose on the other; a column on phones with the media first. #}}
+<div class="dp-beside dp-beside--{{ side ?? 'left' }} dp-beside--{{ width ?? 'half' }}">
+    <div class="dp-beside__media">
+        {{ media }}{{ partial:posts/media class="dp-beside__img" }}{{ /media }}
+    </div>
+    <div class="dp-beside__text dp-prose">{{ text | markdown }}</div>
+</div>

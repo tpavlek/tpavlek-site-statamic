@@ -22,6 +22,19 @@ tabs:
               listable: false
               display: Content
           -
+            handle: og_description
+            field:
+              type: textarea
+              display: 'OpenGraph Description'
+          -
+            handle: og_image
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: 'OpenGraph Image'
+              instructions: 'Also the banner photo on the one-off pages that open with one.'
+          -
             handle: template
             field:
               type: template

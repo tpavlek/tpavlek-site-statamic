@@ -1,0 +1,24 @@
+{{# The card is drawn on a canvas, so the preview and the download are the same pixels.
+    The old site rendered a DOM overlay and screenshotted it with dom-to-image. #}}
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;900&display=swap" rel="stylesheet">
+<div class="pb-8 max-w-4xl mx-auto" x-data="exemptionCard('/assets/bylaw-exemption/mask-exemption-template.png')">
+    <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-4">{{ title }}</h1>
+    <div class="content text-lg mb-8">{{ content | widont }}</div>
+
+    <div class="grid gap-3 mb-6">
+        <label class="block"><span class="block text-xs uppercase tracking-widest text-gray-500 mb-1">Exemption</span>
+            <input type="text" x-model="header" @input="draw()" class="w-full rounded-lg border border-gray-300 px-4 py-3 text-lg focus:border-teal focus:outline-none" /></label>
+        <label class="block"><span class="block text-xs uppercase tracking-widest text-gray-500 mb-1">Fine print</span>
+            <input type="text" x-model="caption" @input="draw()" class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-teal focus:outline-none" /></label>
+    </div>
+
+    <canvas x-ref="canvas" width="1000" height="750" class="w-full h-auto rounded-lg shadow-md mb-4" aria-label="Your exemption card"></canvas>
+
+    <div class="flex flex-wrap items-center gap-3">
+        <button type="button" @click="download()" class="rounded-full bg-teal text-white px-5 py-2 hover:bg-teal-dark transition-colors cursor-pointer border-0">Download card</button>
+        <button type="button" @click="shuffle(); draw()" class="rounded-full border border-gray-300 text-gray-700 px-5 py-2 hover:border-teal hover:text-teal transition-colors cursor-pointer bg-white">Surprise me</button>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-8 mb-0">Made with ❤ by Troy Pavlek &amp; <a href="https://www.natebryant.ca/">Nate Bryant</a>. Photo credit <a href="https://twitter.com/davidbloomphoto">@davidbloomphoto</a>, <a href="https://edmontonjournal.com/news/local-news/city-of-edmonton-abruptly-ends-mask-exemption-card-distribution-after-four-days">Edmonton Journal</a>.</p>
+</div>

@@ -233,3 +233,392 @@ h1 {
         }
     }
 }
+
+/*
+ * Dessert People
+ *
+ * The baking series carried over from the old sub-site. Its look — banner-with-title
+ * header, brick-red headings, grey cards with a photo cut on a slant, a fraction-and-bar
+ * progress meter — is reproduced here as a handful of `.dp-*` blocks so the posts read as
+ * one series. The slants are clip-paths; the old site faked them with a rotated,
+ * oversized div positioned over the edge of a background image, which is why its markup
+ * was hard to reason about. Everything stacks to a single column below `md`.
+ */
+.dp-hero {
+    @apply relative w-full bg-cover bg-center mb-8 rounded-lg overflow-hidden;
+    min-height: 16rem;
+}
+
+.dp-hero__text {
+    @apply absolute inset-x-0 bottom-0 px-6 pt-24 pb-5 text-center;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0));
+}
+
+.dp-hero__title {
+    @apply text-white text-3xl mb-1 leading-tight;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.dp-hero__date {
+    @apply text-gold text-lg font-semibold mb-0;
+}
+
+.dp-heading {
+    @apply text-center font-black text-2xl text-brick mt-10 mb-4;
+}
+
+/* Prose inside the cards: the markdown filter emits <p>s, and the `.content` rules give
+   those the blog's paragraph spacing, which is too much inside a card. */
+.dp-prose > p:last-child {
+    @apply mb-0;
+}
+
+.dp-prose > p {
+    @apply mb-3 leading-relaxed text-base;
+}
+
+/* Verdict card */
+.dp-verdict {
+    @apply my-10;
+}
+
+.dp-verdict__card {
+    @apply bg-grey-100 rounded-lg shadow-md overflow-hidden flex flex-col;
+}
+
+.dp-verdict__half {
+    @apply flex w-full;
+    min-height: 11rem;
+}
+
+.dp-verdict__body {
+    @apply flex-1 p-5;
+}
+
+.dp-verdict__who {
+    @apply uppercase text-xs font-black tracking-widest text-gray-500 mb-1;
+}
+
+.dp-verdict__photo {
+    @apply flex-none w-1/3 bg-cover bg-top;
+}
+
+.dp-verdict__photo--left {
+    clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%);
+}
+
+.dp-verdict__photo--right {
+    clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Pro tip */
+.dp-tip {
+    @apply my-8 flex bg-grey-100 rounded-lg shadow-md overflow-hidden;
+    min-height: 10rem;
+}
+
+.dp-tip__body {
+    @apply flex-1 p-5 flex flex-col justify-center;
+}
+
+.dp-tip__label {
+    @apply uppercase text-sm font-black tracking-widest text-brick mb-2;
+}
+
+.dp-tip__photo {
+    @apply flex-none w-1/3 bg-cover bg-top;
+    clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Photo beside text */
+.dp-beside {
+    @apply my-8 flex flex-col items-center gap-6;
+}
+
+.dp-beside__media {
+    @apply w-full;
+}
+
+/* `.post-content` prefix so these outrank `.content img:not(...)`'s my-12. */
+.post-content .dp-beside__img {
+    @apply w-full my-0 rounded-md;
+}
+
+.dp-beside__text {
+    @apply w-full;
+}
+
+/* Gallery */
+.dp-gallery {
+    @apply my-8;
+}
+
+.dp-gallery--card {
+    @apply bg-grey-100 rounded-lg shadow-md p-4;
+}
+
+.dp-gallery__text {
+    @apply mb-4;
+}
+
+.dp-gallery__items {
+    @apply flex flex-wrap items-start justify-center gap-3 mx-auto;
+}
+
+.dp-gallery__items--stacked {
+    @apply flex-col items-center;
+}
+
+.dp-gallery__item {
+    @apply flex-1 min-w-0;
+}
+
+.dp-gallery__items--stacked .dp-gallery__item,
+.dp-gallery__items--grid .dp-gallery__item {
+    @apply flex-none w-full;
+}
+
+.post-content .dp-gallery__item img,
+.post-content .dp-gallery__item video {
+    @apply w-full my-0 rounded-md;
+}
+
+.dp-gallery__items--two_thirds { @apply w-2/3; }
+.dp-gallery__items--half { @apply w-1/2; }
+.dp-gallery__items--third { @apply w-1/3; }
+
+/* Progress */
+.dp-progress {
+    @apply my-10 flex items-center gap-3;
+}
+
+.dp-progress__fraction {
+    @apply flex flex-col text-center font-black text-xl leading-tight text-gray-900;
+}
+
+.dp-progress__done {
+    @apply border-b-2 border-gray-900 px-1;
+}
+
+.dp-progress__track {
+    @apply flex-1 h-14 rounded-lg border-2 border-gray-900 shadow-md overflow-hidden;
+}
+
+.dp-progress__bar {
+    @apply h-full bg-brick;
+    min-width: 0.5rem;
+}
+
+/* Pull quote */
+.dp-quote {
+    @apply my-8 mx-0 px-0 flex items-center justify-center gap-4 text-center border-0 not-italic;
+}
+
+.dp-quote__mark {
+    @apply text-gray-300 leading-none;
+    font-family: Georgia, serif;
+    font-size: 5rem;
+}
+
+.dp-quote__text {
+    @apply text-4xl italic text-gray-500;
+    font-family: Georgia, serif;
+}
+
+@screen md {
+    .dp-hero {
+        min-height: 24rem;
+    }
+
+    .dp-hero__title {
+        @apply text-5xl;
+    }
+
+    .dp-verdict__card {
+        @apply flex-row;
+    }
+
+    .dp-verdict__half {
+        @apply w-1/2;
+    }
+
+    .dp-verdict__half + .dp-verdict__half {
+        @apply border-l-2 border-grey-300;
+    }
+
+    .dp-beside {
+        @apply flex-row;
+    }
+
+    .dp-beside--right {
+        @apply flex-row-reverse;
+    }
+
+    .dp-beside--half .dp-beside__media { @apply w-1/2; }
+    .dp-beside--third .dp-beside__media { @apply w-1/3; }
+
+    .dp-beside__text {
+        @apply flex-1;
+    }
+
+    .dp-gallery__items--grid .dp-gallery__item {
+        width: calc(50% - 0.375rem);
+    }
+
+    .dp-quote__text {
+        @apply text-6xl;
+    }
+}
+
+/*
+ * Timeline (/projects, /sc2ctl) and the photo-with-title header the migrated one-off
+ * pages open on. One rail down the left, a marker per row coloured by the project's
+ * `kind`, and the year sitting in the gutter beside it.
+ */
+.page-hero {
+    @apply relative w-full bg-cover bg-center mb-8 rounded-lg overflow-hidden;
+    min-height: 14rem;
+}
+
+.page-hero--tall {
+    min-height: 20rem;
+}
+
+.page-hero__text {
+    @apply absolute inset-x-0 bottom-0 px-6 pt-24 pb-5 text-center;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+}
+
+.page-hero__title {
+    @apply text-white text-3xl mb-1 leading-tight;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.page-hero__sub {
+    @apply text-gold text-lg font-semibold mb-0;
+}
+
+.page-hero__sub--prose {
+    @apply text-white text-base font-normal max-w-2xl mx-auto;
+}
+
+.tl {
+    @apply list-none p-0 m-0 relative;
+}
+
+.tl::before {
+    content: '';
+    @apply absolute top-2 bottom-2 w-0.5 bg-gray-200;
+    left: 0.4375rem;
+}
+
+.tl__item {
+    @apply relative pl-8 mb-10;
+}
+
+.tl__item::before {
+    content: '';
+    @apply absolute rounded-full bg-gray-400 border-2 border-white shadow;
+    width: 1rem;
+    height: 1rem;
+    left: 0;
+    top: 0.35rem;
+}
+
+.tl__item--civic::before { @apply bg-teal; }
+.tl__item--software::before { @apply bg-blue-500; }
+.tl__item--media::before { @apply bg-amber-500; }
+.tl__item--gaming::before { @apply bg-violet-500; }
+.tl__item--life::before { @apply bg-rose-400; }
+
+.tl__when {
+    @apply mb-2 text-sm font-semibold uppercase tracking-widest text-gray-500;
+}
+
+.tl__year {
+    @apply text-gray-800;
+}
+
+.tl__year--sm {
+    @apply normal-case tracking-normal font-medium;
+}
+
+.tl__card {
+    @apply rounded-lg border border-gray-200 overflow-hidden bg-white flex flex-col;
+}
+
+.tl__card--event {
+    @apply flex-row items-start gap-4 p-4 border-0 bg-transparent;
+}
+
+.tl__image img {
+    @apply w-full aspect-video object-cover my-0;
+}
+
+.tl__body {
+    @apply p-4 flex-1 min-w-0;
+}
+
+.tl__card--event .tl__body {
+    @apply p-0;
+}
+
+.tl__icon {
+    @apply flex-none w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center;
+}
+
+.tl__icon img {
+    @apply w-6 h-6 my-0 opacity-70;
+}
+
+.tl__title {
+    @apply text-lg font-bold leading-tight mb-1 mt-0 py-0;
+}
+
+.tl__title--sm {
+    @apply text-lg;
+}
+
+.tl__title a {
+    @apply text-gray-800 no-underline hover:text-teal;
+}
+
+.tl__blurb p {
+    @apply text-sm text-gray-600 leading-relaxed mb-2;
+}
+
+.tl__blurb a {
+    @apply text-teal;
+}
+
+.tl__blurb p:last-child {
+    @apply mb-0;
+}
+
+.tl__link {
+    @apply inline-block mt-2 text-sm text-teal font-medium no-underline hover:underline;
+}
+
+@screen md {
+    .page-hero { min-height: 20rem; }
+    .page-hero--tall { min-height: 26rem; }
+    .page-hero__title { @apply text-5xl; }
+
+    /* Year moves into a gutter left of the rail. */
+    .tl { @apply ml-28; }
+    .tl__item { @apply pl-10; }
+    .tl__when {
+        @apply absolute right-full top-0 mr-6 text-right mb-0 flex flex-col leading-tight;
+        width: 5.5rem;
+    }
+    .tl__year { @apply text-base; }
+    .tl__until { @apply text-xs; }
+    .tl__card { @apply flex-row; }
+    .tl__image { @apply w-1/3 flex-none; }
+    /* Every image cropped to the same shape so a portrait poster can't make its card
+       twice the height of the others; the card stretches the image only if the text
+       is taller. */
+    .tl__card { @apply items-stretch; min-height: 10rem; }
+    .tl__image img { @apply h-full min-h-full; }
+    .tl__card--event { @apply p-0; }
+}

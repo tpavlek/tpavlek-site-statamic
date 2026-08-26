@@ -1,0 +1,14 @@
+{{#
+    A row (or grid, or stack) of media, optionally on a card with text above. Replaces
+    three old partials — photos-caption, justify-around-gallery and the hand-written
+    flex divs — that all did versions of this.
+#}}
+{{ on_card = card || text }}
+<div class="dp-gallery {{ if on_card }}dp-gallery--card{{ /if }}">
+    {{ if text }}<div class="dp-prose dp-gallery__text">{{ text | markdown }}</div>{{ /if }}
+    <div class="dp-gallery__items dp-gallery__items--{{ layout ?? 'row' }} dp-gallery__items--{{ size ?? 'full' }}">
+        {{ media }}
+            <div class="dp-gallery__item">{{ partial:posts/media }}</div>
+        {{ /media }}
+    </div>
+</div>

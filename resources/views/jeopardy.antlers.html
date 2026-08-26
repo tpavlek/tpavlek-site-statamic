@@ -1,0 +1,37 @@
+<div class="pb-8 max-w-4xl mx-auto">
+    <header class="page-hero" style="background-image:url('{{ og_image:url }}')">
+        <div class="page-hero__text"><h1 class="page-hero__title">{{ title }}</h1><p class="page-hero__sub">2015 – 2016</p></div>
+    </header>
+    <div class="content text-lg mb-10">{{ content | widont }}</div>
+
+    {{ episodes }}{{ if (index + 1) == featured }}
+    <h2 class="text-2xl font-bold mb-4">Episode {{ featured }}: {{ title }}</h2>
+    <div class="video-embed mb-10"><iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/{{ youtube }}" title="{{ title }}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+    {{ /if }}{{ /episodes }}
+
+    <h2 class="text-2xl font-bold mb-4">Every episode</h2>
+    <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 list-none p-0 m-0 mb-12">
+        {{ episodes }}
+            <li>
+                <a href="https://www.youtube.com/watch?v={{ youtube }}" class="group block no-underline text-gray-800">
+                    <img src="/assets/jeopardy/thumb{{ index + 1 }}.jpg" alt="" loading="lazy" class="w-full aspect-video object-cover rounded-lg my-0 bg-grey-100 group-hover:opacity-90 transition-opacity" />
+                    <p class="text-xs uppercase tracking-widest text-gray-500 mt-2 mb-0">Episode {{ index + 1 }}</p>
+                    <p class="text-sm leading-snug mt-0 mb-0 group-hover:text-teal transition-colors">{{ title }}</p>
+                </a>
+            </li>
+        {{ /episodes }}
+    </ul>
+
+    <h2 class="text-2xl font-bold mb-4">I lied about Starcraft Jeopardy returning</h2>
+    <div class="video-embed mb-4"><iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/KeLTcA3BZck" title="Starcraft Jeopardy returns" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+    <div class="content text-lg mb-10">
+        <p>Oh boy, wouldn't it be great if this video was true? Unfortunately, the passion is just dead. It was made in a brief period where I was watching and enjoying StarCraft again. I just couldn't keep it up, and would do the project a huge disservice by writing questions without having expertise. For now, enjoy the immortalised episodes of the people you know and love from the StarCraft community competing in the singular wordplay-focused question-and-answer style of <em>Jeopardy!</em></p>
+        <p class="font-bold">The dream is as dead as ded gaem.</p>
+    </div>
+
+    <div class="rounded-lg border border-gray-200 p-6">
+        <h2 class="text-xl font-bold mb-2">The code</h2>
+        <p class="mb-3">The Jeopardy system is open source. Use it to play your own games, or use the parser I built to pull games off <a href="http://j-archive.com">j-archive</a> and play with your friends.</p>
+        <a href="https://github.com/tpavlek/Jeopardy" class="inline-block rounded-full bg-teal text-white no-underline px-5 py-2 hover:bg-teal-dark transition-colors">Check out the code on GitHub &rarr;</a>
+    </div>
+</div>

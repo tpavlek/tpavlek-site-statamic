@@ -26,48 +26,43 @@
     </a>
 </div>
 
-<div class="pb-8 max-w-4xl mx-auto text-lg">
-    {{ collection:posts as="posts" sort="date:desc" limit="4" }}
-        {{ posts }}
-        {{ if yegvote_2025_update_types | pluck('title') | contains_any('Update', 'Analysis', 'Context') }}
-            <a href="{{ url }}" class="appearance-none text-gray-800 no-underline">
-                <div class="rounded-lg rounded-l-none border border-grey-300 hover:bg-gray-50 mb-3">
-                    <div class="border-teal border-l-8">
-                        <div class="px-4 py-2">
-                            <div class="text-normal font-light flex items-center">{{ partial:yegvote-2025/update-badge }} <span>{{ title }}</span></div>
-                            <span class="text-xs text-gray-600 uppercase">{{ date }}</span>
+<div class="pb-8 max-w-4xl mx-auto">
+    {{# The five newest posts on the election — same list as the reading section on
+        /fringe/reviews — with the rest behind the hub filtered to the topic. Membership
+        is the `yegvote-2025` topic, so tagging a post is the whole job of listing it. #}}
+    {{ collection:posts taxonomy:topics="yegvote-2025" sort="date:desc" limit="5" as="election_posts" }}
+        {{ if election_posts }}
+            <section class="pt-4">
+                <h2 class="text-xl font-bold mb-3">Reading on the election</h2>
+                <ul class="list-none p-0 m-0 divide-y divide-gray-100 border-t border-b border-gray-100">
+                    {{ election_posts }}
+                        <li class="relative py-3 hover:bg-grey-50 transition-colors">
+                            <a href="{{ url }}" class="font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
+                            <p class="text-sm text-gray-500 mt-0.5 mb-0">
+                                <time datetime="{{ date format="Y-m-d" }}">{{ date format="F j, Y" }}</time>
+                                {{ if og_description }}<span class="text-gray-600"> &middot; {{ og_description }}</span>{{ /if }}
+                            </p>
+                        </li>
+                    {{ /election_posts }}
+                </ul>
+                <p class="mt-3 mb-0"><a href="/posts?topic=yegvote-2025" class="text-teal font-medium no-underline hover:underline">View all election posts &rarr;</a></p>
+            </section>
 
-                        </div>
-                    </div>
-                </div>
-            </a>
+            <hr class="w-1/2 text-center mx-auto py-4" />
         {{ /if }}
-
-        {{ /posts }}
     {{ /collection:posts }}
-    <p class="content">
-        <a href="/posts">View all posts →</a>
-    </p>
 
-    <h3 class="uppercase font-semibold text-2xl">Videos</h3>
-
-    <div class="pb-2 overflow-scroll">
-        {{ videos as="video" }}
-        <ul class="carousel grid grid-flow-col gap-2">
-            {{ video }}
-            <li class="my-2">
-                {{ if youtube }}
-                    <iframe width="315" height="560" src="https://www.youtube.com/embed/{{ youtube }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                {{ else }}
-                    <div class="mb-2 flex items-center"><span class="bg-grey-200 rounded-lg text-xs font-medium uppercase py-1 px-3 mr-2">VIDEO</span> {{ content | strip_tags | safe_truncate:200:... }}</div>
-                {{ /if }}
-
-            </li>
-
-            {{ /video }}
-        </ul>
-        {{ /videos }}
-
-    </div>
-
+    {{# Videos tagged yegvote-2025 (filtered in YegvoteController), as cards linking to
+        their /video pages rather than inline YouTube players — same strip as the Fringe
+        reviews page, and a page of 19 embedded players is not something to scroll past. #}}
+    {{ if videos | length }}
+        <section class="pt-4">
+            <h2 class="text-xl font-bold mb-3">The election on video</h2>
+            <ul class="flex gap-4 overflow-x-auto pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 list-none p-0 m-0">
+                {{ videos }}
+                    {{ partial:video-card }}
+                {{ /videos }}
+            </ul>
+        </section>
+    {{ /if }}
 </div>

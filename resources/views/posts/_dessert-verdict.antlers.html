@@ -1,0 +1,28 @@
+{{#
+    The two-up verdict card: each baker's rating and one-liner beside a reaction photo.
+    The old site picked the photo by mangling the star value into a filename
+    ("troy_3_500_stars.jpg" was a different face from "troy_3_50_stars.jpg"); here the
+    photo is simply a field. The slanted edge on each photo is a clip-path, not a rotated
+    overlay div. Stacks to two rows on phones.
+#}}
+<div class="dp-verdict">
+    <h3 class="dp-heading">{{ recipe ?: 'The Verdict' }}</h3>
+    <div class="dp-verdict__card">
+        <div class="dp-verdict__half">
+            {{ troy_photo }}<div class="dp-verdict__photo dp-verdict__photo--left" style="background-image:url('{{ url }}')" role="img" aria-label="Troy's reaction"></div>{{ /troy_photo }}
+            <div class="dp-verdict__body">
+                <p class="dp-verdict__who">Troy</p>
+                {{ partial:posts/stars :value="troy_stars:value" }}
+                <div class="dp-prose">{{ troy_verdict | markdown }}</div>
+            </div>
+        </div>
+        <div class="dp-verdict__half">
+            <div class="dp-verdict__body">
+                <p class="dp-verdict__who">Rhianna</p>
+                {{ partial:posts/stars :value="rhi_stars:value" }}
+                <div class="dp-prose">{{ rhi_verdict | markdown }}</div>
+            </div>
+            {{ rhi_photo }}<div class="dp-verdict__photo dp-verdict__photo--right" style="background-image:url('{{ url }}')" role="img" aria-label="Rhianna's reaction"></div>{{ /rhi_photo }}
+        </div>
+    </div>
+</div>

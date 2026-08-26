@@ -11,6 +11,11 @@ page_links:
         icon: "fas fa-pencil"
         link: "/posts"
         handle: "Read my posts"
+    -
+        label: "Projects"
+        icon: "fas fa-history"
+        link: "/projects"
+        handle: "Things I've made"
     - 
         label: "YouTube"
         icon: "fab fa-youtube"

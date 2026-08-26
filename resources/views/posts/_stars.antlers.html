@@ -1,0 +1,12 @@
+{{#
+    Star glyphs for a plain numeric rating in a Bard set (0–5 in halves), with a spoken
+    equivalent for screen readers — same reasoning as fringe/_stars, which can't be reused
+    here because it expects the review fieldtype's `stars:label`.
+
+    Expects `value` in scope, e.g. {{ partial:posts/stars :value="troy_stars" }}.
+#}}
+{{ full = (value | floor) }}
+{{ half = (value - full) >= 0.5 ? 1 : 0 }}
+{{ empty = 5 - full - half }}
+<span class="text-brick text-lg tracking-tight whitespace-nowrap" aria-hidden="true">{{ '★' | repeat:full }}{{ if half }}½{{ /if }}{{ '☆' | repeat:empty }}</span>
+<span class="sr-only">{{ value }} out of 5 stars</span>

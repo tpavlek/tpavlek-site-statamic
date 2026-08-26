@@ -1,0 +1,8 @@
+{{# A tip on a card with the author's photo down the right, slanted edge. #}}
+<aside class="dp-tip">
+    <div class="dp-tip__body">
+        <p class="dp-tip__label">{{ author == 'rhianna' ? 'Rhianna' : 'Troy' }}'s pro tip</p>
+        <div class="dp-prose dp-tip__text">{{ tip | markdown }}</div>
+    </div>
+    {{ photo }}<div class="dp-tip__photo" style="background-image:url('{{ url }}')" role="presentation"></div>{{ /photo }}
+</aside>

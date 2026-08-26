@@ -19,6 +19,11 @@ export default {
                 'teal-dark': '#00706e',
                 'teal-light': '#a6d0cf',
                 'grey': colors.gray,
+                // Dessert People house colours, carried over from the old sub-site: a
+                // dark brick red for headings and the progress bar, gold for the date on
+                // the banner. Only the dessert-people partials use them.
+                'brick': '#7f1d1d',
+                'gold': '#d0aa48',
             }
         }
     },

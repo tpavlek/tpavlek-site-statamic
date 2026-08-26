@@ -164,6 +164,11 @@ Alpine.data('postFilter', () => ({
 
     init() {
         this.$watch('topic', () => this.apply())
+        // `/posts?topic=dessert-people` lands with that pill already active, so a
+        // section of the old site can redirect straight to its posts. Unknown slugs just
+        // show the empty state with its "show all" link.
+        const wanted = new URLSearchParams(window.location.search).get('topic')
+        if (wanted) this.topic = wanted
     },
 
     apply() {
@@ -185,6 +190,95 @@ Alpine.data('postFilter', () => ({
         }
 
         this.shown = shown
+    },
+}))
+
+
+// /bylaw-exemption. Draws the card on a canvas so the preview is the download. Text sits
+// where the card's blank sits: measured on the 1000×750 template, rotated with it.
+Alpine.data('exemptionCard', (templateUrl) => ({
+    header: '',
+    caption: '',
+    image: null,
+    presets: [
+        ['I cannot properly navigate roundabouts', 'To me, they are the traffic equivalent of a sudoku puzzle'],
+        ['I cannot use my signal lights', 'Prepare yourself for some unpredictable sh*t'],
+        ['I cannot wear a mask or face covering', 'Please give me 2 metres of space.'],
+        ['I cannot pay taxes or parking tickets', "Please don't bother trying to collect payment."],
+        ['I am going to sneeze in your face', 'Here comes the mucus!!!'],
+        ['I cannot chew quietly', 'You better hope those Beats By Dre headphones go to 11.'],
+        ['I can have more than 6 cats and 3 dogs in my household', "It won't smell too bad."],
+        ['Hello.', 'My name is Inigo Montoya. You killed my father. Prepare to die.'],
+        ['I cannot make the playoffs', 'I think high draft picks are worth more than cups.'],
+        ['Get out of jail free card', 'This card may be kept until needed or sold.'],
+        ['My blue lamborghini is not too loud', "It's accessible so even the hard of hearing can enjoy it."],
+        ['I only vote no', 'Vote yes to me being mayor.'],
+        ['I cannot pay for my own MBA', 'Please give me $44,000.'],
+        ['I am legally entitled to park in a bike lane', 'I pay road tax.'],
+        ["Can't pay $3.50 to use transit?", 'What if we enforce a $250 fine?'],
+    ],
+
+    init() {
+        this.shuffle()
+        this.image = new Image()
+        this.image.onload = () => this.draw()
+        this.image.src = templateUrl
+        // Redraw once the webfont lands; the first paint may have used the fallback.
+        if (document.fonts) document.fonts.ready.then(() => this.draw())
+    },
+
+    shuffle() {
+        const [header, caption] = this.presets[Math.floor(Math.random() * this.presets.length)]
+        this.header = header
+        this.caption = caption
+    },
+
+    wrap(ctx, text, maxWidth) {
+        const lines = []
+        let line = ''
+        for (const word of text.split(/\s+/)) {
+            const trial = line ? `${line} ${word}` : word
+            if (ctx.measureText(trial).width > maxWidth && line) { lines.push(line); line = word } else line = trial
+        }
+        if (line) lines.push(line)
+        return lines
+    },
+
+    draw() {
+        const canvas = this.$refs.canvas
+        if (!canvas || !this.image || !this.image.complete) return
+        const ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(this.image, 0, 0, canvas.width, canvas.height)
+
+        ctx.save()
+        ctx.translate(112, 246)
+        ctx.rotate(10.6 * Math.PI / 180)
+        ctx.fillStyle = 'rgb(240, 213, 192)'
+        ctx.shadowColor = 'rgb(156, 54, 10)'
+        ctx.shadowOffsetX = 8
+        ctx.shadowOffsetY = 11
+        ctx.shadowBlur = 9
+        ctx.textBaseline = 'top'
+
+        ctx.font = '900 54px "Roboto Slab", Georgia, serif'
+        let y = 0
+        for (const line of this.wrap(ctx, this.header, 560)) { ctx.fillText(line, 0, y); y += 62 }
+        y += 18
+        ctx.font = 'italic 400 25px "Roboto Slab", Georgia, serif'
+        for (const line of this.wrap(ctx, this.caption, 390)) { ctx.fillText(line, 0, y); y += 37 }
+        ctx.restore()
+    },
+
+    download() {
+        this.draw()
+        this.$refs.canvas.toBlob((blob) => {
+            const link = document.createElement('a')
+            link.download = 'exemption-card.png'
+            link.href = URL.createObjectURL(blob)
+            link.click()
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000)
+        }, 'image/png')
     },
 }))
 
