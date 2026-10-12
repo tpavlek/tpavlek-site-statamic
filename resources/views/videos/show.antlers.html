@@ -11,18 +11,11 @@
         as the meta description and listing summary. #}}
     {{ if article }}
         <article class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-x-12 lg:items-start">
-            <header class="lg:col-span-2">
-                {{# mb-5 overrides the global `h1 { mb-16 }`, as on posts. #}}
-                <h1 class="mb-5">{{ title }}</h1>
-                {{# The same byline pill as a post, since this is read as one. #}}
-                <div class="bg-gray-800 inline-block text-sm mb-8 pl-4 pr-5 uppercase tracking-widest text-white py-1 rounded-r-full">
-                    Video
-                    {{ if topics }}
-                    in {{ topics }}{{ if link }}<a href="{{ link }}" class="text-teal-light no-underline hover:text-white">{{ title }}</a>{{ else }}{{ title }}{{ /if }}{{ unless last }}, {{ /unless }}{{ /topics }}
-                    {{ /if }}
-                    {{ if publish_date }}on <time datetime="{{ publish_date format="Y-m-d" }}">{{ publish_date format="M j, Y" }}</time>{{ /if }}
-                </div>
-            </header>
+            <div class="lg:col-span-2">
+                {{# The same header as a post, since this is read as one. The dek is only the
+                    override: the YouTube description usually opens the way the article does. #}}
+                {{ partial:posts/article-header :header_date="publish_date" :dek="og_description_override" is_video="true" }}
+            </div>
 
             {{# Narrower than the plain layout's on phones: a full-width 9:16 player is taller
                 than the screen and buries the article it's meant to sit beside. #}}
@@ -37,6 +30,8 @@
                 {{ article }}
                     {{ partial:posts/bard-sets }}
                 {{ /article }}
+                {{# As on posts: closes the article unless the body already has one. #}}
+                {{ unless has_subscribe_prompt }}{{ partial:email-subscribe }}{{ /unless }}
             </div>
         </article>
     {{ else }}

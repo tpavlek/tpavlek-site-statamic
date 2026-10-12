@@ -1,0 +1,47 @@
+{{#
+    The header of anything read as an article: posts, and videos with a companion article.
+    One partial so the two can't drift apart.
+
+    Topics above the headline, a dek (one-sentence summary) under it, then a byline row with
+    the date and reading time. It replaced an all-caps "PUBLISHED IN … ON …" pill that read
+    as a decade older than the rest of the site.
+
+    Expects the entry in scope, plus:
+      header_date   the date to show (a post's `date`, a video's `publish_date`)
+      dek           the summary line; omitted when empty
+      is_video      adds a "Video" mark to the byline
+      hide_title    for Dessert People posts, whose title is set over the banner photo
+
+    Topics have no pages of their own, so a topic links to the section that hosts it (the
+    term's `link`, e.g. fringe → /fringe) and is plain text when there isn't one.
+#}}
+<header class="mb-10 lg:mb-12">
+    {{ if topics }}
+        <p class="mb-3 text-sm font-semibold text-teal-dark">
+            {{ topics }}{{ if link }}<a href="{{ link }}" class="text-teal-dark no-underline hover:text-gray-900">{{ title }}</a>{{ else }}<span>{{ title }}</span>{{ /if }}{{ unless last }}<span class="mx-1.5 font-normal text-gray-300" aria-hidden="true">/</span>{{ /unless }}{{ /topics }}
+        </p>
+    {{ /if }}
+
+    {{ unless hide_title }}
+        {{# The utilities override the global `h1 { text-4xl mb-16 }` (Tailwind is set to
+            `important`). text-balance evens out the line breaks, so a long title doesn't end
+            on one stranded word. #}}
+        <h1 class="mb-0 max-w-3xl text-balance text-3xl font-bold leading-[1.1] tracking-tight text-gray-900 sm:text-4xl lg:text-[2.75rem]">{{ title }}</h1>
+    {{ /unless }}
+
+    {{ if dek }}
+        <p class="mb-0 mt-4 max-w-2xl text-lg leading-snug text-gray-600 sm:text-xl">{{ dek }}</p>
+    {{ /if }}
+
+    {{# The photo stays beside the text on a phone, and each piece is nowrap, so a narrow
+        screen breaks between "Oct 11, 2026" and "5 min read" rather than inside either. #}}
+    <div class="mt-6 flex items-center gap-3 border-t border-gray-200 pt-4 text-sm leading-snug text-gray-500">
+        <img src="/assets/troy-headshot-avatar.png" alt="" width="32" height="32" class="h-8 w-8 shrink-0 rounded-full object-cover">
+        <span class="min-w-0">
+            <span class="whitespace-nowrap font-semibold text-gray-900">Troy Pavlek</span>
+            {{ if header_date }}<span aria-hidden="true">&middot;</span> <time datetime="{{ header_date format="Y-m-d" }}" class="whitespace-nowrap">{{ header_date format="M j, Y" }}</time>{{ /if }}
+            {{ if reading_minutes }}<span aria-hidden="true">&middot;</span> <span class="whitespace-nowrap">{{ reading_minutes }} min read</span>{{ /if }}
+            {{ if is_video }}<span aria-hidden="true">&middot;</span> <span class="whitespace-nowrap"><i class="fas fa-play text-[10px] text-teal" aria-hidden="true"></i> Video</span>{{ /if }}
+        </span>
+    </div>
+</header>

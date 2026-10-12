@@ -286,6 +286,30 @@ class AppServiceProvider extends ServiceProvider
             return \App\Fringe\PostFestivals::for($entry);
         });
 
+        // Whether the body already has a subscribe box placed by hand (mid-article, say), in
+        // which case the templates skip the automatic one at the end. One box per page.
+        foreach (['posts' => 'content', 'videos' => 'article'] as $collection => $body) {
+            Collection::computed($collection, 'has_subscribe_prompt', function ($entry, $value) use ($body) {
+                return \App\Support\BardSets::ofType($entry->value($body) ?? [], 'email_subscription_prompt') !== [];
+            });
+        }
+
+        // Minutes to read the body, for the article header's byline. Prose only: bardText
+        // skips sets (images, galleries, show headings), which are looked at, not read.
+        foreach (['posts' => 'content', 'videos' => 'article'] as $collection => $body) {
+            Collection::computed($collection, 'reading_minutes', function ($entry, $value) use ($body) {
+                $nodes = $entry->value($body);
+
+                if (! is_array($nodes) || $nodes === []) {
+                    return null;
+                }
+
+                $text = \Statamic\Modifiers\Modify::value($entry->augmentedValue($body))->bardText()->fetch();
+
+                return max(1, (int) round(str_word_count(strip_tags((string) $text)) / 230));
+            });
+        }
+
         // A video page is a VideoObject, or a BlogPosting carrying one when the video has a
         // companion article. See App\Schema\VideoSchema.
         Collection::computed('videos', 'video_schema', function ($entry, $value) {
