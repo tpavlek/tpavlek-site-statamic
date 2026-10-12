@@ -76,6 +76,19 @@ tabs:
               mode: select
               instructions: 'Which festival this post is about. Leave empty for a round-up — the year is taken from the shows it headlines. Only set it for a Fringe post that names no shows, or one whose subject year differs from the shows it mentions.'
           -
+            handle: newsletter_drafted_at
+            field:
+              type: text
+              display: 'Newsletter drafted'
+              visibility: read_only
+              instructions: 'Set by "Draft newsletter in Kit". When this was last saved to Kit as a draft broadcast.'
+          -
+            handle: newsletter_broadcast_id
+            field:
+              type: text
+              display: 'Kit broadcast'
+              visibility: read_only
+          -
             handle: yegvote_2025_update_types
             field:
               type: terms

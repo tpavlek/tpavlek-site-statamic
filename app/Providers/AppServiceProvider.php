@@ -81,6 +81,9 @@ class AppServiceProvider extends ServiceProvider
                 Route::post('{entryId}/og-image', [\App\Http\Controllers\CP\SocialCardController::class, 'setOgImage'])->name('fringe-social-card.og');
             });
 
+            // The newsletter version of a post, to read before it goes to Kit.
+            Route::get('newsletter/{entryId}/preview', [\App\Http\Controllers\CP\NewsletterController::class, 'preview'])->name('newsletter.preview');
+
             Route::prefix('video-distribution')->group(function () {
                 Route::get('{entryId}/status', [VideoDistributionController::class, 'status']);
                 Route::post('{entryId}/distribute', [VideoDistributionController::class, 'distribute']);

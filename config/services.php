@@ -28,6 +28,14 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    /**
+     * Kit (kit.com), which holds the mailing list and sends the newsletter. A v4 API key,
+     * starting `kit_`. Used only to save posts as draft broadcasts; see App\Newsletter\Kit.
+     */
+    'kit' => [
+        'key' => env('KIT_API_KEY'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

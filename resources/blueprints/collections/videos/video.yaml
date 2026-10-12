@@ -134,6 +134,19 @@ tabs:
               display: 'OpenGraph Image'
               instructions: '1200×630 link-preview image. Leave empty for the site default. The 9:16 thumbnail crops badly in previews, so it isn''t used.'
           -
+            handle: newsletter_drafted_at
+            field:
+              type: text
+              display: 'Newsletter drafted'
+              visibility: read_only
+              instructions: 'Set by "Draft newsletter in Kit". When this was last saved to Kit as a draft broadcast.'
+          -
+            handle: newsletter_broadcast_id
+            field:
+              type: text
+              display: 'Kit broadcast'
+              visibility: read_only
+          -
             handle: og_description_override
             field:
               type: textarea

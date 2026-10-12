@@ -1,0 +1,85 @@
+{{#
+    The email counterpart of posts/_bard-sets: one node of a long-form Bard body, rendered
+    with nothing an email client will mangle. Same fields, simpler shapes:
+
+    - floats become a narrower centred image, because a floated portrait shot rendered full
+      width would fill a phone screen and then some;
+    - galleries become table rows, the only side-by-side layout Outlook honours;
+    - the subscribe prompt is dropped (the reader is already subscribed), and so are social
+      embeds, which are scripts.
+
+    Classes here are hooks for resources/views/emails/email.css, which PostEmail inlines.
+#}}
+{{ if type == "text" }}
+    {{ text }}
+{{ /if }}
+
+{{ if type == "candidate" }}
+    {{ candidate }}
+        <p class="card"><a href="{{ permalink }}"><strong>{{ name ?? title }}</strong></a></p>
+    {{ /candidate }}
+{{ /if }}
+
+{{ if type == "show" }}
+    {{ review }}
+        <h2 class="show"><a href="{{ permalink }}">{{ title }} ({{ festival:slug }})</a>{{ if rating }} <span class="stars">{{ rating:label }}</span>{{ /if }}</h2>
+    {{ /review }}
+{{ /if }}
+
+{{ if type == "image" }}
+    {{ image_alignment = alignment ?? 'full' }}
+    {{ image_caption = caption }}
+    {{ images }}
+        <p class="figure"><img src="{{ permalink }}" alt="{{ alt | entities }}" class="img img--{{ image_alignment == 'full' ? 'full' : 'narrow' }}" /></p>
+        {{ if image_caption }}<p class="caption">{{ image_caption }}</p>{{ /if }}
+    {{ /images }}
+{{ /if }}
+
+{{ if type == "gallery" }}
+    {{ if text }}<div class="note">{{ text | markdown }}</div>{{ /if }}
+    {{ if layout == 'stacked' }}
+        {{ media }}{{ unless is_video }}<p class="figure"><img src="{{ permalink }}" alt="{{ alt | entities }}" class="img img--full" /></p>{{ /unless }}{{ /media }}
+    {{ else }}
+        {{# Table rows, the only side-by-side layout every client honours: everything in one
+            row for `row`, a new row every two images for `grid`. A plain loop rather than the
+            chunk modifier, which yielded the rows but not the assets inside them.
+            Videos (muted loops on the site) have no email equivalent and are skipped. #}}
+        {{ gallery_grid = layout == 'grid' }}
+        <table class="gallery" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                {{ media }}
+                    {{ if gallery_grid && index > 0 && index % 2 == 0 }}</tr><tr>{{ /if }}
+                    {{ unless is_video }}<td class="gallery-cell" valign="top"><img src="{{ permalink }}" alt="{{ alt | entities }}" class="img img--cell" /></td>{{ /unless }}
+                {{ /media }}
+            </tr>
+        </table>
+    {{ /if }}
+{{ /if }}
+
+{{ if type == "photo_beside" }}
+    {{ media }}{{ unless is_video }}<p class="figure"><img src="{{ permalink }}" alt="{{ alt | entities }}" class="img img--narrow" /></p>{{ /unless }}{{ /media }}
+    {{ text | markdown }}
+{{ /if }}
+
+{{ if type == "pull_quote" }}
+    <blockquote class="pull">&ldquo;{{ text }}&rdquo;</blockquote>
+{{ /if }}
+
+{{ if type == "verdict" }}
+    <h3>{{ recipe ?: 'The Verdict' }}</h3>
+    <p><strong>Troy:</strong> {{ troy_stars:value }} out of 5</p>
+    {{ troy_verdict | markdown }}
+    <p><strong>Rhianna:</strong> {{ rhi_stars:value }} out of 5</p>
+    {{ rhi_verdict | markdown }}
+{{ /if }}
+
+{{ if type == "pro_tip" }}
+    <div class="tip">
+        <p class="tip-label">{{ author == 'rhianna' ? 'Rhianna' : 'Troy' }}'s pro tip</p>
+        {{ tip | markdown }}
+    </div>
+{{ /if }}
+
+{{ if type == "progress" }}
+    <p class="meta">{{ progress }} of {{ total }} recipes baked</p>
+{{ /if }}

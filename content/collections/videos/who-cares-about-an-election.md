@@ -449,8 +449,15 @@ article:
     content:
       - type: text
         text: 'Contrary to what Jesse Watson and Danielle Smith believe, local elections still determine that mandate.'
+  -
+    type: set
+    attrs:
+      id: eTEPCNl_7gmyVUsLZHGI7
+      values:
+        type: email_subscription_prompt
+  - type: paragraph
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1791838347
+updated_at: 1791838757
 ---
 "Who cares about an election? No one does."
 
