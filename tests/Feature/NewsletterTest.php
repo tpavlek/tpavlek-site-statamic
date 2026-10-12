@@ -144,6 +144,28 @@ class NewsletterTest extends TestCase
         }
     }
 
+    /**
+     * Images get a pixel width from their own proportions, not width: 100%. Gmail gives the
+     * email a far wider column than it was designed for, and a portrait image at full width
+     * was several screens tall.
+     */
+    public function test_images_are_sized_so_portraits_stay_short(): void
+    {
+        // A portrait map: 700 x 1180.
+        $post = $this->makePost(['content' => [
+            ['type' => 'set', 'attrs' => ['values' => ['type' => 'image', 'images' => ['who-cares-about-an-election/alberta-2023-filled-map.png']]]],
+        ]]);
+
+        $html = (new PostEmail($post))->html();
+
+        preg_match('~<img[^>]*alberta-2023-filled-map\.png[^>]*>~', $html, $img);
+        preg_match('~width="(\d+)"~', $img[0], $width);
+
+        // 520px tall at most, so about 308 wide, and still able to shrink on a phone.
+        $this->assertLessThanOrEqual(310, (int) $width[1]);
+        $this->assertStringContainsString('max-width: 100%', $img[0]);
+    }
+
     public function test_a_video_article_leads_with_a_linked_thumbnail_instead_of_an_embed(): void
     {
         $video = $this->makeVideo();

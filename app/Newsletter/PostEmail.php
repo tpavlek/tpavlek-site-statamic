@@ -82,6 +82,64 @@ class PostEmail
         return $youtube ? "https://i.ytimg.com/vi/{$youtube}/hqdefault.jpg" : null;
     }
 
+    /** Widest an image gets, in px: the 600px body less a little breathing room. */
+    private const MAX_WIDTH = 560;
+
+    /** Tallest a standalone image gets, and one inside a gallery row. */
+    private const MAX_HEIGHT = 520;
+
+    private const MAX_CELL_HEIGHT = 400;
+
+    /**
+     * Give an image a real pixel width from its own proportions.
+     *
+     * "width: 100%" is the trouble: Gmail gives Kit's template a far wider column than the
+     * 600px the email is designed for, so a screenshot blew up to fill it and a portrait
+     * image (a map of Alberta, a phone screenshot) became several screens tall. Capping the
+     * height as well as the width means a tall image comes out narrower rather than longer.
+     * max-width stays at 100% so it still shrinks on a phone.
+     *
+     * Only our own assets have known dimensions; anything else is left as it was.
+     */
+    private function size(\DOMElement $img): void
+    {
+        // The template already sized this one on purpose (the video thumbnail).
+        if ($img->hasAttribute('width')) {
+            return;
+        }
+
+        $src = $img->getAttribute('src');
+        $path = parse_url($src, PHP_URL_PATH) ?: '';
+
+        if (! str_starts_with($path, '/assets/')) {
+            return;
+        }
+
+        $asset = \Statamic\Facades\Asset::find('assets::'.urldecode(substr($path, strlen('/assets/'))));
+        $width = (int) $asset?->width();
+        $height = (int) $asset?->height();
+
+        if (! $width || ! $height) {
+            return;
+        }
+
+        $cell = $img->parentNode?->nodeName === 'td' ? $img->parentNode : null;
+
+        if ($cell) {
+            $columns = max(1, $cell->parentNode->getElementsByTagName('td')->length);
+            $maxWidth = intdiv(self::MAX_WIDTH, $columns);
+            $maxHeight = self::MAX_CELL_HEIGHT;
+        } else {
+            $maxWidth = self::MAX_WIDTH;
+            $maxHeight = self::MAX_HEIGHT;
+        }
+
+        $display = (int) min($maxWidth, $width, round($maxHeight * $width / $height));
+
+        $img->setAttribute('width', (string) $display);
+        $img->setAttribute('style', rtrim($img->getAttribute('style'), '; ')."; width: {$display}px; max-width: 100%; height: auto; margin-left: auto; margin-right: auto;");
+    }
+
     /**
      * Absolute URLs, no screen-reader-only text, and just the email's own markup.
      *
@@ -101,6 +159,10 @@ class PostEmail
         }
 
         $base = rtrim(config('app.url'), '/');
+
+        foreach ($xpath->query('//img[@src]') as $img) {
+            $this->size($img);
+        }
 
         foreach ($xpath->query('//a[@href] | //img[@src]') as $node) {
             $attribute = $node->nodeName === 'a' ? 'href' : 'src';
