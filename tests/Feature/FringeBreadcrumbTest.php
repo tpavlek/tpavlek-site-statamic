@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Fringe\FestivalUrls;
+use App\Fringe\Reviews;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
 use Tests\TestCase;
@@ -95,9 +96,9 @@ class FringeBreadcrumbTest extends TestCase
     {
         $current = FestivalUrls::currentSlug();
 
-        $review = EntryFacade::query()
-            ->where('collection', 'fringe_reviews')
-            ->get()
+        // Reviews::reviewed(), not every entry: the current festival also holds unpublished
+        // lineup imports, whose pages 404 and so have no trail to check.
+        $review = Reviews::reviewed()
             ->first(fn (Entry $entry) => $entry->festival?->slug() === $current);
 
         if (! $review) {

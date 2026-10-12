@@ -18,6 +18,8 @@ class PostShowSectionTest extends TestCase
 {
     private const SLUG = 'show-section-test-post';
 
+    private const RETURNING = 'show-section-test-returning';
+
     private function cleanup(): void
     {
         EntryFacade::query()->where('collection', 'posts')->get()
@@ -27,6 +29,11 @@ class PostShowSectionTest extends TestCase
     protected function tearDown(): void
     {
         $this->cleanup();
+
+        // Not in cleanup(): makePost() calls that, and would delete the returning show a
+        // test has just made for the post to point at.
+        EntryFacade::query()->where('collection', 'fringe_reviews')->get()
+            ->first(fn ($e) => $e->slug() === self::RETURNING)?->delete();
 
         parent::tearDown();
     }
@@ -124,23 +131,37 @@ class PostShowSectionTest extends TestCase
      * A returning show wears its predecessor's stars, and the year those were earned. Both
      * halves matter: Troy stands behind the old rating, but stamping it with this festival's
      * year would claim a verdict on a staging nobody has seen yet.
+     *
+     * The returning show is made here rather than borrowed: a real one only stays unrated
+     * until Troy sees it, after which it has its own stars and the premise is gone. (This
+     * test used "Field Zoology 301" (2026) and broke the day it was reviewed.) The original
+     * it points back to is real, any rated review from an earlier festival.
      */
     public function test_an_inherited_rating_is_labelled_with_the_year_it_was_earned(): void
     {
-        $review = $this->review('Field Zoology 301', '2026');
+        $original = EntryFacade::query()->where('collection', 'fringe_reviews')->get()
+            ->first(fn ($e) => $e->published() && (string) $e->value('stars') !== '' && $e->value('festival') !== '2026');
 
-        $this->assertSame('', (string) $review->value('stars'), 'Expected an unrated returning show.');
-
-        $original = EntryFacade::find($review->value('original_review'));
+        $this->assertNotNull($original, 'Expected at least one rated review from an earlier festival.');
         $originalYear = $original->value('festival');
 
-        $this->assertNotSame($originalYear, $review->value('festival'), 'Expected the original to be a different year.');
+        $returning = EntryFacade::make()
+            ->collection('fringe_reviews')
+            ->slug(self::RETURNING)
+            ->date('2026-08-14')
+            ->published(true)
+            ->data([
+                'title' => 'Show section test returning show',
+                'festival' => '2026',
+                'original_review' => $original->id(),
+            ]);
+        $returning->save();
 
-        $post = $this->makePost([['review' => $review->id(), 'level' => 'h2']]);
+        $post = $this->makePost([['review' => $returning->id(), 'level' => 'h2']]);
         $html = $this->get($post->url())->assertOk()->getContent();
 
         $this->assertStringContainsString('Returning &middot; '.$originalYear, $html);
-        $this->assertStringNotContainsString('Returning &middot; '.$review->value('festival'), $html);
+        $this->assertStringNotContainsString('Returning &middot; 2026', $html);
     }
 
     /** Stars are glyphs. Without the spoken equivalent a screen reader gets nothing at all. */

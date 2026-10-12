@@ -34,7 +34,7 @@ const svgs = resolve(root, 'node_modules/@fortawesome/fontawesome-free/svgs')
  */
 const ICONS = {
   brands: ['bluesky', 'facebook', 'instagram', 'linkedin', 'reddit', 'tiktok', 'twitter', 'youtube'],
-  solid: ['envelope', 'globe', 'history', 'image', 'link', 'location-dot', 'pencil', 'play', 'rss'],
+  solid: ['envelope', 'globe', 'history', 'home', 'image', 'link', 'location-dot', 'pencil', 'play', 'rss'],
 }
 
 /**
@@ -92,6 +92,10 @@ const css = `/*
   -webkit-mask-position:center;mask-position:center;
   -webkit-mask-size:contain;mask-size:contain;
 }
+
+/* Font Awesome's size modifiers, which older posts use (the 2017 city-dysfunction post sizes
+   its row of houses with fa-3x). The icons are 1em boxes, so a size is just a font-size. */
+.fa-lg{font-size:1.25em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}
 
 ${rules.join('\n')}
 `
