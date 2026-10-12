@@ -1,18 +1,48 @@
-<nav class="flex items-center justify-between flex-wrap py-12 lg:py-24 max-w-5xl mx-auto">
-    <div class="text-sm flex items-center gap-3">
-        <span>&copy; {{ now format="Y" }} {{ settings:site_name }}</span>
+{{#
+    Site footer: three short columns — where to watch, what to read, how to reach me —
+    over the copyright line. Links are written here rather than pulled from the settings
+    global because the grouping is the point: the global is a flat list of icons, and a
+    flat list is what this replaced. The icon classes are the self-hosted set from
+    build/icons.mjs; a new one has to be added there or it renders as nothing.
+#}}
+<footer class="max-w-5xl mx-auto pt-12 lg:pt-20 pb-10 border-t border-gray-100 mt-16">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-sm">
+        <div>
+            <p class="uppercase tracking-widest text-xs font-black text-gray-500 mb-3">Watch</p>
+            <ul class="list-none p-0 m-0 space-y-2">
+                <li><a href="https://youtube.com/@troypavlek/shorts" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-youtube mr-2 opacity-80"></i>YouTube</a></li>
+                <li><a href="https://tiktok.com/@troypavlek" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-tiktok mr-2 opacity-80"></i>TikTok</a></li>
+                <li><a href="https://instagram.com/troypavlek" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-instagram mr-2 opacity-80"></i>Instagram</a></li>
+                <li><a href="/videos" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fas fa-play mr-2 opacity-80"></i>All videos</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="uppercase tracking-widest text-xs font-black text-gray-500 mb-3">Read</p>
+            <ul class="list-none p-0 m-0 space-y-2">
+                <li><a href="/posts" class="text-gray-700 no-underline hover:text-teal transition-colors">Posts</a></li>
+                <li><a href="/fringe" class="text-gray-700 no-underline hover:text-teal transition-colors">Edmonton Fringe reviews</a></li>
+                <li><a href="/fringe/ticket-availability" class="text-gray-700 no-underline hover:text-teal transition-colors">Fringe ticket availability</a></li>
+                <li><a href="/yegvote-2025" class="text-gray-700 no-underline hover:text-teal transition-colors">YEGVote 2025</a></li>
+                <li><a href="/projects" class="text-gray-700 no-underline hover:text-teal transition-colors">Things I've made</a></li>
+            </ul>
+        </div>
+        <div>
+            <p class="uppercase tracking-widest text-xs font-black text-gray-500 mb-3">Say hi</p>
+            <ul class="list-none p-0 m-0 space-y-2">
+                <li><a href="mailto:troy@tpavlek.me" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fas fa-envelope mr-2 opacity-80"></i>troy@tpavlek.me</a></li>
+                <li><a href="https://bsky.app/profile/troypavlek.ca" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-bluesky mr-2 opacity-80"></i>Bluesky</a></li>
+                <li><a href="https://facebook.com/troypavlek" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-facebook mr-2 opacity-80"></i>Facebook</a></li>
+                <li><a href="https://reddit.com/u/troypavlek" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-reddit mr-2 opacity-80"></i>Reddit</a></li>
+                <li><a href="https://x.com/troypavlek" rel="noopener" class="text-gray-700 no-underline hover:text-teal transition-colors"><i class="fab fa-twitter mr-2 opacity-80"></i>Twitter</a></li>
+            </ul>
+        </div>
+    </div>
 
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-10 pt-6 border-t border-gray-100 text-xs text-gray-500">
+        <span>&copy; {{ now format="Y" }} {{ settings:site_name }}</span>
         {{# The page's own feed where it has one — the Fringe reviews index sets `feed_url`,
             so during the festival this points at the reviews rather than the blog — and the
-            posts feed everywhere else. Down here rather than up in the page: few people use
-            a reader, and the ones who do are served by autodiscovery in the layout. #}}
-        <a href="{{ feed_url ?? '/feed.xml' }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="Subscribe with a feed reader">RSS</a>
+            posts feed everywhere else. #}}
+        <a href="{{ feed_url ?? '/feed.xml' }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="Subscribe with a feed reader"><i class="fas fa-rss mr-1 opacity-80"></i>RSS</a>
     </div>
-    <div class="flex items-center">
-        {{ settings:social }}
-            <a href="{{ url }}" class="ml-4" aria-label="{{ name }}" rel="noopener">
-                {{ svg :src="icon" class="h-6 w-6 hover:text-teal" }}
-            </a>
-        {{ /settings:social }}
-    </div>
-</nav>
+</footer>
