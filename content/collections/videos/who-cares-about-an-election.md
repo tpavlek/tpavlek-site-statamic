@@ -2,7 +2,6 @@
 id: fbae3ba1-fdf8-4202-94b0-031c80354da1
 blueprint: video
 title: '"Who cares about an election?" – Edmonton''s anti-infill organizers dismiss democracy'
-video_file: who-cares-about-an-election-captioned.mp4
 thumbnail: videos/covers/who-cares-about-an-election-cover.png
 youtube: QApNCvAGFgk
 instagram: DeXlXolyRg8
@@ -13,6 +12,7 @@ facebook: '1006538279140294'
 publish_date: '2026-10-11 00:00'
 topics:
   - municipal-politics
+  - infill
 og_image: og/who-cares-about-an-election.png
 article:
   -
@@ -33,7 +33,7 @@ article:
     type: paragraph
     content:
       - type: text
-        text: "That's Jesse Watson, whose agenda voters soundly rejected last October. Now that Danielle Smith is overturning local democracy to suit his preferences, he thinks the election doesn't matter and shouldn't be considered."
+        text: "That's Jesse Watson, the anti-infill organizer whose agenda voters soundly rejected last October. Now that Danielle Smith is overturning local democracy to suit his preferences, he thinks the election doesn't matter and shouldn't be considered."
   -
     type: heading
     attrs:
@@ -450,7 +450,7 @@ article:
       - type: text
         text: 'Contrary to what Jesse Watson and Danielle Smith believe, local elections still determine that mandate.'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1791826934
+updated_at: 1791838347
 ---
 "Who cares about an election? No one does."
 
