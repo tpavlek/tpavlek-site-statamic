@@ -7,7 +7,8 @@ tiktok: '7681401970782965012'
 instagram: Dc1ntEjBguc
 thumbnail: videos/covers/public-speakers-banned-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1788468141
+updated_at: 1791827817
+publish_date: '2026-09-03 00:00'
 ---
 Police Commission meetings will be held online-only with no public speakers for the rest of the year.
 

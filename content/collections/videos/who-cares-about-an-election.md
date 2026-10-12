@@ -449,7 +449,6 @@ article:
     content:
       - type: text
         text: 'Contrary to what Jesse Watson and Danielle Smith believe, local elections still determine that mandate.'
-og_description: '"Who cares about an election? No one does." That''s what organizers behind the campaign opposing the zoning bylaw have to say about local democracy. It makes sense too: they used their connections to…'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1791826934
 ---

@@ -305,10 +305,13 @@ class AppServiceProvider extends ServiceProvider
             return "https://bsky.app/profile/{$m[1]}/post/{$m[2]}";
         });
 
-        // An explicit og_description wins; otherwise the start of the YouTube description,
-        // so a video page never falls back to the layout's Fringe boilerplate.
+        // An explicit override wins; otherwise the start of the YouTube description, so a
+        // video page never falls back to the layout's Fringe boilerplate. The editable field
+        // is `og_description_override`, not `og_description`: a blueprint field with the same
+        // handle as a computed one is filled with the computed value in the CP, and every
+        // save then froze the auto summary into the entry.
         Collection::computed('videos', 'og_description', function ($entry, $value) {
-            return $value ?: \App\Schema\VideoSchema::description($entry);
+            return $entry->value('og_description_override') ?: \App\Schema\VideoSchema::description($entry);
         });
 
         // Each festival's reviews page is a controller route rather than an entry, so the

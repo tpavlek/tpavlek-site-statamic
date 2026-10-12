@@ -134,7 +134,7 @@ tabs:
               display: 'OpenGraph Image'
               instructions: '1200×630 link-preview image. Leave empty for the site default. The 9:16 thumbnail crops badly in previews, so it isn''t used.'
           -
-            handle: og_description
+            handle: og_description_override
             field:
               type: textarea
               display: 'OpenGraph Description'
