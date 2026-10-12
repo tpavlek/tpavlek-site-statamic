@@ -41,7 +41,7 @@
             <span class="whitespace-nowrap font-semibold text-gray-900">Troy Pavlek</span>
             {{ if header_date }}<span aria-hidden="true">&middot;</span> <time datetime="{{ header_date format="Y-m-d" }}" class="whitespace-nowrap">{{ header_date format="M j, Y" }}</time>{{ /if }}
             {{ if reading_minutes }}<span aria-hidden="true">&middot;</span> <span class="whitespace-nowrap">{{ reading_minutes }} min read</span>{{ /if }}
-            {{ if is_video }}<span aria-hidden="true">&middot;</span> <span class="whitespace-nowrap"><i class="fas fa-play text-[10px] text-teal" aria-hidden="true"></i> Video</span>{{ /if }}
+            {{ if is_video }}<span class="ml-1">{{ partial:video-badge }}</span>{{ /if }}
         </span>
     </div>
 </header>

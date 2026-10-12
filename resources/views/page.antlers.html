@@ -1,4 +1,11 @@
-<div class="mt-8 pb-8 max-w-4xl mx-auto text-lg">
+{{# An optional wide banner above the title. The About page uses the home page's, so the two
+    read as one introduction. #}}
+{{ if banner }}
+    <div class="mx-auto max-w-4xl mb-8">
+        <img src="{{ banner:url }}" alt="{{ banner:alt | entities }}" class="w-full">
+    </div>
+{{ /if }}
+<div class="{{ banner ? 'mt-0' : 'mt-8' }} pb-8 max-w-4xl mx-auto text-lg">
     {{# mb-6 overrides the global `h1 { mb-16 }` in style.css, which leaves far too
         much air between a page title and its first paragraph. #}}
     <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-6">{{ title }}</h1>

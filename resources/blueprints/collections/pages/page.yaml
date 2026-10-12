@@ -15,6 +15,14 @@ tabs:
               validate:
                 - required
           -
+            handle: banner
+            field:
+              type: assets
+              container: assets
+              max_files: 1
+              display: Banner
+              instructions: 'Optional wide image above the title, like the home page banner.'
+          -
             handle: content
             field:
               escape_markup: true

@@ -14,9 +14,58 @@
 <div class="mx-auto max-w-4xl mb-8">
     <img src="/assets/commentator-cover-scaled.png" />
 </div>
-<div class="pb-8 max-w-4xl mx-auto text-lg content">
+<div class="max-w-4xl mx-auto text-lg content">
     {{ content | widont }}
+</div>
 
+{{# The newest posts and video articles. Most visitors arrive by searching Troy's name and
+    land here; without this the page answered "who is he" but had nowhere to send someone
+    who wanted to see what he's been saying lately. Same list as /posts (App\Tags\Writing),
+    so it updates itself. Outside the .content wrapper on purpose: its prose rules (teal
+    underlined links, my-12 on every image) are for articles, not a list of cards. #}}
+<section class="max-w-4xl mx-auto mt-10 mb-4" aria-labelledby="latest-heading">
+    <div class="flex items-baseline justify-between mb-3">
+        <h2 id="latest-heading" class="m-0 p-0 text-xs font-black uppercase tracking-widest text-gray-500">Latest</h2>
+        <a href="/posts" class="text-sm font-medium text-teal-dark no-underline hover:text-gray-900">All posts &rarr;</a>
+    </div>
+    <ul class="list-none m-0 p-0 divide-y divide-gray-200 border-t border-b border-gray-200">
+        {{ writing limit="3" }}
+            {{ posts }}
+                {{# `relative` anchors the stretched title link, so the whole row is one tap target. #}}
+                <li class="relative flex gap-4 py-4 hover:bg-gray-50 transition-colors">
+                    {{ if image }}
+                        <div class="relative h-[3.75rem] w-28 shrink-0 sm:h-[5.25rem] sm:w-40">
+                            <img src="{{ image }}" alt="" loading="lazy" width="160" height="84"
+                                 class="h-full w-full rounded-md bg-gray-100 object-cover">
+                            {{# A play button over a video's image: the cue people already read
+                                from every video site. #}}
+                            {{ if is_video }}
+                                <span class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+                                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md sm:h-10 sm:w-10">
+                                        <i class="fas fa-play ml-0.5 text-xs text-gray-900 sm:text-sm"></i>
+                                    </span>
+                                </span>
+                            {{ /if }}
+                        </div>
+                    {{ /if }}
+                    <div class="min-w-0">
+                        {{# A flex row so the date and the badge centre on each other; inline, the
+                            pill sat on the text baseline and looked dropped. #}}
+                        <p class="m-0 mb-1 flex items-center gap-2 text-xs uppercase leading-none tracking-wide text-gray-500">
+                            <time datetime="{{ date format="Y-m-d" }}">{{ date format="M j, Y" }}</time>{{ if is_video }}{{ partial:video-badge }}{{ /if }}
+                        </p>
+                        <a href="{{ url }}" class="block text-base font-bold leading-snug text-gray-900 no-underline hover:text-teal-dark before:absolute before:inset-0 sm:text-lg">{{ title }}</a>
+                        {{ if og_description }}
+                            <p class="m-0 mt-1 hidden text-sm leading-snug text-gray-600 sm:line-clamp-2">{{ og_description }}</p>
+                        {{ /if }}
+                    </div>
+                </li>
+            {{ /posts }}
+        {{ /writing }}
+    </ul>
+</section>
+
+<div class="pb-8 max-w-4xl mx-auto text-lg content">
     {{ partial:_email-subscribe }}
 
     <h3>You can find me on...</h3>

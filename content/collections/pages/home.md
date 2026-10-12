@@ -52,14 +52,8 @@ page_links:
         link: "https://x.com/troypavlek"
         handle: "@troypavlek"
 ---
-I'm Troy Pavlek. 
+I'm Troy Pavlek.
 
 I'm an Edmonton-based local politics **communicator, commentator, advocate and analyst** (who also professionally writes software for money, but we don't talk about that).
 
-I co-founded the [Taproot Edmonton podcast Speaking Municipally](https://speakingmunicipally.taprootedmonton.ca) where I hosted over 300 episodes across 7 years helping residents understand everything they need to know about Edmonton City Council in 30 minutes or less.
-
-Currently, I produce shortform video content all about Edmonton municipal politics on [Instagram](https://instagram.com/troypavlek), [TikTok](https://tiktok.com/@troypavlek) and [YouTube shorts](https://youtube.com/@troypavlek/shorts).
-
-I am also an *expert-level Fringer*. You can read [my reviews →](/fringe/reviews).
-
-I have four cats (it is too many cats).
+[More about me →](/about)
