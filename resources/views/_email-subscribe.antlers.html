@@ -1,17 +1,57 @@
-<div class="py-4 px-6 border-grey-200 border rounded-lg bg-grey-50">
-    <p class="mb-4">
-        <strong>Get updates straight to your inbox. </strong>We don't need to include Mark Zuckerburg in our relationship.
+{{#
+    The newsletter signup box. Posts to /subscribe (App\Http\Controllers\SubscribeController),
+    which adds the address to Kit; it replaced Kit's embed script, so there's no third-party
+    JavaScript on the page and the box looks like the rest of the site.
+
+    Works without JavaScript: the form posts normally and the controller redirects back here
+    (#subscribe) with a flash. With it, the `subscribeForm` Alpine component in site.js posts
+    in the background and swaps the form for the thank-you line.
+
+    The line under the button is the consent CASL asks for: who's sending, what, and that it
+    can be undone. Kit's emails carry the unsubscribe link and mailing address themselves.
+
+    `website` is a honeypot: hidden from people, filled in by bots, and silently ignored.
+#}}
+{{ subscribe_status = session:subscribe_status }}
+<section id="subscribe" class="my-10 rounded-xl border border-gray-200 bg-gray-50 px-5 py-6 sm:px-8 sm:py-7"
+         x-data="subscribeForm('{{ subscribe_status ?? 'idle' }}')">
+    <p class="mb-2 text-xl sm:text-2xl font-bold leading-tight text-gray-900">Get my news and takes in your inbox</p>
+    <p class="mb-5 text-base sm:text-lg leading-snug text-gray-600">
+        Don't let algorithms control whether you see my latest video or article. We don't need to include Mark Zuckerberg in our relationship.
     </p>
-    <script async data-uid="665dc00476" src="https://troypavlek.kit.com/665dc00476/index.js"></script>
 
-    {{ if (include_content | count) > 0 || immediate_list == 'true' }}
-        <hr class="my-2 mb-4" />
+    <form method="post" action="/subscribe" class="flex flex-col gap-2 sm:flex-row"
+          x-show="status !== 'done'" @submit.prevent="submit($el)">
+        {{ csrf_field }}
+        <input type="hidden" name="referrer" value="{{ current_url }}">
+        <div class="absolute -left-[9999px]" aria-hidden="true">
+            <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+        <label for="subscribe-email-{{ subscribe_id ?? 'box' }}" class="sr-only">Email address</label>
+        <input id="subscribe-email-{{ subscribe_id ?? 'box' }}" type="email" name="email" required autocomplete="email"
+               placeholder="you@example.com"
+               class="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 focus:border-teal focus:outline-none focus:ring-2 focus:ring-teal-light">
+        <button type="submit" :disabled="status === 'sending'"
+                class="cursor-pointer rounded-lg bg-teal-dark px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-gray-900 disabled:opacity-60">
+            <span x-text="status === 'sending' ? 'Subscribing…' : 'Subscribe'">Subscribe</span>
+        </button>
+    </form>
 
-        {{ if (include_content | pluck('value') | contains('immediate_list')) || immediate_list == 'true' }}
-            <p class="text-sm">
-                If you're a journalist — or just super interested — Send an email to <a href="mailto:troy@tpavlek.me?subject=Add me to the Immediate List">troy@tpavlek.me</a> and ask to be added to the "immediate list".
-                I'll send you an update <em>as soon as I know anything</em>.
-            </p>
-        {{ /if }}
+    <p class="mb-0 mt-3 text-sm text-gray-500" x-show="status !== 'done'">
+        Free. Emails from Troy Pavlek when I publish something new. Unsubscribe any time.
+    </p>
+    <p class="mb-0 mt-3 text-sm font-medium text-red-700" x-show="status === 'error'" {{ if subscribe_status != 'error' }}x-cloak{{ /if }} role="alert">
+        That didn't go through. Try again in a minute, or email <a href="mailto:troy@tpavlek.me" class="text-red-700 underline">troy@tpavlek.me</a>.
+    </p>
+    <p class="mb-0 text-lg font-semibold text-teal-dark" x-show="status === 'done'" {{ if subscribe_status != 'done' }}x-cloak{{ /if }} role="status">
+        You're in. Thanks for subscribing!
+    </p>
+
+    {{ if (include_content | pluck('value') | contains('immediate_list')) || immediate_list == 'true' }}
+        <hr class="my-5 border-gray-200" />
+        <p class="mb-0 text-sm text-gray-600">
+            If you're a journalist, or just super interested, email <a href="mailto:troy@tpavlek.me?subject=Add me to the Immediate List">troy@tpavlek.me</a> and ask to be added to the "immediate list".
+            I'll send you an update <em>as soon as I know anything</em>.
+        </p>
     {{ /if }}
-</div>
+</section>

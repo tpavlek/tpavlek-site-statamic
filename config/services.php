@@ -34,6 +34,9 @@ return [
      */
     'kit' => [
         'key' => env('KIT_API_KEY'),
+        // The Kit form new signups are added to: "Simple inline signup form", the one the old
+        // Kit embed used, so every signup is still attributed to it in Kit.
+        'form_id' => env('KIT_FORM_ID', 7583430),
     ],
 
     'slack' => [

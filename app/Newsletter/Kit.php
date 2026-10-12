@@ -25,6 +25,40 @@ class Kit
     }
 
     /**
+     * Sign someone up through the site's own subscribe form.
+     *
+     * Single opt-in, by choice (2026-10-12): someone who fills in the form is subscribed
+     * straight away, with no confirmation email to lose them on the way. CASL is satisfied by
+     * the consent line under the form, not by a confirmation step. The form's honeypot and
+     * the route's throttle stand in for what double opt-in would otherwise catch.
+     *
+     * To switch to double opt-in, create the subscriber with `'state' => 'inactive'`: adding
+     * an inactive subscriber to a form with double opt-in on is what makes Kit send its
+     * confirmation email.
+     *
+     * The create call is an upsert, and it can't change an existing subscriber's state, so
+     * someone already on the list (or who unsubscribed) stays exactly as they were.
+     */
+    public function subscribe(string $email, int $formId, ?string $referrer = null): void
+    {
+        if (! $this->key) {
+            throw new RuntimeException('KIT_API_KEY is not set, so there is no Kit account to subscribe to.');
+        }
+
+        $request = fn () => Http::withHeaders(['X-Kit-Api-Key' => $this->key])->acceptJson()->timeout(15);
+
+        $request()->post('https://api.kit.com/v4/subscribers', [
+            'email_address' => $email,
+            'state' => 'active',
+        ])->throw();
+
+        $request()->post("https://api.kit.com/v4/forms/{$formId}/subscribers", array_filter([
+            'email_address' => $email,
+            'referrer' => $referrer,
+        ]))->throw();
+    }
+
+    /**
      * @return array{id: int, status: string}
      */
     public function draftBroadcast(string $subject, string $previewText, string $html, string $description, ?string $thumbnailUrl = null): array

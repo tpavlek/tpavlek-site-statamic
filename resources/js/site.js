@@ -282,4 +282,29 @@ Alpine.data('exemptionCard', (templateUrl) => ({
     },
 }))
 
+// The newsletter signup box, _email-subscribe. Posts in the background and swaps the form
+// for a thank-you; the form still posts normally if this never runs. `initial` is the
+// server's flash ('done' or 'error') after a no-JavaScript post, so a reload lands in the
+// same state.
+Alpine.data('subscribeForm', (initial = 'idle') => ({
+    status: initial,
+
+    async submit(form) {
+        if (this.status === 'sending') return
+        this.status = 'sending'
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: new FormData(form),
+            })
+
+            this.status = response.ok ? 'done' : 'error'
+        } catch {
+            this.status = 'error'
+        }
+    },
+}))
+
 Alpine.start()

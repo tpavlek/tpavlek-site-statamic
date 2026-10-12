@@ -24,6 +24,12 @@ Route::statamic('/fringe', 'fringe/landing', [
 
 Route::get('/endorsements', fn() => redirect('/yegvote-2025/endorsements'));
 
+// The newsletter signup form, _email-subscribe. Throttled per IP: a real person subscribes
+// once, and anything posting more often than this is a bot working through a list.
+Route::post('/subscribe', \App\Http\Controllers\SubscribeController::class)
+    ->middleware('throttle:5,1')
+    ->name('subscribe');
+
 // Retired: the landing page and the reviews intro cover this better. Redirected rather
 // than 404'd so anything already linking or indexed lands somewhere useful.
 Route::redirect('/fringe/why-fringe', '/fringe', 301);
