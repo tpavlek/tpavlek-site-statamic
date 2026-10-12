@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Statamic\Facades\Entry as EntryFacade;
 use Tests\TestCase;
 
 /**
@@ -36,6 +37,34 @@ class HeadMetaTest extends TestCase
             $this->get($url)
                 ->assertOk()
                 ->assertSee('<meta property="og:site_name" content="Troy Pavlek">', false);
+        }
+    }
+
+    /**
+     * Antlers doesn't escape, so a title opening with a quote closed every content="" it
+     * landed in, and the share preview read as empty. Uses its own throwaway entry.
+     */
+    public function test_quotes_in_a_title_and_description_stay_inside_the_attribute(): void
+    {
+        $slug = 'head-meta-quote-test';
+        $entry = EntryFacade::make()
+            ->collection('videos')
+            ->slug($slug)
+            ->published(true)
+            ->data([
+                'title' => '"Quoted" title',
+                'publish_date' => '2099-01-01 00:00',
+                'content' => '"Quoted" description.',
+            ]);
+        $entry->save();
+
+        try {
+            $html = $this->get($entry->url())->assertOk()->getContent();
+
+            $this->assertStringContainsString('<meta property="og:title" content="&quot;Quoted&quot; title">', $html);
+            $this->assertStringContainsString('<meta name="description" content="&quot;Quoted&quot; description.">', $html);
+        } finally {
+            $entry->delete();
         }
     }
 }

@@ -14,7 +14,7 @@
                             <div class="aspect-[9/16] bg-gray-100">
                                 <img
                                     src="{{ thumbnail:url }}"
-                                    alt="{{ title }}"
+                                    alt="{{ title | entities }}"
                                     class="w-full h-full object-cover"
                                     loading="lazy"
                                 />
@@ -23,7 +23,7 @@
                             <div class="aspect-[9/16] bg-gray-100">
                                 <img
                                     src="https://img.youtube.com/vi/{{ youtube }}/hqdefault.jpg"
-                                    alt="{{ title }}"
+                                    alt="{{ title | entities }}"
                                     class="w-full h-full object-cover"
                                     loading="lazy"
                                 />

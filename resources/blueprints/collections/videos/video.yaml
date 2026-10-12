@@ -15,8 +15,16 @@ tabs:
             handle: content
             field:
               type: markdown
+              display: Description
+              instructions: 'Sent to YouTube as the video description, and used as the summary in listings and link previews.'
               listable: false
               localizable: true
+          -
+            handle: article
+            field: long_form.body
+            config:
+              display: 'Companion article'
+              instructions: 'Optional. The written version of the video, for people who would rather read it. Filling this in turns the page into an article with the video beside it, and lists it on /posts and in the feed. The description above stays the YouTube description.'
           -
             handle: video_file
             field:
@@ -71,6 +79,12 @@ tabs:
               display: Instagram
               instructions: 'Enter the Instagram Reel ID'
           -
+            handle: facebook
+            field:
+              type: text
+              display: Facebook
+              instructions: 'The Facebook Reel ID (the number at the end of facebook.com/reel/…)'
+          -
             handle: thumbnail
             field:
               type: assets
@@ -101,4 +115,28 @@ tabs:
                 - video_category
               type: terms
               display: category
+          -
+            handle: topics
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              display: Topics
+              mode: select
+              instructions: 'Only matters for a video with a companion article — it is what the /posts topic filter reads.'
+          -
+            handle: og_image
+            field:
+              max_files: 1
+              container: assets
+              folder: og
+              type: assets
+              display: 'OpenGraph Image'
+              instructions: '1200×630 link-preview image. Leave empty for the site default. The 9:16 thumbnail crops badly in previews, so it isn''t used.'
+          -
+            handle: og_description
+            field:
+              type: textarea
+              display: 'OpenGraph Description'
+              instructions: 'Leave empty to use the start of the description.'
 title: Video

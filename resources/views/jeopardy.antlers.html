@@ -6,7 +6,7 @@
 
     {{ episodes }}{{ if (index + 1) == featured }}
     <h2 class="text-2xl font-bold mb-4">Episode {{ featured }}: {{ title }}</h2>
-    <div class="video-embed mb-10"><iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/{{ youtube }}" title="{{ title }}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+    <div class="video-embed mb-10"><iframe width="100%" style="aspect-ratio:16/9" src="https://www.youtube.com/embed/{{ youtube }}" title="{{ title | entities }}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
     {{ /if }}{{ /episodes }}
 
     <h2 class="text-2xl font-bold mb-4">Every episode</h2>

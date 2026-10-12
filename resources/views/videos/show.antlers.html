@@ -1,85 +1,85 @@
+{{ if video_schema }}<script type="application/ld+json">{{ video_schema }}</script>{{ /if }}
 <div class="max-w-5xl mx-auto px-4 py-8 lg:py-12">
 
-    {{# Desktop: side-by-side; Mobile: stacked #}}
-    <div class="flex flex-col lg:flex-row lg:gap-12 lg:items-start">
+    {{# Two shapes. A video with a companion article is a page to read: the article gets the
+        main column and the video sits beside it, sticky on desktop so it's still there when
+        you scroll down to the part you wanted to see. Without an article, the video is the
+        page and the description is a caption beside it.
 
-        {{# Video embed column #}}
-        <div class="flex-shrink-0 w-full lg:w-96 mb-6 lg:mb-0">
-            <div class="w-full max-w-sm mx-auto lg:mx-0">
-                {{ if youtube }}
-                    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl">
-                        <iframe
-                            class="w-full h-full"
-                            src="https://www.youtube.com/embed/{{ youtube }}"
-                            title="{{ title }}"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allowfullscreen
-                        ></iframe>
-                    </div>
-                {{ elseif instagram }}
-                    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl flex items-center justify-center">
-                        <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" rel="noopener noreferrer"
-                           class="text-white no-underline flex flex-col items-center gap-3">
-                            <i class="fa-brands fa-instagram text-5xl"></i>
-                            <span class="text-sm font-medium">Watch on Instagram</span>
-                        </a>
+        The description isn't shown above an article. It's the YouTube description — a
+        summary of the same thing the article says at length — and it still does its job
+        as the meta description and listing summary. #}}
+    {{ if article }}
+        <article class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-x-12 lg:items-start">
+            <header class="lg:col-span-2">
+                {{# mb-5 overrides the global `h1 { mb-16 }`, as on posts. #}}
+                <h1 class="mb-5">{{ title }}</h1>
+                {{# The same byline pill as a post, since this is read as one. #}}
+                <div class="bg-gray-800 inline-block text-sm mb-8 pl-4 pr-5 uppercase tracking-widest text-white py-1 rounded-r-full">
+                    Video
+                    {{ if topics }}
+                    in {{ topics }}{{ if link }}<a href="{{ link }}" class="text-teal-light no-underline hover:text-white">{{ title }}</a>{{ else }}{{ title }}{{ /if }}{{ unless last }}, {{ /unless }}{{ /topics }}
+                    {{ /if }}
+                    {{ if publish_date }}on <time datetime="{{ publish_date format="Y-m-d" }}">{{ publish_date format="M j, Y" }}</time>{{ /if }}
+                </div>
+            </header>
+
+            {{# Narrower than the plain layout's on phones: a full-width 9:16 player is taller
+                than the screen and buries the article it's meant to sit beside. #}}
+            <aside class="lg:col-start-2 lg:row-start-2 lg:sticky lg:top-8 mb-10 lg:mb-0">
+                <div class="w-full max-w-[15rem] lg:max-w-none mx-auto">
+                    {{ partial:videos/embed }}
+                </div>
+                {{ partial:videos/platform-links links_class="pt-4 text-center lg:text-left [&>div]:justify-center lg:[&>div]:justify-start" }}
+            </aside>
+
+            <div class="lg:col-start-1 lg:row-start-2 min-w-0 post-content content">
+                {{ article }}
+                    {{ partial:posts/bard-sets }}
+                {{ /article }}
+            </div>
+        </article>
+    {{ else }}
+        {{# Desktop: side-by-side; Mobile: stacked #}}
+        <div class="flex flex-col lg:flex-row lg:gap-12 lg:items-start">
+
+            {{# Video embed column #}}
+            <div class="flex-shrink-0 w-full lg:w-96 mb-6 lg:mb-0">
+                <div class="w-full max-w-sm mx-auto lg:mx-0">
+                    {{ partial:videos/embed }}
+                </div>
+            </div>
+
+            {{# Text content column #}}
+            <div class="flex-1 min-w-0 flex flex-col">
+
+                {{# Title & meta #}}
+                <div class="mb-5">
+                    <h1 class="text-2xl lg:text-3xl font-bold leading-snug mb-2">{{ title }}</h1>
+                    {{ if publish_date }}
+                        <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
+                    {{ /if }}
+                </div>
+
+                {{# Categories/tags #}}
+                {{ if category }}
+                    <div class="flex flex-wrap gap-2 mb-5">
+                        {{ category }}
+                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
+                        {{ /category }}
                     </div>
                 {{ /if }}
-            </div>
-        </div>
 
-        {{# Text content column #}}
-        <div class="flex-1 min-w-0 flex flex-col">
-
-            {{# Title & meta #}}
-            <div class="mb-5">
-                <h1 class="text-2xl lg:text-3xl font-bold leading-snug mb-2">{{ title }}</h1>
-                {{ if publish_date }}
-                    <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
+                {{# Content #}}
+                {{ if content }}
+                    <div class="content text-gray-800 mb-6">{{ content }}</div>
                 {{ /if }}
+
+                {{ partial:videos/platform-links }}
+
             </div>
-
-            {{# Categories/tags #}}
-            {{ if category }}
-                <div class="flex flex-wrap gap-2 mb-5">
-                    {{ category }}
-                        <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
-                    {{ /category }}
-                </div>
-            {{ /if }}
-
-            {{# Content #}}
-            {{ if content }}
-                <div class="content text-gray-800 mb-6">{{ content }}</div>
-            {{ /if }}
-
-            {{# Platform links #}}
-            {{ if youtube || instagram }}
-                <div class="mt-auto pt-4">
-                    <p class="text-xs text-gray-400 uppercase tracking-widest mb-3">View on</p>
-                    <div class="flex flex-wrap gap-3">
-                        {{ if youtube }}
-                            <a href="https://www.youtube.com/watch?v={{ youtube }}" target="_blank" rel="noopener noreferrer"
-                               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 text-sm font-medium no-underline hover:border-red-600 hover:bg-red-600 hover:text-white transition-all">
-                                <i class="fa-brands fa-youtube text-base"></i>
-                                YouTube
-                            </a>
-                        {{ /if }}
-                        {{ if instagram }}
-                            <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" rel="noopener noreferrer"
-                               class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 text-sm font-medium no-underline hover:border-pink-500 hover:bg-pink-500 hover:text-white transition-all">
-                                <i class="fa-brands fa-instagram text-base"></i>
-                                Instagram
-                            </a>
-                        {{ /if }}
-                    </div>
-                </div>
-            {{ /if }}
-
         </div>
-    </div>
+    {{ /if }}
 
     {{# Prev / Next navigation #}}
     <div class="border-t border-gray-200 mt-10 pt-8">
@@ -96,9 +96,9 @@
                         </div>
                         <div class="flex-shrink-0 w-12 aspect-[9/16] rounded-md overflow-hidden bg-gray-100">
                             {{ if thumbnail }}
-                                <img src="{{ thumbnail:url }}" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                                <img src="{{ thumbnail:url }}" alt="{{ title | entities }}" class="w-full h-full object-cover" loading="lazy">
                             {{ elseif youtube }}
-                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title | entities }}" class="w-full h-full object-cover" loading="lazy">
                             {{ else }}
                                 <div class="w-full h-full flex items-center justify-center text-gray-300">
                                     <i class="fa-brands fa-instagram text-lg"></i>
@@ -124,9 +124,9 @@
                         </div>
                         <div class="flex-shrink-0 w-12 aspect-[9/16] rounded-md overflow-hidden bg-gray-100">
                             {{ if thumbnail }}
-                                <img src="{{ thumbnail:url }}" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                                <img src="{{ thumbnail:url }}" alt="{{ title | entities }}" class="w-full h-full object-cover" loading="lazy">
                             {{ elseif youtube }}
-                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title }}" class="w-full h-full object-cover" loading="lazy">
+                                <img src="https://i.ytimg.com/vi/{{ youtube }}/hqdefault.jpg" alt="{{ title | entities }}" class="w-full h-full object-cover" loading="lazy">
                             {{ else }}
                                 <div class="w-full h-full flex items-center justify-center text-gray-300">
                                     <i class="fa-brands fa-instagram text-lg"></i>

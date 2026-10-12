@@ -38,11 +38,7 @@ class PostSchema
             'image' => self::image($entry),
             'datePublished' => $entry->date()?->toDateString(),
             'dateModified' => self::dateModified($entry),
-            'author' => [
-                '@type' => 'Person',
-                'name' => 'Troy Pavlek',
-                'url' => 'https://troypavlek.ca',
-            ],
+            'author' => self::author(),
             'mainEntity' => self::showList($entry),
         ]);
 
@@ -51,6 +47,16 @@ class PostSchema
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
             | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_PRETTY_PRINT
         );
+    }
+
+    /** Shared with VideoSchema, so a companion article is credited the same way. */
+    public static function author(): array
+    {
+        return [
+            '@type' => 'Person',
+            'name' => 'Troy Pavlek',
+            'url' => 'https://troypavlek.ca',
+        ];
     }
 
     private static function showList($entry): ?array

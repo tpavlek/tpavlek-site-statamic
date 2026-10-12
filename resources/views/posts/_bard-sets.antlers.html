@@ -1,0 +1,94 @@
+{{# One node of a long-form Bard body (the `long_form.body` fieldset field): a post's
+    `content`, or a video's companion `article`. Called from inside the Bard loop, so the
+    set's own fields are in scope. Shared so the two can never render a set differently. #}}
+{{ if type == "text" }}
+    {{ text }}
+{{ /if }}
+
+{{ if type == "candidate" }}
+    {{ candidate }}
+        {{ partial src="yegvote-2025/candidate" }}
+    {{ /candidate }}
+{{ /if }}
+{{# A section about one show. This is a set rather than an inline review pin
+    because a pin is an inline Bard node — it always renders inside the
+    paragraph around it, so it can never be a heading, and a six-show post with
+    no headings is one a screen reader or a skimming reader can't navigate.
+
+    The rating shown is whatever fringe/_review-link would show, including one
+    inherited from an earlier staging, paired with a "Returning · 2024" badge so
+    the year it was earned is never in doubt. #}}
+{{# The spacing utilities are undoing `.content > h2` in style.css, which sets
+    `mt-12 py-6` (and `mt-16` at lg) for headings that break up long prose. These
+    headings label a section that already opens with a rule and an image, so that
+    much air reads as an interruption rather than a division. Tailwind's config
+    sets `important: true`, so these beat the bare element selector. #}}
+{{ if type == "show" }}
+    {{ heading_level = level ?? 'h2' }}
+    {{ review }}
+        {{# The negative top margin is the line box's half-leading, not a nudge:
+            `leading-tight` puts (1.25em - 1em) / 2 of space above the cap, which
+            leaves the heading sitting visibly below the top of the image it's
+            floated beside. Expressed in em so it stays correct at both sizes. #}}
+        <{{ heading_level }} id="{{ url_slug }}" class="mt-[-0.125em] mb-0 pt-0 pb-2 text-xl lg:text-2xl leading-tight">
+            {{# The year is the festival this staging plays, which is not
+                necessarily the year the rating beside it was earned — that one is
+                on the returning badge. #}}
+            <a href="{{ url }}" class="no-underline text-gray-800 hover:text-teal">{{ title }} <span class="text-gray-500 font-normal">({{ festival:slug }})</span></a>
+            {{ if rating }} {{ partial:fringe/rating size="text-lg" }}{{ /if }}
+            {{ partial:fringe/returning-badge size="text-xs" }}
+        </{{ heading_level }}>
+    {{ /review }}
+    {{# Earlier shows by the same company, derived from the artist rather than
+        picked — see App\Fringe\ArtistShows. The set's own `previous_reviews`
+        overrides that when the line should be a specific subset. #}}
+    {{ if previous_reviews }}
+        {{ partial:fringe/previous-shows :shows="previous_reviews" }}
+    {{ else }}
+        {{ review }}{{ partial:fringe/previous-shows :shows="previous_shows" }}{{ /review }}
+    {{ /if }}
+{{ /if }}
+
+{{# A floated image wraps the paragraphs that follow it in the same .post-content
+    flow. The float is cleared on the next full-width image and at the end of the
+    article, and drops to full width on narrow screens where wrapping just gives
+    you two-word lines. #}}
+{{ if type == "image" }}
+    {{# Held in variables because inside {{ images }} the scope is the asset,
+        which has its own alt and could have its own caption field. #}}
+    {{ image_alignment = alignment ?? 'full' }}
+    {{ image_caption = caption }}
+    {{ images }}
+        <figure class="post-image post-image--{{ image_alignment }}">
+            {{# |entities because alt text describing a share card quotes the
+                card, and a double quote in it would otherwise close the
+                attribute and spill the rest of the sentence into the markup. #}}
+            <img src="{{ url }}" alt="{{ alt | entities }}" />
+            {{ if image_caption }}<figcaption>{{ image_caption }}</figcaption>{{ /if }}
+        </figure>
+    {{ /images }}
+{{ /if }}
+
+{{# Draws nothing; its only job is to stop the wrap around a floated image. #}}
+{{ if type == "break" }}
+    <div class="post-break post-break--{{ space ?? 'none' }}" aria-hidden="true"></div>
+{{ /if }}
+
+{{ if type == "email_subscription_prompt" }}
+    {{ partial:email-subscribe }}
+{{ /if }}
+
+{{ if type == "social_embed" }}
+    {{ if instagram }}
+        {{ instagram }}
+    {{ /if }}
+{{ /if }}
+
+{{# The Dessert People sets. Each is one partial; the styles are the `.dp-*`
+    block in style.css. #}}
+{{ if type == "verdict" }}{{ partial:posts/dessert-verdict }}{{ /if }}
+{{ if type == "pro_tip" }}{{ partial:posts/dessert-pro-tip }}{{ /if }}
+{{ if type == "photo_beside" }}{{ partial:posts/dessert-photo-beside }}{{ /if }}
+{{ if type == "gallery" }}{{ partial:posts/dessert-gallery }}{{ /if }}
+{{ if type == "progress" }}{{ partial:posts/dessert-progress }}{{ /if }}
+{{ if type == "pull_quote" }}{{ partial:posts/pull-quote }}{{ /if }}

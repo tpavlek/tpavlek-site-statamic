@@ -84,7 +84,7 @@
                             <div class="relative mt-0.5 normal-case">
                                 also
                                 {{ earlier_stagings }}
-                                    <a href="{{ url }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="{{ title }} at Fringe {{ festival:slug }}">{{ festival:slug }}</a>{{ unless last }},{{ /unless }}
+                                    <a href="{{ url }}" class="text-gray-500 no-underline hover:text-teal transition-colors" title="{{ title | entities }} at Fringe {{ festival:slug }}">{{ festival:slug }}</a>{{ unless last }},{{ /unless }}
                                 {{ /earlier_stagings }}
                             </div>
                         {{ /if }}

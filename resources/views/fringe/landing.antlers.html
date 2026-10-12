@@ -75,7 +75,7 @@
                 <a href="{{ fringe:reviews_url :year="slug" }}" class="group block rounded-xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all no-underline">
                     {{ if artwork }}
                         <div class="aspect-[16/9] overflow-hidden bg-gray-100">
-                            <img src="{{ artwork:url }}" alt="{{ title }} festival artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="{{ artwork:url }}" alt="{{ title | entities }} festival artwork" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         </div>
                     {{ else }}
                         <div class="aspect-[16/9] bg-gray-100 flex items-center justify-center">

@@ -283,6 +283,34 @@ class AppServiceProvider extends ServiceProvider
             return \App\Fringe\PostFestivals::for($entry);
         });
 
+        // A video page is a VideoObject, or a BlogPosting carrying one when the video has a
+        // companion article. See App\Schema\VideoSchema.
+        Collection::computed('videos', 'video_schema', function ($entry, $value) {
+            return \App\Schema\VideoSchema::build($entry);
+        });
+
+        Collection::computed('videos', 'og_type', function ($entry, $value) {
+            return \App\Support\Writing::hasArticle($entry) ? 'article' : 'video.other';
+        });
+
+        // The bluesky field holds the post's AT-URI (at://did/app.bsky.feed.post/rkey), which is
+        // what distribution gets back from the API. The web URL is built from its two parts.
+        Collection::computed('videos', 'bluesky_url', function ($entry, $value) {
+            $uri = (string) $entry->value('bluesky');
+
+            if (! preg_match('~^at://([^/]+)/app\.bsky\.feed\.post/([^/]+)$~', $uri, $m)) {
+                return null;
+            }
+
+            return "https://bsky.app/profile/{$m[1]}/post/{$m[2]}";
+        });
+
+        // An explicit og_description wins; otherwise the start of the YouTube description,
+        // so a video page never falls back to the layout's Fringe boilerplate.
+        Collection::computed('videos', 'og_description', function ($entry, $value) {
+            return $value ?: \App\Schema\VideoSchema::description($entry);
+        });
+
         // Each festival's reviews page is a controller route rather than an entry, so the
         // sitemap generator can't discover it. One per fringe_festival term, which means a
         // new year appears automatically.

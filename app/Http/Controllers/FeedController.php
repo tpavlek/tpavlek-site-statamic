@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Feed\Feed;
 use App\Fringe\FestivalUrls;
 use App\Fringe\Reviews;
+use App\Support\Writing;
 use Illuminate\Http\Response;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
@@ -23,7 +24,7 @@ use Statamic\Facades\Entry as EntryFacade;
 class FeedController extends Controller
 {
     /**
-     * Posts, newest first.
+     * Posts and video companion articles, newest first.
      *
      * Summaries rather than full text: a post's body is a Bard field with a dozen custom
      * sets — show sections, floated figures, candidate cards, subscribe prompts — and the
@@ -33,16 +34,14 @@ class FeedController extends Controller
      */
     public function posts(): Response
     {
-        $items = EntryFacade::query()
-            ->where('collection', 'posts')
-            ->where('published', true)
-            ->get()
-            ->sortByDesc(fn (Entry $entry) => $entry->date())
+        // Writing, not just the posts collection: a video with a companion article is a
+        // post in every way a reader cares about. See App\Support\Writing.
+        $items = Writing::entries()
             ->take(30)
             ->map(fn (Entry $entry) => [
                 'title' => $entry->value('title'),
                 'url' => $entry->url(),
-                'date' => $entry->date(),
+                'date' => Writing::date($entry),
                 'description' => (string) ($entry->augmentedValue('og_description')->value() ?? ''),
                 'content' => null,
             ])

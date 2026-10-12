@@ -1,0 +1,23 @@
+{{# The player: YouTube if we have it, otherwise a card linking out to the Instagram reel.
+    Fills the width it's given, at 9:16. #}}
+{{ if youtube }}
+    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl">
+        <iframe
+            class="w-full h-full"
+            src="https://www.youtube.com/embed/{{ youtube }}"
+            title="{{ title | entities }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+        ></iframe>
+    </div>
+{{ elseif instagram }}
+    <div class="aspect-[9/16] rounded-xl overflow-hidden bg-black shadow-xl flex items-center justify-center">
+        <a href="https://www.instagram.com/reel/{{ instagram }}/" target="_blank" rel="noopener noreferrer"
+           class="text-white no-underline flex flex-col items-center gap-3">
+            <i class="fa-brands fa-instagram text-5xl"></i>
+            <span class="text-sm font-medium">Watch on Instagram</span>
+        </a>
+    </div>
+{{ /if }}

@@ -24,17 +24,20 @@
             it was handed. A page can name a more specific feed via `feed_url` — the Fringe
             reviews do, since someone on that page wants the reviews as they land, not the
             blog. #}}
-        <link rel="alternate" type="application/rss+xml" title="{{ settings:site_name }}" href="/feed.xml">
+        <link rel="alternate" type="application/rss+xml" title="{{ settings:site_name | entities }}" href="/feed.xml">
         {{ if feed_url }}
-            <link rel="alternate" type="application/rss+xml" title="{{ feed_title ?? 'Edmonton Fringe Reviews' }}" href="{{ feed_url }}">
+            <link rel="alternate" type="application/rss+xml" title="{{ (feed_title ?? 'Edmonton Fringe Reviews') | entities }}" href="{{ feed_url }}">
         {{ /if }}
 
+        {{# Every text value in an attribute below goes through `| entities`. Antlers doesn't
+            escape, so a title that opens with a quote ("Who cares about an election?") closed
+            the attribute early and every share preview read as empty. #}}
         {{ if og_description }}
-            <meta name="description" content="{{ og_description }}">
-            <meta property="og:description" content="{{ og_description }}">
-            <meta name="twitter:description" content="{{ og_description }}">
+            <meta name="description" content="{{ og_description | entities }}">
+            <meta property="og:description" content="{{ og_description | entities }}">
+            <meta name="twitter:description" content="{{ og_description | entities }}">
         {{ else }}
-            <meta name="description" content="{{ excerpt ?? title }}">
+            <meta name="description" content="{{ (excerpt ?? title) | entities }}">
             <meta property="og:description" content="Honest reviews of the Edmonton International Fringe Festival — find a show you'll actually like.">
             <meta name="twitter:description" content="Honest reviews of the Edmonton International Fringe Festival — find a show you'll actually like.">
         {{ /if }}
@@ -47,13 +50,13 @@
         <meta property="og:type" content="{{ og_type ?? 'website' }}">
         {{# Discord and Slack print this above the title; without it a shared link is
             attributed to nobody. #}}
-        <meta property="og:site_name" content="{{ settings:site_name }}">
+        <meta property="og:site_name" content="{{ settings:site_name | entities }}">
         {{ if og_title }}
-            <meta property="og:title" content="{{ og_title }}">
-            <meta name="twitter:title" content="{{ og_title }}">
+            <meta property="og:title" content="{{ og_title | entities }}">
+            <meta name="twitter:title" content="{{ og_title | entities }}">
         {{ elseif title }}
-            <meta property="og:title" content="{{ title }}">
-            <meta name="twitter:title" content="{{ title }}">
+            <meta property="og:title" content="{{ title | entities }}">
+            <meta name="twitter:title" content="{{ title | entities }}">
         {{ else }}
             <meta property="og:title" content="Edmonton Fringe Festival Reviews">
             <meta name="twitter:title" content="Edmonton Fringe Festival Reviews">

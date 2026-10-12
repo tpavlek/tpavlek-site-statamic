@@ -1,0 +1,383 @@
+title: 'Long-form body'
+fields:
+  -
+    handle: body
+    field:
+      remove_empty_nodes: false
+      type: bard
+      display: Content
+      container: assets
+      buttons:
+        - h2
+        - h3
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - removeformat
+        - quote
+        - anchor
+        - horizontalrule
+        - image
+        - table
+        - code
+        - bts_pins
+      bts_pins:
+        - review_ref
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          sets:
+            candidate:
+              display: Candidate
+              fields:
+                -
+                  handle: candidate
+                  field:
+                    max_items: 1
+                    mode: typeahead
+                    collections:
+                      - yegvote_2025_candidates
+                    type: entries
+                    display: Candidate
+            show:
+              display: 'Show heading'
+              icon: entry
+              instructions: 'Starts a section about one show. Renders as a real heading, unlike the inline review pin, which is always stuck inside a paragraph.'
+              fields:
+                -
+                  handle: review
+                  field:
+                    max_items: 1
+                    mode: typeahead
+                    collections:
+                      - fringe_reviews
+                    type: review_ref_entries
+                    display: Show
+                    instructions: 'The show this section is about. Its stars only appear if this entry has its own rating — a returning show that has not opened yet has nothing to show.'
+                -
+                  handle: previous_reviews
+                  field:
+                    mode: typeahead
+                    collections:
+                      - fringe_reviews
+                    type: review_ref_entries
+                    display: 'Previously'
+                    instructions: 'Leave empty and the company''s earlier Fringe shows are listed automatically, newest first. Only fill this in to show a specific subset, or for a company that has changed names.'
+                -
+                  handle: level
+                  field:
+                    type: select
+                    display: 'Heading level'
+                    default: h2
+                    clearable: false
+                    instructions: 'h2 for a top-level section. h3 only if it sits inside one.'
+                    options:
+                      h2: 'Heading 2'
+                      h3: 'Heading 3'
+            image:
+              display: image
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  handle: images
+                  field:
+                    container: assets
+                    dynamic: slug
+                    type: assets
+                    display: Images
+                -
+                  handle: alignment
+                  field:
+                    type: select
+                    display: Placement
+                    default: full
+                    clearable: false
+                    instructions: 'Float left or right to wrap the following paragraphs around the image. On phones a floated image goes full width, because there is no room to wrap.'
+                    options:
+                      full: 'Full width'
+                      left: 'Float left, text wraps right'
+                      right: 'Float right, text wraps left'
+                -
+                  handle: caption
+                  field:
+                    type: text
+                    display: Caption
+                    instructions: 'Optional. Shown under the image.'
+            break:
+              display: 'Break (invisible)'
+              instructions: 'Ends the text wrap around a floated image without drawing anything. Use it between two facing images so the text starts beside the second one. For a visible divider, use the horizontal rule button instead.'
+              fields:
+                -
+                  handle: space
+                  field:
+                    type: select
+                    display: 'Extra space'
+                    default: none
+                    clearable: false
+                    instructions: 'Vertical gap left behind, on top of the clearing.'
+                    options:
+                      none: None
+                      small: Small
+                      large: Large
+            email_subscription_prompt:
+              display: 'Email Subscription prompt'
+              instructions: 'Include an inline email subscription prompt'
+              icon: mail-sign-at
+              fields:
+                -
+                  handle: include_content
+                  field:
+                    options:
+                      -
+                        key: immediate_list
+                        value: 'Immediate List Note'
+                    type: checkboxes
+                    display: 'Include Content'
+                    instructions: 'Sections you want to include'
+            social_embed:
+              display: 'Social Embed'
+              instructions: 'Embed social content'
+              icon: social-share
+              fields:
+                -
+                  handle: instagram
+                  field:
+                    type: code
+                    display: Instagram
+                    instructions: 'Enter in the instagram embed code'
+        dessert_people:
+          display: 'Dessert People'
+          sets:
+            verdict:
+              display: Verdict
+              icon: star
+              instructions: 'The two-up rating card. One per recipe; a post baking two recipes gets two, each named.'
+              fields:
+                -
+                  handle: recipe
+                  field:
+                    type: text
+                    display: Recipe
+                    instructions: 'Leave empty when the post is about one recipe — the card is then headed "The Verdict".'
+                -
+                  handle: troy_stars
+                  field:
+                    type: select
+                    display: 'Troy''s stars'
+                    width: 33
+                    clearable: false
+                    options:
+                      '0': '0'
+                      '0.5': '½'
+                      '1': '1'
+                      '1.5': '1½'
+                      '2': '2'
+                      '2.5': '2½'
+                      '3': '3'
+                      '3.5': '3½'
+                      '4': '4'
+                      '4.5': '4½'
+                      '5': '5'
+                -
+                  handle: troy_photo
+                  field:
+                    type: assets
+                    container: assets
+                    folder: dessert-people
+                    max_files: 1
+                    display: 'Troy''s face'
+                    width: 66
+                    instructions: 'The reaction photo beside the rating. Any photo; the shared ones live in the dessert-people folder.'
+                -
+                  handle: troy_verdict
+                  field:
+                    type: textarea
+                    display: 'Troy''s verdict'
+                    instructions: 'Markdown.'
+                -
+                  handle: rhi_stars
+                  field:
+                    type: select
+                    display: 'Rhianna''s stars'
+                    width: 33
+                    clearable: false
+                    options:
+                      '0': '0'
+                      '0.5': '½'
+                      '1': '1'
+                      '1.5': '1½'
+                      '2': '2'
+                      '2.5': '2½'
+                      '3': '3'
+                      '3.5': '3½'
+                      '4': '4'
+                      '4.5': '4½'
+                      '5': '5'
+                -
+                  handle: rhi_photo
+                  field:
+                    type: assets
+                    container: assets
+                    folder: dessert-people
+                    max_files: 1
+                    display: 'Rhianna''s face'
+                    width: 66
+                -
+                  handle: rhi_verdict
+                  field:
+                    type: textarea
+                    display: 'Rhianna''s verdict'
+                    instructions: 'Markdown.'
+            pro_tip:
+              display: 'Pro tip'
+              icon: lightbulb
+              fields:
+                -
+                  handle: author
+                  field:
+                    type: select
+                    display: Whose
+                    width: 33
+                    clearable: false
+                    default: troy
+                    options:
+                      troy: Troy
+                      rhianna: Rhianna
+                -
+                  handle: photo
+                  field:
+                    type: assets
+                    container: assets
+                    folder: dessert-people
+                    max_files: 1
+                    display: Photo
+                    width: 66
+                -
+                  handle: tip
+                  field:
+                    type: textarea
+                    display: Tip
+                    instructions: 'Markdown.'
+            photo_beside:
+              display: 'Photo beside text'
+              icon: media-image-picture-orientation
+              instructions: 'A photo or short video on one side, a paragraph or two on the other. Stacks on phones.'
+              fields:
+                -
+                  handle: media
+                  field:
+                    type: assets
+                    container: assets
+                    dynamic: slug
+                    max_files: 1
+                    display: 'Photo or video'
+                    width: 50
+                -
+                  handle: side
+                  field:
+                    type: select
+                    display: 'Photo on the'
+                    width: 25
+                    clearable: false
+                    default: left
+                    options:
+                      left: Left
+                      right: Right
+                -
+                  handle: width
+                  field:
+                    type: select
+                    display: 'Photo width'
+                    width: 25
+                    clearable: false
+                    default: half
+                    options:
+                      third: 'A third'
+                      half: Half
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                    instructions: 'Markdown.'
+            gallery:
+              display: Gallery
+              icon: media-image-picture-gallery
+              instructions: 'Photos, gifs or short videos side by side. Optional text sits above them on a card.'
+              fields:
+                -
+                  handle: media
+                  field:
+                    type: assets
+                    container: assets
+                    dynamic: slug
+                    display: Media
+                -
+                  handle: layout
+                  field:
+                    type: select
+                    display: Layout
+                    width: 33
+                    clearable: false
+                    default: row
+                    options:
+                      row: 'One row'
+                      grid: 'Two per row'
+                      stacked: Stacked
+                -
+                  handle: size
+                  field:
+                    type: select
+                    display: 'Max width'
+                    width: 33
+                    clearable: false
+                    default: full
+                    instructions: 'For a single narrow photo you don''t want stretched.'
+                    options:
+                      full: Full
+                      two_thirds: 'Two thirds'
+                      half: Half
+                      third: 'A third'
+                -
+                  handle: card
+                  field:
+                    type: toggle
+                    display: 'On a card'
+                    width: 33
+                    default: false
+                    instructions: 'Grey card behind everything; automatic when there is text.'
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                    instructions: 'Markdown. Shown above the media.'
+            pull_quote:
+              display: 'Pull quote'
+              icon: quote
+              instructions: 'One huge line, quotation marks and all.'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: Quote
+            progress:
+              display: 'Progress bar'
+              icon: charts-bar
+              instructions: 'How far through the book this post gets us.'
+              fields:
+                -
+                  handle: progress
+                  field:
+                    type: integer
+                    display: Done
+                    width: 50
+                -
+                  handle: total
+                  field:
+                    type: integer
+                    display: Of
+                    width: 50
+                    default: 89

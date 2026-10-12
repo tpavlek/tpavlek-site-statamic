@@ -289,7 +289,7 @@
                             <a href="{{ url }}" class="block no-underline text-gray-800 group">
                                 {{ if thumbnail }}
                                     <img src="{{ thumbnail:url }}"
-                                         alt="{{ title }}"
+                                         alt="{{ title | entities }}"
                                          loading="lazy"
                                          class="w-full aspect-[9/16] object-cover rounded-lg bg-grey-100 group-hover:opacity-90 transition-opacity">
                                 {{ else }}

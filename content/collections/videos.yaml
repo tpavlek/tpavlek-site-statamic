@@ -3,7 +3,10 @@ template: videos/show
 layout: layout
 revisions: false
 route: 'video/{slug}'
-sort_field: publish_date
+# Newest first in the CP listing. The key is `sort_by`: this read `sort_field` for a long
+# time, which Statamic ignores, so the CP fell back to its default order. Front-end listings
+# pass their own `sort="publish_date:desc"` either way.
+sort_by: publish_date
 sort_dir: desc
 date_behavior:
   past: public

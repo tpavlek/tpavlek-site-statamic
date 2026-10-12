@@ -7,7 +7,10 @@
         <div class="text-xl text-gray-500 leading-relaxed">{{ content }}</div>
     </div>
 
-    {{ collection:posts as="posts" sort="date:desc" }}
+    {{# Posts plus videos that have a companion article, newest first — App\Tags\Writing.
+        A plain collection:posts would miss the videos, which live in their own collection so
+        reviews and endorsements can keep pointing at them. #}}
+    {{ writing }}
     <div x-data="postFilter">
         {{# One pill per topic, one active at a time, click again to clear. Purely
             client-side — every post is already in the page — so without JS the bar is
@@ -46,6 +49,9 @@
                     class="relative py-4 hover:bg-grey-50 transition-colors">
                     <p class="mb-1 text-xs text-gray-500 uppercase tracking-wide">
                         <time datetime="{{ date format="Y-m-d" }}">{{ date format="F j, Y" }}</time>
+                        {{ if is_video }}
+                            <span class="ml-2 inline-block rounded bg-gray-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white"><i class="fas fa-play mr-1"></i>Video</span>
+                        {{ /if }}
                         {{ topics }}
                             <span class="ml-2 inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">{{ title }}</span>
                         {{ /topics }}
@@ -64,6 +70,6 @@
                     @click="topic = ''">Show all posts</button>
         </p>
     </div>
-    {{ /collection:posts }}
+    {{ /writing }}
 
 </div>
