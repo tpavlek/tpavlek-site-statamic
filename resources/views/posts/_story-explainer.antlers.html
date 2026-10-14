@@ -1,0 +1,9 @@
+{{# Definition cards side by side, stacked on a phone. #}}
+<div class="story-explainer"{{ if anchor }} id="{{ anchor }}"{{ /if }}>
+    {{ cards }}
+        <section class="story-explainer__card">
+            <h3 class="story-explainer__term">{{ term }}</h3>
+            <div class="story-explainer__body">{{ body | markdown }}</div>
+        </section>
+    {{ /cards }}
+</div>

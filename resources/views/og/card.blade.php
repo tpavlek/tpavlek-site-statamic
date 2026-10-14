@@ -53,6 +53,15 @@
             opacity: 0.7;
         }
 
+        /* A photo in place of the doodles, cropped to fill. The scrim on top does the work
+           of keeping the copy readable, the same as it does over the doodles. */
+        .photo {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: {{ $backgroundFocus }};
+        }
+
         /* The scrim is heaviest under the copy and clears off toward the artwork. Without it
            a doodle can run straight through a letterform. It follows the layout: sideways on
            the wide card, downward on the square one. */
@@ -233,7 +242,11 @@
     </style>
 </head>
 <body class="{{ $format }}">
-    <div class="doodles"></div>
+    @if ($background)
+        <div class="photo" style="background-image: url('{{ $background }}')"></div>
+    @else
+        <div class="doodles"></div>
+    @endif
     <div class="scrim"></div>
 
     <div class="card">

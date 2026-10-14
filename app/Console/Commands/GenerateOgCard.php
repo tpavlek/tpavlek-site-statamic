@@ -37,6 +37,8 @@ class GenerateOgCard extends Command
         {--images=* : Asset paths (or /site-root paths), up to three, fanned alongside}
         {--portrait= : A photo of a person, laid on top of the fan and taking one of its slots}
         {--portrait-focus= : Which part of the photo survives the square crop, as a CSS object-position (e.g. left, 30% 40%)}
+        {--background= : A photo behind the whole card in place of the doodles. Defaults to the entry\'s og_background}
+        {--background-focus= : Which part of the background photo survives the crop, as a CSS background-position}
         {--out= : Output path under public/assets. Defaults to og/{entry-slug}.png}
         {--attach : Set the entry\'s og_image to the generated file}
         {--url= : Site origin to screenshot. Defaults to the app URL}';
@@ -70,6 +72,8 @@ class GenerateOgCard extends Command
             'images' => $this->option('images'),
             'portrait' => $this->option('portrait'),
             'portrait_focus' => $this->option('portrait-focus'),
+            'background' => $this->option('background'),
+            'background_focus' => $this->option('background-focus'),
         ]);
 
         $path = $this->option('out') ?: CardParams::path($entry?->slug() ?? 'card', $format);

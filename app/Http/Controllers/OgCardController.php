@@ -48,6 +48,7 @@ class OgCardController extends Controller
 
         $headline = $this->text($request, 'headline', $defaults);
         $portrait = $this->portrait($request);
+        $background = $this->localPath($this->text($request, 'background', $defaults));
         $images = $this->images($request, $defaults);
 
         return response()
@@ -71,6 +72,10 @@ class OgCardController extends Controller
                 // runs bigger; these mirror the sizes in the stylesheet.
                 'squareFan' => $this->fan(count($images) + ($portrait ? 1 : 0), 520, self::SQUARE_FAN_STEP),
                 'pattern' => '/assets/fringe/fringe-doodles.svg',
+                // A photo behind the whole card, in place of the doodles. The scrim stays,
+                // so the copy reads the same over either.
+                'background' => $background,
+                'backgroundFocus' => $this->focus($request->query('background_focus')),
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');
     }
@@ -225,6 +230,9 @@ class OgCardController extends Controller
             'cta' => $this->cta($entry),
             'footnote' => 'troypavlek.ca',
             'images' => $this->entryImages($entry),
+            // Read from the entry rather than passed in, so the CP's "Regenerate link
+            // preview" action keeps the photo instead of quietly reverting to doodles.
+            'background' => $entry->value('og_background'),
         ];
     }
 

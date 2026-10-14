@@ -146,6 +146,145 @@ fields:
                     type: code
                     display: Instagram
                     instructions: 'Enter in the instagram embed code'
+        story:
+          display: Story
+          sets:
+            timestamp:
+              display: Timestamp
+              icon: time-clock
+              instructions: 'A clock marker on the timeline down the left of the post. Put it before the paragraph that happens at that time.'
+              fields:
+                -
+                  handle: time
+                  field:
+                    type: text
+                    display: Time
+                    instructions: 'As it should read, e.g. "11:30am" or "~4pm".'
+            beat:
+              display: Beat
+              icon: text-formatting-initial-letter
+              instructions: 'A one-line punchline that needs a pause around it.'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: Line
+            dialogue:
+              display: Dialogue
+              icon: mail-chat-bubble-text
+              instructions: 'Overheard chatter as speech bubbles, or a back-and-forth as a transcript.'
+              fields:
+                -
+                  handle: style
+                  field:
+                    type: button_group
+                    display: Style
+                    default: chatter
+                    options:
+                      chatter: 'Overheard chatter'
+                      transcript: Transcript
+                -
+                  handle: label
+                  field:
+                    type: text
+                    display: Label
+                    instructions: 'Optional. A small heading over the block, e.g. "Overheard in the hallway".'
+                -
+                  handle: lines
+                  field:
+                    type: grid
+                    display: Lines
+                    mode: stacked
+                    add_row: 'Add line'
+                    fields:
+                      -
+                        handle: speaker
+                        field:
+                          type: text
+                          display: Speaker
+                          width: 25
+                          instructions: 'Transcripts only.'
+                      -
+                        handle: line
+                        field:
+                          type: text
+                          display: Line
+                          width: 75
+                      -
+                        handle: aside
+                        field:
+                          type: text
+                          display: Aside
+                          instructions: 'Optional. Your commentary on the line, shown under it in smaller type.'
+            stats:
+              display: 'Stat strip'
+              icon: money-graph-bar-increase
+              instructions: 'A row of big numbers.'
+              fields:
+                -
+                  handle: stats
+                  field:
+                    type: grid
+                    display: Stats
+                    add_row: 'Add stat'
+                    fields:
+                      -
+                        handle: value
+                        field:
+                          type: text
+                          display: Number
+                      -
+                        handle: label
+                        field:
+                          type: text
+                          display: Label
+            explainer:
+              display: Explainer
+              icon: dictionary-language-book
+              instructions: 'Side-by-side definition cards, for a pair of terms worth comparing.'
+              fields:
+                -
+                  handle: anchor
+                  field:
+                    type: text
+                    display: Anchor
+                    instructions: 'Optional. Lets other text link to #this.'
+                -
+                  handle: cards
+                  field:
+                    type: grid
+                    display: Cards
+                    mode: stacked
+                    add_row: 'Add card'
+                    fields:
+                      -
+                        handle: term
+                        field:
+                          type: text
+                          display: Term
+                      -
+                        handle: body
+                        field:
+                          type: textarea
+                          display: Body
+                          instructions: Markdown.
+            callout:
+              display: Callout
+              icon: alert-warning-exclamation-mark
+              instructions: 'A tinted box set apart from the story, e.g. a practical summary for readers who arrive from search.'
+              fields:
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                -
+                  handle: body
+                  field:
+                    type: textarea
+                    display: Body
+                    instructions: Markdown.
         dessert_people:
           display: 'Dessert People'
           sets:

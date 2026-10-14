@@ -351,4 +351,33 @@ class OgCardTest extends TestCase
 
         $this->assertGreaterThan((int) $l[1], (int) $s[1]);
     }
+
+    /** A background photo replaces the doodle field; the scrim stays so the copy reads the same. */
+    public function test_a_background_photo_replaces_the_doodles(): void
+    {
+        $html = $this->get('/og-card?'.http_build_query([
+            'headline' => 'Art',
+            'background' => 'edmonton-jury-selection/law-courts.jpg',
+            'background_focus' => 'right',
+        ]))->assertOk()->getContent();
+
+        $this->assertStringContainsString("background-image: url('/assets/edmonton-jury-selection/law-courts.jpg')", $html);
+        $this->assertStringContainsString('background-position: right', $html);
+        $this->assertStringNotContainsString('<div class="doodles">', $html);
+        $this->assertStringContainsString('<div class="scrim">', $html);
+
+        $this->get('/og-card?headline=Art')->assertSee('<div class="doodles">', false);
+    }
+
+    /** A remote background is refused for the same reason a remote image is. */
+    public function test_a_remote_background_is_refused(): void
+    {
+        $html = $this->get('/og-card?'.http_build_query([
+            'headline' => 'Art',
+            'background' => 'https://example.com/evil.jpg',
+        ]))->assertOk()->getContent();
+
+        $this->assertStringNotContainsString('example.com', $html);
+        $this->assertStringContainsString('<div class="doodles">', $html);
+    }
 }

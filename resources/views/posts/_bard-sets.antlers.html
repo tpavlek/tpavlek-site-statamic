@@ -92,3 +92,12 @@
 {{ if type == "gallery" }}{{ partial:posts/dessert-gallery }}{{ /if }}
 {{ if type == "progress" }}{{ partial:posts/dessert-progress }}{{ /if }}
 {{ if type == "pull_quote" }}{{ partial:posts/pull-quote }}{{ /if }}
+
+{{# The Story sets, for posts told as a timeline. Styles are the `.story-*` block in
+    style.css. #}}
+{{ if type == "timestamp" }}{{ partial:posts/story-timestamp }}{{ /if }}
+{{ if type == "beat" }}{{ partial:posts/story-beat }}{{ /if }}
+{{ if type == "dialogue" }}{{ partial:posts/story-dialogue }}{{ /if }}
+{{ if type == "stats" }}{{ partial:posts/story-stats }}{{ /if }}
+{{ if type == "explainer" }}{{ partial:posts/story-explainer }}{{ /if }}
+{{ if type == "callout" }}{{ partial:posts/story-callout }}{{ /if }}

@@ -1,0 +1,18 @@
+{{# Lines spoken aloud. `chatter` is a crowd of unnamed voices, shown as speech bubbles
+    staggered left and right; `transcript` is a back-and-forth with each speaker named
+    in a column down the left. An aside is the author talking over the line. #}}
+{{ dialogue_style = style ?? 'chatter' }}
+<figure class="story-dialogue story-dialogue--{{ dialogue_style }}">
+    {{ if label }}<figcaption class="story-dialogue__label">{{ label }}</figcaption>{{ /if }}
+    <ul class="list-none story-dialogue__lines">
+        {{ lines }}
+            <li class="story-dialogue__line">
+                {{ if dialogue_style == 'transcript' }}<span class="story-dialogue__speaker">{{ speaker }}</span>{{ /if }}
+                <div class="story-dialogue__body">
+                    <p class="story-dialogue__text">{{ line }}</p>
+                    {{ if aside }}<p class="story-dialogue__aside">{{ aside }}</p>{{ /if }}
+                </div>
+            </li>
+        {{ /lines }}
+    </ul>
+</figure>

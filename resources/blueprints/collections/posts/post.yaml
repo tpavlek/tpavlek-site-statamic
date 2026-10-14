@@ -58,6 +58,14 @@ tabs:
               type: assets
               display: 'OpenGraph Image'
           -
+            handle: og_background
+            field:
+              max_files: 1
+              container: assets
+              type: assets
+              display: 'Link preview background'
+              instructions: 'Optional. A photo behind the generated link preview, in place of the teal doodles. Regenerate the link preview after changing it.'
+          -
             handle: topics
             field:
               type: terms

@@ -622,3 +622,149 @@ h1 {
     .tl__image img { @apply h-full min-h-full; }
     .tl__card--event { @apply p-0; }
 }
+
+/*
+ * Story sets: timestamps, beats, dialogue, stat strips, explainers and callouts, for a
+ * long post told as a timeline. Selectors that touch a <p> or <ul> are prefixed with
+ * `.content` so they outrank `.content > p` and `.content ul:not(.list-none)`.
+ */
+.story-time {
+    @apply flex items-center gap-3 mt-10 mb-4;
+}
+
+.story-time::after {
+    @apply flex-1 border-t border-gray-200;
+    content: '';
+}
+
+/* A day heading already opens the section; the first marker under it needs no extra air. */
+.content > h2 + .story-time {
+    @apply mt-0;
+}
+
+.story-time__clock {
+    @apply inline-flex items-center gap-2 font-mono text-sm font-semibold text-teal-dark;
+}
+
+.story-time__clock::before {
+    @apply w-2 h-2 rounded-full bg-teal;
+    content: '';
+}
+
+.content > p.story-beat {
+    @apply text-2xl italic text-gray-600 leading-snug my-10;
+}
+
+.story-dialogue {
+    @apply my-10;
+}
+
+.story-dialogue__label {
+    @apply mb-3 text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
+.content .story-dialogue__lines {
+    @apply m-0 p-0 flex flex-col gap-3;
+}
+
+.content .story-dialogue__text {
+    @apply m-0 text-lg leading-snug;
+}
+
+.content .story-dialogue__aside {
+    @apply mt-1 mb-0 text-sm text-gray-600 leading-snug;
+}
+
+/* Chatter: unnamed voices in bubbles, staggered so it reads as a crowd. */
+.story-dialogue--chatter .story-dialogue__line {
+    @apply max-w-[85%] self-start;
+}
+
+.story-dialogue--chatter .story-dialogue__line:nth-child(even) {
+    @apply self-end;
+}
+
+.story-dialogue--chatter .story-dialogue__body {
+    @apply bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-3;
+}
+
+.story-dialogue--chatter .story-dialogue__line:nth-child(even) .story-dialogue__body {
+    @apply rounded-2xl rounded-br-sm bg-teal-light/40;
+}
+
+/* Transcript: each speaker named in a column down the left. */
+.story-dialogue--transcript .story-dialogue__lines {
+    @apply border-l-2 border-gray-200 pl-4;
+}
+
+.story-dialogue--transcript .story-dialogue__line {
+    @apply grid gap-x-4;
+    grid-template-columns: 4.5rem 1fr;
+}
+
+.story-dialogue__speaker {
+    @apply pt-1 text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
+.story-stats {
+    @apply my-10 grid grid-cols-2 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden;
+}
+
+.story-stats__item {
+    @apply flex flex-col-reverse bg-white px-4 py-5;
+}
+
+.story-stats__value {
+    @apply m-0 text-4xl font-black leading-none text-teal-dark;
+}
+
+.story-stats__label {
+    @apply mt-2 text-sm text-gray-600 leading-snug;
+}
+
+.story-explainer {
+    @apply my-10 grid gap-4;
+    scroll-margin-top: 2rem;
+}
+
+.story-explainer__card {
+    @apply bg-gray-50 border border-gray-200 rounded-lg p-5;
+}
+
+.content .story-explainer__term {
+    @apply m-0 mb-3 p-0 text-lg font-bold leading-tight;
+}
+
+.content .story-explainer__body p {
+    @apply mb-3 text-base leading-relaxed;
+}
+
+.content .story-explainer__body p:last-child {
+    @apply mb-0;
+}
+
+.story-callout {
+    @apply my-10 bg-teal-light/25 border-l-4 border-teal rounded-r-lg px-5 py-5;
+}
+
+.content .story-callout__title {
+    @apply mb-3 text-lg font-bold leading-tight;
+}
+
+.content .story-callout__body p,
+.content .story-callout__body ul:not(.list-none) {
+    @apply mb-3 text-base leading-relaxed;
+}
+
+.content .story-callout__body ul:not(.list-none) {
+    @apply ml-5;
+}
+
+.content .story-callout__body > :last-child {
+    @apply mb-0;
+}
+
+@screen md {
+    .story-stats { @apply grid-cols-4; }
+    .story-explainer { @apply grid-cols-2; }
+}

@@ -1,0 +1,6 @@
+{{# A tinted box that steps outside the story, e.g. the practical version for a reader
+    who arrived from search. #}}
+<aside class="story-callout">
+    {{ if heading }}<p class="story-callout__title">{{ heading }}</p>{{ /if }}
+    <div class="story-callout__body">{{ body | markdown }}</div>
+</aside>
