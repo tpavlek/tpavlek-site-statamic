@@ -37,6 +37,10 @@ return [
         // The Kit form new signups are added to: "Simple inline signup form", the one the old
         // Kit embed used, so every signup is still attributed to it in Kit.
         'form_id' => env('KIT_FORM_ID', 7583430),
+        // Where an email's links and images point. Not APP_URL: newsletters are drafted from
+        // a local install (Laravel Cloud's CP doesn't keep edits), and a subscriber can't
+        // follow a link to tpavlek-me-statamic.test.
+        'site_url' => env('NEWSLETTER_SITE_URL', 'https://troypavlek.ca'),
     ],
 
     'slack' => [

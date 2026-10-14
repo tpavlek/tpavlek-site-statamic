@@ -98,8 +98,12 @@ class NewsletterTest extends TestCase
 
     public function test_a_post_renders_as_email_safe_html(): void
     {
+        // Drafted from a local install, the email still has to point at the public site.
+        config(['app.url' => 'http://tpavlek-me-statamic.test', 'services.kit.site_url' => 'https://troypavlek.ca']);
+        \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+
         $html = (new PostEmail($this->makePost()))->html();
-        $base = rtrim(config('app.url'), '/');
+        $base = 'https://troypavlek.ca';
 
         $this->assertStringContainsString('Opening paragraph.', $html);
         $this->assertStringContainsString('Quote me.', $html);
@@ -113,6 +117,7 @@ class NewsletterTest extends TestCase
         $this->assertStringContainsString('href="'.$base.'/fringe/reviews"', $html);
         $this->assertStringContainsString('src="'.$base.'/assets/fringe/100-wizard.webp"', $html);
         $this->assertDoesNotMatchRegularExpression('~(href|src)="/(?!/)~', $html);
+        $this->assertStringNotContainsString('tpavlek-me-statamic.test', $html);
 
         // The subscribe prompt is pointless in an email to subscribers.
         $this->assertStringNotContainsString('Get updates straight to your inbox', $html);
@@ -175,7 +180,7 @@ class NewsletterTest extends TestCase
         $this->assertStringNotContainsString('<iframe', $html);
         $this->assertStringContainsString('i.ytimg.com/vi/abc123XYZ', $html);
         $this->assertStringContainsString('Watch the video', $html);
-        $this->assertStringContainsString($video->absoluteUrl(), $html);
+        $this->assertStringContainsString('https://troypavlek.ca'.$video->url(), $html);
         $this->assertStringContainsString('The companion article.', $html);
         $this->assertSame('The YouTube description.', $email->previewText());
     }

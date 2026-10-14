@@ -205,6 +205,8 @@ article:
   - type: paragraph
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1792017212
+newsletter_broadcast_id: 26416479
+newsletter_drafted_at: '2026-10-14T16:37:36-06:00'
 ---
 When she was announcing her shortsighted and anti-democratic overturning of Edmonton's zoning bylaw, she said she would force Edmonton to have a public hearing, and then dictate their votes.
 

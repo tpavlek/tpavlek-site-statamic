@@ -158,19 +158,13 @@ class PostEmail
             $node->parentNode->removeChild($node);
         }
 
-        $base = rtrim(config('app.url'), '/');
-
         foreach ($xpath->query('//img[@src]') as $img) {
             $this->size($img);
         }
 
         foreach ($xpath->query('//a[@href] | //img[@src]') as $node) {
             $attribute = $node->nodeName === 'a' ? 'href' : 'src';
-            $value = $node->getAttribute($attribute);
-
-            if (str_starts_with($value, '/') && ! str_starts_with($value, '//')) {
-                $node->setAttribute($attribute, $base.$value);
-            }
+            $node->setAttribute($attribute, $this->publicUrl($node->getAttribute($attribute)));
         }
 
         // Classes did their job when the styles were inlined; leaving them in only invites
@@ -182,5 +176,26 @@ class PostEmail
         $wrapper = $xpath->query('//body/*')->item(0);
 
         return $wrapper ? trim($doc->saveHTML($wrapper)) : '';
+    }
+
+    /**
+     * A URL on the public site. Relative ones get its origin; ones on this install's own
+     * origin (permalinks and asset URLs are built from APP_URL) are moved onto it, so an
+     * email drafted locally doesn't link subscribers to a .test domain.
+     */
+    private function publicUrl(string $url): string
+    {
+        $public = rtrim(config('services.kit.site_url'), '/');
+        $local = rtrim(config('app.url'), '/');
+
+        if (str_starts_with($url, '/') && ! str_starts_with($url, '//')) {
+            return $public.$url;
+        }
+
+        if ($url === $local || str_starts_with($url, $local.'/') || str_starts_with($url, $local.'?') || str_starts_with($url, $local.'#')) {
+            return $public.substr($url, strlen($local));
+        }
+
+        return $url;
     }
 }
