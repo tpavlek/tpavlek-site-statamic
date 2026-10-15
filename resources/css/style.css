@@ -706,6 +706,51 @@ h1 {
     @apply pt-1 text-xs font-bold uppercase tracking-widest text-gray-500;
 }
 
+/* Chat: an interview as a chatroom. Each line is the speaker's photo in a circle, then
+   their name and what they said, so it's always clear whose line it is. */
+/* `.content ul:not(.tl)` indents every list 2.5rem and outranks `.content
+   .story-dialogue__lines`; a chatroom sits flush with the text around it. */
+.content .story-dialogue--chat ul.story-dialogue__lines {
+    @apply ml-0 gap-5;
+}
+
+.story-dialogue--chat .story-dialogue__line {
+    @apply flex items-start gap-3 sm:gap-4;
+}
+
+.post-content img.story-dialogue__avatar,
+.story-dialogue__avatar {
+    @apply my-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover flex-shrink-0 ring-1 ring-gray-200;
+}
+
+.story-dialogue__avatar--initial {
+    @apply flex items-center justify-center bg-gray-200 text-gray-600 font-bold;
+}
+
+.story-dialogue--chat .story-dialogue__body {
+    @apply min-w-0 flex-1;
+}
+
+.story-dialogue__name {
+    @apply block mb-0.5 text-sm font-bold text-gray-900;
+}
+
+/* A line with no speaker: a system divider, e.g. the silence before an answer. Extra air
+   above and below so the pause takes up room on the page too. */
+.story-dialogue__system {
+    @apply flex items-center gap-3 py-12 text-sm italic text-gray-500;
+}
+
+.story-dialogue__system::before,
+.story-dialogue__system::after {
+    content: '';
+    @apply flex-1 border-t border-dashed border-gray-300;
+}
+
+.content .story-dialogue--chat .story-dialogue__text {
+    @apply text-lg leading-relaxed text-gray-800;
+}
+
 .story-stats {
     @apply my-10 grid grid-cols-2 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden;
 }
@@ -1032,4 +1077,27 @@ a.video-thread__update,
 
 .content .story-speech__source {
     @apply mt-3 mb-0 text-sm font-semibold text-gray-500;
+}
+
+/* One big closing line (posts/_story-punchline). Same type as `.content > blockquote`,
+   which can't be used here: this one sits inside a figure, so the child selector misses. */
+.story-punchline {
+    @apply relative mt-6 mb-28 px-4 pt-6;
+}
+
+.story-punchline__text {
+    @apply m-0 p-0 text-center font-black italic text-3xl leading-tight text-gray-900;
+}
+
+/* Stamped on, not placed: tilted, hanging off the corner, slightly see-through. */
+.story-punchline__sticker {
+    @apply absolute -bottom-24 right-2 sm:right-6 w-16 h-16 sm:w-20 sm:h-20;
+    transform: rotate(14deg);
+    opacity: .92;
+}
+
+/* A raw embed from the social_embed set has no margin of its own; give it room before
+   the text that follows. */
+.content .video-embed {
+    @apply mt-6 mb-12;
 }

@@ -1,18 +1,38 @@
 {{# Lines spoken aloud. `chatter` is a crowd of unnamed voices, shown as speech bubbles
     staggered left and right; `transcript` is a back-and-forth with each speaker named
-    in a column down the left. An aside is the author talking over the line. #}}
+    in a column down the left; `chat` is an interview as a chatroom, each line led by the
+    speaker's photo (matched by name from `people`) and their name, and a line with no
+    speaker is a system divider. An aside is the author talking over the line. #}}
 {{ dialogue_style = style ?? 'chatter' }}
 <figure class="story-dialogue story-dialogue--{{ dialogue_style }}">
     {{ if label }}<figcaption class="story-dialogue__label">{{ label }}</figcaption>{{ /if }}
     <ul class="list-none story-dialogue__lines">
         {{ lines }}
+            {{ line_speaker = speaker }}
+            {{ if dialogue_style == 'chat' && !speaker }}
+                {{# No speaker in a chatroom: a system line between messages, like a pause. #}}
+                <li class="story-dialogue__system">{{ line }}</li>
+            {{ else }}
             <li class="story-dialogue__line">
                 {{ if dialogue_style == 'transcript' }}<span class="story-dialogue__speaker">{{ speaker }}</span>{{ /if }}
+                {{ if dialogue_style == 'chat' }}
+                    {{# Held in a variable, then drawn once: the photo comes from whichever
+                        `people` row shares this line's speaker name. #}}
+                    {{ line_photo = '' }}
+                    {{ people }}{{ if name == line_speaker }}{{ photo }}{{ line_photo = url }}{{ /photo }}{{ /if }}{{ /people }}
+                    {{ if line_photo }}
+                        <img src="{{ line_photo }}" alt="" class="story-dialogue__avatar" loading="lazy" />
+                    {{ else }}
+                        <span class="story-dialogue__avatar story-dialogue__avatar--initial" aria-hidden="true">{{ line_speaker | substr(0, 1) }}</span>
+                    {{ /if }}
+                {{ /if }}
                 <div class="story-dialogue__body">
+                    {{ if dialogue_style == 'chat' }}<span class="story-dialogue__name">{{ speaker }}</span>{{ /if }}
                     <p class="story-dialogue__text">{{ line }}</p>
                     {{ if aside }}<p class="story-dialogue__aside">{{ aside }}</p>{{ /if }}
                 </div>
             </li>
+            {{ /if }}
         {{ /lines }}
     </ul>
 </figure>

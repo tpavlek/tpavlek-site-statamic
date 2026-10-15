@@ -173,7 +173,7 @@ fields:
             dialogue:
               display: Dialogue
               icon: mail-chat-bubble-text
-              instructions: 'Overheard chatter as speech bubbles, or a back-and-forth as a transcript.'
+              instructions: 'Overheard chatter as speech bubbles, a back-and-forth as a transcript, or an interview as a chatroom.'
               fields:
                 -
                   handle: style
@@ -184,6 +184,7 @@ fields:
                     options:
                       chatter: 'Overheard chatter'
                       transcript: Transcript
+                      chat: 'Chatroom (interview)'
                 -
                   handle: label
                   field:
@@ -204,7 +205,7 @@ fields:
                           type: text
                           display: Speaker
                           width: 25
-                          instructions: 'Transcripts only.'
+                          instructions: 'Transcripts and chatrooms. In a chatroom, match a name under People to show their photo; leave it empty for a system line, e.g. a long silence.'
                       -
                         handle: line
                         field:
@@ -217,6 +218,27 @@ fields:
                           type: text
                           display: Aside
                           instructions: 'Optional. Your commentary on the line, shown under it in smaller type.'
+                -
+                  handle: people
+                  field:
+                    type: grid
+                    display: People
+                    mode: table
+                    add_row: 'Add person'
+                    instructions: 'Chatroom only. A photo for each speaker, matched by name.'
+                    fields:
+                      -
+                        handle: name
+                        field:
+                          type: text
+                          display: Name
+                      -
+                        handle: photo
+                        field:
+                          type: assets
+                          container: assets
+                          max_files: 1
+                          display: Photo
             stats:
               display: 'Stat strip'
               icon: money-graph-bar-increase
@@ -337,6 +359,24 @@ fields:
                     type: text
                     display: Stamp
                     instructions: 'Optional. A rubber stamp slapped on the bubble, e.g. "Approved".'
+            punchline:
+              display: Punchline
+              icon: text-formatting-bold
+              instructions: 'One big closing line, styled like the quote button, with an optional sticker stamped on its corner.'
+              fields:
+                -
+                  handle: text
+                  field:
+                    type: text
+                    display: Line
+                -
+                  handle: sticker
+                  field:
+                    type: select
+                    display: Sticker
+                    clearable: true
+                    options:
+                      cracked_egg: 'Cracked egg'
             timeline:
               display: Timeline
               icon: time-clock-circle
