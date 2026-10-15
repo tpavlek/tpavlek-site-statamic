@@ -887,8 +887,123 @@ h1 {
 .story-timeline__mark span:nth-child(2) { transform: rotate(6deg) translateY(-0.1em); }
 .story-timeline__mark span:nth-child(3) { transform: rotate(16deg); }
 
+/* An odd count would leave a grey hole in the last row: the last stat takes the full row on
+   phones, and three stats make three columns from md up. */
+.story-stats__item:last-child:nth-child(odd) {
+    @apply col-span-2;
+}
+
 @screen md {
     .story-stats { @apply grid-cols-4; }
+    .story-stats__item:last-child:nth-child(odd) { @apply col-span-1; }
+    .story-stats:has(> :nth-child(3):last-child) { @apply grid-cols-3; }
     .post-content ul.story-scorecard__tiles { @apply grid-cols-4; }
     .story-explainer { @apply grid-cols-2; }
+}
+
+/* The story so far, on a video that's one part of several (videos/_thread). */
+.video-thread {
+    @apply mb-10 border border-gray-200 rounded-lg overflow-hidden bg-white;
+}
+
+.video-thread__update {
+    @apply flex flex-wrap items-baseline gap-x-2 gap-y-1 px-4 py-3 bg-teal-light/25 border-b border-teal-light no-underline text-gray-800;
+}
+
+.video-thread__update:hover .video-thread__update-title {
+    @apply underline;
+}
+
+.video-thread__update-label {
+    @apply text-xs font-black uppercase tracking-wide text-teal-dark;
+}
+
+.video-thread__update-title {
+    @apply font-bold leading-snug;
+}
+
+.video-thread__update-date {
+    @apply text-sm text-gray-600 whitespace-nowrap;
+}
+
+/* Both: without an article the box sits outside .content, and inside it `.content p`
+   would otherwise win. */
+.video-thread__heading,
+.content .video-thread__heading {
+    @apply m-0 px-4 pt-3 pb-1 text-xs font-bold uppercase tracking-wide text-gray-500;
+}
+
+.video-thread ol.video-thread__parts,
+.post-content ol.video-thread__parts {
+    @apply m-0 px-4 pb-3 pt-1;
+}
+
+.video-thread__part {
+    @apply m-0 py-1.5 grid items-baseline gap-x-3 text-base leading-snug;
+    grid-template-columns: 1.5rem 1fr auto;
+}
+
+.video-thread__number {
+    @apply flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-xs font-bold text-gray-600 self-start;
+}
+
+.video-thread__part--current .video-thread__number {
+    @apply bg-teal-dark text-white;
+}
+
+.video-thread__part--current .video-thread__title {
+    @apply font-bold text-gray-900;
+}
+
+.video-thread__meta {
+    @apply text-sm text-gray-500 whitespace-nowrap;
+}
+
+/* Ends a part with the next one (videos/_thread-next). */
+.video-thread-next {
+    @apply my-10 flex gap-4 items-stretch p-4 border-2 border-teal-dark rounded-lg no-underline text-gray-800 bg-white;
+}
+
+.video-thread-next:hover {
+    @apply bg-teal-light/10;
+}
+
+.post-content img.video-thread-next__cover {
+    @apply my-0 w-20 sm:w-24 aspect-[9/16] object-cover rounded-md flex-shrink-0;
+}
+
+.video-thread-next__body {
+    @apply flex flex-col min-w-0;
+}
+
+.video-thread-next__label {
+    @apply text-xs font-black uppercase tracking-wide text-teal-dark;
+}
+
+.video-thread-next__title {
+    @apply mt-1 text-xl font-bold leading-snug text-gray-900;
+}
+
+.video-thread-next__summary {
+    @apply mt-2 text-sm leading-relaxed text-gray-600 line-clamp-3;
+}
+
+.video-thread-next__cta {
+    @apply mt-auto pt-3 text-sm font-bold text-teal-dark;
+}
+
+/* Whole-card links: `.content a` underlines and colours prose links, which would run
+   under every line of these. The title underlines on hover instead. */
+a.video-thread__update,
+.post-content a.video-thread__update,
+.post-content a.video-thread-next {
+    @apply no-underline text-gray-800;
+}
+
+.post-content a.video-thread-next:hover .video-thread-next__title {
+    @apply underline;
+}
+
+.video-thread__part a.video-thread__title {
+    @apply text-teal-dark;
 }

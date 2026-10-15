@@ -27,9 +27,17 @@
             </aside>
 
             <div class="lg:col-start-1 lg:row-start-2 min-w-0 post-content content">
+                {{# Parts of a multi-video story open with the story so far and end on the
+                    next part. See App\Support\VideoThread. #}}
+                {{ video_thread }}
+                    {{ if parts }}{{ partial:videos/thread }}{{ /if }}
+                {{ /video_thread }}
                 {{ article }}
                     {{ partial:posts/bard-sets }}
                 {{ /article }}
+                {{ video_thread }}
+                    {{ if next }}{{ partial:videos/thread-next }}{{ /if }}
+                {{ /video_thread }}
                 {{# As on posts: closes the article unless the body already has one. #}}
                 {{ unless has_subscribe_prompt }}{{ partial:email-subscribe }}{{ /unless }}
             </div>
@@ -55,6 +63,10 @@
                         <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
                     {{ /if }}
                 </div>
+
+                {{ video_thread }}
+                    {{ if parts }}{{ partial:videos/thread }}{{ /if }}
+                {{ /video_thread }}
 
                 {{# Categories/tags #}}
                 {{ if category }}

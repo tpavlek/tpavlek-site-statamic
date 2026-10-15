@@ -1,0 +1,28 @@
+{{# The story so far, for a video that's one part of several. Lists every part with the
+    current one marked, and on any part but the newest, leads with the update: a reader who
+    lands on the original from search should learn straight away that the story moved on.
+    Called inside {{ video_thread }}. #}}
+<nav class="video-thread" aria-label="The story so far">
+    {{ if latest }}
+        <a href="{{ latest:url }}" class="video-thread__update">
+            <span class="video-thread__update-label">Update</span>
+            <span class="video-thread__update-title">{{ latest:title }}</span>
+            <span class="video-thread__update-date">{{ latest:date format="M j" }} →</span>
+        </a>
+    {{ /if }}
+    <p class="video-thread__heading">The story so far</p>
+    <ol class="video-thread__parts list-none">
+        {{ parts }}
+            <li class="video-thread__part{{ if is_current }} video-thread__part--current{{ /if }}">
+                <span class="video-thread__number">{{ part }}</span>
+                {{ if is_current }}
+                    <span class="video-thread__title" aria-current="page">{{ title }}</span>
+                    <span class="video-thread__meta">You're here</span>
+                {{ else }}
+                    <a href="{{ url }}" class="video-thread__title">{{ title }}</a>
+                    <span class="video-thread__meta">{{ date format="M j, Y" }}</span>
+                {{ /if }}
+            </li>
+        {{ /parts }}
+    </ol>
+</nav>

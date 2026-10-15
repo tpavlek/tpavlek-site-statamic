@@ -125,6 +125,16 @@ tabs:
               mode: select
               instructions: 'Only matters for a video with a companion article — it is what the /posts topic filter reads.'
           -
+            handle: follows_up
+            field:
+              type: entries
+              collections:
+                - videos
+              max_items: 1
+              mode: select
+              display: 'Follow-up to'
+              instructions: 'Set on the newer video only. Both pages then show the story so far, the earlier one gets an "update" note, and each article ends with a card for the next part.'
+          -
             handle: og_image
             field:
               max_files: 1

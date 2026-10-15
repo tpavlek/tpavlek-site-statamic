@@ -8,6 +8,7 @@ thumbnail: videos/covers/police-commission-whats-next-cover.png
 publish_date: '2026-09-04 00:00'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1788560887
+follows_up: de132c4a-6b5f-4250-b23d-e4ee0651492b
 ---
 Speakers are banned from police commission meetings. What can we do about it?
 

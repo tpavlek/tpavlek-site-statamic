@@ -1,0 +1,13 @@
+{{# Ends a part with the next one, so the story reads straight through from part to part
+    without the two pages carrying the same text. Called inside {{ video_thread }}. #}}
+{{ next }}
+    <a href="{{ url }}" class="video-thread-next">
+        {{ if cover }}<img src="{{ cover }}" alt="" class="video-thread-next__cover" loading="lazy" />{{ /if }}
+        <span class="video-thread-next__body">
+            <span class="video-thread-next__label">Part {{ part }} · {{ date format="M j, Y" }}</span>
+            <span class="video-thread-next__title">{{ title }}</span>
+            {{ if summary }}<span class="video-thread-next__summary">{{ summary }}</span>{{ /if }}
+            <span class="video-thread-next__cta">Keep reading →</span>
+        </span>
+    </a>
+{{ /next }}
