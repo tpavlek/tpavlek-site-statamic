@@ -285,56 +285,58 @@ fields:
                     type: textarea
                     display: Body
                     instructions: Markdown.
-            scorecard:
-              display: Scorecard
-              icon: layout-grid
-              instructions: 'A row of picture tiles that builds to one empty tile, for a list whose punchline is what never happened.'
+            source_quote:
+              display: 'Quoted source'
+              icon: text-quote
+              instructions: 'Someone else''s words, with who said them. For your own line set big for emphasis, use the quote button instead.'
               fields:
                 -
-                  handle: heading
+                  handle: quote
+                  field:
+                    type: textarea
+                    display: Quote
+                    instructions: 'Markdown, so **bold** can mark the part that matters.'
+                -
+                  handle: source
                   field:
                     type: text
-                    display: Heading
-                    instructions: 'Optional. Sits above the tiles, e.g. "Since 1988:".'
+                    display: Source
+                    width: 50
+                    instructions: 'e.g. "Edmonton Police Commission website".'
                 -
-                  handle: tiles
-                  field:
-                    type: grid
-                    display: Tiles
-                    mode: stacked
-                    add_row: 'Add tile'
-                    fields:
-                      -
-                        handle: image
-                        field:
-                          type: assets
-                          container: assets
-                          max_files: 1
-                          display: Image
-                          instructions: 'Letterboxed on a dark background, never cropped, so a chart or a screenshot keeps its edges.'
-                      -
-                        handle: caption
-                        field:
-                          type: text
-                          display: Caption
-                -
-                  handle: empty_value
+                  handle: source_url
                   field:
                     type: text
-                    display: 'Empty tile number'
-                    default: '0'
+                    display: 'Source link'
+                    width: 50
+                    instructions: 'Optional.'
                 -
-                  handle: empty_label
+                  handle: speaker
                   field:
                     type: text
-                    display: 'Empty tile label'
-                    instructions: 'What never happened, e.g. "New adult hospitals".'
+                    display: Speaker
+                    width: 50
+                    instructions: 'Optional. With a photo, the quote becomes a speech bubble from this person, and Source becomes the small print under it.'
                 -
-                  handle: punchline
+                  handle: speaker_role
                   field:
                     type: text
-                    display: Punchline
-                    instructions: 'Optional. The line that lands under the tiles, set larger than body text.'
+                    display: 'Speaker title'
+                    width: 50
+                -
+                  handle: speaker_photo
+                  field:
+                    type: assets
+                    container: assets
+                    max_files: 1
+                    display: 'Speaker photo'
+                    instructions: 'A square headshot; shown as a small circle.'
+                -
+                  handle: stamp
+                  field:
+                    type: text
+                    display: Stamp
+                    instructions: 'Optional. A rubber stamp slapped on the bubble, e.g. "Approved".'
             timeline:
               display: Timeline
               icon: time-clock-circle

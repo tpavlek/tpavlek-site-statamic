@@ -5,7 +5,12 @@ title: 'Edmonton is on the verge of an Elmdemic'
 video_file: elmdemic-captioned.mp4
 thumbnail: videos/covers/elmdemic-cover.png
 youtube: 7szEZtCpdnQ
-instagram: ''
+instagram: DbdbYWfsoCO
+facebook: '1041416998294602'
+topics:
+  - municipal-politics
+  - environment
+og_image: og/elmdemic.png
 publish_date: '2026-07-31 00:00'
 article:
 - type: paragraph

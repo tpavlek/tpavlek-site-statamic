@@ -5,7 +5,12 @@ title: 'Four new cases of Dutch Elm Disease confirmed in Edmonton'
 video_file: four-new-cases-captioned.mp4
 thumbnail: videos/covers/four-new-cases-cover.png
 youtube: B3Kv_QgAQWU
-instagram: ''
+instagram: Dbg0wvBSPOf
+facebook: '1187351737805518'
+topics:
+  - municipal-politics
+  - environment
+og_image: og/four-new-cases.png
 publish_date: '2026-08-01 00:00'
 follows_up: 62c42bf3-6695-43bc-86ac-8e0024406a60
 article:

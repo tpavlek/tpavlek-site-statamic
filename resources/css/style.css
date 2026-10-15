@@ -764,50 +764,6 @@ h1 {
     @apply mb-0;
 }
 
-.story-scorecard {
-    @apply my-10;
-}
-
-.story-scorecard__heading {
-    @apply mb-3 text-sm font-bold uppercase tracking-wide text-gray-600;
-}
-
-/* `.post-content` + `ul` so these outrank the prose list margin. */
-.post-content ul.story-scorecard__tiles {
-    @apply m-0 p-0 grid grid-cols-2 gap-3;
-}
-
-.story-scorecard__tile {
-    @apply m-0 flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white;
-}
-
-/* Contain, not cover: the tiles hold charts and screenshots whose edges carry the
-   point, and the dark letterbox matches the dark images these were built for.
-   `.post-content img` to outrank `.content img:not(...)`'s my-12. */
-.post-content img.story-scorecard__image {
-    @apply block my-0 w-full aspect-[16/10] object-contain bg-gray-900;
-}
-
-.story-scorecard__caption {
-    @apply block px-3 py-3 text-sm leading-snug text-gray-700;
-}
-
-.story-scorecard__tile--empty {
-    @apply border-2 border-dashed border-gray-300 bg-gray-50;
-}
-
-.story-scorecard__value {
-    @apply flex items-center justify-center aspect-[16/10] text-6xl font-black leading-none text-red-600;
-}
-
-.story-scorecard__tile--empty .story-scorecard__caption {
-    @apply font-bold text-gray-800;
-}
-
-.content .story-scorecard__punchline {
-    @apply mt-6 mb-0 text-2xl font-bold leading-snug text-gray-800;
-}
-
 /* `.post-content ol` / `img` so these outrank the prose list margins and
    `.content img:not(...)`'s my-12. */
 .post-content ol.story-timeline {
@@ -897,7 +853,6 @@ h1 {
     .story-stats { @apply grid-cols-4; }
     .story-stats__item:last-child:nth-child(odd) { @apply col-span-1; }
     .story-stats:has(> :nth-child(3):last-child) { @apply grid-cols-3; }
-    .post-content ul.story-scorecard__tiles { @apply grid-cols-4; }
     .story-explainer { @apply grid-cols-2; }
 }
 
@@ -1006,4 +961,75 @@ a.video-thread__update,
 
 .video-thread__part a.video-thread__title {
     @apply text-teal-dark;
+}
+
+/* Someone else's words, with who said them (posts/_story-source-quote). Reading size on
+   purpose: the bare blockquote is a pull quote, and a press statement set that way reads
+   like a slogan. */
+.story-source-quote {
+    @apply my-8 border-l-4 border-teal bg-gray-50 rounded-r-lg px-5 py-4;
+}
+
+.post-content .story-source-quote__text,
+.content .story-source-quote__text {
+    @apply m-0 p-0 text-left not-italic font-normal text-lg leading-7 text-gray-800;
+}
+
+/* Same size as the body text around it (`.content > p`): it's read, not skimmed. */
+.content .story-source-quote__text p {
+    @apply m-0 text-lg leading-7;
+}
+
+.content .story-source-quote__text p + p {
+    @apply mt-3;
+}
+
+.content .story-source-quote__source {
+    @apply mt-3 text-sm font-semibold text-gray-600;
+}
+
+.content .story-source-quote__source::before {
+    content: '— ';
+}
+
+/* A quoted source as a speech bubble from the speaker (posts/_story-source-quote with a
+   speaker and photo). The bubble's squared top-left corner points at the face. */
+.story-speech {
+    @apply my-10 flex items-start gap-4;
+}
+
+.post-content img.story-speech__photo {
+    @apply my-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover flex-shrink-0 ring-2 ring-white shadow-md;
+}
+
+.story-speech__body {
+    @apply min-w-0 flex-1;
+}
+
+.story-speech__who {
+    @apply mb-1.5 flex flex-wrap items-baseline gap-x-2;
+}
+
+.story-speech__name {
+    @apply font-bold text-gray-900;
+}
+
+.story-speech__role {
+    @apply text-sm text-gray-500;
+}
+
+.story-speech__bubble {
+    @apply relative bg-gray-100 rounded-2xl rounded-tl-sm px-5 py-4;
+}
+
+/* A rubber stamp: red, outlined, tilted, a little faded, hanging off the bubble's corner. */
+.story-speech__stamp {
+    @apply absolute -bottom-4 -right-2 sm:-right-4 px-3 py-1 border-[3px] border-red-600 rounded-md text-red-600 text-xl font-black uppercase tracking-widest leading-none bg-white/70 select-none pointer-events-none;
+    transform: rotate(-9deg);
+    opacity: .85;
+    mix-blend-mode: multiply;
+}
+
+.content .story-speech__source {
+    @apply mt-3 mb-0 text-sm font-semibold text-gray-500;
 }

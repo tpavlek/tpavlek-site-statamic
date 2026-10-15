@@ -7,6 +7,7 @@ thumbnail: videos/covers/spend-more-get-nothing-cover.png
 youtube: -v5OLEnxbP8
 instagram: DbE3OIwpOgn
 facebook: '1593290158827621'
+og_image: og/spend-more-get-nothing.png
 publish_date: '2026-07-22 00:00'
 topics:
 - healthcare

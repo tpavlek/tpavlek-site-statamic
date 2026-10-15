@@ -1,0 +1,35 @@
+{{# Someone else's words, at reading size, with who said them. The quote button's
+    blockquote is a pull quote (big, bold, centred), which suits a line of the author's
+    own but makes a sentence from a website or a press statement look like a slogan.
+
+    With a speaker and a photo it becomes a speech bubble from that person instead, for
+    when the point is who said it. The optional stamp is the joke slapped on top. #}}
+{{ if speaker && speaker_photo }}
+    <figure class="story-speech">
+        {{ speaker_photo }}<img src="{{ url }}" alt="" class="story-speech__photo" loading="lazy" />{{ /speaker_photo }}
+        <div class="story-speech__body">
+            <figcaption class="story-speech__who">
+                <span class="story-speech__name">{{ speaker }}</span>
+                {{ if speaker_role }}<span class="story-speech__role">{{ speaker_role }}</span>{{ /if }}
+            </figcaption>
+            <div class="story-speech__bubble">
+                <blockquote class="story-source-quote__text">{{ quote | markdown }}</blockquote>
+                {{ if stamp }}<span class="story-speech__stamp" aria-hidden="true">{{ stamp }}</span>{{ /if }}
+            </div>
+            {{ if source }}
+                <p class="story-speech__source">
+                    {{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}
+                </p>
+            {{ /if }}
+        </div>
+    </figure>
+{{ else }}
+    <figure class="story-source-quote">
+        <blockquote class="story-source-quote__text">{{ quote | markdown }}</blockquote>
+        {{ if source }}
+            <figcaption class="story-source-quote__source">
+                {{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}
+            </figcaption>
+        {{ /if }}
+    </figure>
+{{ /if }}
