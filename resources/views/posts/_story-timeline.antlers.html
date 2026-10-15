@@ -1,0 +1,28 @@
+{{# Dated entries down a vertical line. The optional final entry is the one that never
+    arrived: a dashed line, a hollow marker, and an oversized mark (question marks by
+    default) where the event should be. #}}
+<ol class="story-timeline list-none">
+    {{ entries }}
+        <li class="story-timeline__entry">
+            <span class="story-timeline__year">{{ year }}</span>
+            <div class="story-timeline__body">
+                {{ text | markdown }}
+                {{ if stat }}<p class="story-timeline__stat">{{ stat }}</p>{{ /if }}
+                {{ image }}
+                    <img src="{{ url }}" alt="{{ alt | entities }}" class="story-timeline__image" loading="lazy" />
+                {{ /image }}
+            </div>
+        </li>
+    {{ /entries }}
+    {{ if end_year }}
+        <li class="story-timeline__entry story-timeline__entry--never">
+            <span class="story-timeline__year">{{ end_year }}</span>
+            <div class="story-timeline__body">
+                {{ if end_text }}<p>{{ end_text }}</p>{{ /if }}
+                {{# Space-separated so each mark gets its own span and tilts its own way: "? ? ?"
+                    reads as a shrug rather than a typo. #}}
+                <p class="story-timeline__mark" aria-hidden="true">{{ end_mark | explode(' ') }}<span>{{ value }}</span>{{ /end_mark }}</p>
+            </div>
+        </li>
+    {{ /if }}
+</ol>

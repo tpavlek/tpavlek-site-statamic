@@ -764,7 +764,131 @@ h1 {
     @apply mb-0;
 }
 
+.story-scorecard {
+    @apply my-10;
+}
+
+.story-scorecard__heading {
+    @apply mb-3 text-sm font-bold uppercase tracking-wide text-gray-600;
+}
+
+/* `.post-content` + `ul` so these outrank the prose list margin. */
+.post-content ul.story-scorecard__tiles {
+    @apply m-0 p-0 grid grid-cols-2 gap-3;
+}
+
+.story-scorecard__tile {
+    @apply m-0 flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white;
+}
+
+/* Contain, not cover: the tiles hold charts and screenshots whose edges carry the
+   point, and the dark letterbox matches the dark images these were built for.
+   `.post-content img` to outrank `.content img:not(...)`'s my-12. */
+.post-content img.story-scorecard__image {
+    @apply block my-0 w-full aspect-[16/10] object-contain bg-gray-900;
+}
+
+.story-scorecard__caption {
+    @apply block px-3 py-3 text-sm leading-snug text-gray-700;
+}
+
+.story-scorecard__tile--empty {
+    @apply border-2 border-dashed border-gray-300 bg-gray-50;
+}
+
+.story-scorecard__value {
+    @apply flex items-center justify-center aspect-[16/10] text-6xl font-black leading-none text-red-600;
+}
+
+.story-scorecard__tile--empty .story-scorecard__caption {
+    @apply font-bold text-gray-800;
+}
+
+.content .story-scorecard__punchline {
+    @apply mt-6 mb-0 text-2xl font-bold leading-snug text-gray-800;
+}
+
+/* `.post-content ol` / `img` so these outrank the prose list margins and
+   `.content img:not(...)`'s my-12. */
+.post-content ol.story-timeline {
+    @apply my-10 ml-0 p-0;
+}
+
+/* The line is each entry's left border, so it always reaches the next entry no
+   matter how tall this one is. The year sits in a fixed column left of it. */
+.story-timeline__entry {
+    @apply relative m-0 grid gap-x-5 pb-8;
+    grid-template-columns: 4rem 1fr;
+}
+
+.story-timeline__entry::before {
+    content: '';
+    @apply absolute top-2 bottom-0 border-l-2 border-gray-300;
+    left: calc(4rem + 0.625rem);
+}
+
+.story-timeline__entry::after {
+    content: '';
+    @apply absolute top-1.5 w-3 h-3 rounded-full bg-teal-dark;
+    left: calc(4rem + 0.625rem - 5px);
+}
+
+.story-timeline__year {
+    @apply text-right text-lg font-black leading-tight text-gray-800 tabular-nums;
+}
+
+.story-timeline__body {
+    @apply pl-5 min-w-0;
+}
+
+.content .story-timeline__body p {
+    @apply mb-2 text-base leading-relaxed;
+}
+
+/* `p.` to outrank `.story-timeline__body p` above. */
+.content p.story-timeline__stat {
+    @apply mt-1 text-2xl font-black leading-tight text-teal-dark;
+}
+
+.post-content img.story-timeline__image {
+    @apply block my-2 w-full max-w-xs rounded-md;
+}
+
+/* The one that never came: dashed, hollow, and a year in red. */
+.story-timeline__entry--never {
+    @apply pb-0;
+}
+
+.story-timeline__entry--never::before {
+    @apply border-dashed border-red-300;
+    top: -2rem;
+    bottom: auto;
+    height: 2.5rem;
+}
+
+.story-timeline__entry--never::after {
+    @apply bg-white border-2 border-dashed border-red-600;
+}
+
+.story-timeline__entry--never .story-timeline__year {
+    @apply text-red-600;
+}
+
+.content p.story-timeline__mark {
+    @apply mt-2 mb-0 text-7xl font-black leading-none text-red-600 select-none;
+}
+
+.story-timeline__mark span {
+    margin: 0 0.04em;
+    @apply inline-block;
+}
+
+.story-timeline__mark span:nth-child(1) { transform: rotate(-12deg); }
+.story-timeline__mark span:nth-child(2) { transform: rotate(6deg) translateY(-0.1em); }
+.story-timeline__mark span:nth-child(3) { transform: rotate(16deg); }
+
 @screen md {
     .story-stats { @apply grid-cols-4; }
+    .post-content ul.story-scorecard__tiles { @apply grid-cols-4; }
     .story-explainer { @apply grid-cols-2; }
 }

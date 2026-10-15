@@ -285,6 +285,113 @@ fields:
                     type: textarea
                     display: Body
                     instructions: Markdown.
+            scorecard:
+              display: Scorecard
+              icon: layout-grid
+              instructions: 'A row of picture tiles that builds to one empty tile, for a list whose punchline is what never happened.'
+              fields:
+                -
+                  handle: heading
+                  field:
+                    type: text
+                    display: Heading
+                    instructions: 'Optional. Sits above the tiles, e.g. "Since 1988:".'
+                -
+                  handle: tiles
+                  field:
+                    type: grid
+                    display: Tiles
+                    mode: stacked
+                    add_row: 'Add tile'
+                    fields:
+                      -
+                        handle: image
+                        field:
+                          type: assets
+                          container: assets
+                          max_files: 1
+                          display: Image
+                          instructions: 'Letterboxed on a dark background, never cropped, so a chart or a screenshot keeps its edges.'
+                      -
+                        handle: caption
+                        field:
+                          type: text
+                          display: Caption
+                -
+                  handle: empty_value
+                  field:
+                    type: text
+                    display: 'Empty tile number'
+                    default: '0'
+                -
+                  handle: empty_label
+                  field:
+                    type: text
+                    display: 'Empty tile label'
+                    instructions: 'What never happened, e.g. "New adult hospitals".'
+                -
+                  handle: punchline
+                  field:
+                    type: text
+                    display: Punchline
+                    instructions: 'Optional. The line that lands under the tiles, set larger than body text.'
+            timeline:
+              display: Timeline
+              icon: time-clock-circle
+              instructions: 'Dated entries down a line, ending on one that never arrived.'
+              fields:
+                -
+                  handle: entries
+                  field:
+                    type: grid
+                    display: Entries
+                    mode: stacked
+                    add_row: 'Add entry'
+                    fields:
+                      -
+                        handle: year
+                        field:
+                          type: text
+                          display: Year
+                          width: 25
+                      -
+                        handle: text
+                        field:
+                          type: textarea
+                          display: Text
+                          width: 75
+                          instructions: 'Markdown, for links.'
+                      -
+                        handle: stat
+                        field:
+                          type: text
+                          display: 'Big number'
+                          instructions: 'Optional. Set large under the text, e.g. "808,000 → 1.59 million".'
+                      -
+                        handle: image
+                        field:
+                          type: assets
+                          container: assets
+                          max_files: 1
+                          display: Image
+                -
+                  handle: end_year
+                  field:
+                    type: text
+                    display: 'Final year'
+                    instructions: 'Optional. The entry that never happened, drawn with a dashed line.'
+                -
+                  handle: end_text
+                  field:
+                    type: text
+                    display: 'Final text'
+                -
+                  handle: end_mark
+                  field:
+                    type: text
+                    display: 'Final mark'
+                    default: '? ? ?'
+                    instructions: 'Separate the characters with spaces; each one is tilted on its own.'
         dessert_people:
           display: 'Dessert People'
           sets:
