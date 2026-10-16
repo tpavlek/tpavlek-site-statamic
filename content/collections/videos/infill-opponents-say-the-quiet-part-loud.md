@@ -112,6 +112,16 @@ article:
   content:
   - type: text
     text: Next slide
+- type: paragraph
+  content:
+  - type: text
+    text: 'It might be easy to dismiss these infill opponents as classist, but you''d be forgetting one thing: they have '
+  - type: text
+    marks:
+    - type: italic
+    text: divine law
+  - type: text
+    text: ' on their side.'
 - type: set
   attrs:
     id: ygogdrls
