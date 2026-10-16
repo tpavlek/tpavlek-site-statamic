@@ -314,6 +314,16 @@ fields:
                     type: textarea
                     display: Body
                     instructions: Markdown.
+                -
+                  handle: style
+                  field:
+                    type: button_group
+                    display: Style
+                    default: tinted
+                    options:
+                      tinted: Tinted
+                      highlight: Highlight
+                    instructions: 'Highlight is a tilted teal card with the heading as a tab, for a note that should grab you before the story, like a "worth revisiting" intro.'
             source_quote:
               display: 'Quoted source'
               icon: text-quote

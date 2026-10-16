@@ -15,6 +15,20 @@ topics:
 - infill
 - municipal-politics
 article:
+- type: set
+  attrs:
+    id: rvsqtopq
+    values:
+      type: callout
+      style: highlight
+      heading: 'October 2026: worth revisiting'
+      body: 'The province is now overriding Edmonton''s own zoning and [forcing council to roll back infill](/video/the-ucp-will-require-edmonton-to-repeal-its-zoning-bylaw) to lower unit counts. So it''s worth revisiting this exchange.
+
+
+        The unit count was never the problem, and no number will ever be low enough. The loud minority fighting responsible urban planning (mostly older, wealthy homeowners) was never going to be won over by an adjustment.
+
+
+        **The problem is class.** They think renters deserve a worse life in their neighbourhoods, and they think a mortgage makes their opinion count for more. If conservatism is about preserving the status quo and returning to "traditional values," well, only letting landowners vote is about as traditional as it gets.'
 - type: paragraph
   content:
   - type: text

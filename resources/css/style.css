@@ -924,6 +924,55 @@ h1 {
     @apply mb-0;
 }
 
+/* Callout style "highlight": a soft teal card knocked slightly off square, with a
+   hard offset shadow and the heading as a black tab pinned over its top edge. */
+.story-callout--highlight {
+    @apply relative my-14 mr-2 rounded-sm border-2 border-l-2 px-6 pt-9 pb-6 sm:px-8;
+    background: #cfe6e5;
+    border-color: #111;
+    color: #10292a;
+    box-shadow: 6px 6px 0 #111;
+    transform: rotate(-.75deg);
+}
+
+@screen sm {
+    .story-callout--highlight {
+        transform: rotate(-1.25deg);
+    }
+}
+
+.content .story-callout--highlight .story-callout__title {
+    @apply absolute m-0 px-3 py-1 text-xs font-black uppercase tracking-widest;
+    top: -.85rem;
+    left: 1.25rem;
+    background: #111;
+    color: #a6d0cf;
+    transform: rotate(2deg);
+}
+
+.content .story-callout--highlight .story-callout__body p {
+    @apply text-lg leading-relaxed;
+}
+
+.content .story-callout--highlight .story-callout__body strong {
+    @apply font-extrabold;
+    background: linear-gradient(transparent 58%, #8cc4c2 58%);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.content .story-callout--highlight .story-callout__body a {
+    color: #111;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+}
+
+.content .story-callout--highlight .story-callout__body a:hover {
+    background: #111;
+    color: #a6d0cf;
+}
+
 /* `.post-content ol` / `img` so these outrank the prose list margins and
    `.content img:not(...)`'s my-12. */
 .post-content ol.story-timeline {
