@@ -22,7 +22,7 @@ article:
       type: callout
       style: highlight
       heading: 'October 2026: worth revisiting'
-      body: 'The province is now overriding Edmonton''s own zoning and [forcing council to roll back infill](/video/the-ucp-will-require-edmonton-to-repeal-its-zoning-bylaw) to lower unit counts. So it''s worth revisiting this exchange.
+      body: 'The province is now overriding Edmonton''s own zoning and [forcing council to roll back infill](/video/the-ucp-will-require-edmonton-to-repeal-its-zoning-bylaw) to lower unit counts. So it''s worth revisiting this exchange from February.
 
 
         The unit count was never the problem, and no number will ever be low enough. The loud minority fighting responsible urban planning (mostly older, wealthy homeowners) was never going to be won over by an adjustment.

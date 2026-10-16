@@ -941,6 +941,11 @@ h1 {
     }
 }
 
+/* Opening the article, it only needs room for the tab, not the full my-14. */
+.content > .story-callout--highlight:first-child {
+    @apply mt-5;
+}
+
 .content .story-callout--highlight .story-callout__title {
     @apply absolute m-0 px-3 py-1 text-xs font-black uppercase tracking-widest;
     top: -.85rem;
