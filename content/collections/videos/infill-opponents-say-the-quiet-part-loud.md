@@ -169,7 +169,7 @@ article:
 - type: paragraph
   content:
   - type: text
-    text: And jeez, did you know that people who don't own land are allowed to vote now?
+    text: 'But sure, we''re supposed to believe this is about "responsible" infill, and the only problem is the pace. A deep-seated contempt for anyone who doesn''t own property, fully resolved by knocking eight units down to six. Sure.'
 - type: set
   attrs:
     id: cqyjzqmn
