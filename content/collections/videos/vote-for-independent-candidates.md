@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-05'
 title: 'Vote for independent candidates'
 youtube: nUs8rHYAxLs
+facebook: '1110525003917200'
+tiktok: '7546723310055329080'
 instagram: DOPGOlhEjW5
 category:
   - yegvote-2025

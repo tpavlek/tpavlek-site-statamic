@@ -5,6 +5,8 @@ publish_date: '2025-07-12 00:00'
 instagram: DMA9w-0p_rr
 title: 'THE SEARCH FOR TIM CARTMELL 🔍'
 youtube: 0N1oc4BuLEw
+facebook: '1089762700017109'
+tiktok: '7526239853722242311'
 thumbnail: videos/covers/search-for-tim-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403423

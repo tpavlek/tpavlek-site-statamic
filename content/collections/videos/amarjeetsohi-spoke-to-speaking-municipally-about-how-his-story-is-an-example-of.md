@@ -6,6 +6,9 @@ instagram: DHmHg0mzcIQ
 description: '@amarjeet_sohi spoke to Speaking Municipally about how his story is an example of what makes Canada great: investing in public services to lift peo...'
 title: 'Amarjeet Sohi thinks his story is an example of what makes Canada great'
 youtube: t43N9kS8dZ0
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3ll2sn5kths2e'
+twitter: '1903866868873748679'
+tiktok: '7485477998229982519'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774382027
 ---

@@ -3,6 +3,10 @@ id: e33c7ee4-c82c-4337-8b11-5c39ec5a6c57
 blueprint: video
 title: 'The UCP is finally paying their property taxes'
 youtube: zCU4y9mJgms
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mfx7iimcxk2e'
+twitter: '2027862620196233576'
+facebook: '2326083847901148'
+tiktok: '7612033819587218708'
 instagram: DVUR3OlEjAp
 publish_date: '2026-02-28 00:00'
 thumbnail: videos/covers/gipot-cover.png

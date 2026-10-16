@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-08-15'
 title: 'Fringe Day 1 Reviews'
 youtube: QozhqZujOSw
+facebook: '749482664449903'
+tiktok: '7538876308806176006'
 instagram: DNYpKDzh2Mo
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750091

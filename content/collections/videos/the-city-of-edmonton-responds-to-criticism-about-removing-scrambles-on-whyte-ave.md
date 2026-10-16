@@ -5,6 +5,9 @@ title: 'The City of Edmonton responds to criticism about removing scrambles on W
 video_file: city-responds-whyte-avenue-scrambles-captioned.mp4
 thumbnail: videos/covers/city-responds-whyte-ave-scrambles-cover.png
 youtube: 2F8YLGKw9rA
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mif7vuxk4c2s'
+twitter: '2039106286462398706'
+tiktok: '7623547156007292181'
 instagram: DWkLH2QAVpz
 facebook: '1266392538251917'
 og_image: og/city-responds-scrambles.png

@@ -4,6 +4,10 @@ blueprint: video
 publish_date: '2025-10-01'
 title: "Why I'm endorsing Ashley Salvador"
 youtube: 70V3Xc5CQZ8
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m26b75jw4k2e'
+twitter: '1973539429768896738'
+facebook: '1843729712844448'
+tiktok: '7556385910632336652'
 instagram: DPSJTKQDEQN
 category:
   - yegvote-2025

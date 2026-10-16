@@ -4,6 +4,10 @@ blueprint: video
 publish_date: '2025-10-14'
 title: "O-day'min candidate overview"
 youtube: jWbQA6TzbsU
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m3aheeyjb22p'
+twitter: '1978467291714265557'
+facebook: '697148376748890'
+tiktok: '7561229508347448587'
 instagram: DPzwNVmAewH
 category:
   - yegvote-2025

@@ -5,7 +5,11 @@ title: 'The number of parking fines has plummeted in the past decade'
 video_file: parking-fines-captioned.mp4
 thumbnail: videos/covers/parking-fines-cover.png
 youtube: eg8g8QXS0Xw
-instagram: ''
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mnndxa3dcs2b'
+twitter: '2063334361093865698'
+facebook: '28142422635347223'
+tiktok: '7648358617732762900'
+instagram: 'DZQVdaRBiWc'
 publish_date: '2026-06-06 00:00'
 ---
 If you're paying for parking, the city thinks you're a sucker.

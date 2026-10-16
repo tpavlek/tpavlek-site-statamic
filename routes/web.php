@@ -34,6 +34,29 @@ Route::post('/subscribe', \App\Http\Controllers\SubscribeController::class)
 // than 404'd so anything already linking or indexed lands somewhere useful.
 Route::redirect('/fringe/why-fringe', '/fringe', 301);
 
+// Renamed videos. Many old slugs were the title cut off at 80 characters mid-word; the
+// old URLs are kept alive for shares and search.
+foreach ([
+    'karen-principe-says-its-too-colonial-to-mention-europe-or-utah-when-talking-about-solar' => 'dont-say-utah-karen-principe-votes-against-her-own-motion',
+    'mayor-jeromy-farkas-says-calgary-pays-edmonton-equalization-transfer-payments-th' => 'farkas-transfer-payments',
+    'a-new-mayoral-poll-puts-michael-walters-ahead-but-only-just-with-knack-and-cartm' => 'michael-walters-leads-mayoral-poll',
+    'after-nearly-a-decade-of-being-a-blight-in-ritchieleague-the-pit-is-finally-goin' => 'the-pit-is-becoming-housing',
+    'as-i-talk-with-more-and-more-voters-one-thing-is-becoming-abundantly-clear-munic' => 'municipal-parties-are-unpopular',
+    'candidates-running-in-the-election-want-you-to-trust-them-to-read-hundreds-of-pa' => 'candidates-cannot-read-sign-rules',
+    'danielle-smiths-ucp-is-removing-every-code-of-conduct-for-municipal-elected-offi' => 'ucp-removes-municipal-codes-of-conduct',
+    'edmonton-massively-revamped-its-zoning-and-now-housing-is-getting-more-affordabl' => 'zoning-is-making-housing-more-affordable',
+    'if-edmontonians-are-upset-about-the-direction-of-the-city-why-were-all-the-incum' => 'why-were-the-incumbents-re-elected',
+    'in-collaboration-with-yegarts-there-is-new-musical-furniture-at-the-mill-woods-l' => 'mill-woods-musical-furniture',
+    'joshuadoyleyegs-cheating-has-been-some-of-the-most-egregious-so-far-in-this-elec' => 'joshua-doyle-caught-cheating',
+    'renters-should-have-to-live-on-arterial-roads-infill-opponents-say-the-quiet-par' => 'infill-opponents-say-the-quiet-part-loud',
+    'the-ucp-has-removed-all-rules-and-restrictions-on-election-sign-placement-in-alb' => 'ucp-removes-election-sign-rules',
+    'tim-cartmell-has-raised-as-much-money-as-every-candidate-outside-his-party-combi' => 'tim-cartmell-raised-as-much-as-everyone-combined',
+    'vassy-kapelos-tears-a-strip-off-of-ucp-education-minister-demetrios-nicolaides-i' => 'vassy-kapelos-vs-demetrios-nicolaides',
+    'while-edmonton-funds-day-use-shelter-spaces-the-ucp-calls-houselessness-a-fake-n' => 'ucp-calls-houselessness-a-fake-crisis',
+] as $old => $new) {
+    Route::redirect("/video/{$old}", "/video/{$new}", 301);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Fringe

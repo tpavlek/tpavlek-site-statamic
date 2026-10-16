@@ -5,6 +5,9 @@ title: 'Edmonton is on the verge of an Elmdemic'
 video_file: elmdemic-captioned.mp4
 thumbnail: videos/covers/elmdemic-cover.png
 youtube: 7szEZtCpdnQ
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mrx4xqcnhk23'
+twitter: '2083190958166810812'
+tiktok: '7668693092098149653'
 instagram: DbdbYWfsoCO
 facebook: '1041416998294602'
 topics:

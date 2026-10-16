@@ -4,6 +4,10 @@ blueprint: video
 publish_date: '2025-09-02'
 title: 'Meet Andrew Knack, my pick for Mayor of Edmonton'
 youtube: L84MDVODeKk
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lxvkiuled226'
+twitter: '1963031171190948149'
+facebook: '2155689241590807'
+tiktok: '7545609385582644485'
 instagram: DOHXjqlEm2M
 category:
   - yegvote-2025

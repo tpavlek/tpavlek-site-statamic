@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-15'
 title: 'Meet the candidate: Jon Morgan'
 youtube: d4huby7RSxE
+facebook: '2776319072557444'
+tiktok: '7550441870799719736'
 instagram: DOo6lmFEgnQ
 category:
   - yegvote-2025

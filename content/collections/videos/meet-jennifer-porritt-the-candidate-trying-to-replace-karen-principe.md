@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-20'
 title: 'Meet Jennifer Porritt, the candidate trying to replace Karen Principe'
 youtube: zVlAYyKaedE
+facebook: '677769978096089'
+tiktok: '7552284803047984440'
 instagram: DO1oJ2CEilA
 category:
   - yegvote-2025

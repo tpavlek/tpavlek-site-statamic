@@ -4,16 +4,21 @@ blueprint: video
 title: "Why wasn't big money enough to win the last election?"
 thumbnail: videos/covers/campaign-spending-is-magic-cover.png
 publish_date: '2026-04-06 00:00'
-updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
-updated_at: 1775512884
 video_file: campaign-spending-is-magic-captioned.mp4
 youtube: iAF-BNqfCw4
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3miud2ymh6c2e'
+instagram: 'DWzicPvkjNC'
+twitter: '2041278665410175074'
+facebook: '3402999899862687'
+tiktok: '7625765920035605781'
 shortform_content: |-
   When Andrew Knack won, he was outspent six-to-one.
 
   Like a bad birthday magician, Tim Cartmell revealed how his trick was going to work. He made it obvious he wanted to buy the election, and so every additional dollar spent made people less likely to vote for him. 
 
   $1.5M, gone.
+updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
+updated_at: 1775512884
 ---
 Despite being outspent six-to-one, Andrew Knack still won the last election.
 

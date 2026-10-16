@@ -5,7 +5,11 @@ title: 'Clearing your leaves on the first warm weekend is a death sentence for b
 video_file: STOP-leave-your-leaves-captioned.mp4
 thumbnail: videos/covers/STOP-leave-your-leaves-cover.png
 youtube: envdLr4_Ta4
-instagram: ''
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mjpxrq2ryk2j'
+twitter: '2045267268779852143'
+facebook: '3168521123320578'
+tiktok: '7629856442635357460'
+instagram: 'DXP9AFTgSGH'
 publish_date: '2026-04-17 00:00'
 ---
 I know we have an absolute scorcher coming up this weekend in Edmonton, but the bees have not yet woken up yet. It takes several consistent days above ten degrees to encourage them out.

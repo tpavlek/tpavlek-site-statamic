@@ -6,6 +6,7 @@ instagram: DIE1T6xyzDC
 description: 'Your updates to the #yegvote mayor race include @omar_4_mayor rapping, @timcartmell competing with wet lettuce, @karenprincipe.yeg making bad jokes...'
 title: 'Omar Mohammed is rapping for mayor'
 youtube: ahIFPgTXXpM
+tiktok: '7489902466637614342'
 thumbnail: videos/covers/mayor-update-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774404593

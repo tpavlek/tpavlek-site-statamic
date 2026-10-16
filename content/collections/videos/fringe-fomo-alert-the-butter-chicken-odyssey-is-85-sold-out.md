@@ -3,6 +3,8 @@ id: 47a88154-2219-49d1-b5a7-aa68275ae822
 blueprint: video
 title: 'FRINGE FOMO ALERT: The Butter Chicken Odyssey is 85% sold out'
 youtube: zlFd3eKwsMk
+facebook: '2023153371671014'
+tiktok: '7672090791111707924'
 instagram: Db1AsKhJoB4
 thumbnail: videos/covers/butter-chicken-odyssey-cover.png
 publish_date: '2026-08-09 00:00'

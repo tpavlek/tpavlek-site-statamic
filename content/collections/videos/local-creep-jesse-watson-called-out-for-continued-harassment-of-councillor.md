@@ -4,6 +4,10 @@ blueprint: video
 thumbnail: videos/covers/jesse-stalking-cover.png
 title: 'Local creep Jesse Watson called out for continued harassment of councillor'
 youtube: xEYOgJhXbXU
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mcxojv3zjk2m'
+twitter: '2014093782153658588'
+facebook: '878217338258817'
+tiktok: '7597924220751858962'
 instagram: DTyXqzjExJh
 publish_date: '2026-01-21 00:00'
 og_image: og/jesse-watson-harassment.png

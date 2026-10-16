@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-10-08'
 title: 'Who are the candidates running in Anirniq?'
 youtube: 224U9pCdNPE
+facebook: '4221933168083056'
+tiktok: '7558958858811608332'
 instagram: DPj_1dmgWW8
 category:
   - yegvote-2025

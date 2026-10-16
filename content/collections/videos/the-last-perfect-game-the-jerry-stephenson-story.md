@@ -5,6 +5,9 @@ publish_date: '2025-08-11'
 title: 'The Last Perfect Game: The Jerry Stephenson Story'
 description: 'The Last Perfect Game: The Jerry Stephenson Story'
 youtube: l7v8RWp-Stg
+twitter: '1954945486093463799'
+facebook: '620229327467262'
+tiktok: '7537343637202521400'
 instagram: DNOAIdmxsl2
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750114

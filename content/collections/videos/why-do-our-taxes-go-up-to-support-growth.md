@@ -5,6 +5,10 @@ publish_date: '2025-11-27 00:00'
 instagram: DRit8X4iTIv
 title: 'Why do our taxes go up to support growth?'
 youtube: SrYcYQNmPMU
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m6lcnpjq5223'
+twitter: '1993866848757231677'
+facebook: '851187894119945'
+tiktok: '7577221145594727692'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774404365
 ---

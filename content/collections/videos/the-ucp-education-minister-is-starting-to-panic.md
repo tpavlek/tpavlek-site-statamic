@@ -5,6 +5,10 @@ publish_date: '2025-11-14 00:00'
 instagram: DRBF_dkAeKr
 title: 'The UCP Education Minister is starting to panic'
 youtube: 4oxdPPckSj8
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m5knh5btak2u'
+twitter: '1989159474393973120'
+facebook: '2243242159515757'
+tiktok: '7572375530524151096'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403516
 ---

@@ -5,6 +5,8 @@ publish_date: '2025-08-07'
 title: 'Musicals to be excited for at #yegfringe'
 description: 'Musicals to be excited for at #yegfringe'
 youtube: UfVRnZafEAs
+facebook: '1179604790558163'
+tiktok: '7535887151129578758'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750096
 instagram: DND5fSZpBTJ

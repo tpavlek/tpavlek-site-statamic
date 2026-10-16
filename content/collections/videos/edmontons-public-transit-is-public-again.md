@@ -5,7 +5,11 @@ title: "Edmonton's public transit is PUBLIC again"
 video_file: ets-takes-back-valley-line-captioned.mp4
 thumbnail: videos/covers/ets-takes-back-valley-line-cover.png
 youtube: kAeelVhAbCk
-instagram: ''
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mnv5xa3wts2j'
+twitter: '2064459847454871969'
+facebook: '1493827339153149'
+tiktok: '7649511332022324501'
+instagram: 'DZYVJhxS6uQ'
 publish_date: '2026-06-09 00:00'
 ---
 Once again, privatizing public services has failed.

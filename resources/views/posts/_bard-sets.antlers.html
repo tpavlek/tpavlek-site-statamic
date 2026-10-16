@@ -59,7 +59,9 @@
     {{ image_alignment = alignment ?? 'full' }}
     {{ image_caption = caption }}
     {{ images }}
-        <figure class="post-image post-image--{{ image_alignment }}">
+        {{# A tall image floated beside text fills a whole phone screen once the float
+            drops away, so it gets a `--tall` class and a narrower cap there. #}}
+        <figure class="post-image post-image--{{ image_alignment }}{{ if image_alignment != 'full' && height > width }} post-image--tall{{ /if }}">
             {{# |entities because alt text describing a share card quotes the
                 card, and a double quote in it would otherwise close the
                 attribute and spill the rest of the sentence into the markup. #}}
@@ -102,5 +104,6 @@
 {{ if type == "explainer" }}{{ partial:posts/story-explainer }}{{ /if }}
 {{ if type == "callout" }}{{ partial:posts/story-callout }}{{ /if }}
 {{ if type == "source_quote" }}{{ partial:posts/story-source-quote }}{{ /if }}
+{{ if type == "motion" }}{{ partial:posts/story-motion }}{{ /if }}
 {{ if type == "timeline" }}{{ partial:posts/story-timeline }}{{ /if }}
 {{ if type == "punchline" }}{{ partial:posts/story-punchline }}{{ /if }}

@@ -39,8 +39,21 @@ class Writing
             ->get()
             ->filter(fn (Entry $entry) => self::hasArticle($entry));
 
+        // A follow-up often goes up the same day as the video it follows, and publish_date has
+        // no time of day, so on a tie the later part of a thread counts as newer.
+        $follows = $videos->mapWithKeys(fn (Entry $entry) => [$entry->id() => BardSets::first($entry->value('follows_up'))]);
+        $depth = function (Entry $entry) use ($follows): int {
+            $n = 0;
+            for ($id = $follows[$entry->id()] ?? null; $id !== null && $n < 50; $id = $follows[$id] ?? null) {
+                $n++;
+            }
+
+            return $n;
+        };
+
         return $posts->concat($videos)
-            ->sortByDesc(fn (Entry $entry) => self::date($entry)?->getTimestamp() ?? 0)
+            ->sort(fn (Entry $a, Entry $b) => [self::date($b)?->getTimestamp() ?? 0, $depth($b)]
+                <=> [self::date($a)?->getTimestamp() ?? 0, $depth($a)])
             ->values();
     }
 

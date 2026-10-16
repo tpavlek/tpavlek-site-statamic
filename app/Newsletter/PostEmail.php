@@ -180,22 +180,30 @@ class PostEmail
 
     /**
      * A URL on the public site. Relative ones get its origin; ones on this install's own
-     * origin (permalinks and asset URLs are built from APP_URL) are moved onto it, so an
-     * email drafted locally doesn't link subscribers to a .test domain.
+     * host are moved onto it, so an email drafted locally doesn't link subscribers to a
+     * .test domain.
+     *
+     * Matched on host, not on APP_URL as written: in the CP, permalinks are built from the
+     * request, so APP_URL's http:// comes out as https:// and a prefix match misses it.
      */
     private function publicUrl(string $url): string
     {
         $public = rtrim(config('services.kit.site_url'), '/');
-        $local = rtrim(config('app.url'), '/');
 
         if (str_starts_with($url, '/') && ! str_starts_with($url, '//')) {
             return $public.$url;
         }
 
-        if ($url === $local || str_starts_with($url, $local.'/') || str_starts_with($url, $local.'?') || str_starts_with($url, $local.'#')) {
-            return $public.substr($url, strlen($local));
+        $parts = parse_url($url);
+        $localHosts = array_filter([parse_url(config('app.url'), PHP_URL_HOST), parse_url(url('/'), PHP_URL_HOST)]);
+
+        if (! isset($parts['host']) || ! in_array($parts['host'], $localHosts, true) || $parts['host'] === parse_url($public, PHP_URL_HOST)) {
+            return $url;
         }
 
-        return $url;
+        return $public
+            .($parts['path'] ?? '')
+            .(isset($parts['query']) ? '?'.$parts['query'] : '')
+            .(isset($parts['fragment']) ? '#'.$parts['fragment'] : '');
     }
 }

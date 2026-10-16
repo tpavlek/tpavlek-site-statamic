@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-10-02'
 title: "Hot Takes with Jackie Liu: Edmonton's not broken"
 youtube: duEU_au9nQM
+facebook: '1503625817542716'
+tiktok: '7556707067432619276'
 instagram: DPUX1oQDOzT
 category:
   - yegvote-2025

@@ -5,7 +5,10 @@ title: "The UCP's Climate Crisis"
 video_file: pristine-views-captioned.mp4
 thumbnail: videos/covers/pristine-views-cover.png
 youtube: qHiBlc5gkCA
-instagram: ''
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mrghimtbo22p'
+twitter: '2080790290663919809'
+tiktok: '7666234388820102420'
+instagram: 'DbMXvRGBV8V'
 facebook: '1727854698418055'
 og_image: og/the-ucps-climate-crisis.png
 publish_date: '2026-07-24 00:00'

@@ -2,14 +2,25 @@
     staggered left and right; `transcript` is a back-and-forth with each speaker named
     in a column down the left; `chat` is an interview as a chatroom, each line led by the
     speaker's photo (matched by name from `people`) and their name, and a line with no
-    speaker is a system divider. An aside is the author talking over the line. #}}
+    speaker is a system divider; `clippings` is quotes from separate stories (not a
+    conversation), each a newsprint clipping with its outlet, from the speaker field,
+    under it. An aside is the author talking over the line. An
+    `escalate` line in a chat is a refrain ("Next slide.") hung under the message before
+    it, numbered so each one can be styled louder than the last (capped at 4 in the CSS). #}}
 {{ dialogue_style = style ?? 'chatter' }}
+{{ escalate_level = 0 }}
 <figure class="story-dialogue story-dialogue--{{ dialogue_style }}">
     {{ if label }}<figcaption class="story-dialogue__label">{{ label }}</figcaption>{{ /if }}
     <ul class="list-none story-dialogue__lines">
         {{ lines }}
             {{ line_speaker = speaker }}
-            {{ if dialogue_style == 'chat' && !speaker }}
+            {{ if dialogue_style == 'chat' && escalate }}
+                {{ escalate_level += 1 }}
+                <li class="story-dialogue__line story-dialogue__escalate story-dialogue__escalate--{{ escalate_level > 4 ? 4 : escalate_level }}">
+                    <span class="story-dialogue__avatar-gap" aria-hidden="true"></span>
+                    <p class="story-dialogue__text"><span>{{ line }}</span></p>
+                </li>
+            {{ elseif dialogue_style == 'chat' && !speaker }}
                 {{# No speaker in a chatroom: a system line between messages, like a pause. #}}
                 <li class="story-dialogue__system">{{ line }}</li>
             {{ else }}
@@ -29,6 +40,7 @@
                 <div class="story-dialogue__body">
                     {{ if dialogue_style == 'chat' }}<span class="story-dialogue__name">{{ speaker }}</span>{{ /if }}
                     <p class="story-dialogue__text">{{ line }}</p>
+                    {{ if dialogue_style == 'clippings' && speaker }}<p class="story-dialogue__outlet">{{ speaker }}</p>{{ /if }}
                     {{ if aside }}<p class="story-dialogue__aside">{{ aside }}</p>{{ /if }}
                 </div>
             </li>

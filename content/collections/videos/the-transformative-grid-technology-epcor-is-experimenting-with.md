@@ -5,7 +5,11 @@ title: 'The transformative grid technology EPCOR is experimenting with'
 video_file: derms-raw.mp4
 thumbnail: videos/covers/derms-cover.png
 youtube: -Y05MSn9D_s
-instagram: ''
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mlu5s7wh5c2i'
+twitter: '2055082853881487822'
+facebook: '1678425263482927'
+tiktok: '7639898588537031957'
+instagram: 'DYVocHosleT'
 publish_date: '2026-05-14 00:00'
 ---
 EPCOR is trialing something really cool.

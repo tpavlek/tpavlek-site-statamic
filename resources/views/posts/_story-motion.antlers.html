@@ -1,0 +1,64 @@
+{{# A council motion or amendment as a card (the `motion` set): the wording, who moved
+    and seconded it, and, when there's a vote worth showing, the result with every face
+    on each side. People are council candidate entries, so names and photos stay in one
+    place. The tally is counted from the two lists rather than typed, so it can't disagree
+    with the faces under it. #}}
+{{ favour_count = in_favour | count }}
+{{ opposed_count = opposed | count }}
+<figure class="story-motion story-motion--{{ result ?? 'none' }}">
+    <div class="story-motion__head">
+        <span class="story-motion__kind">{{ kind == 'amendment' ? 'Amendment' : 'Motion' }}</span>
+        {{ if result == 'carried' || result == 'defeated' }}
+            <span class="story-motion__result">{{ result == 'carried' ? 'Carried' : 'Defeated' }}{{ if favour_count || opposed_count }} ({{ favour_count }}–{{ opposed_count }}){{ /if }}</span>
+        {{ /if }}
+    </div>
+
+    <blockquote class="story-motion__text">{{ text | markdown }}</blockquote>
+
+    {{ if mover || seconder }}
+        <div class="story-motion__movers">
+            {{ mover }}
+                <div class="story-motion__person">
+                    {{ photo }}<img src="{{ url }}" alt="" class="story-motion__face" loading="lazy" />{{ /photo }}
+                    <span><span class="story-motion__role">Moved by</span> {{ name }}</span>
+                </div>
+            {{ /mover }}
+            {{ seconder }}
+                <div class="story-motion__person">
+                    {{ photo }}<img src="{{ url }}" alt="" class="story-motion__face" loading="lazy" />{{ /photo }}
+                    <span><span class="story-motion__role">Seconded by</span> {{ name }}</span>
+                </div>
+            {{ /seconder }}
+        </div>
+    {{ /if }}
+
+    {{ if (result == 'carried' || result == 'defeated') && (favour_count || opposed_count) }}
+        <div class="story-motion__vote">
+            <div class="story-motion__side story-motion__side--for">
+                <p class="story-motion__side-label">In favour ({{ favour_count }})</p>
+                <div class="story-motion__faces">
+                    {{ in_favour }}
+                        <span class="story-motion__voter" data-name="{{ name }}" tabindex="0">{{ photo }}<img src="{{ url }}" alt="{{ name }}" class="story-motion__face" loading="lazy" />{{ /photo }}</span>
+                    {{ /in_favour }}
+                </div>
+            </div>
+            {{# A unanimous vote has nobody to show on this side; skip the empty row. #}}
+            {{ if opposed_count }}
+            <div class="story-motion__side story-motion__side--against">
+                <p class="story-motion__side-label">Opposed ({{ opposed_count }})</p>
+                <div class="story-motion__faces">
+                    {{ opposed }}
+                        <span class="story-motion__voter" data-name="{{ name }}" tabindex="0">{{ photo }}<img src="{{ url }}" alt="{{ name }}" class="story-motion__face" loading="lazy" />{{ /photo }}</span>
+                    {{ /opposed }}
+                </div>
+            </div>
+            {{ /if }}
+        </div>
+    {{ /if }}
+
+    {{ if source }}
+        <figcaption class="story-motion__source">
+            {{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}
+        </figcaption>
+    {{ /if }}
+</figure>

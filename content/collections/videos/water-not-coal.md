@@ -4,10 +4,15 @@ blueprint: video
 title: "Protect Alberta's watersheds. Edmonton only has one shot at drinkable water"
 video_file: water-not-coal-captioned.mp4
 thumbnail: videos/covers/water-not-coal-cover.png
+youtube: e9M-cbEJQhA
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mj6iruw2ek2t'
+instagram: 'DW-CAzvAfLM'
+twitter: '2042746557897044187'
+facebook: '1279766804147750'
+tiktok: '7627273906797186325'
+publish_date: '2026-04-10 00:00'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1775915691
-youtube: e9M-cbEJQhA
-publish_date: '2026-04-10 00:00'
 ---
 Edmonton has only one source of water: The North Sask.
 

@@ -5,6 +5,7 @@ publish_date: '2025-03-13 00:00'
 instagram: DHJ2-5fy--I
 title: "Provincial politician in Edmonton campaigning for Elon Musk's DOGE"
 youtube: fsXHiear-00
+tiktok: '7481405016612375863'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774402187
 ---

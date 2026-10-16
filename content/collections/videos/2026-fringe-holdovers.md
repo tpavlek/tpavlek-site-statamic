@@ -2,6 +2,8 @@
 id: b484c4ba-609c-4257-a994-c1cf25134659
 blueprint: video
 title: '2026 Fringe Holdovers'
+facebook: '1490969342791663'
+tiktok: '7676604590900497684'
 instagram: DcUVG95y7fq
 thumbnail: videos/covers/holdovers-cover.png
 publish_date: '2026-08-21 00:00'

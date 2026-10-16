@@ -70,6 +70,16 @@ class VideoThreadTest extends TestCase
         return [$one, $two, $three];
     }
 
+    public function test_a_same_day_follow_up_lists_as_newer_than_its_original(): void
+    {
+        $one = $this->makeVideo(self::SLUGS[0], '2099-02-01 00:00');
+        $two = $this->makeVideo(self::SLUGS[1], '2099-02-01 00:00', $one->id());
+
+        $ids = \App\Support\Writing::entries()->map->id()->values()->all();
+
+        $this->assertLessThan(array_search($one->id(), $ids), array_search($two->id(), $ids));
+    }
+
     public function test_every_part_sees_the_whole_chain_in_order(): void
     {
         [$one, $two, $three] = $this->threeParts();

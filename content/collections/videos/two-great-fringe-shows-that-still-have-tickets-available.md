@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-08-19'
 title: 'Two great Fringe shows that still have tickets available'
 youtube: Fzrg5YxMi4Q
+facebook: '757587530360340'
+tiktok: '7540438413284101382'
 instagram: DNje51QSC8V
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750125

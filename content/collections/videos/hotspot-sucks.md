@@ -5,6 +5,7 @@ publish_date: '2025-04-06 00:00'
 instagram: DIHICG5JwH-
 title: 'HotSpot SUCKS'
 youtube: IyOLUX3CYs4
+tiktok: '7490232546526022967'
 thumbnail: videos/covers/hotspot-sucks-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403024

@@ -5,6 +5,10 @@ publish_date: '2025-09-18 00:00'
 instagram: DOwPXUygf9z
 title: "Tim Cartmell skipping work, but it's Alexander Hamilton sneaking out a window"
 youtube: O6jADdyLqQ8
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lz4zh7asas2i'
+twitter: '1968748280541524448'
+facebook: '806066931973411'
+tiktok: '7551500672697486604'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403809
 ---

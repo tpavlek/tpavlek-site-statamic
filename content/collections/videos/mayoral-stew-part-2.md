@@ -3,6 +3,10 @@ id: b7779b50-056f-4c3c-a086-ac3b5a6e01ce
 blueprint: video
 title: 'Mayoral Stew: Part 2'
 youtube: sSl7JCFkIKY
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lujf2xgtxs2b'
+twitter: '1947471235237175598'
+facebook: '1252126066645593'
+tiktok: '7529692637482306823'
 instagram: DMY7PKKywfq
 thumbnail: videos/covers/mayoral-stew-part-2-cover.png
 publish_date: '2025-07-22 00:00'

@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-15'
 title: 'Meet the Candidate: Funke Olokude'
 youtube: 37TaneiSJr8
+facebook: '1116165440082414'
+tiktok: '7550444429371362616'
 instagram: DOmyod0CcrK
 category:
   - yegvote-2025

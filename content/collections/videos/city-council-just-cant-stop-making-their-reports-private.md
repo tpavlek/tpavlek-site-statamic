@@ -5,6 +5,9 @@ publish_date: '2025-04-04 00:00'
 instagram: DICjZ-GzWAj
 title: "Edmonton City Council just can't stop making their reports private"
 youtube: tD62S2Oh3-k
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3llzjfslr4s2c'
+twitter: '1908294897544905030'
+tiktok: '7489574112474582278'
 thumbnail: videos/covers/private-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774402210

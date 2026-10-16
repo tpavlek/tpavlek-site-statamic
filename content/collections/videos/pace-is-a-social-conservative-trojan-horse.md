@@ -5,6 +5,10 @@ publish_date: '2025-10-04 00:00'
 instagram: DPZhBtFgSFF
 title: 'PACE is a social conservative Trojan Horse'
 youtube: VSUo2A9Q828
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m2fcxcmz3s2h'
+twitter: '1974556659348598894'
+facebook: '1186711996633750'
+tiktok: '7557447856659991864'
 thumbnail: videos/covers/pace-trojan-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774402489

@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-10-15'
 title: 'Candidates overview: Dene'
 youtube: yXkqlMBL0pA
+facebook: '1896410460939867'
+tiktok: '7561566787213544760'
 instagram: DP2F9rokjIm
 category:
   - yegvote-2025

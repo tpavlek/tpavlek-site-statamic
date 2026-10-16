@@ -5,6 +5,9 @@ publish_date: '2025-08-06'
 title: 'Quintessential Fringe Recommendations'
 description: 'Quintessential Fringe Recommendations'
 youtube: GZ3ZIDPS0dA
+twitter: '1953228322122678379'
+facebook: '570172189396357'
+tiktok: '7535579547929005318'
 instagram: DNBxIk0zeaf
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750103

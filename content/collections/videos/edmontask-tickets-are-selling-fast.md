@@ -5,6 +5,10 @@ publish_date: '2025-08-13'
 title: 'Edmontask tickets are selling fast!'
 description: 'Edmontask tickets are selling fast!'
 youtube: 6vlTVMXwafY
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lwd2qkbwhc2u'
+twitter: '1955768516659044722'
+facebook: '1182209190382225'
+tiktok: '7538209435924155653'
 instagram: DNUAbdqSRAs
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750079

@@ -3,6 +3,8 @@ id: ce1a3f50-ad5b-462f-b1c0-430fc9485afb
 blueprint: video
 title: "Public speakers banned from the police commission: What's next?"
 youtube: jxANI9vIhOM
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3muq3jjltkk2n'
+tiktok: '7681808467237096724'
 instagram: Dc4b6noB1Cl
 facebook: '2162116137678643'
 thumbnail: videos/covers/police-commission-whats-next-cover.png

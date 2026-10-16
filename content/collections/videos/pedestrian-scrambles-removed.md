@@ -3,6 +3,9 @@ id: dfa6a46a-d749-42ec-97b0-a8da60af8857
 blueprint: video
 title: 'Edmonton is removing all pedestrian scramble intersections from Whyte Ave'
 youtube: _fcq9AXcjso
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mi7vyzm5r22l'
+twitter: '2038341212663689342'
+tiktok: '7622760949555973396'
 instagram: DWet3L9gZ7l
 facebook: '1631267428327180'
 thumbnail: videos/covers/pedestrian-scrambles-removed-cover.png

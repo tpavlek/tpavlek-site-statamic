@@ -6,6 +6,8 @@ instagram: DMvggnDSQx_
 description: 'A “moratorium” as a campaign pitch is just a fallback for a candidate that doesn’t have a plan, doesn’t understand the issue, and wants to rile peo...'
 title: BORE-atorium
 youtube: 1vXzFEq7YqQ
+facebook: '726877333493543'
+tiktok: '7532947159214345528'
 thumbnail: videos/covers/bore-atorium-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774380732

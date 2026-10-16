@@ -185,6 +185,7 @@ fields:
                       chatter: 'Overheard chatter'
                       transcript: Transcript
                       chat: 'Chatroom (interview)'
+                      clippings: 'Press clippings'
                 -
                   handle: label
                   field:
@@ -205,7 +206,7 @@ fields:
                           type: text
                           display: Speaker
                           width: 25
-                          instructions: 'Transcripts and chatrooms. In a chatroom, match a name under People to show their photo; leave it empty for a system line, e.g. a long silence.'
+                          instructions: 'Transcripts and chatrooms. In a chatroom, match a name under People to show their photo; leave it empty for a system line, e.g. a long silence. In press clippings, the outlet the quote ran in.'
                       -
                         handle: line
                         field:
@@ -218,6 +219,12 @@ fields:
                           type: text
                           display: Aside
                           instructions: 'Optional. Your commentary on the line, shown under it in smaller type.'
+                      -
+                        handle: escalate
+                        field:
+                          type: toggle
+                          display: Escalate
+                          instructions: 'Chatroom only. A refrain that gets louder: shown under the previous message without a photo, each escalating line in the block styled more obnoxiously than the last.'
                 -
                   handle: people
                   field:
@@ -359,6 +366,100 @@ fields:
                     type: text
                     display: Stamp
                     instructions: 'Optional. A rubber stamp slapped on the bubble, e.g. "Approved".'
+                -
+                  handle: bubble
+                  field:
+                    type: toggle
+                    display: 'Speech bubble without a photo'
+                    instructions: 'Show this as a speech bubble even with no speaker photo; their initial stands in for the face.'
+                -
+                  handle: document
+                  field:
+                    type: toggle
+                    display: Document
+                    instructions: 'For legislation, orders and other official text: a sheet of paper in a serif face, slightly askew, with the source (linked) as its heading. Ignored on a speech bubble.'
+            motion:
+              display: 'Council motion'
+              icon: text-quote
+              instructions: 'A motion or amendment as a card: its text, who moved and seconded it, and the vote. Copy the wording and roll call from the minutes.'
+              fields:
+                -
+                  handle: kind
+                  field:
+                    type: button_group
+                    display: Kind
+                    default: motion
+                    options:
+                      motion: Motion
+                      amendment: Amendment
+                -
+                  handle: text
+                  field:
+                    type: textarea
+                    display: Text
+                    instructions: 'Markdown. For an amendment, quote the motion it changes and wrap the deleted words in ~~tildes~~ so they show struck through.'
+                -
+                  handle: mover
+                  field:
+                    type: entries
+                    display: 'Moved by'
+                    mode: typeahead
+                    max_items: 1
+                    width: 50
+                    collections:
+                      - yegvote_2025_candidates
+                -
+                  handle: seconder
+                  field:
+                    type: entries
+                    display: 'Seconded by'
+                    mode: typeahead
+                    max_items: 1
+                    width: 50
+                    collections:
+                      - yegvote_2025_candidates
+                -
+                  handle: result
+                  field:
+                    type: button_group
+                    display: Result
+                    default: none
+                    options:
+                      none: 'Not shown'
+                      carried: Carried
+                      defeated: Defeated
+                -
+                  handle: in_favour
+                  field:
+                    type: entries
+                    display: 'In favour'
+                    mode: typeahead
+                    width: 50
+                    collections:
+                      - yegvote_2025_candidates
+                    instructions: 'The tally is counted from these two lists.'
+                -
+                  handle: opposed
+                  field:
+                    type: entries
+                    display: Opposed
+                    mode: typeahead
+                    width: 50
+                    collections:
+                      - yegvote_2025_candidates
+                -
+                  handle: source
+                  field:
+                    type: text
+                    display: Source
+                    width: 50
+                    instructions: 'e.g. "City Council minutes, January 27, 2026".'
+                -
+                  handle: source_url
+                  field:
+                    type: text
+                    display: 'Source link'
+                    width: 50
             punchline:
               display: Punchline
               icon: text-formatting-bold

@@ -5,6 +5,8 @@ publish_date: '2025-03-18 00:00'
 instagram: DHWz0BMS_0d
 title: 'Should Edmonton Public Library prohibit Pride flags?'
 youtube: REBZj11TrYg
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lkormpiil22y'
+tiktok: '7483267638743813381'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774382898
 thumbnail: videos/covers/epl-pride-flags-cover.png

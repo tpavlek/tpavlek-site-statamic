@@ -5,6 +5,10 @@ publish_date: '2025-09-19 00:00'
 instagram: DOzDyXDkiOF
 title: "Better Edmonton is cheating. And they're getting away with it"
 youtube: dmwRkgbdRiE
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lz7s5a2khc22'
+twitter: '1969148815270703507'
+facebook: '1463913354756894'
+tiktok: '7551905777980607756'
 thumbnail: videos/covers/be-cheating-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774402877

@@ -5,6 +5,8 @@ publish_date: '2025-04-07 00:00'
 instagram: DIKCumqSOmR
 title: "You've got LIGMA"
 youtube: W1XS-ak1E-I
+twitter: '1909329216459674109'
+tiktok: '7490653135036370181'
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774402786
 ---

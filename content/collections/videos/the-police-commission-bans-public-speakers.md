@@ -3,6 +3,8 @@ id: de132c4a-6b5f-4250-b23d-e4ee0651492b
 blueprint: video
 title: 'The Police Commission bans public speakers'
 youtube: R37mNuFXm7U
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3munaza2h622l'
+twitter: '2095605117756305464'
 tiktok: '7681401970782965012'
 instagram: Dc1ntEjBguc
 facebook: '1003694126027093'

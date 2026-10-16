@@ -5,6 +5,7 @@ publish_date: '2025-04-25 00:00'
 instagram: DI4kSt5zswd
 title: "At least someone's enjoying the poor Oilers playoff performance"
 youtube: WEztwwc1MrY
+tiktok: '7497359438131563781'
 thumbnail: videos/covers/skinner-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403210

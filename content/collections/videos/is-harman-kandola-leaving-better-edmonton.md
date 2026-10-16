@@ -5,6 +5,8 @@ publish_date: '2025-09-11 00:00'
 instagram: DOeipnaEsYJ
 title: "Is Harman Kandola planning on leaving Tim Cartmell's party?"
 youtube: Ep3SCttQTt8
+facebook: '1050952320446982'
+tiktok: '7548948954289802501'
 thumbnail: videos/covers/kandola-leave-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774401528

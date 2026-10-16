@@ -5,6 +5,8 @@ publish_date: '2025-07-12 00:00'
 instagram: DMA-RCUJVgu
 title: 'THE SEARCH FOR TIM CARTMELL PART 2 🔍'
 youtube: T1O3bsTpS5o
+facebook: '1840761740123799'
+tiktok: '7526243157441334535'
 thumbnail: videos/covers/search-for-tim-part-2-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403461

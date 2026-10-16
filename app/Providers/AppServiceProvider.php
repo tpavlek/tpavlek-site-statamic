@@ -294,19 +294,11 @@ class AppServiceProvider extends ServiceProvider
             });
         }
 
-        // Minutes to read the body, for the article header's byline. Prose only: bardText
-        // skips sets (images, galleries, show headings), which are looked at, not read.
+        // Minutes to read the body, for the article header's byline. Counts the prose inside
+        // story sets and some time per image too. See App\Support\ReadingTime.
         foreach (['posts' => 'content', 'videos' => 'article'] as $collection => $body) {
             Collection::computed($collection, 'reading_minutes', function ($entry, $value) use ($body) {
-                $nodes = $entry->value($body);
-
-                if (! is_array($nodes) || $nodes === []) {
-                    return null;
-                }
-
-                $text = \Statamic\Modifiers\Modify::value($entry->augmentedValue($body))->bardText()->fetch();
-
-                return max(1, (int) round(str_word_count(strip_tags((string) $text)) / 230));
+                return \App\Support\ReadingTime::minutes($entry->value($body));
             });
         }
 

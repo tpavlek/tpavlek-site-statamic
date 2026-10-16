@@ -100,9 +100,13 @@ class NewsletterTest extends TestCase
     {
         // Drafted from a local install, the email still has to point at the public site.
         config(['app.url' => 'http://tpavlek-me-statamic.test', 'services.kit.site_url' => 'https://troypavlek.ca']);
-        \Illuminate\Support\Facades\URL::forceRootUrl(config('app.url'));
+        // In the CP the request is https even though APP_URL says http, and Statamic builds
+        // permalinks from the request.
+        $this->app->instance('request', \Illuminate\Http\Request::create('https://tpavlek-me-statamic.test/cp'));
+        \Illuminate\Support\Facades\URL::setRequest($this->app['request']);
+        $post = $this->makePost();
 
-        $html = (new PostEmail($this->makePost()))->html();
+        $html = (new PostEmail($post))->html();
         $base = 'https://troypavlek.ca';
 
         $this->assertStringContainsString('Opening paragraph.', $html);
@@ -117,6 +121,7 @@ class NewsletterTest extends TestCase
         $this->assertStringContainsString('href="'.$base.'/fringe/reviews"', $html);
         $this->assertStringContainsString('src="'.$base.'/assets/fringe/100-wizard.webp"', $html);
         $this->assertDoesNotMatchRegularExpression('~(href|src)="/(?!/)~', $html);
+        $this->assertStringContainsString('href="'.$base.$post->url().'"', $html);
         $this->assertStringNotContainsString('tpavlek-me-statamic.test', $html);
 
         // The subscribe prompt is pointless in an email to subscribers.

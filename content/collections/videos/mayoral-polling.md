@@ -5,6 +5,10 @@ publish_date: '2025-08-29 00:00'
 instagram: DN8rjDIifAy
 title: 'Mayoral Polling'
 youtube: 15mHHYLfSCQ
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3lxkqvdtakc2i'
+twitter: '1961495710752502065'
+facebook: '1293354955514235'
+tiktok: '7544068855589588230'
 thumbnail: videos/covers/polling-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774404289

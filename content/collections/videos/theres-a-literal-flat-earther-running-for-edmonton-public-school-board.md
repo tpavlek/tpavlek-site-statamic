@@ -4,6 +4,10 @@ blueprint: video
 publish_date: '2025-10-09'
 title: "There's a literal flat-earther running for Edmonton Public School Board"
 youtube: Ka9ZVJJVIpw
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3m2sh2e5sas2y'
+twitter: '1976447365189075293'
+facebook: '2224517031349792'
+tiktok: '7559382050478820620'
 instagram: DPmC4mek5J6
 category:
   - yegvote-2025

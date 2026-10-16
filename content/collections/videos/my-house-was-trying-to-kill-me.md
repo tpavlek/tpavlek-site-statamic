@@ -5,6 +5,7 @@ title: 'My house was trying to kill me'
 video_file: my-house-was-trying-to-kill-me-SHORTS.mp4
 thumbnail: videos/covers/my-house-was-trying-to-kill-me-cover.png
 youtube: F4ied8bXazs
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mxcvcbtdt22n'
 instagram: DeNOJ4aht7l
 tiktok: '7694026571795156245'
 twitter: '2107946024392446307'

@@ -2,6 +2,8 @@
 id: 744d92be-3cb9-4273-aa53-92efc924a0c4
 blueprint: video
 title: 'BRING BACK THE "YIKES" CUT!'
+facebook: '1048854647863503'
+tiktok: '7674029125870439700'
 instagram: DcCdU8mBD8_
 thumbnail: videos/covers/bring-back-the-yikes-cut-cover.png
 publish_date: '2026-08-14 00:00'

@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-25'
 title: 'Meet Jackie Liu, the best Edmonton City Council candidate in ward pihêsiwin'
 youtube: fvC_baoVvg4
+facebook: '641804755655471'
+tiktok: '7554097004578622731'
 instagram: DPCkptmknlH
 category:
   - yegvote-2025

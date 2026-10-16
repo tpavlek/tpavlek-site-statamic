@@ -3,6 +3,8 @@ id: ede40468-0d2a-4156-be73-0af81b948f6b
 blueprint: video
 title: '3 musicals to see at the 2026 fringe'
 youtube: OR64Wu5z0ZM
+facebook: '2523688484802365'
+tiktok: '7672521138299211029'
 instagram: Db3_pdByIoX
 thumbnail: videos/covers/musical-recommendations-cover.png
 publish_date: '2026-08-10 00:00'

@@ -3,6 +3,10 @@ id: 55d87854-757b-49cb-86fd-9825743d6edd
 blueprint: video
 title: "Why does Edmonton's water stink in the spring?"
 youtube: 2ZTEMJhw4RM
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mhlq54whos2j'
+twitter: '2035432206651580641'
+facebook: '1388748939688352'
+tiktok: '7619782894977912085'
 instagram: DWKDhz0AcQ0
 publish_date: '2026-03-21'
 thumbnail: videos/covers/eau-de-public-pool-cover.png

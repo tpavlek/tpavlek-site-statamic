@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-09-13'
 title: 'Sign Cops™ raid foiled'
 youtube: X94iKMTCzmE
+facebook: '2521851211515460'
+tiktok: '7549651212702944517'
 instagram: DOjakR3gTw4
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758990987

@@ -4,6 +4,8 @@ blueprint: video
 publish_date: '2025-08-17'
 title: 'Emmonia shows up to WERK'
 youtube: zStqCo-CJX0
+facebook: '3248084385329629'
+tiktok: '7539664703757290758'
 instagram: DNeHIktSZgE
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1758750085

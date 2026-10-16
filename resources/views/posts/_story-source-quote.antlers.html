@@ -2,11 +2,17 @@
     blockquote is a pull quote (big, bold, centred), which suits a line of the author's
     own but makes a sentence from a website or a press statement look like a slogan.
 
-    With a speaker and a photo it becomes a speech bubble from that person instead, for
-    when the point is who said it. The optional stamp is the joke slapped on top. #}}
-{{ if speaker && speaker_photo }}
+    With a speaker and a photo (or `bubble` on, for someone with no photo) it becomes a
+    speech bubble from that person instead, for when the point is who said it. The optional stamp is the joke slapped on top.
+    `document` sets legislation and orders on paper instead. #}}
+{{ if speaker && (speaker_photo || bubble) }}
     <figure class="story-speech">
-        {{ speaker_photo }}<img src="{{ url }}" alt="" class="story-speech__photo" loading="lazy" />{{ /speaker_photo }}
+        {{ if speaker_photo }}
+            {{ speaker_photo }}<img src="{{ url }}" alt="" class="story-speech__photo" loading="lazy" />{{ /speaker_photo }}
+        {{ else }}
+            {{# No photo on hand (a reporter off camera): their initial, as the chat set does. #}}
+            <span class="story-speech__photo story-speech__photo--initial" aria-hidden="true">{{ speaker | substr(0, 1) }}</span>
+        {{ /if }}
         <div class="story-speech__body">
             <figcaption class="story-speech__who">
                 <span class="story-speech__name">{{ speaker }}</span>
@@ -22,6 +28,16 @@
                 </p>
             {{ /if }}
         </div>
+    </figure>
+{{ elseif document }}
+    {{# Official text as a sheet of paper: the source heads it like a document title. #}}
+    <figure class="story-document">
+        {{ if source }}
+            <figcaption class="story-document__source">
+                {{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}
+            </figcaption>
+        {{ /if }}
+        <blockquote class="story-document__text">{{ quote | markdown }}</blockquote>
     </figure>
 {{ else }}
     <figure class="story-source-quote">

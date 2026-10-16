@@ -3,6 +3,8 @@ id: 3b12bf96-320f-42a6-952c-24d442b36aa4
 blueprint: video
 title: 'EDMONTON FRINGE 2026 DAY 1'
 youtube: eW2spg-qqU0
+facebook: '896515573142090'
+tiktok: '7673903353755208980'
 instagram: DcBlXeDsjKr
 thumbnail: videos/covers/fringe-day-1-cover.png
 publish_date: '2026-08-14 00:00'

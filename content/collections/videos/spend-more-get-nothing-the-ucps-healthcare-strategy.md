@@ -5,6 +5,9 @@ title: "Spend more, get nothing: The UCP's healthcare strategy"
 video_file: spend-more-get-nothing-captioned.mp4
 thumbnail: videos/covers/spend-more-get-nothing-cover.png
 youtube: -v5OLEnxbP8
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mr75jsclg22x'
+twitter: '2079734637518262583'
+tiktok: '7665152166172232980'
 instagram: DbE3OIwpOgn
 facebook: '1593290158827621'
 og_image: og/spend-more-get-nothing.png

@@ -3,6 +3,8 @@ id: 101ba9c7-5e4a-4285-911f-502e059befc1
 blueprint: video
 title: 'The Taint Brothers'
 youtube: vnPa0MmGtXA
+facebook: '2511119746023480'
+tiktok: '7676203057377578261'
 instagram: DcRi2Kohdoz
 thumbnail: videos/covers/the-taint-brothers-cover.png
 publish_date: '2026-08-20 00:00'

@@ -5,6 +5,10 @@ title: 'The UCP will require Edmonton to repeal its zoning bylaw'
 video_file: same-sign-captioned.mp4
 thumbnail: videos/covers/same-sign-cover.png
 youtube: CR29hf5IF5I
+bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mxdhhepi322g'
+twitter: '2108028018036023577'
+facebook: '2138259606728993'
+tiktok: '7694117782325169429'
 instagram: DeN2qrBMW6l
 publish_date: '2026-10-07 00:00'
 og_image: og/same-sign.png

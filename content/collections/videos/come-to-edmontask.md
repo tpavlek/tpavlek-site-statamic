@@ -5,6 +5,8 @@ publish_date: '2025-07-29'
 title: 'Come to Edmontask!'
 description: 'Come to Edmontask!'
 youtube: 8eECD0jBewI
+facebook: '4193824567564887'
+tiktok: '7532691806958423352'
 instagram: DMtuPTQJNU2
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774317102

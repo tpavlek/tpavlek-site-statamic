@@ -166,6 +166,14 @@ h1 {
     clear: both;
 }
 
+/* Below md the float is gone and the image goes full width; a tall one would fill the
+   screen, so cap it and centre it. */
+@media (max-width: 767px) {
+    .post-content .post-image--tall {
+        @apply max-w-[16rem] mx-auto;
+    }
+}
+
 @screen md {
     .post-content .post-image--left,
     .post-content .post-image--right {
@@ -659,6 +667,11 @@ h1 {
     @apply my-10;
 }
 
+/* Right under a heading, the heading's own padding is air enough. */
+.content > h2 + .story-dialogue {
+    @apply mt-0;
+}
+
 .story-dialogue__label {
     @apply mb-3 text-xs font-bold uppercase tracking-widest text-gray-500;
 }
@@ -692,6 +705,41 @@ h1 {
     @apply rounded-2xl rounded-br-sm bg-teal-light/40;
 }
 
+/* Press clippings: quotes from separate stories, so nothing about it says conversation.
+   Each is a scrap of newsprint, set in a serif with its outlet under it, laid out like
+   clippings on a desk: wrapped, slightly askew, every one at its own angle. */
+.content figure.story-dialogue--clippings ul.story-dialogue__lines {
+    @apply ml-0 flex-row flex-wrap justify-center gap-4 sm:gap-5 py-2;
+}
+
+.story-dialogue--clippings .story-dialogue__line {
+    @apply w-full sm:w-[calc(50%-0.625rem)];
+}
+
+.story-dialogue--clippings .story-dialogue__body {
+    @apply h-full px-5 py-4 shadow-md;
+    background: #f6f1e4;
+    border: 1px solid #e4dccb;
+}
+
+.story-dialogue--clippings .story-dialogue__line:nth-child(5n+1) .story-dialogue__body { transform: rotate(-1.5deg); }
+.story-dialogue--clippings .story-dialogue__line:nth-child(5n+2) .story-dialogue__body { transform: rotate(1deg); }
+.story-dialogue--clippings .story-dialogue__line:nth-child(5n+3) .story-dialogue__body { transform: rotate(.5deg); }
+.story-dialogue--clippings .story-dialogue__line:nth-child(5n+4) .story-dialogue__body { transform: rotate(-1deg); }
+.story-dialogue--clippings .story-dialogue__line:nth-child(5n) .story-dialogue__body { transform: rotate(1.5deg); }
+
+.content .story-dialogue--clippings .story-dialogue__text {
+    @apply text-lg leading-snug text-gray-900;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.content .story-dialogue--clippings .story-dialogue__text::before { content: '\201C'; }
+.content .story-dialogue--clippings .story-dialogue__text::after { content: '\201D'; }
+
+.content .story-dialogue__outlet {
+    @apply mt-3 mb-0 text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
 /* Transcript: each speaker named in a column down the left. */
 .story-dialogue--transcript .story-dialogue__lines {
     @apply border-l-2 border-gray-200 pl-4;
@@ -708,9 +756,9 @@ h1 {
 
 /* Chat: an interview as a chatroom. Each line is the speaker's photo in a circle, then
    their name and what they said, so it's always clear whose line it is. */
-/* `.content ul:not(.tl)` indents every list 2.5rem and outranks `.content
-   .story-dialogue__lines`; a chatroom sits flush with the text around it. */
-.content .story-dialogue--chat ul.story-dialogue__lines {
+/* `.content ul:not(...)` indents every list 2.5rem, and one variant ties on specificity with `.content
+   .story-dialogue--chat ul` and comes later; `figure` breaks the tie, so a chatroom sits flush. */
+.content figure.story-dialogue--chat ul.story-dialogue__lines {
     @apply ml-0 gap-5;
 }
 
@@ -751,12 +799,79 @@ h1 {
     @apply text-lg leading-relaxed text-gray-800;
 }
 
+/* An escalating refrain ("Next slide."): tucked under the message before it, lined up
+   with its text, and louder every time. Level 1 is just said; 2 gets her slides' yellow
+   highlighter; 3 is Comic Sans in red caps, tilted; 4 is full WordArt, and it shakes. */
+.content .story-dialogue--chat .story-dialogue__escalate {
+    @apply -mt-3;
+}
+
+.story-dialogue__avatar-gap {
+    @apply w-10 sm:w-12 flex-shrink-0;
+}
+
+.content .story-dialogue__escalate .story-dialogue__text {
+    @apply m-0;
+}
+
+.content .story-dialogue__escalate--1 .story-dialogue__text {
+    @apply text-base italic text-gray-500;
+}
+
+.content .story-dialogue__escalate--2 .story-dialogue__text {
+    @apply text-xl font-bold text-gray-900;
+}
+
+.story-dialogue__escalate--2 .story-dialogue__text span {
+    @apply px-1.5 py-0.5;
+    background: #fde047;
+    box-decoration-break: clone;
+}
+
+.content .story-dialogue__escalate--3 .story-dialogue__text {
+    @apply my-2 text-3xl font-bold uppercase text-red-600;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive;
+    transform: rotate(-3deg);
+    transform-origin: left center;
+    text-shadow: 2px 2px 0 #fde047;
+}
+
+.content .story-dialogue__escalate--4 .story-dialogue__text {
+    @apply my-6 text-5xl sm:text-6xl font-black uppercase italic leading-none;
+    font-family: Impact, 'Arial Black', sans-serif;
+    letter-spacing: .02em;
+}
+
+.story-dialogue__escalate--4 .story-dialogue__text span {
+    display: inline-block;
+    background: linear-gradient(90deg, #ef4444, #f59e0b, #eab308, #22c55e, #3b82f6, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #111;
+    filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, .25));
+    transform: rotate(4deg) skewX(-8deg);
+    animation: story-escalate-shake .5s ease-in-out infinite;
+}
+
+@keyframes story-escalate-shake {
+    0%, 100% { transform: rotate(4deg) skewX(-8deg) translateX(0); }
+    25% { transform: rotate(2deg) skewX(-8deg) translateX(-3px); }
+    75% { transform: rotate(6deg) skewX(-8deg) translateX(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .story-dialogue__escalate--4 .story-dialogue__text span {
+        animation: none;
+    }
+}
+
 .story-stats {
     @apply my-10 grid grid-cols-2 gap-px bg-gray-200 border border-gray-200 rounded-lg overflow-hidden;
 }
 
 .story-stats__item {
-    @apply flex flex-col-reverse bg-white px-4 py-5;
+    @apply flex flex-col-reverse justify-end bg-white px-4 py-5;
 }
 
 .story-stats__value {
@@ -1037,6 +1152,45 @@ a.video-thread__update,
     content: '— ';
 }
 
+/* Official text as a sheet of paper (posts/_story-source-quote with `document`): Times,
+   justified, a ruled heading naming the order and section, and a slight tilt that
+   alternates so a run of them looks dealt onto the desk. */
+.story-document {
+    @apply my-10 mx-auto max-w-[36rem] bg-white px-7 py-6 sm:px-9 sm:py-7;
+    border: 1px solid #e5e2da;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 10px 24px rgba(0, 0, 0, .1);
+    transform: rotate(-1deg);
+    font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
+}
+
+.content > .story-document:nth-of-type(even) {
+    transform: rotate(.8deg);
+}
+
+.content .story-document__source {
+    @apply mb-4 pb-2 text-center text-sm font-bold uppercase tracking-wider text-gray-900;
+    border-bottom: 1px solid #111;
+}
+
+.content .story-document__source a {
+    @apply text-gray-900 underline decoration-gray-400 underline-offset-4 hover:decoration-gray-900;
+}
+
+.post-content .story-document__text,
+.content .story-document__text {
+    @apply m-0 p-0 not-italic font-normal text-gray-900;
+}
+
+.content .story-document__text p {
+    @apply m-0 text-lg leading-relaxed;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.content .story-document__text p + p {
+    @apply mt-3;
+}
+
 /* A quoted source as a speech bubble from the speaker (posts/_story-source-quote with a
    speaker and photo). The bubble's squared top-left corner points at the face. */
 .story-speech {
@@ -1045,6 +1199,10 @@ a.video-thread__update,
 
 .post-content img.story-speech__photo {
     @apply my-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover flex-shrink-0 ring-2 ring-white shadow-md;
+}
+
+.story-speech__photo--initial {
+    @apply flex w-14 h-14 sm:w-16 sm:h-16 items-center justify-center rounded-full flex-shrink-0 bg-gray-200 text-xl font-bold text-gray-600 ring-2 ring-white shadow-md;
 }
 
 .story-speech__body {
@@ -1077,6 +1235,123 @@ a.video-thread__update,
 
 .content .story-speech__source {
     @apply mt-3 mb-0 text-sm font-semibold text-gray-500;
+}
+
+/* A council motion or amendment as a card (posts/_story-motion). The result badge is
+   green for carried and red for defeated; struck words in an amendment are the deletions. */
+.story-motion {
+    @apply my-10 rounded-xl border border-gray-200 bg-white px-5 py-5 sm:px-6 shadow-sm;
+}
+
+.story-motion__head {
+    @apply mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1;
+}
+
+.story-motion__kind {
+    @apply text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
+.story-motion__result {
+    @apply text-2xl font-black uppercase tracking-tight;
+}
+
+.story-motion--carried .story-motion__result {
+    @apply text-green-800;
+}
+
+.story-motion--defeated .story-motion__result {
+    @apply text-red-700;
+}
+
+.post-content .story-motion__text,
+.content .story-motion__text {
+    @apply m-0 p-0 text-left not-italic font-normal text-base leading-7 text-gray-800;
+}
+
+.content .story-motion__text p {
+    @apply m-0 text-base leading-7;
+}
+
+.content .story-motion__text p + p,
+.content .story-motion__text p + ul,
+.content .story-motion__text ul + p {
+    @apply mt-3;
+}
+
+.content .story-motion__text ul {
+    @apply my-2 ml-0 pl-6 list-disc;
+}
+
+.content .story-motion__text li {
+    @apply text-base leading-7;
+}
+
+.story-motion__text del {
+    @apply text-red-600;
+}
+
+.story-motion__movers {
+    @apply mt-5 flex flex-wrap gap-x-8 gap-y-3 text-sm font-semibold text-gray-900;
+}
+
+.story-motion__person {
+    @apply flex items-center gap-3;
+}
+
+.story-motion__role {
+    @apply block text-xs font-normal text-gray-500;
+}
+
+.post-content img.story-motion__face {
+    @apply my-0 w-11 h-11 rounded-full object-cover flex-shrink-0 ring-2 ring-white shadow;
+}
+
+.story-motion__vote {
+    @apply mt-5 pt-4 border-t border-gray-100 grid gap-4;
+}
+
+.content .story-motion__side-label {
+    @apply m-0 mb-2 text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
+.content .story-motion__faces {
+    @apply m-0 ml-0 pl-0 p-0 list-none flex flex-wrap gap-1.5;
+    margin-left: 0;
+}
+
+.content .story-motion__faces span {
+    @apply m-0 p-0;
+}
+
+/* The councillor's name on hover (or keyboard focus), straight away rather than after the
+   native title delay. */
+.story-motion__voter {
+    @apply relative inline-block rounded-full outline-none;
+}
+
+.story-motion__voter::after {
+    content: attr(data-name);
+    @apply pointer-events-none absolute left-1/2 bottom-full z-10 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded bg-gray-900 px-2 py-1 text-xs font-semibold text-white opacity-0 transition-opacity duration-100;
+}
+
+.story-motion__voter:hover::after,
+.story-motion__voter:focus-visible::after {
+    @apply opacity-100;
+}
+
+/* Both sides' faces look the same (greyed faces read as absent, coloured rings were too
+   loud); each side gets its own row, and the label colour says which way they voted. */
+
+.content .story-motion__side--for .story-motion__side-label {
+    @apply text-green-800;
+}
+
+.content .story-motion__side--against .story-motion__side-label {
+    @apply text-red-700;
+}
+
+.content .story-motion__source {
+    @apply mt-4 text-sm font-semibold text-gray-500;
 }
 
 /* One big closing line (posts/_story-punchline). Same type as `.content > blockquote`,

@@ -6,6 +6,9 @@ instagram: DMqtHZfheTR
 description: "Tim Cartmell's campaign continues in a tailspin with Michael Walters continuing to ramp up - people are wondering: what's Plan B?"
 title: "Tim Cartmell's Plan B for when he loses"
 youtube: 0JNCACibF8s
+twitter: '1949966410299355512'
+facebook: '1259283138976232'
+tiktok: '7532256990391782674'
 thumbnail: videos/covers/cartmell-plan-b-cover.png
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1774403887

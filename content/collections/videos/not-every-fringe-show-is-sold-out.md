@@ -3,6 +3,8 @@ id: 3b143005-fc94-4e77-9103-0521cc030c6c
 blueprint: video
 title: 'Not every fringe show is SOLD OUT!'
 youtube: pBvN06OOlJ8
+facebook: '1044265451653074'
+tiktok: '7675429392570469652'
 instagram: DcMLEfCsET1
 thumbnail: videos/covers/not-every-show-is-sold-out-cover-2.png
 publish_date: '2026-08-18 00:00'
