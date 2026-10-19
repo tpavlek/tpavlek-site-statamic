@@ -1251,6 +1251,65 @@ a.video-thread__update,
     @apply mt-3;
 }
 
+/* A quote clipped from a news story (posts/_story-source-quote with a `headline`): the
+   headline in a newspaper serif, the passage under a rule with **bold** as a highlighter
+   stroke, and the outlet's logo in the corner. */
+.story-article {
+    @apply my-10 rounded-xl border border-gray-200 bg-white px-5 py-5 sm:px-7 sm:py-6 shadow-sm;
+}
+
+.content .story-article__meta {
+    @apply m-0 mt-2 text-xs font-bold uppercase tracking-widest text-gray-500;
+}
+
+.content .story-article__headline {
+    @apply m-0 text-xl sm:text-2xl font-bold leading-snug text-gray-900;
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+.content .story-article__headline a {
+    @apply text-gray-900 no-underline hover:underline decoration-gray-400 underline-offset-4;
+}
+
+.post-content .story-article__text,
+.content .story-article__text {
+    @apply m-0 mt-4 pt-4 p-0 border-t border-gray-200 text-left not-italic font-normal text-gray-800;
+}
+
+.content .story-article__text p {
+    @apply m-0 text-lg leading-7;
+}
+
+.content .story-article__text p + p {
+    @apply mt-3;
+}
+
+.story-article__text strong {
+    @apply font-semibold text-gray-900;
+    background: linear-gradient(transparent 55%, #fde68a 55%);
+}
+
+.story-article__foot {
+    @apply mt-5 flex items-center justify-between gap-4;
+}
+
+.content .story-article__source {
+    @apply text-sm font-semibold text-gray-600 whitespace-nowrap;
+}
+
+.content a.story-article__source {
+    @apply no-underline hover:text-gray-900 hover:underline;
+}
+
+/* The wordmarks differ in shape, so each gets the height that makes them read the same size. */
+.post-content img.story-article__logo {
+    @apply my-0 h-3 sm:h-3.5 w-auto min-w-0;
+}
+
+.post-content img.story-article__logo--global {
+    @apply h-5 sm:h-6;
+}
+
 /* A quoted source as a speech bubble from the speaker (posts/_story-source-quote with a
    speaker and photo). The bubble's squared top-left corner points at the face. */
 .story-speech {

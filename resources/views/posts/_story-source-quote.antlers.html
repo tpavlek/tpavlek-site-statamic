@@ -4,8 +4,31 @@
 
     With a speaker and a photo (or `bubble` on, for someone with no photo) it becomes a
     speech bubble from that person instead, for when the point is who said it. The optional stamp is the joke slapped on top.
-    `document` sets legislation and orders on paper instead. #}}
-{{ if speaker && (speaker_photo || bubble) }}
+    `document` sets legislation and orders on paper instead. A `headline` makes it a
+    clipping of a news story, with the outlet's logo when it's one we have. #}}
+{{ if headline }}
+    {{ outlet = '' }}
+    {{ if source_url | contains('cbc.ca') }}{{ outlet = 'cbc' }}
+    {{ elseif source_url | contains('ctvnews.ca') }}{{ outlet = 'ctv' }}
+    {{ elseif source_url | contains('globalnews.ca') }}{{ outlet = 'global' }}{{ /if }}
+    <figure class="story-article">
+        <header class="story-article__head">
+            <p class="story-article__headline">{{ if source_url }}<a href="{{ source_url }}">{{ headline }}</a>{{ else }}{{ headline }}{{ /if }}</p>
+            {{ if byline || published }}
+                <p class="story-article__meta">{{ byline }}{{ if byline && published }} · {{ /if }}{{ if published }}<time datetime="{{ published format='Y-m-d' }}">{{ published format='F j, Y' }}</time>{{ /if }}</p>
+            {{ /if }}
+        </header>
+        <blockquote class="story-article__text">{{ quote | markdown }}</blockquote>
+        <figcaption class="story-article__foot">
+            {{ if source_url }}
+                <a href="{{ source_url }}" class="story-article__source">Full article at {{ source ?? 'the source' }} &rarr;</a>
+            {{ else }}
+                <span class="story-article__source">{{ source }}</span>
+            {{ /if }}
+            {{ if outlet }}<img src="/images/outlets/{{ outlet }}.svg" alt="{{ source }}" class="story-article__logo story-article__logo--{{ outlet }}" loading="lazy" />{{ /if }}
+        </figcaption>
+    </figure>
+{{ elseif speaker && (speaker_photo || bubble) }}
     <figure class="story-speech">
         {{ if speaker_photo }}
             {{ speaker_photo }}<img src="{{ url }}" alt="" class="story-speech__photo" loading="lazy" />{{ /speaker_photo }}

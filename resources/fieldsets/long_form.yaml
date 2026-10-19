@@ -388,6 +388,26 @@ fields:
                     type: toggle
                     display: Document
                     instructions: 'For legislation, orders and other official text: a sheet of paper in a serif face, slightly askew, with the source (linked) as its heading. Ignored on a speech bubble.'
+                -
+                  handle: headline
+                  field:
+                    type: text
+                    display: 'Article headline'
+                    instructions: 'For a news story: the headline as published. With one, the quote becomes a clipping of that article, and a CBC, CTV or Global link gets its logo.'
+                -
+                  handle: byline
+                  field:
+                    type: text
+                    display: Byline
+                    width: 50
+                    instructions: 'Optional. The reporter, e.g. "Emily Williams".'
+                -
+                  handle: published
+                  field:
+                    type: date
+                    display: Published
+                    width: 50
+                    instructions: 'Optional. The article''s date.'
             motion:
               display: 'Council motion'
               icon: text-quote
