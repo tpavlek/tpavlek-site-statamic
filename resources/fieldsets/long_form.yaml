@@ -96,6 +96,7 @@ fields:
                     instructions: 'Float left or right to wrap the following paragraphs around the image. On phones a floated image goes full width, because there is no room to wrap.'
                     options:
                       full: 'Full width'
+                      center: 'Centred, no wrap (for a portrait photo on its own)'
                       left: 'Float left, text wraps right'
                       right: 'Float right, text wraps left'
                 -

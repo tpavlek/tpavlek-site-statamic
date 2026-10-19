@@ -131,6 +131,16 @@ h1 {
     @apply my-12;
 }
 
+/* A photo set on its own between paragraphs, not wrapped: a portrait one at full width would
+   be a screen tall, so it's held to a float's width and centred, caption and all. */
+.post-content .post-image--center {
+    @apply my-10 mx-auto max-w-[22rem];
+
+    figcaption {
+        @apply text-center;
+    }
+}
+
 /*
  * Nothing wraps past the next full-width image, a horizontal rule, or the end of the article.
  *
@@ -140,6 +150,7 @@ h1 {
  * float and the text would never move down.
  */
 .post-content .post-image--full,
+.post-content .post-image--center,
 .post-content hr {
     clear: both;
 }
@@ -1307,7 +1318,7 @@ a.video-thread__update,
 }
 
 .post-content img.story-article__logo--global {
-    @apply h-5 sm:h-6;
+    @apply h-7 sm:h-8;
 }
 
 /* A quoted source as a speech bubble from the speaker (posts/_story-source-quote with a
