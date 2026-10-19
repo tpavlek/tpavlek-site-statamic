@@ -50,6 +50,7 @@ foreach ([
     'joshuadoyleyegs-cheating-has-been-some-of-the-most-egregious-so-far-in-this-elec' => 'joshua-doyle-caught-cheating',
     'renters-should-have-to-live-on-arterial-roads-infill-opponents-say-the-quiet-par' => 'infill-opponents-say-the-quiet-part-loud',
     'the-ucp-has-removed-all-rules-and-restrictions-on-election-sign-placement-in-alb' => 'ucp-removes-election-sign-rules',
+    'the-transformative-grid-technology-epcor-is-experimenting-with' => 'epcors-new-transformative-grid-technology-derms',
     'tim-cartmell-has-raised-as-much-money-as-every-candidate-outside-his-party-combi' => 'tim-cartmell-raised-as-much-as-everyone-combined',
     'vassy-kapelos-tears-a-strip-off-of-ucp-education-minister-demetrios-nicolaides-i' => 'vassy-kapelos-vs-demetrios-nicolaides',
     'while-edmonton-funds-day-use-shelter-spaces-the-ucp-calls-houselessness-a-fake-n' => 'ucp-calls-houselessness-a-fake-crisis',
