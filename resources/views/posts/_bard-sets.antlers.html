@@ -71,7 +71,7 @@
             {{ else }}
                 <img src="{{ url }}" alt="{{ alt | entities }}" />
             {{ /if }}
-            {{ if image_caption }}<figcaption>{{ image_caption }}</figcaption>{{ /if }}
+            {{ if image_caption }}<figcaption>{{ image_caption | markdown }}</figcaption>{{ /if }}
         </figure>
     {{ /images }}
 {{ /if }}

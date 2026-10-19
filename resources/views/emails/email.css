@@ -40,6 +40,8 @@
 .email .img--narrow { width: 320px; max-width: 100%; margin: 0 auto; }
 .email .img--cell { width: 100%; max-width: 100%; border-radius: 6px; }
 .email .caption { font-size: 14px; color: #6b7280; text-align: center; margin: -8px 0 20px; }
+.email .caption p { font-size: 14px; color: #6b7280; margin: 0; }
+.email .caption a { color: #6b7280; }
 
 .email .gallery { width: 100%; margin: 0 0 16px; }
 .email .gallery-cell { padding: 0 4px 8px; border: 0; vertical-align: top; }

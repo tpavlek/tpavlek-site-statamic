@@ -51,15 +51,20 @@ class Hub extends Tags
         ];
     }
 
-    public function for(): array
+    /**
+     * An empty string, not an empty array, when there are no hubs: Antlers renders a pair
+     * tag's contents once against the page's own context for `[]`, so every hub-less piece
+     * showed "Part of the <its own title> hub".
+     */
+    public function for(): array|string
     {
         $entry = $this->current();
 
         if (! $entry) {
-            return [];
+            return '';
         }
 
-        return Hubs::for($entry)->map(function (Entry $hub) use ($entry) {
+        $hubs = Hubs::for($entry)->map(function (Entry $hub) use ($entry) {
             $coverage = Hubs::coverage($hub);
 
             return [
@@ -75,6 +80,8 @@ class Hub extends Tags
                     ->all(),
             ];
         })->all();
+
+        return $hubs ?: '';
     }
 
     /** A CollectionPage whose list is the coverage, so search engines read the hub as an index. */

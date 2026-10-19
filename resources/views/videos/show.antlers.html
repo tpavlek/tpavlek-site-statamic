@@ -95,7 +95,7 @@
 
             {{# Newer video (more recent publish_date) — left #}}
             <div>
-                {{ collection:videos sort="publish_date:asc" limit="1" publish_date:is_after="{{ publish_date }}" }}
+                {{ collection:videos sort="publish_date:asc" limit="1" publish_date:is_after="{{ publish_date }}" id:not="{{ id }}" }}{{ unless no_results }}
                     <a href="{{ url }}" class="group flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all no-underline">
                         <div class="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -118,12 +118,12 @@
                             <p class="text-sm font-medium text-gray-700 leading-snug group-hover:text-gray-900 transition-colors line-clamp-2">{{ title }}</p>
                         </div>
                     </a>
-                {{ /collection:videos }}
+                {{ /unless }}{{ /collection:videos }}
             </div>
 
             {{# Older video (earlier publish_date) — right #}}
             <div>
-                {{ collection:videos from="videos" sort="publish_date:desc" limit="1" publish_date:is_before="{{ publish_date }}" }}
+                {{ collection:videos from="videos" sort="publish_date:desc" limit="1" publish_date:is_before="{{ publish_date }}" id:not="{{ id }}" }}{{ unless no_results }}
                     <a href="{{ url }}" class="group flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all no-underline sm:flex-row-reverse">
                         <div class="text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -146,7 +146,7 @@
                             <p class="text-sm font-medium text-gray-700 leading-snug group-hover:text-gray-900 transition-colors line-clamp-2">{{ title }}</p>
                         </div>
                     </a>
-                {{ /collection:videos }}
+                {{ /unless }}{{ /collection:videos }}
             </div>
 
         </div>

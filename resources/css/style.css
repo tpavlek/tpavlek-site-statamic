@@ -122,8 +122,17 @@ h1 {
         @apply block w-auto max-w-full mx-auto max-h-[36rem];
     }
 
+    /* Captions are markdown, so they arrive wrapped in a <p> and can carry links. */
     figcaption {
         @apply mt-2 text-sm text-gray-600 leading-snug;
+
+        p {
+            @apply m-0;
+        }
+
+        a {
+            @apply text-inherit underline;
+        }
     }
 }
 
