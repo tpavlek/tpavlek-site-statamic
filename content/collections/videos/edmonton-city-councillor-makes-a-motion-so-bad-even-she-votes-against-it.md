@@ -2,6 +2,8 @@
 id: 08f145b1-e84d-4d8c-9de9-7566b329cf1d
 blueprint: video
 title: 'Edmonton City Councillor makes a motion so bad, even she votes against it'
+hubs:
+  - 3bfa80c8-a7e6-49f8-aaff-87dd88a44765
 youtube: NIPvt3vZHys
 bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mhgwr6d4nk27'
 twitter: '2034740936908185821'

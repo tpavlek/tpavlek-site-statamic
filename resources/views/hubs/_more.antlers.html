@@ -1,0 +1,30 @@
+{{# Ends an article with the newest other pieces from each hub it's in. Where a follow-up
+    thread's "next part" card says "keep reading this story", this says "there's more on
+    this subject": separate incidents, no part numbers. #}}
+{{ hub:for }}
+    {{ if more }}
+        <aside class="hub-more" aria-label="More from the {{ title }} hub">
+            <a href="{{ url }}" class="hub-more__head">
+                {{ if photo }}<img src="{{ photo }}" alt="" class="hub-more__photo" width="40" height="40">{{ /if }}
+                <span>
+                    <span class="hub-more__label">More from the hub</span>
+                    <span class="hub-more__title">{{ title }}</span>
+                </span>
+            </a>
+            <ul class="hub-more__list list-none">
+                {{ more }}
+                    <li>
+                        <a href="{{ url }}" class="hub-more__item">
+                            {{ if cover }}<img src="{{ cover }}" alt="" class="hub-more__cover {{ is_video ? 'hub-more__cover--video' : 'hub-more__cover--post' }}" loading="lazy">{{ /if }}
+                            <span>
+                                <span class="hub-more__date">{{ date format="M j, Y" }}</span>
+                                <span class="hub-more__item-title">{{ title }}</span>
+                            </span>
+                        </a>
+                    </li>
+                {{ /more }}
+            </ul>
+            <a href="{{ url }}" class="hub-more__all">All {{ total }} stories &rarr;</a>
+        </aside>
+    {{ /if }}
+{{ /hub:for }}

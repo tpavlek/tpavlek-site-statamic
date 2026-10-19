@@ -38,6 +38,7 @@
                 {{ video_thread }}
                     {{ if next }}{{ partial:videos/thread-next }}{{ /if }}
                 {{ /video_thread }}
+                {{ partial:hubs/more }}
                 {{# As on posts: closes the article unless the body already has one. #}}
                 {{ unless has_subscribe_prompt }}{{ partial:email-subscribe }}{{ /unless }}
             </div>

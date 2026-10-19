@@ -3,6 +3,8 @@ id: 0abcdab8-2d82-4748-bfff-1f9438f44914
 blueprint: video
 publish_date: '2026-02-03'
 title: "Cheap houses that we can't afford"
+hubs:
+  - 3bfa80c8-a7e6-49f8-aaff-87dd88a44765
 description: 'Edmonton City Council votes against getting information about how much a new neighbourhood will cost'
 youtube: TnEEgoWFRd4
 bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mdyhxmqre22k'

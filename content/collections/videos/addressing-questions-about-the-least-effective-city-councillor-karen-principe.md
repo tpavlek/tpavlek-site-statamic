@@ -2,6 +2,8 @@
 id: b6baaa61-f60a-4d19-bf42-77460a148d35
 blueprint: video
 title: 'Addressing questions about the least effective city councillor, Karen Principe'
+hubs:
+  - 3bfa80c8-a7e6-49f8-aaff-87dd88a44765
 youtube: 07n3FVibDL8
 bluesky: 'at://did:plc:byejetampnt7x6r4kci5bo2z/app.bsky.feed.post/3mhgzhfq5hk27'
 twitter: '2034753679241486707'

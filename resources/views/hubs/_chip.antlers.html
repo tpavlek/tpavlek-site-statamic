@@ -1,0 +1,9 @@
+{{# Under an article's byline: the hubs it belongs to, so a reader can tell at a glance it's
+    one piece of a running story and jump to the rest. #}}
+{{ hub:for more="0" }}
+    <a href="{{ url }}" class="hub-chip">
+        {{ if photo }}<img src="{{ photo }}" alt="" class="hub-chip__photo" width="24" height="24">{{ /if }}
+        <span>Part of the <strong>{{ title }}</strong> hub</span>
+        <span class="hub-chip__count">{{ total }} {{ total == 1 ? 'story' : 'stories' }} &rarr;</span>
+    </a>
+{{ /hub:for }}

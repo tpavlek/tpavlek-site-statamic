@@ -2,6 +2,8 @@
 id: 299762f0-140b-4c05-bcde-e87084219013
 blueprint: video
 title: 'Don''t say Utah: Karen Principe Votes against her own motion'
+hubs:
+  - 3bfa80c8-a7e6-49f8-aaff-87dd88a44765
 video_file: dont-say-utah-captioned.mp4
 thumbnail: videos/covers/dont-say-utah-cover.png
 youtube: MCBd9CcfPVY

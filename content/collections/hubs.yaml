@@ -1,0 +1,11 @@
+title: Hubs
+template: hubs/show
+layout: layout
+revisions: false
+route: 'hub/{slug}'
+sort_dir: asc
+preview_targets:
+  -
+    label: Entry
+    url: '{permalink}'
+    refresh: true

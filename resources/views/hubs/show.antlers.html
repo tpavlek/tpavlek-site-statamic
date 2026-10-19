@@ -1,0 +1,80 @@
+{{# A hub: everything about one subject, newest first. See App\Support\Hubs.
+
+    A person's hub also opens with their record, gathered from the motion cards in the
+    coverage, so it's never typed twice and can't disagree with the articles. #}}
+{{ hub:page }}
+{{ if schema }}<script type="application/ld+json">{{ schema }}</script>{{ /if }}
+<div class="max-w-4xl mx-auto px-4 py-8 lg:py-16">
+    <header class="hub-head">
+        {{ if photo }}<img src="{{ photo }}" alt="" class="hub-head__photo" width="112" height="112">{{ /if }}
+        <div class="hub-head__text">
+            <p class="hub-head__kicker"><span class="hub-head__label">Hub</span>{{ if kicker }} {{ kicker }}{{ /if }}</p>
+            <h1 class="hub-head__title">{{ title }}</h1>
+            {{ if intro }}<div class="hub-head__intro">{{ intro | markdown }}</div>{{ /if }}
+            <p class="hub-head__stats">
+                <span><strong>{{ total }}</strong> {{ total == 1 ? 'story' : 'stories' }}</span>
+                {{ if stats }}
+                    <span><strong>{{ stats:motions }}</strong> {{ stats:motions == 1 ? 'vote' : 'votes' }} on record</span>
+                    {{ if stats:moved }}<span><strong>{{ stats:moved }}</strong> moved</span>{{ /if }}
+                    {{ if stats:against_own }}<span class="hub-head__stat--sting"><strong>{{ stats:against_own }}</strong> voted against {{ stats:against_own == 1 ? 'a motion' : 'motions' }} they moved</span>{{ /if }}
+                {{ /if }}
+            </p>
+        </div>
+    </header>
+
+    {{ if record }}
+        <section class="hub-section" aria-labelledby="hub-record">
+            <h2 id="hub-record" class="hub-section__title">The record</h2>
+            <ol class="hub-record">
+                {{ record }}
+                    <li class="hub-record__item">
+                        <div class="hub-record__meta">
+                            <time datetime="{{ date format='Y-m-d' }}">{{ date format="M j, Y" }}</time>
+                            <span aria-hidden="true">&middot;</span>
+                            <span>{{ kind }}</span>
+                            {{ if result }}<span class="hub-record__result hub-record__result--{{ result }}">{{ result == 'carried' ? 'Carried' : 'Defeated' }} {{ tally }}</span>{{ /if }}
+                        </div>
+                        <div class="hub-record__badges">
+                            {{ if moved }}<span class="hub-badge">Moved it</span>{{ /if }}
+                            {{ if seconded }}<span class="hub-badge">Seconded it</span>{{ /if }}
+                            {{ if vote == 'for' }}<span class="hub-badge hub-badge--for">Voted for</span>{{ /if }}
+                            {{ if vote == 'against' }}<span class="hub-badge hub-badge--against">Voted against</span>{{ /if }}
+                        </div>
+                        <div class="hub-record__text">{{ text | markdown }}</div>
+                        <a href="{{ url }}" class="hub-record__from">{{ title }} &rarr;</a>
+                    </li>
+                {{ /record }}
+            </ol>
+        </section>
+    {{ /if }}
+
+    <section class="hub-section" aria-labelledby="hub-coverage">
+        <h2 id="hub-coverage" class="hub-section__title">The coverage</h2>
+        <ol class="hub-list">
+            {{ items }}
+                <li class="hub-card">
+                    <a href="{{ url }}" class="hub-card__link">
+                        {{ if cover }}<img src="{{ cover }}" alt="" class="hub-card__cover {{ is_video ? 'hub-card__cover--video' : 'hub-card__cover--post' }}" loading="lazy">{{ /if }}
+                        <span class="hub-card__body">
+                            <span class="hub-card__meta">
+                                <time datetime="{{ date format='Y-m-d' }}">{{ date format="M j, Y" }}</time>
+                                {{ if is_video }}{{ partial:video-badge }}{{ /if }}
+                            </span>
+                            <span class="hub-card__title">{{ title }}</span>
+                            {{ if summary }}<span class="hub-card__summary">{{ summary }}</span>{{ /if }}
+                        </span>
+                    </a>
+                    {{ if earlier }}
+                        <p class="hub-card__earlier">
+                            <span class="hub-card__earlier-label">Earlier in this story:</span>
+                            {{ earlier }}<a href="{{ url }}">{{ title }}</a>{{ unless last }}<span aria-hidden="true">, </span>{{ /unless }}{{ /earlier }}
+                        </p>
+                    {{ /if }}
+                </li>
+            {{ /items }}
+        </ol>
+    </section>
+
+    {{ partial:email-subscribe }}
+</div>
+{{ /hub:page }}

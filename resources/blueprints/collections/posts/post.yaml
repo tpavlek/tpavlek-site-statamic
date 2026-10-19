@@ -75,6 +75,15 @@ tabs:
               mode: select
               instructions: 'What this post is about. Tagging a post `Edmonton Fringe` is what lists it on the /fringe hub.'
           -
+            handle: hubs
+            field:
+              type: entries
+              collections:
+                - hubs
+              mode: select
+              display: Hubs
+              instructions: 'The hubs this belongs to, e.g. Karen Principe. A post with a hub''s topic joins it without being tagged here.'
+          -
             handle: fringe_festival
             field:
               type: terms

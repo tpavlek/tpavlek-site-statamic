@@ -1194,6 +1194,282 @@ a.video-thread__update,
     @apply text-teal-dark;
 }
 
+/* Hubs (hubs/show, hubs/_chip, hubs/_more): everything about one subject. The chip and the
+   end card sit inside `.post-content`, whose prose rules would underline every line of a
+   whole-card link and put margins on its images, hence the `.post-content` overrides. */
+.hub-chip {
+    @apply mt-4 inline-flex max-w-full items-center gap-2 rounded-full border border-teal-dark/30 bg-teal-light/10 py-1 pl-1 pr-3 text-sm text-gray-700 no-underline;
+}
+
+.hub-chip:not(:has(.hub-chip__photo)) {
+    @apply pl-3;
+}
+
+.hub-chip:hover {
+    @apply border-teal-dark bg-teal-light/20 text-gray-900;
+}
+
+.hub-chip + .hub-chip {
+    @apply ml-2;
+}
+
+img.hub-chip__photo {
+    @apply m-0 h-6 w-6 shrink-0 rounded-full object-cover;
+}
+
+.hub-chip strong {
+    @apply font-semibold text-gray-900;
+}
+
+.hub-chip__count {
+    @apply whitespace-nowrap font-semibold text-teal-dark;
+}
+
+.hub-more {
+    @apply my-10 rounded-xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm;
+}
+
+.post-content a.hub-more__head,
+a.hub-more__head {
+    @apply flex items-center gap-3 no-underline text-gray-900;
+}
+
+.post-content img.hub-more__photo {
+    @apply my-0 h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white shadow;
+}
+
+.hub-more__label {
+    @apply block text-xs font-black uppercase tracking-wide text-teal-dark;
+}
+
+.hub-more__title {
+    @apply block text-lg font-bold leading-snug;
+}
+
+.post-content a.hub-more__head:hover .hub-more__title {
+    @apply underline;
+}
+
+/* `aside` outranks `.content ul:not(.tl)`, which would otherwise indent this 2.5rem (as the
+   chat dialogue does with `figure`). */
+.content aside.hub-more ul.hub-more__list {
+    @apply my-4 ml-0 grid gap-3 p-0;
+    list-style: none;
+}
+
+.content .hub-more__list li {
+    @apply m-0 p-0;
+}
+
+.content .hub-more__list li::before {
+    content: none;
+}
+
+.post-content a.hub-more__item {
+    @apply flex items-center gap-3 no-underline text-gray-800;
+}
+
+.post-content img.hub-more__cover {
+    @apply my-0 shrink-0 rounded object-cover;
+}
+
+.post-content img.hub-more__cover--video {
+    @apply w-10 aspect-[9/16];
+}
+
+.post-content img.hub-more__cover--post {
+    @apply w-20 aspect-[1.91/1];
+}
+
+.hub-more__date {
+    @apply block text-xs text-gray-500;
+}
+
+.hub-more__item-title {
+    @apply block text-base font-semibold leading-snug;
+}
+
+.post-content a.hub-more__item:hover .hub-more__item-title {
+    @apply underline;
+}
+
+.post-content a.hub-more__all {
+    @apply text-sm font-bold text-teal-dark no-underline hover:underline;
+}
+
+.hub-head {
+    @apply flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8;
+}
+
+.hub-head__photo {
+    @apply h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-full object-cover ring-4 ring-white shadow-md;
+}
+
+.hub-head__kicker {
+    @apply mb-2 flex flex-wrap items-center gap-2 text-sm font-semibold text-gray-600;
+}
+
+.hub-head__label {
+    @apply rounded bg-teal-dark px-1.5 py-0.5 text-xs font-black uppercase tracking-wider text-white;
+}
+
+/* Overrides the global `h1 { text-4xl mb-16 }`. */
+.hub-head__title {
+    @apply mb-0 text-balance text-4xl/tight font-bold tracking-tight text-gray-900 sm:text-5xl/tight;
+}
+
+.hub-head__intro {
+    @apply mt-4 max-w-2xl text-lg leading-relaxed text-gray-700;
+}
+
+.hub-head__intro p + p {
+    @apply mt-3;
+}
+
+.hub-head__stats {
+    @apply mt-5 flex flex-wrap gap-x-5 gap-y-1 border-t border-gray-200 pt-4 text-sm text-gray-600;
+}
+
+.hub-head__stats strong {
+    @apply text-base font-black text-gray-900;
+}
+
+.hub-head__stat--sting strong {
+    @apply text-red-700;
+}
+
+.hub-section {
+    @apply mt-14;
+}
+
+/* Overrides the global h2 sizing; the sections are labels over lists, not article headings. */
+.hub-section__title {
+    @apply mb-5 text-xs font-black uppercase tracking-widest text-gray-500;
+}
+
+.hub-record {
+    @apply m-0 grid gap-3 p-0;
+    list-style: none;
+}
+
+.hub-record__item {
+    @apply rounded-xl border border-gray-200 bg-white px-4 py-4 sm:px-5 shadow-sm;
+}
+
+.hub-record__meta {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold uppercase tracking-wide text-gray-500;
+}
+
+.hub-record__result {
+    @apply ml-auto text-sm font-black;
+}
+
+.hub-record__result--carried {
+    @apply text-green-800;
+}
+
+.hub-record__result--defeated {
+    @apply text-red-700;
+}
+
+.hub-record__badges {
+    @apply mt-2 flex flex-wrap gap-1.5;
+}
+
+.hub-badge {
+    @apply rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-bold text-gray-700;
+}
+
+.hub-badge--for {
+    @apply bg-green-100 text-green-900;
+}
+
+.hub-badge--against {
+    @apply bg-red-100 text-red-800;
+}
+
+.hub-record__text {
+    @apply mt-3 text-sm leading-6 text-gray-700 line-clamp-3;
+}
+
+.hub-record__text p,
+.hub-record__text ul {
+    @apply m-0 inline;
+}
+
+.hub-record__text li {
+    @apply inline;
+}
+
+.hub-record__text li::before {
+    content: ' • ';
+}
+
+.hub-record__text del {
+    @apply text-red-600;
+}
+
+.hub-record__from {
+    @apply mt-3 inline-block text-sm font-semibold text-teal-dark no-underline hover:underline;
+}
+
+.hub-list {
+    @apply m-0 grid gap-4 p-0;
+    list-style: none;
+}
+
+.hub-card {
+    @apply rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md;
+}
+
+.hub-card__link {
+    @apply flex items-start gap-4 p-4 no-underline text-gray-800;
+}
+
+.hub-card__cover {
+    @apply shrink-0 rounded-md bg-gray-100 object-cover;
+}
+
+.hub-card__cover--video {
+    @apply w-16 sm:w-20 aspect-[9/16];
+}
+
+.hub-card__cover--post {
+    @apply w-28 sm:w-40 aspect-[1.91/1];
+}
+
+.hub-card__body {
+    @apply flex min-w-0 flex-col;
+}
+
+.hub-card__meta {
+    @apply flex items-center gap-2 text-xs text-gray-500;
+}
+
+.hub-card__title {
+    @apply mt-1 text-lg font-bold leading-snug text-gray-900;
+}
+
+.hub-card__link:hover .hub-card__title {
+    @apply underline;
+}
+
+.hub-card__summary {
+    @apply mt-1.5 text-sm leading-relaxed text-gray-600 line-clamp-2;
+}
+
+.hub-card__earlier {
+    @apply m-0 border-t border-gray-100 px-4 py-2.5 text-sm text-gray-600;
+}
+
+.hub-card__earlier-label {
+    @apply font-semibold text-gray-500;
+}
+
+.hub-card__earlier a {
+    @apply text-teal-dark no-underline hover:underline;
+}
+
 /* Someone else's words, with who said them (posts/_story-source-quote). Reading size on
    purpose: the bare blockquote is a pull quote, and a press statement set that way reads
    like a slogan. */

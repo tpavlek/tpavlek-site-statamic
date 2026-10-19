@@ -123,7 +123,16 @@ tabs:
                 - topics
               display: Topics
               mode: select
-              instructions: 'Only matters for a video with a companion article — it is what the /posts topic filter reads.'
+              instructions: 'What the /posts topic filter reads (for a video with a companion article), and how a video joins a topic''s hub, e.g. Infill.'
+          -
+            handle: hubs
+            field:
+              type: entries
+              collections:
+                - hubs
+              mode: select
+              display: Hubs
+              instructions: 'The hubs this belongs to, e.g. Karen Principe. A piece with a hub''s topic joins it without being tagged here.'
           -
             handle: follows_up
             field:

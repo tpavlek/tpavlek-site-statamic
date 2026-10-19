@@ -1,0 +1,79 @@
+title: Hub
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              display: Title
+              instructions: 'Who or what the hub is about, e.g. "Karen Principe" or "Infill".'
+          -
+            handle: kicker
+            field:
+              type: text
+              display: Kicker
+              instructions: 'The small line over the title, e.g. "Councillor, Ward tastawiyiniwak".'
+          -
+            handle: intro
+            field:
+              type: textarea
+              display: Intro
+              instructions: 'Markdown. Two or three sentences in your own voice: why you keep coming back to this.'
+          -
+            handle: person
+            field:
+              type: entries
+              collections:
+                - yegvote_2025_candidates
+              max_items: 1
+              mode: typeahead
+              display: Person
+              instructions: 'For a hub about a council member. Their photo heads the page, and every motion card in the coverage that names them is gathered into "The record".'
+          -
+            handle: photo
+            field:
+              type: assets
+              container: assets
+              max_files: 1
+              display: Photo
+              instructions: 'Optional. Overrides the person''s photo, or gives a topic hub an image for its chip and header.'
+          -
+            handle: topic
+            field:
+              type: terms
+              taxonomies:
+                - topics
+              max_items: 1
+              mode: select
+              display: Topic
+              instructions: 'Optional. Everything with this topic joins the hub without being tagged one by one (the infill hub reads the Infill topic).'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: og_description
+            field:
+              type: textarea
+              display: 'Meta description'
+              instructions: 'The search and share summary. Falls back to the intro.'
+          -
+            handle: og_image
+            field:
+              type: assets
+              container: assets
+              folder: og
+              max_files: 1
+              display: 'Share card'
