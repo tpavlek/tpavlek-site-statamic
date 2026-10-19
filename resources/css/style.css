@@ -112,8 +112,14 @@ h1 {
 .post-content .post-image {
     @apply mb-6;
 
-    img {
+    img,
+    video {
         @apply w-full my-0;
+    }
+
+    /* A vertical clip at full width would be a whole screen tall, so it's capped and centred. */
+    video {
+        @apply block w-auto max-w-full mx-auto max-h-[36rem];
     }
 
     figcaption {

@@ -29,10 +29,11 @@
 {{ if type == "image" }}
     {{ image_alignment = alignment ?? 'full' }}
     {{ image_caption = caption }}
-    {{ images }}
+    {{# Muted loops have no email equivalent, so a video asset is skipped with its caption. #}}
+    {{ images }}{{ unless is_video }}
         <p class="figure"><img src="{{ permalink }}" alt="{{ alt | entities }}" class="img img--{{ image_alignment == 'full' ? 'full' : 'narrow' }}" /></p>
         {{ if image_caption }}<p class="caption">{{ image_caption }}</p>{{ /if }}
-    {{ /images }}
+    {{ /unless }}{{ /images }}
 {{ /if }}
 
 {{ if type == "gallery" }}

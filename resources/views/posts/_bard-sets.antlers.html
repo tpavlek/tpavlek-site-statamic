@@ -65,7 +65,12 @@
             {{# |entities because alt text describing a share card quotes the
                 card, and a double quote in it would otherwise close the
                 attribute and spill the rest of the sentence into the markup. #}}
-            <img src="{{ url }}" alt="{{ alt | entities }}" />
+            {{# A video asset plays as a muted loop, the GIF of it, not as a player. #}}
+            {{ if is_video }}
+                <video src="{{ url }}" autoplay loop muted playsinline aria-label="{{ alt | entities }}"></video>
+            {{ else }}
+                <img src="{{ url }}" alt="{{ alt | entities }}" />
+            {{ /if }}
             {{ if image_caption }}<figcaption>{{ image_caption }}</figcaption>{{ /if }}
         </figure>
     {{ /images }}
