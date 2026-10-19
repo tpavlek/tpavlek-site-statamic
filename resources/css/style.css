@@ -1257,6 +1257,12 @@ a.video-thread__update,
     @apply my-10 flex items-start gap-4;
 }
 
+/* Opening the article, a quote starts where the first paragraph would. */
+.content > .story-speech:first-child,
+.content > .story-source-quote:first-child {
+    @apply mt-0;
+}
+
 .post-content img.story-speech__photo {
     @apply my-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover flex-shrink-0 ring-2 ring-white shadow-md;
 }
