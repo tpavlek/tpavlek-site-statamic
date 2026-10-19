@@ -15,6 +15,7 @@ publish_date: '2026-03-31 00:00'
 follows_up: dfa6a46a-d749-42ec-97b0-a8da60af8857
 topics:
 - municipal-politics
+- traffic-safety
 article:
 - type: paragraph
   content:
