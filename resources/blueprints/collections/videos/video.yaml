@@ -125,6 +125,16 @@ tabs:
               mode: select
               instructions: 'What the /posts topic filter reads (for a video with a companion article), and how a video joins a topic''s hub, e.g. Infill.'
           -
+            handle: full_story
+            field:
+              type: entries
+              collections:
+                - posts
+              max_items: 1
+              mode: select
+              display: 'Full story'
+              instructions: 'A post that tells this video''s story at length. The video page sends readers there with a "Get the full story" card, so leave the article empty. Not for posts that are only related: list those videos under the post''s Related videos instead.'
+          -
             handle: hubs
             field:
               type: entries

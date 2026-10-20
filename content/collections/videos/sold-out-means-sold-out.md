@@ -10,6 +10,11 @@ category:
 youtube: jUEwy7OyH1w
 facebook: '1044401451781858'
 tiktok: '7673204340911394068'
+og_image: og/sold-out-means-sold-out.png
+topics:
+- fringe
+full_story:
+  - 4ce8d56c-cb04-4398-b47c-785afbf7f1a7
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1786659995
 ---
