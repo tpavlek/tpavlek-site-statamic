@@ -10,6 +10,8 @@ twitter: '2077871417090256898'
 facebook: '1771612010938200'
 tiktok: '7663244891648134421'
 instagram: 'Da3oLPAyJt9'
+hubs:
+  - c2556b8c-142a-421c-a627-4aa30c8bab5a
 publish_date: '2026-07-16 00:00'
 og_image: og/devin-dreeshen-resume.png
 topics:

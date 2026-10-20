@@ -1,6 +1,8 @@
 ---
 id: 325dc87b-5d98-42c5-bee2-3c857757c956
 blueprint: video
+hubs:
+  - c2556b8c-142a-421c-a627-4aa30c8bab5a
 publish_date: '2025-08-05 00:00'
 instagram: DM_TCPmz7W7
 title: 'SEPARATE LANES, NOT SEPARATION!'
