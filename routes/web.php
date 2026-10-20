@@ -44,6 +44,7 @@ foreach ([
     'as-i-talk-with-more-and-more-voters-one-thing-is-becoming-abundantly-clear-munic' => 'municipal-parties-are-unpopular',
     'candidates-running-in-the-election-want-you-to-trust-them-to-read-hundreds-of-pa' => 'candidates-cannot-read-sign-rules',
     'danielle-smiths-ucp-is-removing-every-code-of-conduct-for-municipal-elected-offi' => 'ucp-removes-municipal-codes-of-conduct',
+    'drinking-on-the-job-and-campaigning-for-trump-are-just-two-items-on-devin-dreeshens-resume' => 'drinking-on-the-job-and-campaigning-for-trump-devin-dreeshens-resume',
     'edmonton-massively-revamped-its-zoning-and-now-housing-is-getting-more-affordabl' => 'zoning-is-making-housing-more-affordable',
     'if-edmontonians-are-upset-about-the-direction-of-the-city-why-were-all-the-incum' => 'why-were-the-incumbents-re-elected',
     'in-collaboration-with-yegarts-there-is-new-musical-furniture-at-the-mill-woods-l' => 'mill-woods-musical-furniture',
