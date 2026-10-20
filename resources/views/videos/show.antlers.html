@@ -61,26 +61,26 @@
                 {{# Title & meta #}}
                 <div class="mb-5">
                     <h1 class="text-2xl lg:text-3xl font-bold leading-snug mb-2">{{ title }}</h1>
-                    {{ if publish_date }}
-                        <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
-                    {{ /if }}
+                    {{# The tags sit beside the date, with the title they describe, rather than
+                        between the thread box and whatever follows it. #}}
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                        {{ if publish_date }}
+                            <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
+                        {{ /if }}
+                        {{ category }}
+                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
+                        {{ /category }}
+                    </div>
                 </div>
 
                 {{ video_thread }}
                     {{ if parts }}{{ partial:videos/thread }}{{ /if }}
                 {{ /video_thread }}
 
-                {{# Categories/tags #}}
-                {{ if category }}
-                    <div class="flex flex-wrap gap-2 mb-5">
-                        {{ category }}
-                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
-                        {{ /category }}
-                    </div>
-                {{ /if }}
-
-                {{# Content #}}
-                {{ if content }}
+                {{# Content. Left out when a post or review tells the full story: the
+                    description is the YouTube caption, a thinner version of what the card
+                    below says. It still serves as the meta description. #}}
+                {{ if content && !full_story }}
                     <div class="content text-gray-800 mb-6">{{ content }}</div>
                 {{ /if }}
 

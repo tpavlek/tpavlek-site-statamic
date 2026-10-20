@@ -1,15 +1,27 @@
-{{# The post behind a short video, as the highlight callout's sibling: same tilted teal
-    card and black tab, so it reads as "there's more" rather than as another listing.
-    The title's link is stretched over the whole card. See App\Tags\FullStory. #}}
+{{# The post or Fringe review behind a short video, as the highlight callout's sibling:
+    same tilted teal card and black tab, so it reads as "there's more" rather than as
+    another listing. A review leads with its stars and opening line, so the verdict is
+    on this page. The title's link is stretched over the whole card. See App\Tags\FullStory. #}}
 {{ full_story }}
-    <aside class="story-callout story-callout--highlight full-story">
+    <aside class="story-callout story-callout--highlight full-story{{ if is_review }} full-story--review{{ /if }}">
         <p class="story-callout__title">Get the full story</p>
         <div class="story-callout__body full-story__body">
             {{ if image }}<img src="{{ image }}" alt="" class="full-story__image" loading="lazy">{{ /if }}
             <div class="min-w-0">
-                <p class="full-story__headline"><a href="{{ url }}" class="full-story__link">{{ title }}</a></p>
-                {{ if summary }}<p class="full-story__summary">{{ summary }}</p>{{ /if }}
-                <p class="full-story__cta">Read the post &rarr;</p>
+                {{ if is_review }}
+                    {{ if stars }}
+                        <p class="full-story__stars">
+                            <span aria-hidden="true">{{ stars:label }}</span>
+                            <span class="sr-only">{{ stars:value }} out of 5 stars</span>
+                        </p>
+                    {{ /if }}
+                    {{ if lede }}<p class="full-story__lede">{{ lede }}</p>{{ /if }}
+                    <p class="full-story__headline full-story__headline--small"><a href="{{ url }}" class="full-story__link">{{ title }}{{ if year }} ({{ year }}){{ /if }}</a></p>
+                {{ else }}
+                    <p class="full-story__headline"><a href="{{ url }}" class="full-story__link">{{ title }}</a></p>
+                    {{ if summary }}<p class="full-story__summary">{{ summary }}</p>{{ /if }}
+                {{ /if }}
+                <p class="full-story__cta">{{ cta }} &rarr;</p>
             </div>
         </div>
     </aside>

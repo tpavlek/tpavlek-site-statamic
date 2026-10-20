@@ -16,7 +16,8 @@ use Statamic\Tags\Tags;
  * - `parts`: every video in the story, oldest first, each with `part`, `title`, `url`,
  *   `date` and `is_current`.
  * - `latest`: the newest part, but only when this page isn't it. That's the "there's an
- *   update" note, for readers who land on the original from search.
+ *   update" note, for readers who land on the original from search. Its `same_year` says
+ *   whether the date needs a year.
  * - `next`: the part after this one, with `cover` and `summary`, for the card that ends
  *   the article.
  *
@@ -47,7 +48,12 @@ class VideoThread extends Tags
             ])->all(),
             'total' => $parts->count(),
             'current_part' => $position + 1,
-            'latest' => $latest->id() === $entry->id() ? null : $this->card($latest),
+            'latest' => $latest->id() === $entry->id() ? null : [
+                ...$this->card($latest),
+                // "Aug 15" on a 2025 page reads as Aug 15, 2025; the banner names the year
+                // when the update landed in a different one.
+                'same_year' => Writing::date($latest)?->year === Writing::date($entry)?->year,
+            ],
             'next' => $next ? [...$this->card($next), 'part' => $position + 2] : null,
         ];
     }

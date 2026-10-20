@@ -8,35 +8,72 @@ use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Tags\Tags;
 
 /**
- * The post that tells a video's story at length, for the video page.
+ * The post or Fringe review that tells a video's story at length, for the video page.
  *
  *     {{ full_story }} … {{ /full_story }}
  *
- * One story, one page: when a post already covers what a short video says, the video
- * carries no article of its own and points at the post through its `full_story` field.
- * That's chosen by hand, not inferred from a post's `related_videos`: plenty of posts
- * list videos that are only extra watching, and those shouldn't redirect anyone.
+ * One story, one page: when a post or review already covers what a short video says, the
+ * video carries no article of its own and points at it through its `full_story` field.
+ * That's chosen by hand, not inferred from a post's `related_videos` or a review's
+ * `companion_videos`: plenty of those are only extra watching, and shouldn't redirect anyone.
  *
- * `title`, `url`, `summary`, `date` and `image`. An empty string, not an empty array, when
- * there's no such post (see Hub::for() for why).
+ * `title`, `url`, `image`, `cta` and `is_review`. A post adds `summary`; a review adds
+ * `stars`, `year` and `lede` (its opening paragraph), shown on the card so a reader gets the
+ * verdict without clicking through. An empty string, not an empty array, when there's no
+ * such entry (see Hub::for() for why).
  */
 class FullStory extends Tags
 {
     public function index(): array|string
     {
         $video = EntryFacade::find($this->params->get('id', $this->context->get('id')));
-        $post = ($id = collect($video?->value('full_story'))->first()) ? EntryFacade::find($id) : null;
+        $story = ($id = collect($video?->value('full_story'))->first()) ? EntryFacade::find($id) : null;
 
-        if (! $post instanceof Entry || ! $post->published()) {
+        if (! $story instanceof Entry || ! $story->published()) {
             return '';
         }
 
+        if ($story->collectionHandle() === 'fringe_reviews') {
+            $stars = $story->augmentedValue('stars');
+
+            return [
+                'is_review' => true,
+                'title' => $story->value('title'),
+                'url' => $story->url(),
+                'cta' => 'Read the review',
+                'image' => $story->augmentedValue('poster')?->value()?->url(),
+                'stars' => $stars?->value() ? $stars : null,
+                'year' => $story->value('festival'),
+                'lede' => self::lede($story->value('content')),
+            ];
+        }
+
         return [
-            'title' => $post->value('title'),
-            'url' => $post->url(),
-            'summary' => $post->augmentedValue('og_description')?->value(),
-            'date' => Writing::date($post),
-            'image' => $post->augmentedValue('og_image')?->value()?->url(),
+            'is_review' => false,
+            'title' => $story->value('title'),
+            'url' => $story->url(),
+            'cta' => 'Read the post',
+            'image' => $story->augmentedValue('og_image')?->value()?->url(),
+            'summary' => $story->augmentedValue('og_description')?->value(),
+            'date' => Writing::date($story),
         ];
+    }
+
+    /** The plain text of a Bard field's first non-empty paragraph. */
+    private static function lede(mixed $content): ?string
+    {
+        foreach ((array) $content as $node) {
+            if (($node['type'] ?? null) !== 'paragraph') {
+                continue;
+            }
+
+            $text = trim(collect($node['content'] ?? [])->pluck('text')->implode(''));
+
+            if ($text !== '') {
+                return $text;
+            }
+        }
+
+        return null;
     }
 }

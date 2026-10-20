@@ -130,10 +130,11 @@ tabs:
               type: entries
               collections:
                 - posts
+                - fringe_reviews
               max_items: 1
               mode: select
               display: 'Full story'
-              instructions: 'A post that tells this video''s story at length. The video page sends readers there with a "Get the full story" card, so leave the article empty. Not for posts that are only related: list those videos under the post''s Related videos instead.'
+              instructions: 'A post or Fringe review that tells this video''s story at length. The video page sends readers there with a "Get the full story" card (a review shows its stars and opening line on it), so leave the article empty. Not for ones that are only related: list those videos under the post''s Related videos or the review''s companion videos instead.'
           -
             handle: hubs
             field:

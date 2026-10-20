@@ -1018,7 +1018,7 @@ h1 {
     border-color: #111;
 }
 
-.content .full-story .full-story__headline {
+.content .full-story .full-story__body p.full-story__headline {
     @apply mb-2 text-lg font-extrabold leading-snug;
 }
 
@@ -1038,12 +1038,32 @@ h1 {
     inset: 0;
 }
 
-.content .full-story .full-story__summary {
+.content .full-story .full-story__body p.full-story__summary {
     @apply mb-3 text-base leading-relaxed;
 }
 
-.content .full-story .full-story__cta {
+.content .full-story .full-story__body p.full-story__cta {
     @apply text-sm font-black uppercase tracking-widest;
+}
+
+/* The p.* selectors outrank the highlight card's own paragraph size.
+   A review leads with the verdict: big stars, then its opening line as a quote, then the
+   show's name. Its thumb is the square show poster rather than a share card. */
+.full-story--review .full-story__image {
+    @apply w-28 aspect-square;
+}
+
+.content .full-story .full-story__body p.full-story__stars {
+    @apply mb-2 text-2xl leading-none tracking-wider;
+    color: #111;
+}
+
+.content .full-story .full-story__body p.full-story__lede {
+    @apply mb-3 text-xl font-bold leading-snug;
+}
+
+.content .full-story .full-story__body p.full-story__headline--small {
+    @apply mb-2 text-sm font-semibold;
 }
 
 .content .story-callout--highlight .story-callout__body a:hover {

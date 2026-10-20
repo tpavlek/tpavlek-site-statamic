@@ -7,7 +7,7 @@
         <a href="{{ latest:url }}" class="video-thread__update">
             <span class="video-thread__update-label">Update</span>
             <span class="video-thread__update-title">{{ latest:title }}</span>
-            <span class="video-thread__update-date">{{ latest:date format="M j" }} →</span>
+            <span class="video-thread__update-date">{{ if latest:same_year }}{{ latest:date format="M j" }}{{ else }}{{ latest:date format="M j, Y" }}{{ /if }} →</span>
         </a>
     {{ /if }}
     <p class="video-thread__heading">The story so far</p>

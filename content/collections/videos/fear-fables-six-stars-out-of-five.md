@@ -10,6 +10,13 @@ publish_date: '2026-08-15 00:00'
 category:
   - fringe-2026
 thumbnail: videos/covers/fear-fables-cover.png
+og_image: og/fear-fables.png
+follows_up:
+  - 52cb41de-c9c5-4ed7-afad-42f046515fd4
+topics:
+- fringe
+full_story:
+  - 5b310999-8497-40c9-9f9c-6b3da2187f42
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1786812042
 ---
