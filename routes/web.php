@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Route;
 // ]);
 //
 
-Route::statamic('/videos', 'videos/index', ['title' => 'Videos']);
+// The content hub (pages/posts.md renders it at /posts), opened on its Watch filter.
+Route::statamic('/videos', 'posts/index', [
+    'title' => 'Videos',
+    'initial_show' => 'watch',
+    'intro' => 'I make videos on the internet, you can watch them here.',
+]);
 Route::statamic('/fringe', 'fringe/landing', [
     'title' => 'Edmonton Fringe Reviews',
     'og_title' => 'Edmonton Fringe Reviews',

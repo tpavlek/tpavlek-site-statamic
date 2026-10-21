@@ -156,40 +156,61 @@ Alpine.data('reviewFilter', () => ({
     },
 }))
 
-// Posts hub: show only the rows tagged with the selected topic pill. Rows carry
-// data-topics (space-separated term slugs); one topic at a time, empty string means all.
-Alpine.data('postFilter', () => ({
+// The content hub (/posts, and /videos opening on Watch). Items carry data-kind (read,
+// both, watch), data-video and data-topics (space-separated term slugs). Read hides
+// anything that's only a video; Watch shows anything with a video. A month with nothing
+// left shows nothing, not an orphaned heading. `?topic=` and `?show=` set the filters on
+// arrival, so the old site's redirects (`/posts?topic=dessert-people`) still land filtered,
+// and the URL follows the filters so a filtered view can be shared.
+Alpine.data('contentHub', (initialShow = 'all') => ({
+    show: initialShow,
     topic: '',
     shown: 0,
 
     init() {
-        this.$watch('topic', () => this.apply())
-        // `/posts?topic=dessert-people` lands with that pill already active, so a
-        // section of the old site can redirect straight to its posts. Unknown slugs just
-        // show the empty state with its "show all" link.
-        const wanted = new URLSearchParams(window.location.search).get('topic')
-        if (wanted) this.topic = wanted
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('topic')) this.topic = params.get('topic')
+        if (['all', 'read', 'watch'].includes(params.get('show'))) this.show = params.get('show')
+
+        this.$watch('show', () => this.apply(true))
+        this.$watch('topic', () => this.apply(true))
+        this.apply(false)
     },
 
-    apply() {
+    apply(updateUrl) {
+        // Inline important, for the same reason as reviewFilter above: the Tailwind
+        // config's `important: true` means only an inline declaration marked important
+        // reliably beats utility classes.
+        const toggle = (el, visible) => visible
+            ? el.style.removeProperty('display')
+            : el.style.setProperty('display', 'none', 'important')
+
         let shown = 0
 
-        for (const row of this.$root.querySelectorAll('li[data-topics]')) {
-            const matches = !this.topic ||
-                row.dataset.topics.split(/\s+/).includes(this.topic)
+        for (const item of this.$root.querySelectorAll('[data-hub-item]')) {
+            const kindOk = this.show === 'all'
+                || (this.show === 'read' ? item.dataset.kind !== 'watch' : item.dataset.video === '1')
+            const topicOk = !this.topic || (item.dataset.topics || '').split(/\s+/).includes(this.topic)
+            const visible = kindOk && topicOk
 
-            // Inline important, for the same reason as reviewFilter above: the Tailwind
-            // config's `important: true` means only an inline declaration marked
-            // important reliably wins over utility classes.
-            if (matches) {
-                row.style.removeProperty('display')
-                shown++
-            } else {
-                row.style.setProperty('display', 'none', 'important')
-            }
+            toggle(item, visible)
+            if (visible) shown++
         }
 
+        for (const group of this.$root.querySelectorAll('[data-hub-shorts], [data-hub-month]')) {
+            toggle(group, [...group.querySelectorAll('[data-hub-item]')].some(i => i.style.display !== 'none'))
+        }
+
+        for (const hubs of this.$root.querySelectorAll('[data-hub-hubs]')) toggle(hubs, !this.topic)
+
         this.shown = shown
+
+        if (updateUrl) {
+            const url = new URL(window.location)
+            this.topic ? url.searchParams.set('topic', this.topic) : url.searchParams.delete('topic')
+            this.show !== initialShow ? url.searchParams.set('show', this.show) : url.searchParams.delete('show')
+            history.replaceState(null, '', url)
+        }
     },
 }))
 

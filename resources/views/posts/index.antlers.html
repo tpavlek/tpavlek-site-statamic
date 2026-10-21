@@ -1,75 +1,120 @@
-<div class="max-w-4xl mx-auto px-4 py-8">
+{{# The content hub: everything, newest first, grouped by month. Served at /posts by the
+    pages/posts.md entry (so the intro is editable in the CP) and at /videos by a route that
+    opens it on Watch. Data from App\Tags\ContentHub; filtering is the contentHub Alpine
+    component in site.js, which also reads ?topic= and ?show= so old-site redirects and shared
+    links land on a filtered view. #}}
+<div class="max-w-5xl mx-auto px-4 py-8" x-data="contentHub('{{ initial_show ?? 'all' }}')">
 
-    {{# Hero, in the shape of the fringe landing page: title, then the page entry's own
-        body as the subhead so the intro is editable in the CP. #}}
-    <div class="mb-8">
-        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-3">{{ title }}</h1>
-        <div class="text-xl text-gray-500 leading-relaxed">{{ content }}</div>
+    <div class="mb-6">
+        <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-2">{{ title }}</h1>
+        <div class="text-xl text-gray-500 leading-relaxed">{{ if intro }}{{ intro }}{{ else }}{{ content }}{{ /if }}</div>
     </div>
 
-    {{# Posts plus videos that have a companion article, newest first — App\Tags\Writing.
-        A plain collection:posts would miss the videos, which live in their own collection so
-        reviews and endorsements can keep pointing at them. #}}
-    {{ writing }}
-    <div x-data="postFilter">
-        {{# One pill per topic, one active at a time, click again to clear. Purely
-            client-side — every post is already in the page — so without JS the bar is
-            x-cloak'd away rather than shown broken. Pills come from the taxonomy, not the
-            posts, so an unused term shows an empty state; the taxonomy is curated enough
-            that this is a non-problem. Ordered by how many posts carry the topic, most
-            first, so the pills that matter sit next to "All posts"; `collection="posts"`
-            scopes that count to this collection. #}}
-        <div class="flex flex-wrap items-center gap-2 pb-6" x-cloak>
-            <button type="button"
-                    class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
-                    :class="topic === '' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
-                    @click="topic = ''">
-                All posts
-            </button>
-            {{ taxonomy:topics collection="posts" sort="entries_count:desc|title" }}
-                <button type="button"
-                        class="rounded-full border px-4 py-1 text-sm cursor-pointer transition-colors"
-                        :class="topic === '{{ slug }}' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
-                        @click="topic = topic === '{{ slug }}' ? '' : '{{ slug }}'">
-                    {{ title }}
-                </button>
-            {{ /taxonomy:topics }}
-
-            <span class="text-sm text-gray-500 ml-auto" aria-live="polite" x-show="topic !== ''">
-                <span x-text="shown"></span> of {{ posts | length }} posts
-            </span>
+    {{ content_hub }}
+    {{# Without JS every piece is listed and the bar would do nothing, so it's x-cloak'd away. #}}
+    <div class="sticky top-0 z-10 -mx-4 mb-6 border-b border-gray-200 bg-white/95 px-4 py-3 backdrop-blur" x-cloak>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="inline-flex rounded-full border border-gray-300 p-0.5 text-sm font-semibold" role="group" aria-label="Show">
+                <button type="button" class="rounded-full px-4 py-1 cursor-pointer" :class="show === 'all' ? 'bg-gray-900 text-white' : 'text-gray-600'" :aria-pressed="show === 'all'" @click="show = 'all'">All <span class="font-normal opacity-70">{{ counts:all }}</span></button>
+                <button type="button" class="rounded-full px-4 py-1 cursor-pointer" :class="show === 'read' ? 'bg-gray-900 text-white' : 'text-gray-600'" :aria-pressed="show === 'read'" @click="show = 'read'"><i class="fas fa-file-lines mr-1 text-xs" aria-hidden="true"></i>Read <span class="font-normal opacity-70">{{ counts:read }}</span></button>
+                <button type="button" class="rounded-full px-4 py-1 cursor-pointer" :class="show === 'watch' ? 'bg-gray-900 text-white' : 'text-gray-600'" :aria-pressed="show === 'watch'" @click="show = 'watch'"><i class="fas fa-play mr-1 text-xs" aria-hidden="true"></i>Watch <span class="font-normal opacity-70">{{ counts:watch }}</span></button>
+            </div>
+            {{# The most-used topics; scrolls sideways on a phone rather than wrapping into a wall. #}}
+            <div class="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+                {{ taxonomy:topics sort="entries_count:desc|title" limit="8" }}
+                    <button type="button"
+                            class="shrink-0 rounded-full border px-3 py-1 text-sm cursor-pointer transition-colors"
+                            :class="topic === '{{ slug }}' ? 'bg-teal border-teal text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-teal hover:text-teal'"
+                            :aria-pressed="topic === '{{ slug }}'"
+                            @click="topic = topic === '{{ slug }}' ? '' : '{{ slug }}'">{{ title }}</button>
+                {{ /taxonomy:topics }}
+            </div>
         </div>
-
-        <ul class="list-none p-0 m-0 divide-y divide-gray-200 border-t border-b border-gray-200">
-            {{ posts }}
-                {{# `relative` anchors the stretched title link that makes the whole row
-                    tappable, same as the fringe landing's post list. data-topics carries
-                    raw term slugs for the filter. #}}
-                <li data-topics="{{ topics }}{{ slug }} {{ /topics }}"
-                    class="relative py-4 hover:bg-grey-50 transition-colors">
-                    <p class="mb-1 text-xs text-gray-500 uppercase tracking-wide">
-                        <time datetime="{{ date format="Y-m-d" }}">{{ date format="F j, Y" }}</time>
-                        {{ if is_video }}
-                            <span class="ml-2 inline-block rounded bg-gray-800 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white"><i class="fas fa-play mr-1"></i>Video</span>
-                        {{ /if }}
-                        {{ topics }}
-                            <span class="ml-2 inline-block rounded bg-teal-light bg-opacity-30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-teal-dark">{{ title }}</span>
-                        {{ /topics }}
-                    </p>
-                    <a href="{{ url }}" class="text-lg font-bold text-gray-800 no-underline hover:text-teal before:absolute before:inset-0">{{ title }}</a>
-                    {{ if og_description }}
-                        <p class="text-sm text-gray-600 mt-1 mb-0">{{ og_description }}</p>
-                    {{ /if }}
-                </li>
-            {{ /posts }}
-        </ul>
-
-        <p class="text-gray-500 py-4 mb-0" x-show="topic !== '' && shown === 0" x-cloak>
-            No posts under that topic yet.
-            <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
-                    @click="topic = ''">Show all posts</button>
-        </p>
     </div>
-    {{ /writing }}
 
+    {{# The hubs: running stories with their own page, up top so someone browsing finds the
+        deep dives and not only the newest pieces. Hidden while a topic is picked. #}}
+    {{ if hubs }}
+        <section class="mb-10" data-hub-hubs>
+            <h2 class="mb-3 text-xs font-black uppercase tracking-widest text-gray-500">Coverage of repeat topics in hubs</h2>
+            <ul class="-mx-4 flex list-none gap-3 overflow-x-auto px-4 pb-2 m-0 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
+                {{ hubs }}
+                    <li class="group relative flex w-64 shrink-0 items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 transition-colors hover:border-teal sm:w-auto">
+                        {{ if photo }}
+                            <img src="{{ photo }}" alt="" class="h-14 w-14 shrink-0 rounded-full object-cover" loading="lazy">
+                        {{ else }}
+                            <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-light/40 text-xl font-black text-teal-dark" aria-hidden="true">{{ title | substr:0:1 }}</span>
+                        {{ /if }}
+                        <div class="min-w-0">
+                            {{ if kicker }}<p class="m-0 truncate text-[11px] uppercase tracking-wide text-gray-500">{{ kicker }}</p>{{ /if }}
+                            <a href="{{ url }}" class="block truncate text-base font-bold text-gray-900 no-underline group-hover:text-teal-dark before:absolute before:inset-0">{{ title }}</a>
+                            <p class="m-0 text-xs text-gray-500">{{ total }} stories &rarr;</p>
+                        </div>
+                    </li>
+                {{ /hubs }}
+            </ul>
+        </section>
+    {{ /if }}
+
+    {{ months }}
+        <section class="mb-12" data-hub-month>
+            <h2 class="mb-4 text-xs font-black uppercase tracking-widest text-gray-500">{{ label }}</h2>
+
+            {{# Pieces with words, share image on top. The newest one overall runs wide. #}}
+            {{ if cards }}
+                <div class="grid gap-x-6 gap-y-8 sm:grid-cols-2">
+                    {{ cards }}
+                        <article class="group relative {{ if featured }}sm:col-span-2{{ /if }}"
+                                 data-hub-item data-kind="{{ kind }}" data-video="{{ if has_video }}1{{ else }}0{{ /if }}" data-topics="{{ topics }}">
+                            {{ if image }}
+                                <div class="relative mb-3 overflow-hidden rounded-lg bg-gray-100 aspect-[1200/630]">
+                                    <img src="{{ image }}" alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]">
+                                    {{ if has_video }}
+                                        <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/75 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white"><i class="fas fa-play text-[9px]" aria-hidden="true"></i>Video</span>
+                                    {{ /if }}
+                                </div>
+                            {{ /if }}
+                            <p class="m-0 mb-1 flex flex-wrap items-center gap-x-2 text-xs uppercase tracking-wide text-gray-500">
+                                <time datetime="{{ date format="Y-m-d" }}">{{ date format="M j, Y" }}</time>
+                                {{ if minutes }}<span>&middot; {{ minutes }} min read</span>{{ /if }}
+                                {{ if kind == 'read' && has_video }}<span>&middot; with video</span>{{ /if }}
+                            </p>
+                            <h3 class="m-0 {{ if featured }}text-2xl sm:text-3xl{{ else }}text-lg{{ /if }} font-bold leading-snug">
+                                <a href="{{ url }}" class="text-gray-900 no-underline group-hover:text-teal-dark before:absolute before:inset-0">{{ title }}</a>
+                            </h3>
+                            {{ if summary }}<p class="m-0 mt-1 text-sm leading-relaxed text-gray-600 line-clamp-2 {{ if featured }}sm:text-base{{ /if }}">{{ summary }}</p>{{ /if }}
+                            {{# Above the stretched link, so the hub is its own tap target. #}}
+                            {{ hubs }}
+                                <a href="{{ url }}" class="relative z-[1] mt-2 inline-flex items-center gap-1 rounded-full bg-teal-light/30 px-2.5 py-0.5 text-xs font-semibold text-teal-dark no-underline hover:bg-teal-light/60">Part of the {{ title }} hub &rarr;</a>
+                            {{ /hubs }}
+                        </article>
+                    {{ /cards }}
+                </div>
+            {{ /if }}
+
+            {{# Videos with no article, as a row of their own 9:16 covers. Hidden under Read. #}}
+            {{ if shorts }}
+                <div class="mt-8 first:mt-0" data-hub-shorts>
+                    <p class="mb-2 text-xs font-bold uppercase tracking-widest text-gray-500"><i class="fas fa-play mr-1 text-[9px]" aria-hidden="true"></i>Shorts</p>
+                    <ul class="-mx-4 flex list-none gap-3 overflow-x-auto px-4 pb-2 m-0">
+                        {{ shorts }}
+                            <li class="group relative w-28 shrink-0 sm:w-32" data-hub-item data-kind="watch" data-video="1" data-topics="{{ topics }}">
+                                <div class="mb-1.5 aspect-[9/16] overflow-hidden rounded-lg bg-gray-100">
+                                    {{ if cover }}<img src="{{ cover }}" alt="" loading="lazy" class="h-full w-full object-cover">{{ /if }}
+                                </div>
+                                <a href="{{ url }}" class="block text-xs font-semibold leading-snug text-gray-800 no-underline line-clamp-3 group-hover:text-teal-dark before:absolute before:inset-0">{{ title }}</a>
+                            </li>
+                        {{ /shorts }}
+                    </ul>
+                </div>
+            {{ /if }}
+        </section>
+    {{ /months }}
+    {{ /content_hub }}
+
+    <p class="text-gray-500 py-4 mb-0" x-show="shown === 0" x-cloak>
+        Nothing matches that yet.
+        <button type="button" class="text-teal underline bg-transparent border-0 p-0 cursor-pointer"
+                @click="topic = ''; show = 'all'">Show everything</button>
+    </p>
 </div>
