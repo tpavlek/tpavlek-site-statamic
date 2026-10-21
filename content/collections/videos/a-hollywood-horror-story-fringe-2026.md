@@ -15,6 +15,7 @@ topics:
 - fringe
 full_story:
   - a400141c-a691-4306-81da-c3f1fec48018
+og_description_override: 'Go see this one. Ingrid Garner is absolutely captivating as Vampira. It is so obviously borne out of intense passion (and research).'
 article:
 - type: paragraph
   content:

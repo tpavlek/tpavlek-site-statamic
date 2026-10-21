@@ -187,7 +187,9 @@ class NewsletterTest extends TestCase
         $this->assertStringContainsString('Watch the video', $html);
         $this->assertStringContainsString('https://troypavlek.ca'.$video->url(), $html);
         $this->assertStringContainsString('The companion article.', $html);
-        $this->assertSame('The YouTube description.', $email->previewText());
+        // The inbox preview, like the meta description, comes from the article's opening, not
+        // the YouTube description written for a different audience.
+        $this->assertSame('The companion article.', $email->previewText());
     }
 
     public function test_only_posts_and_videos_with_an_article_can_be_newsletters(): void

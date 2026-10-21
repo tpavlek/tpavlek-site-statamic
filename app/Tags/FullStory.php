@@ -2,6 +2,7 @@
 
 namespace App\Tags;
 
+use App\Support\BardSets;
 use App\Support\Writing;
 use Statamic\Entries\Entry;
 use Statamic\Facades\Entry as EntryFacade;
@@ -44,7 +45,7 @@ class FullStory extends Tags
                 'image' => $story->augmentedValue('poster')?->value()?->url(),
                 'stars' => $stars?->value() ? $stars : null,
                 'year' => $story->value('festival'),
-                'lede' => self::lede($story->value('content')),
+                'lede' => BardSets::paragraphs($story->value('content'))[0] ?? null,
             ];
         }
 
@@ -57,23 +58,5 @@ class FullStory extends Tags
             'summary' => $story->augmentedValue('og_description')?->value(),
             'date' => Writing::date($story),
         ];
-    }
-
-    /** The plain text of a Bard field's first non-empty paragraph. */
-    private static function lede(mixed $content): ?string
-    {
-        foreach ((array) $content as $node) {
-            if (($node['type'] ?? null) !== 'paragraph') {
-                continue;
-            }
-
-            $text = trim(collect($node['content'] ?? [])->pluck('text')->implode(''));
-
-            if ($text !== '') {
-                return $text;
-            }
-        }
-
-        return null;
     }
 }

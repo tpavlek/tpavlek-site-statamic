@@ -14,6 +14,7 @@ og_image: og/book-ban-confirmed.png
 follows_up: c943cf87-5932-4702-8e62-49a22ce23999
 topics:
 - provincial-politics
+og_description_override: 'Danielle Smith confirmed she plans to extend the UCP book ban to public libraries, days after my video breaking the news.'
 article:
 - type: paragraph
   content:

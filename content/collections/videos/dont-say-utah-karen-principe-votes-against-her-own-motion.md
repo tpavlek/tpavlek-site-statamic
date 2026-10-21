@@ -17,6 +17,7 @@ og_image: og/principe-dont-say-utah.png
 topics:
 - municipal-politics
 - environment
+og_description_override: 'Karen Principe proposes a motion so bad that even she can''t support it. Apparently, solar panels are just too colonial.'
 article:
 - type: paragraph
   content:

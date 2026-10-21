@@ -181,5 +181,5 @@ tabs:
             field:
               type: textarea
               display: 'OpenGraph Description'
-              instructions: 'Leave empty to use the start of the description.'
+              instructions: 'Leave empty to use the opening of the article, or the start of the description when there''s no article.'
 title: Video

@@ -15,6 +15,7 @@ og_image: og/principe-least-effective.png
 follows_up: 08f145b1-e84d-4d8c-9de9-7566b329cf1d
 topics:
 - municipal-politics
+og_description_override: 'Followup: Karen Principe is the least effective councillor - what could she have done to be more effective?'
 article:
 - type: set
   attrs:

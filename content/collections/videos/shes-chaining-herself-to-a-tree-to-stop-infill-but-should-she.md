@@ -14,6 +14,7 @@ og_image: og/dovercourt-chaining.png
 topics:
 - infill
 - municipal-politics
+og_description_override: 'A lady in Dovercourt is raising the alarm about infill. But is she ringing the right bell? Spoiler: no, it''s not worth chaining yourself to a tree over this.'
 article:
 - type: set
   attrs:

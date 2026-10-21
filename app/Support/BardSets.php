@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use Statamic\Facades\Entry;
+
 /**
  * Pulls sets of a given type out of a Bard value, in the order they appear.
  *
@@ -34,6 +36,43 @@ class BardSets
         }
 
         return $found;
+    }
+
+    /**
+     * The plain text of each top-level paragraph, in order, skipping empty ones. Sets and
+     * other blocks are left out, so a callout or image ahead of the opening line doesn't
+     * become the summary. An inline review pin stores only the review's id, so it reads as
+     * the show's title; without that, "<pin> is held over" summarised as " is held over".
+     *
+     * @return array<int, string>
+     */
+    public static function paragraphs($nodes): array
+    {
+        $paragraphs = [];
+
+        foreach ((array) $nodes as $node) {
+            if (! is_array($node) || ($node['type'] ?? null) !== 'paragraph') {
+                continue;
+            }
+
+            $text = collect($node['content'] ?? [])->map(function ($inline) {
+                if (($inline['type'] ?? null) === 'btsPin') {
+                    $id = self::first($inline['attrs']['values']['review'] ?? null);
+
+                    return $id ? (Entry::find($id)?->value('title') ?? '') : '';
+                }
+
+                return $inline['text'] ?? '';
+            })->implode('');
+
+            $text = trim(preg_replace('/\s+/', ' ', $text));
+
+            if ($text !== '') {
+                $paragraphs[] = $text;
+            }
+        }
+
+        return $paragraphs;
     }
 
     /**
