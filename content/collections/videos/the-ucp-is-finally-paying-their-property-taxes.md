@@ -8,6 +8,8 @@ twitter: '2027862620196233576'
 facebook: '2326083847901148'
 tiktok: '7612033819587218708'
 instagram: DVUR3OlEjAp
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2026-02-28 00:00'
 thumbnail: videos/covers/gipot-cover.png
 og_image: og/ucp-paying-property-taxes.png

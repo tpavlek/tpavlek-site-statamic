@@ -9,6 +9,8 @@ twitter: '1997383231658774960'
 facebook: '2276107292872085'
 tiktok: '7580823466346024210'
 instagram: DR7t059kmLB
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2025-12-06'
 og_image: og/property-taxes-confusing.png
 follows_up: 926fae86-915d-4c79-94f2-7c2d480eb8db

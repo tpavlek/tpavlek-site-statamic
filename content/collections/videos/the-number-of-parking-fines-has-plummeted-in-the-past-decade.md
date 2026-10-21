@@ -10,6 +10,8 @@ twitter: '2063334361093865698'
 facebook: '28142422635347223'
 tiktok: '7648358617732762900'
 instagram: 'DZQVdaRBiWc'
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2026-06-06 00:00'
 og_image: og/parking-fines.png
 topics:

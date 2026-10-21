@@ -9,6 +9,8 @@ facebook: '1329098735803879'
 tiktok: '7621319096608574741'
 instagram: DWUtryykmlE
 thumbnail: videos/covers/who-pays-for-the-cash-cow-cover.png
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2026-03-25 00:00'
 og_image: og/who-pays-for-the-cash-cow.png
 topics:

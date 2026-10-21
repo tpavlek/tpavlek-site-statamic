@@ -9,6 +9,8 @@ twitter: '2030084141992337779'
 facebook: '783724891444953'
 tiktok: '7614309233256942869'
 instagram: DVkEpRGiX4M
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2026-03-07'
 og_image: og/farkas-cant-do-the-math.png
 follows_up: 09a2671b-9813-47af-8f1e-3e1169190d8e

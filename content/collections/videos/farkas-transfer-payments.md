@@ -9,6 +9,8 @@ twitter: '2029705962706325789'
 facebook: '1610420880296187'
 tiktok: '7613921277430091028'
 instagram: DVhYYExgTM5
+hubs:
+  - 95b38f7f-196a-4483-8bf2-d8b3b8f7685a
 publish_date: '2026-03-05'
 og_image: og/farkas-transfer-payments.png
 topics:
