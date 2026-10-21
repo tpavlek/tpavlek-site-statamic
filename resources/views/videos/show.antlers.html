@@ -12,9 +12,11 @@
     {{ if article }}
         <article class="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-x-12 lg:items-start">
             <div class="lg:col-span-2">
-                {{# The same header as a post, since this is read as one. The dek is only the
-                    override: the YouTube description usually opens the way the article does. #}}
-                {{ partial:posts/article-header :header_date="publish_date" :dek="og_description_override" is_video="true" }}
+                {{# The same header as a post, since this is read as one, but with no dek: the
+                    article's opening line already gets the big lede style, so a subhead above it
+                    says the same thing twice. og_description_override is for search and shares
+                    only (it's the meta description). #}}
+                {{ partial:posts/article-header :header_date="publish_date" is_video="true" }}
             </div>
 
             {{# Narrower than the plain layout's on phones: a full-width 9:16 player is taller
