@@ -67,9 +67,14 @@
                         {{ if publish_date }}
                             <p class="text-sm text-gray-400 uppercase tracking-widest">{{ publish_date format="F j, Y" }}</p>
                         {{ /if }}
-                        {{ category }}
-                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
-                        {{ /category }}
+                        {{# The guard matters: an empty pair tag renders its contents once against
+                            the page's own context, so every uncategorised video showed its own
+                            title as a tag. #}}
+                        {{ if category }}
+                            {{ category }}
+                                <span class="bg-gray-100 text-gray-600 text-xs font-semibold uppercase tracking-wide py-1 px-3 rounded-full">{{ title }}</span>
+                            {{ /category }}
+                        {{ /if }}
                     </div>
                 </div>
 
