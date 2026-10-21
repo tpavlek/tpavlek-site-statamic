@@ -10,6 +10,11 @@ thumbnail: videos/covers/the-taint-brothers-cover.png
 publish_date: '2026-08-20 00:00'
 category:
   - fringe-2026
+og_image: og/taint-brothers.png
+topics:
+- fringe
+full_story:
+  - e7d92b1e-59e1-4a48-a42c-1c357bbe2b44
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1787255682
 ---
