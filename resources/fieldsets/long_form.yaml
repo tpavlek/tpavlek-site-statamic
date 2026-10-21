@@ -325,6 +325,41 @@ fields:
                       tinted: Tinted
                       highlight: Highlight
                     instructions: 'Highlight is a tilted teal card with the heading as a tab, for a note that should grab you before the story, like a "worth revisiting" intro.'
+            viewer_question:
+              display: 'Viewer question'
+              icon: mail-chat-bubble-text
+              instructions: 'A question a viewer sent in (email, comment, DM) that the piece answers. Not a quote from a source: use Quoted source for those.'
+              fields:
+                -
+                  handle: question
+                  field:
+                    type: textarea
+                    display: Question
+                    instructions: 'Markdown. As they wrote it.'
+                    validate:
+                      - required
+                -
+                  handle: name
+                  field:
+                    type: text
+                    display: From
+                    instructions: 'Optional. A first name, or leave empty for "a viewer".'
+                -
+                  handle: via
+                  field:
+                    type: button_group
+                    display: Via
+                    default: email
+                    options:
+                      email: Email
+                      comment: Comment
+                      dm: DM
+                -
+                  handle: link
+                  field:
+                    type: text
+                    display: Link
+                    instructions: 'Optional. The public comment, if there is one.'
             source_quote:
               display: 'Quoted source'
               icon: text-quote

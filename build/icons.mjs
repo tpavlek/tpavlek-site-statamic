@@ -34,7 +34,7 @@ const svgs = resolve(root, 'node_modules/@fortawesome/fontawesome-free/svgs')
  */
 const ICONS = {
   brands: ['bluesky', 'facebook', 'instagram', 'linkedin', 'reddit', 'tiktok', 'twitter', 'youtube'],
-  solid: ['envelope', 'globe', 'history', 'home', 'image', 'link', 'location-dot', 'pencil', 'play', 'rss'],
+  solid: ['comment', 'comment-dots', 'envelope', 'file-lines', 'globe', 'history', 'home', 'image', 'link', 'location-dot', 'pencil', 'play', 'rss'],
 }
 
 /**

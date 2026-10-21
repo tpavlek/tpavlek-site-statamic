@@ -1,0 +1,16 @@
+{{# A question a viewer sent in, which the piece then answers. Deliberately not a speech
+    bubble: a bubble says "this person said this", and a source's words are evidence. This
+    looks like what it is, a message in Troy's inbox: a sender row, then the question as
+    they wrote it, on a sheet set slightly askew like the document card. #}}
+{{ asker = name ?: 'A viewer' }}
+<figure class="viewer-question">
+    <figcaption class="viewer-question__head">
+        <span class="viewer-question__avatar" aria-hidden="true">{{ asker | substr:0:1 }}</span>
+        <span class="viewer-question__who">
+            <span class="viewer-question__name">{{ if link }}<a href="{{ link }}">{{ asker }}</a>{{ else }}{{ asker }}{{ /if }}</span>
+            <span class="viewer-question__via">{{ via == 'comment' ? 'commented' : (via == 'dm' ? 'to Troy · by DM' : 'to Troy · by email') }}</span>
+        </span>
+        <i class="viewer-question__icon fas {{ via == 'comment' ? 'fa-comment' : (via == 'dm' ? 'fa-comment-dots' : 'fa-envelope') }}" aria-hidden="true"></i>
+    </figcaption>
+    <blockquote class="viewer-question__text">{{ question | markdown }}</blockquote>
+</figure>

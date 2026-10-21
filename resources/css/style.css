@@ -950,6 +950,60 @@ h1 {
     @apply mb-0;
 }
 
+/* Viewer question: a message in the inbox, printed out. A white sheet askew like the
+   document card, a sender row (initial, name, how it came in) over a hairline, and the
+   question in plain reading text. Quiet on purpose: the answer is the article. */
+.viewer-question {
+    @apply my-10 mx-auto max-w-[34rem] bg-white px-6 py-5 sm:px-7;
+    border: 1px solid #e5e2da;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 8px 20px rgba(0, 0, 0, .08);
+    transform: rotate(-.6deg);
+}
+
+.content .viewer-question__head {
+    @apply m-0 mb-4 flex items-center gap-3 pb-3;
+    border-bottom: 1px solid #ece9e2;
+}
+
+.viewer-question__avatar {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold uppercase;
+    background: #e8f2f1;
+    color: #00706e;
+}
+
+.viewer-question__who {
+    @apply flex min-w-0 flex-1 flex-col leading-tight;
+}
+
+.viewer-question__name {
+    @apply text-sm font-bold text-gray-900;
+}
+
+.content .viewer-question__name a {
+    @apply text-gray-900;
+}
+
+.viewer-question__via {
+    @apply text-xs text-gray-500;
+}
+
+.viewer-question__icon {
+    @apply text-sm text-gray-400;
+}
+
+.content .viewer-question__text {
+    @apply m-0 border-0 p-0 text-lg font-normal not-italic leading-relaxed text-gray-900;
+}
+
+.content .viewer-question__text p {
+    @apply m-0;
+}
+
+.content .viewer-question__text p + p {
+    @apply mt-3;
+}
+
 /* Callout style "highlight": a soft teal card knocked slightly off square, with a
    hard offset shadow and the heading as a black tab pinned over its top edge. */
 .story-callout--highlight {

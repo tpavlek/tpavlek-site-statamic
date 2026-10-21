@@ -62,6 +62,12 @@
     {{ text | markdown }}
 {{ /if }}
 
+{{ if type == "viewer_question" }}
+    <p class="meta">{{ via == 'comment' ? 'A viewer comment' : (via == 'dm' ? 'A viewer DM' : 'A viewer email') }}</p>
+    <blockquote class="pull">{{ question | markdown }}</blockquote>
+    <p class="meta">{{ name ?: 'A viewer' }}</p>
+{{ /if }}
+
 {{ if type == "pull_quote" }}
     <blockquote class="pull">&ldquo;{{ text }}&rdquo;</blockquote>
 {{ /if }}
