@@ -51,6 +51,7 @@ foreach ([
     'danielle-smiths-ucp-is-removing-every-code-of-conduct-for-municipal-elected-offi' => 'ucp-removes-municipal-codes-of-conduct',
     'drinking-on-the-job-and-campaigning-for-trump-are-just-two-items-on-devin-dreeshens-resume' => 'drinking-on-the-job-and-campaigning-for-trump-devin-dreeshens-resume',
     'why-do-our-taxes-go-up-to-support-growth' => 'why-growth-increases-edmontons-taxes',
+    'the-ucp-education-minister-is-starting-to-panic' => 'the-ucp-education-minister-is-starting-to-panic-about-his-recall-petition',
     'edmonton-massively-revamped-its-zoning-and-now-housing-is-getting-more-affordabl' => 'zoning-is-making-housing-more-affordable',
     'if-edmontonians-are-upset-about-the-direction-of-the-city-why-were-all-the-incum' => 'why-were-the-incumbents-re-elected',
     'in-collaboration-with-yegarts-there-is-new-musical-furniture-at-the-mill-woods-l' => 'mill-woods-musical-furniture',
