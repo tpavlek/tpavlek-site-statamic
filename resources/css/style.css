@@ -1668,6 +1668,74 @@ a.hub-more__head {
     @apply mt-3;
 }
 
+/* An email (posts/_story-email): a mail-client card with the envelope, a blue label pill,
+   the subject in bold over a rule, and the body at reading size. **bold** in the body is a
+   highlighter stroke, like the clippings. */
+.story-email {
+    @apply my-10 rounded-xl border border-gray-200 bg-white px-5 py-5 sm:px-7 sm:py-6 shadow-sm;
+}
+
+.content .story-email__head {
+    @apply flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-200;
+}
+
+.content .story-email__kind {
+    @apply inline-flex items-center gap-2 text-lg font-bold text-gray-900;
+}
+
+.story-email__icon {
+    @apply h-6 w-6;
+}
+
+.content .story-email__label {
+    @apply rounded-full bg-blue-800 px-3 py-0.5 text-xs font-bold uppercase tracking-wide text-white;
+}
+
+.content .story-email__meta {
+    @apply py-3 border-b border-gray-200;
+}
+
+.content .story-email__meta p {
+    @apply m-0;
+}
+
+.content .story-email__subject-label {
+    @apply text-xs text-gray-500;
+}
+
+.content .story-email__subject {
+    @apply text-lg font-bold leading-snug text-gray-900;
+}
+
+.content .story-email__line {
+    @apply mt-1 text-sm text-gray-700;
+}
+
+.content .story-email__line span {
+    @apply mr-1 text-gray-500;
+}
+
+.content .story-email__date {
+    @apply mt-1 text-sm text-gray-500;
+}
+
+.content .story-email__body {
+    @apply pt-3 text-gray-900;
+}
+
+.content .story-email__body p {
+    @apply my-0 leading-relaxed;
+}
+
+.content .story-email__body p + p {
+    @apply mt-3;
+}
+
+.content .story-email__body strong {
+    @apply font-semibold text-gray-900;
+    background: linear-gradient(transparent 55%, #fde68a 55%);
+}
+
 /* A quote clipped from a news story (posts/_story-source-quote with a `headline`): the
    headline in a newspaper serif, the passage under a rule with **bold** as a highlighter
    stroke, and the outlet's logo in the corner. */

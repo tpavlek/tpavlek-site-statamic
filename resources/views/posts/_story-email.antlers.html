@@ -1,0 +1,22 @@
+{{# An email shown as an email (the `email_message` set): a header with the envelope and an
+    optional label, the subject, who sent it to whom and when, then the body. For leaked or
+    internal emails, where a screenshot would be unreadable on a phone and unsearchable. #}}
+<figure class="story-email">
+    <header class="story-email__head">
+        <span class="story-email__kind">
+            <svg class="story-email__icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            Email
+        </span>
+        {{ if label }}<span class="story-email__label">{{ label }}</span>{{ /if }}
+    </header>
+    <div class="story-email__meta">
+        {{ if subject }}
+            <p class="story-email__subject-label">Subject</p>
+            <p class="story-email__subject">{{ subject }}</p>
+        {{ /if }}
+        {{ if from }}<p class="story-email__line"><span>From</span> {{ from }}</p>{{ /if }}
+        {{ if to }}<p class="story-email__line"><span>To</span> {{ to }}</p>{{ /if }}
+        {{ if sent }}<p class="story-email__date"><time datetime="{{ sent format='Y-m-d' }}">{{ sent format='D, M j, Y' }}</time></p>{{ /if }}
+    </div>
+    <div class="story-email__body">{{ body | markdown }}</div>
+</figure>

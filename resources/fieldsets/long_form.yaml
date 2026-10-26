@@ -444,6 +444,49 @@ fields:
                     display: Published
                     width: 50
                     instructions: 'Optional. The article''s date.'
+            email_message:
+              display: Email
+              icon: mail
+              instructions: 'An email as an email: subject, sender, date and body. For leaked or internal emails, and replies to my questions.'
+              fields:
+                -
+                  handle: subject
+                  field:
+                    type: text
+                    display: Subject
+                -
+                  handle: label
+                  field:
+                    type: text
+                    display: Label
+                    width: 50
+                    instructions: 'Optional tag in the corner, e.g. "Internal · City of Edmonton".'
+                -
+                  handle: sent
+                  field:
+                    type: date
+                    display: Sent
+                    width: 50
+                -
+                  handle: from
+                  field:
+                    type: text
+                    display: From
+                    width: 50
+                    instructions: 'Optional. Leave blank to keep the sender anonymous.'
+                -
+                  handle: to
+                  field:
+                    type: text
+                    display: To
+                    width: 50
+                    instructions: 'Optional.'
+                -
+                  handle: body
+                  field:
+                    type: textarea
+                    display: Body
+                    instructions: 'Markdown, so **bold** can mark the part that matters.'
             motion:
               display: 'Council motion'
               icon: text-quote
