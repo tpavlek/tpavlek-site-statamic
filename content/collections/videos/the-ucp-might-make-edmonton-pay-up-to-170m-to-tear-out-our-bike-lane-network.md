@@ -10,6 +10,8 @@ facebook: '1428314156145755'
 hubs:
   - c2556b8c-142a-421c-a627-4aa30c8bab5a
 publish_date: '2026-10-26 00:00'
+newsletter_broadcast_id: 26625524
+newsletter_drafted_at: '2026-10-26T16:41:11-06:00'
 og_image: og/bike-lane-cost.png
 follows_up: b39eadec-4e0e-4c6b-b5fa-717d56d2d34c
 topics:
@@ -50,18 +52,7 @@ article:
 - type: paragraph
   content:
   - type: text
-    text: 'Most of it is one corridor, '
-  - type: text
-    marks:
-    - type: link
-      attrs:
-        href: https://engaged.edmonton.ca/132avenuephase1
-        rel: null
-        target: null
-        title: null
-    text: 132 Ave
-  - type: text
-    text: ', where we have built one of the nicest neighbourhood streetscapes that Edmonton has ever seen.'
+    text: Most of it is one corridor, 132 Ave, where we have built one of the nicest neighbourhood streetscapes that Edmonton has ever seen.
 - type: set
   attrs:
     id: pfnllugw
