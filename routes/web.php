@@ -62,6 +62,7 @@ foreach ([
     'tim-cartmell-has-raised-as-much-money-as-every-candidate-outside-his-party-combi' => 'tim-cartmell-raised-as-much-as-everyone-combined',
     'vassy-kapelos-tears-a-strip-off-of-ucp-education-minister-demetrios-nicolaides-i' => 'vassy-kapelos-vs-demetrios-nicolaides',
     'while-edmonton-funds-day-use-shelter-spaces-the-ucp-calls-houselessness-a-fake-n' => 'ucp-calls-houselessness-a-fake-crisis',
+    'thu-parmar-wins-election-after-recount-shocking' => 'thu-parmar-wins-ward-sipiwiyiniwak-after-a-recount',
 ] as $old => $new) {
     Route::redirect("/video/{$old}", "/video/{$new}", 301);
 }
