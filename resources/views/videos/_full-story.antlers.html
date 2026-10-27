@@ -3,7 +3,7 @@
     another listing. A review leads with its stars and opening line, so the verdict is
     on this page. The title's link is stretched over the whole card. See App\Tags\FullStory. #}}
 {{ full_story }}
-    <aside class="story-callout story-callout--highlight full-story{{ if is_review }} full-story--review{{ /if }}">
+    <aside class="story-callout story-callout--highlight full-story{{ if is_review }} full-story--review{{ /if }}{{ if is_video }} full-story--video{{ /if }}">
         <p class="story-callout__title">Get the full story</p>
         <div class="story-callout__body full-story__body">
             {{ if image }}<img src="{{ image }}" alt="" class="full-story__image" loading="lazy">{{ /if }}

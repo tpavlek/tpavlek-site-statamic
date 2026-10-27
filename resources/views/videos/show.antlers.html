@@ -86,8 +86,9 @@
 
                 {{# Content. Left out when a post or review tells the full story: the
                     description is the YouTube caption, a thinner version of what the card
-                    below says. It still serves as the meta description. #}}
-                {{ if content && !full_story }}
+                    below says. It still serves as the meta description. Kept when the full
+                    story is another video, which says nothing at length either. #}}
+                {{ if content && (!full_story || full_story:collection:handle == 'videos') }}
                     <div class="content text-gray-800 mb-6">{{ content }}</div>
                 {{ /if }}
 

@@ -9,8 +9,8 @@ use Statamic\Facades\Entry as EntryFacade;
 use Statamic\Tags\Tags;
 
 /**
- * The post, Fringe review or endorsement that tells a video's story at length, for the
- * video page.
+ * The post, Fringe review, endorsement or other video that tells a video's story at
+ * length, for the video page.
  *
  *     {{ full_story }} … {{ /full_story }}
  *
@@ -20,7 +20,7 @@ use Statamic\Tags\Tags;
  * closes it. Chosen by hand, not inferred from a post's `related_videos`, a review's
  * `companion_videos` or an endorsement's `videos`: plenty of those are only extra watching.
  *
- * `title`, `url`, `image`, `cta` and `is_review`. A post or endorsement adds `summary`; a
+ * `title`, `url`, `image`, `cta`, `is_review` and `is_video` (a portrait cover for the thumb). A post or endorsement adds `summary`; a
  * review adds `stars`, `year` and `lede` (its opening paragraph), shown on the card so a
  * reader gets the verdict without clicking through. An empty string, not an empty array,
  * when there's no such entry (see Hub::for() for why).
@@ -41,6 +41,7 @@ class FullStory extends Tags
 
             return [
                 'is_review' => true,
+                'is_video' => false,
                 'title' => $story->value('title'),
                 'url' => $story->url(),
                 'cta' => 'Read the review',
@@ -58,6 +59,7 @@ class FullStory extends Tags
 
             return [
                 'is_review' => false,
+                'is_video' => false,
                 'title' => $ward ? "{$story->value('title')} for {$ward->value('title')}" : $story->value('title'),
                 'url' => $story->url(),
                 'cta' => 'Read my endorsement',
@@ -66,8 +68,26 @@ class FullStory extends Tags
             ];
         }
 
+        // Another video: a meme pointing at the news video it riffs on. Its share card as the
+        // thumb, as a post's, or its 9:16 cover when it has none; and its article's opening
+        // line, if it has one, as the summary.
+        if ($story->collectionHandle() === 'videos') {
+            $card = $story->augmentedValue('og_image')?->value()?->url();
+
+            return [
+                'is_review' => false,
+                'is_video' => ! $card,
+                'title' => $story->value('title'),
+                'url' => $story->url(),
+                'cta' => $story->value('article') ? 'Read the story' : 'Watch the video',
+                'image' => $card ?? $story->augmentedValue('thumbnail')?->value()?->url(),
+                'summary' => BardSets::paragraphs($story->value('article'))[0] ?? null,
+            ];
+        }
+
         return [
             'is_review' => false,
+            'is_video' => false,
             'title' => $story->value('title'),
             'url' => $story->url(),
             'cta' => 'Read the post',

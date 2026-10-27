@@ -132,10 +132,11 @@ tabs:
                 - posts
                 - fringe_reviews
                 - endorsements
+                - videos
               max_items: 1
               mode: select
               display: 'Full story'
-              instructions: 'A post, Fringe review or endorsement that tells this video''s story at length. The video page sends readers there with a "Get the full story" card (a review shows its stars and opening line on it). Usually that means leaving the article empty; when the video adds things the post or review doesn''t, keep the article and the card closes it, in place of a "my full review" line. Not for ones that are only related: list those videos under the post''s Related videos or the review''s companion videos instead.'
+              instructions: 'A post, Fringe review or endorsement that tells this video''s story at length. The video page sends readers there with a "Get the full story" card (a review shows its stars and opening line on it). Usually that means leaving the article empty; when the video adds things the post or review doesn''t, keep the article and the card closes it, in place of a "my full review" line. Not for ones that are only related: list those videos under the post''s Related videos or the review''s companion videos instead. A video works too, for a meme whose news is another video (the meme keeps its description).'
           -
             handle: hubs
             field:

@@ -1107,6 +1107,10 @@ h1 {
     @apply w-28 aspect-square;
 }
 
+.full-story--video .full-story__image {
+    @apply w-20 aspect-[9/16];
+}
+
 .content .full-story .full-story__body p.full-story__stars {
     @apply mb-2 text-2xl leading-none tracking-wider;
     color: #111;
@@ -1985,4 +1989,10 @@ a.hub-more__head {
    the text that follows. */
 .content .video-embed {
     @apply mt-6 mb-12;
+}
+
+/* `.content img:not(...)` gives every image in prose my-12, which turned a portrait thumb
+   into a card twice its height. */
+.content .full-story--video .full-story__image {
+    @apply my-0;
 }
