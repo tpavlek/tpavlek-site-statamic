@@ -13,7 +13,10 @@
         <meta name="csrf-token" content="{{ csrf_token }}">
         {{# Pages that shouldn't rank set `noindex` — e.g. the ticket-availability report, which
             is our own reading of the festival's box office and has no business in search. #}}
-        {{ if noindex }}<meta name="robots" content="noindex, nofollow">{{ /if }}
+        {{# Everything else opts in to the large image preview. Without it Google Discover,
+            where news-style pieces mostly get found, shows a thumbnail at best, and the share
+            cards are 1200 wide precisely so they can run full-width there. #}}
+        {{ if noindex }}<meta name="robots" content="noindex, nofollow">{{ else }}<meta name="robots" content="max-image-preview:large">{{ /if }}
         {{# Self-referential unless a page names its own canonical. The Fringe reviews index
             does: the current festival answers on both /fringe/reviews and /fringe/{year}/reviews,
             and the evergreen URL is the one that should rank. #}}
@@ -48,6 +51,12 @@
         {{# Posts compute this to `article`, which is what unlocks the byline and published
             date in a share preview. Everything else is a website. #}}
         <meta property="og:type" content="{{ og_type ?? 'website' }}">
+        {{# The dates an article card shows, and that crawlers read when deciding how fresh a
+            piece is. Videos keep theirs in publish_date; posts use the entry date. #}}
+        {{ if og_type == 'article' }}
+            <meta property="article:published_time" content="{{ (publish_date ?? date) | format('c') }}">
+            <meta property="article:author" content="https://troypavlek.ca">
+        {{ /if }}
         {{# Discord and Slack print this above the title; without it a shared link is
             attributed to nobody. #}}
         <meta property="og:site_name" content="{{ settings:site_name | entities }}">

@@ -50,12 +50,27 @@ class PostSchema
     }
 
     /** Shared with VideoSchema, so a companion article is credited the same way. */
+    /**
+     * sameAs is what ties this site to the channels the videos actually live on. Without it
+     * the author is just a name; with it, search engines and AI models can treat the site,
+     * the YouTube channel and the socials as one person, and credit a quoted video to him.
+     * Same list as the footer.
+     */
     public static function author(): array
     {
         return [
             '@type' => 'Person',
             'name' => 'Troy Pavlek',
             'url' => 'https://troypavlek.ca',
+            'sameAs' => [
+                'https://www.youtube.com/@troypavlek',
+                'https://www.tiktok.com/@troypavlek',
+                'https://www.instagram.com/troypavlek',
+                'https://www.facebook.com/troypavlek',
+                'https://bsky.app/profile/troypavlek.ca',
+                'https://x.com/troypavlek',
+                'https://www.reddit.com/user/troypavlek',
+            ],
         ];
     }
 

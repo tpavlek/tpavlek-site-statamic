@@ -32,7 +32,7 @@ class VideoSchema
                 'url' => $entry->absoluteUrl(),
                 'mainEntityOfPage' => $entry->absoluteUrl(),
                 'description' => self::description($entry),
-                'image' => $video['thumbnailUrl'] ?? null,
+                'image' => self::images($entry, $video['thumbnailUrl'] ?? null),
                 'datePublished' => Writing::date($entry)?->toIso8601String(),
                 'dateModified' => self::dateModified($entry),
                 'author' => PostSchema::author(),
@@ -113,6 +113,20 @@ class VideoSchema
         $youtube = $entry->value('youtube');
 
         return $youtube ? "https://i.ytimg.com/vi/{$youtube}/hqdefault.jpg" : null;
+    }
+
+    /**
+     * The share card first, then the cover. The cover is 9:16, and Google's article and
+     * Discover surfaces want a wide image at least 1200px across; with only the cover, an
+     * article had no image they could use. The cover stays in the list for surfaces that
+     * crop square or tall.
+     */
+    private static function images($entry, ?string $cover): array
+    {
+        $card = $entry->augmentedValue('og_image')?->value();
+        $card = is_iterable($card) ? collect($card)->first() : $card;
+
+        return array_values(array_unique(array_filter([$card?->absoluteUrl(), $cover])));
     }
 
     private static function dateModified($entry): ?string
