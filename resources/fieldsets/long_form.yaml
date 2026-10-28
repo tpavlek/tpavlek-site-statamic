@@ -644,6 +644,12 @@ fields:
                     display: 'Final mark'
                     default: '? ? ?'
                     instructions: 'Separate the characters with spaces; each one is tilted on its own.'
+                -
+                  handle: dates
+                  field:
+                    type: toggle
+                    display: 'Dates, not years'
+                    instructions: 'Widens the label column for labels like "Feb 17".'
         dessert_people:
           display: 'Dessert People'
           sets:

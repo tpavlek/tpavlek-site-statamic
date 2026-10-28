@@ -1,7 +1,7 @@
 {{# Dated entries down a vertical line. The optional final entry is the one that never
     arrived: a dashed line, a hollow marker, and an oversized mark (question marks by
     default) where the event should be. #}}
-<ol class="story-timeline list-none">
+<ol class="story-timeline{{ if dates }} story-timeline--dates{{ /if }} list-none">
     {{ entries }}
         <li class="story-timeline__entry">
             <span class="story-timeline__year">{{ year }}</span>

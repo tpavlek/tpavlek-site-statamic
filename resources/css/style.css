@@ -1133,25 +1133,31 @@ h1 {
    `.content img:not(...)`'s my-12. */
 .post-content ol.story-timeline {
     @apply my-10 ml-0 p-0;
+    --tl-label: 4rem;
+}
+
+/* Labels like "Feb 17" instead of a bare year need a wider column. */
+.post-content ol.story-timeline--dates {
+    --tl-label: 5.25rem;
 }
 
 /* The line is each entry's left border, so it always reaches the next entry no
    matter how tall this one is. The year sits in a fixed column left of it. */
 .story-timeline__entry {
     @apply relative m-0 grid gap-x-5 pb-8;
-    grid-template-columns: 4rem 1fr;
+    grid-template-columns: var(--tl-label) 1fr;
 }
 
 .story-timeline__entry::before {
     content: '';
     @apply absolute top-2 bottom-0 border-l-2 border-gray-300;
-    left: calc(4rem + 0.625rem);
+    left: calc(var(--tl-label) + 0.625rem);
 }
 
 .story-timeline__entry::after {
     content: '';
     @apply absolute top-1.5 w-3 h-3 rounded-full bg-teal-dark;
-    left: calc(4rem + 0.625rem - 5px);
+    left: calc(var(--tl-label) + 0.625rem - 5px);
 }
 
 .story-timeline__year {
