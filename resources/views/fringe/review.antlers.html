@@ -135,8 +135,12 @@
 
             The stars guard matches the badge branch order: a reviewed show can still carry
             recommendation: watchlist from before it was seen (Merkin Sisters does), and a
-            card claiming "I haven't seen it yet" above a starred review would be nonsense. #}}
+            card claiming "I haven't seen it yet" above a starred review would be nonsense.
+
+            nocache: the page itself is statically cached until the next deploy, but whether
+            the booking is still upcoming changes with the clock. #}}
         {{ if recommendation:value == "watchlist" && !stars }}
+            {{ nocache }}
             {{ fringe:agenda_slot }}
                 <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm leading-relaxed text-blue-900 mb-4">
                     <p class="m-0">This show is on my watchlist &mdash; I haven't seen it yet.
@@ -148,6 +152,7 @@
                     </p>
                 </div>
             {{ /fringe:agenda_slot }}
+            {{ /nocache }}
         {{ /if }}
         {{ if content }}
             {{ content }}
@@ -194,7 +199,12 @@
         scraped data for this show; the {{ fringe:availability }} tag applies the same
         server-side auth gate as the sold-out page, so seat counts and percentages reach the
         template only for a logged-in viewer. The showtimes and legend come from the same
-        shared partials the sold-out list uses. #}}
+        shared partials the sold-out list uses.
+
+        nocache, for both of those reasons: the page is statically cached until the next
+        deploy, while availability is re-scraped between deploys, and a cached copy must
+        never carry the seat counts a logged-in render would put in it. #}}
+    {{ nocache }}
     {{ fringe:availability }}
         <section class="mt-8 rounded-lg border border-gray-200 overflow-hidden text-base"
             {{ if reveal_numbers }}x-data="showRefresh('{{ event_id }}')"{{ /if }}>
@@ -255,6 +265,7 @@
             </div>
         </section>
     {{ /fringe:availability }}
+    {{ /nocache }}
 
     {{# Notes about the room rather than the show, written once on the venue and appended to
         every review playing there. Only renders when that venue has notes.

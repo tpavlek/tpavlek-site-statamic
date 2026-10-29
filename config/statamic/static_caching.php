@@ -98,9 +98,13 @@ return [
     | parameters separately. This is useful for pages with pagination.
     | If you'd like to ignore the query strings, you may do so.
     |
+    | Ignored here: nothing Statamic renders reads the query string. The content
+    | hub's ?topic= filter is applied by site.js, and the rest are utm_/fbclid
+    | noise that would otherwise each write another copy of the same page.
+    |
     */
 
-    'ignore_query_strings' => false,
+    'ignore_query_strings' => true,
 
     'allowed_query_strings' => [
         //

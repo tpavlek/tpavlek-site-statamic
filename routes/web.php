@@ -6,6 +6,13 @@ use App\Http\Controllers\FringeController;
 use App\Http\Controllers\YegvoteController;
 use App\Http\Controllers\YouTubeOAuthController;
 use Illuminate\Support\Facades\Route;
+use Statamic\StaticCaching\Middleware\Cache as StaticCache;
+
+/*
+| StaticCache on a controller route opts it into Statamic's static cache, which otherwise only
+| covers entries and Route::statamic pages. Only for pages that are pure content: anything that
+| reads the clock, the login or live scraped data stays off it. See App\Console\Commands\StaticBake.
+*/
 
 // Route::statamic('example', 'example-view', [
 //    'title' => 'Example'
@@ -111,8 +118,10 @@ Route::get('/fringe/reviews/feed.xml', [\App\Http\Controllers\FeedController::cl
 | the entry — see App\Fringe\Artists — so these are controller routes and the collection has
 | no route of its own. An artist who doesn't qualify 404s.
 */
-Route::get('/fringe/artists', [\App\Http\Controllers\FringeArtistController::class, 'index'])->name('fringe.artists');
-Route::get('/fringe/artists/{slug}', [\App\Http\Controllers\FringeArtistController::class, 'show'])->name('fringe.artist');
+Route::get('/fringe/artists', [\App\Http\Controllers\FringeArtistController::class, 'index'])->name('fringe.artists')
+    ->middleware(StaticCache::class);
+Route::get('/fringe/artists/{slug}', [\App\Http\Controllers\FringeArtistController::class, 'show'])->name('fringe.artist')
+    ->middleware(StaticCache::class);
 
 // Troy's personal festival schedule, pulled from his public Fringe Google Calendar.
 Route::get('/fringe/agenda', [ FringeController::class, 'agenda' ])->name('fringe.agenda');
@@ -148,8 +157,10 @@ Route::post('/fringe/ticket-availability/refresh/finish', [ FringeController::cl
 // with a specific person, not for the public. Gate and noindex live in the controller.
 Route::get('/fringe/availability.json', [ FringeController::class, 'availabilityExport' ]);
 
+// Not statically cached: the current festival's index carries live availability lights, which
+// change with every scrape and with the clock. Past years' indexes are settled, so they are.
 Route::get('/fringe/reviews', [ FringeController::class, 'currentYear' ]);
-Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year);
+Route::get('/fringe/{year}/reviews', [ FringeController::class, 'year' ])->where($year)->middleware(StaticCache::class);
 
 // There has never been a festival landing page at /fringe/{year}, but it's the obvious
 // thing to type, and a 404 is a bad answer to a good guess. Permanent because it's true
@@ -212,8 +223,8 @@ Route::get('/fringe-{year}', fn () => redirect(FestivalUrls::EVERGREEN, 301))->w
 
 Route::get('/fringe-reviews/{year}/{slug}/share-card', fn (string $year, string $slug) => redirect("/fringe/{$year}/reviews/{$slug}/share-card", 301))->where($year);
 Route::get('/fringe-reviews/{year}/{slug}', fn (string $year, string $slug) => redirect("/fringe/{$year}/reviews/{$slug}", 301))->where($year);
-Route::get('/yegvote-2025', [ YegvoteController::class, 'yegvote_2025' ]);
-Route::get('/yegvote-2025/endorsements', [ EndorsementsController::class, 'currentYear' ]);
+Route::get('/yegvote-2025', [ YegvoteController::class, 'yegvote_2025' ])->middleware(StaticCache::class);
+Route::get('/yegvote-2025/endorsements', [ EndorsementsController::class, 'currentYear' ])->middleware(StaticCache::class);
 //Route::get('/fringe/{entry}/social', [ FringeController::class, 'generateSocialImage' ]);
 
 Route::get('/youtube_oauth_handler', [YouTubeOAuthController::class, 'handle']);
