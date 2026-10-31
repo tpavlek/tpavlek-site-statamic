@@ -20,8 +20,9 @@ use Symfony\Component\Process\Process;
  * deployed image ships with the whole site already rendered and nginx serves it without
  * touching PHP.
  *
- * Why it matters: a page render peaks at 60–100MB of PHP memory, and Laravel Cloud sizes the
- * FPM pool assuming 30MB per worker. A crawler walking uncached pages fills every worker at
+ * Why it matters: Laravel Cloud runs 17 FPM workers on the 512MB instance, a warm render
+ * reserves 20–40MB each, and about 200MB is already taken before any request (opcache, nginx,
+ * Cloud's agents). A crawler walking uncached pages on a fractional CPU fills every worker at
  * once and the instance runs out of memory (2026-10-29). Pages already on disk never reach
  * a worker.
  *
