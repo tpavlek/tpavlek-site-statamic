@@ -90,3 +90,171 @@
 {{ if type == "progress" }}
     <p class="meta">{{ progress }} of {{ total }} recipes baked</p>
 {{ /if }}
+
+{{# The story sets (see posts/_story-*). Each keeps what it says and drops what it does:
+    tilts, stamps' rotation, hover names and stickers have no email equivalent, so a
+    speech bubble is a photo beside a grey box, a clipping is a bordered box with its
+    headline, and a vote lists names rather than faces. A photo beside text is a table
+    row, the only side-by-side layout every client honours. #}}
+{{ if type == "source_quote" }}
+    {{ if headline }}
+        <div class="clip">
+            <p class="clip-headline">{{ if source_url }}<a href="{{ source_url }}">{{ headline }}</a>{{ else }}{{ headline }}{{ /if }}</p>
+            {{ if byline || published }}<p class="clip-meta">{{ byline }}{{ if byline && published }} &middot; {{ /if }}{{ if published }}{{ published format='F j, Y' }}{{ /if }}</p>{{ /if }}
+            <div class="clip-text">{{ quote | markdown }}</div>
+            <p class="clip-source">{{ if source_url }}<a href="{{ source_url }}">Full article at {{ source ?? 'the source' }} &rarr;</a>{{ else }}{{ source }}{{ /if }}</p>
+        </div>
+    {{ elseif speaker && (speaker_photo || bubble) }}
+        <table class="speech" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="speech-photo-cell" valign="top" width="56">
+                    {{ if speaker_photo }}
+                        {{ speaker_photo }}<img src="{{ url }}" alt="" width="48" height="48" class="speech-photo" />{{ /speaker_photo }}
+                    {{ else }}
+                        <span class="speech-initial">{{ speaker | substr(0, 1) }}</span>
+                    {{ /if }}
+                </td>
+                <td class="speech-body-cell" valign="top">
+                    <p class="speech-who"><strong>{{ speaker }}</strong>{{ if speaker_role }} <span class="speech-role">{{ speaker_role }}</span>{{ /if }}</p>
+                    <div class="speech-bubble">{{ quote | markdown }}{{ if stamp }}<p class="speech-stamp">{{ stamp }}</p>{{ /if }}</div>
+                    {{ if source }}<p class="speech-source">{{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}</p>{{ /if }}
+                </td>
+            </tr>
+        </table>
+    {{ elseif document }}
+        <div class="doc">
+            {{ if source }}<p class="doc-source">{{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}</p>{{ /if }}
+            <div class="doc-text">{{ quote | markdown }}</div>
+        </div>
+    {{ else }}
+        <blockquote class="quote">{{ quote | markdown }}</blockquote>
+        {{ if source }}<p class="quote-source">{{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}</p>{{ /if }}
+    {{ /if }}
+{{ /if }}
+
+{{ if type == "email_message" }}
+    <div class="mail">
+        <p class="mail-kind">Email{{ if label }} &middot; {{ label }}{{ /if }}</p>
+        {{ if subject }}<p class="mail-subject">{{ subject }}</p>{{ /if }}
+        {{ if from }}<p class="mail-line">From {{ from }}</p>{{ /if }}
+        {{ if to }}<p class="mail-line">To {{ to }}</p>{{ /if }}
+        {{ if sent }}<p class="mail-line">{{ sent format='D, M j, Y' }}</p>{{ /if }}
+        <div class="mail-body">{{ body | markdown }}</div>
+    </div>
+{{ /if }}
+
+{{ if type == "punchline" }}
+    <blockquote class="pull">{{ text }}</blockquote>
+{{ /if }}
+
+{{ if type == "beat" }}
+    <p class="beat">{{ text }}</p>
+{{ /if }}
+
+{{ if type == "timestamp" }}
+    <p class="timestamp">{{ time }}</p>
+{{ /if }}
+
+{{ if type == "callout" }}
+    <div class="note">
+        {{ if heading }}<p class="note-title">{{ heading }}</p>{{ /if }}
+        {{ body | markdown }}
+    </div>
+{{ /if }}
+
+{{ if type == "explainer" }}
+    {{ cards }}
+        <div class="note">
+            <p class="note-title">{{ term }}</p>
+            {{ body | markdown }}
+        </div>
+    {{ /cards }}
+{{ /if }}
+
+{{ if type == "stats" }}
+    <table class="stats" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+            {{ stats }}
+                <td class="stat" valign="top"><p class="stat-value">{{ value }}</p><p class="stat-label">{{ label }}</p></td>
+            {{ /stats }}
+        </tr>
+    </table>
+{{ /if }}
+
+{{ if type == "timeline" }}
+    <table class="timeline" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        {{ entries }}
+            <tr>
+                <td class="timeline-year" valign="top" width="72">{{ year }}</td>
+                <td class="timeline-body" valign="top">
+                    {{ text | markdown }}
+                    {{ if stat }}<p class="timeline-stat">{{ stat }}</p>{{ /if }}
+                    {{ image }}<img src="{{ url }}" alt="{{ alt | entities }}" class="img img--narrow" />{{ /image }}
+                </td>
+            </tr>
+        {{ /entries }}
+        {{ if end_year }}
+            <tr>
+                <td class="timeline-year timeline-year--never" valign="top" width="72">{{ end_year }}</td>
+                <td class="timeline-body" valign="top">
+                    {{ if end_text }}<p>{{ end_text }}</p>{{ /if }}
+                    <p class="timeline-mark">{{ end_mark }}</p>
+                </td>
+            </tr>
+        {{ /if }}
+    </table>
+{{ /if }}
+
+{{ if type == "dialogue" }}
+    {{ dialogue_style = style ?? 'chatter' }}
+    {{ if label }}<p class="meta">{{ label }}</p>{{ /if }}
+    {{ if dialogue_style == 'chat' }}
+        <table class="chat" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            {{ lines }}
+                {{ line_speaker = speaker }}
+                {{ if escalate }}
+                    <tr><td class="chat-photo-cell" width="44"></td><td class="chat-body-cell"><p class="chat-escalate">{{ line }}</p></td></tr>
+                {{ elseif !speaker }}
+                    <tr><td colspan="2" class="chat-system">{{ line }}</td></tr>
+                {{ else }}
+                    {{ line_photo = '' }}
+                    {{ people }}{{ if name == line_speaker }}{{ photo }}{{ line_photo = url }}{{ /photo }}{{ /if }}{{ /people }}
+                    <tr>
+                        <td class="chat-photo-cell" valign="top" width="44">
+                            {{ if line_photo }}<img src="{{ line_photo }}" alt="" width="36" height="36" class="chat-photo" />{{ else }}<span class="speech-initial">{{ line_speaker | substr(0, 1) }}</span>{{ /if }}
+                        </td>
+                        <td class="chat-body-cell" valign="top">
+                            <p class="chat-line"><strong>{{ speaker }}</strong><br />{{ line }}</p>
+                            {{ if aside }}<p class="aside">{{ aside }}</p>{{ /if }}
+                        </td>
+                    </tr>
+                {{ /if }}
+            {{ /lines }}
+        </table>
+    {{ else }}
+        <div class="dialogue">
+            {{ lines }}
+                <p class="dialogue-line">{{ if dialogue_style == 'transcript' && speaker }}<strong>{{ speaker }}:</strong> {{ /if }}{{ dialogue_style == 'chatter' ? '&ldquo;' : '' }}{{ line }}{{ dialogue_style == 'chatter' ? '&rdquo;' : '' }}</p>
+                {{ if dialogue_style == 'clippings' && speaker }}<p class="quote-source">{{ speaker }}</p>{{ /if }}
+                {{ if aside }}<p class="aside">{{ aside }}</p>{{ /if }}
+            {{ /lines }}
+        </div>
+    {{ /if }}
+{{ /if }}
+
+{{ if type == "motion" }}
+    {{ favour_count = in_favour | count }}
+    {{ opposed_count = opposed | count }}
+    <div class="motion">
+        <p class="motion-kind">{{ kind == 'amendment' ? 'Amendment' : 'Motion' }}{{ if result == 'carried' }} &middot; Carried{{ elseif result == 'defeated' }} &middot; Defeated{{ /if }}{{ if (result == 'carried' || result == 'defeated') && (favour_count || opposed_count) }} ({{ favour_count }}&ndash;{{ opposed_count }}){{ /if }}</p>
+        <div class="motion-text">{{ text | markdown }}</div>
+        {{ if mover || seconder }}
+            <p class="motion-people">{{ mover }}Moved by {{ name }}{{ /mover }}{{ if mover && seconder }}<br />{{ /if }}{{ seconder }}Seconded by {{ name }}{{ /seconder }}</p>
+        {{ /if }}
+        {{ if (result == 'carried' || result == 'defeated') && (favour_count || opposed_count) }}
+            <p class="motion-people"><strong>In favour ({{ favour_count }}):</strong> {{ in_favour }}{{ name }}{{ unless last }}, {{ /unless }}{{ /in_favour }}</p>
+            {{ if opposed_count }}<p class="motion-people"><strong>Opposed ({{ opposed_count }}):</strong> {{ opposed }}{{ name }}{{ unless last }}, {{ /unless }}{{ /opposed }}</p>{{ /if }}
+        {{ /if }}
+        {{ if source }}<p class="quote-source">{{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}</p>{{ /if }}
+    </div>
+{{ /if }}

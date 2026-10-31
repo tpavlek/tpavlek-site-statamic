@@ -132,6 +132,37 @@ class NewsletterTest extends TestCase
         $this->assertStringNotContainsString('<script', $html);
     }
 
+    /**
+     * A set type the email partial doesn't know renders as nothing, silently: the Rath quote,
+     * the Kenney clipping, the commission report and the closing line all vanished from the
+     * cheat-to-win email that way. Every story set has to say what it says in the email too.
+     */
+    public function test_story_sets_keep_their_words_in_the_email(): void
+    {
+        $set = fn (array $values) => ['type' => 'set', 'attrs' => ['values' => $values]];
+        $post = $this->makePost(['content' => [
+            $set(['type' => 'source_quote', 'quote' => 'Clipped words.', 'source' => 'CBC News', 'source_url' => 'https://www.cbc.ca/news/x', 'headline' => 'A clipping headline', 'byline' => 'A Reporter', 'published' => '2026-03-26']),
+            $set(['type' => 'source_quote', 'quote' => 'Bubble words.', 'source' => 'Global News', 'speaker' => 'A Speaker', 'speaker_role' => 'Their title', 'bubble' => true]),
+            $set(['type' => 'source_quote', 'quote' => 'Official words.', 'source' => 'The Final Report', 'document' => true]),
+            $set(['type' => 'source_quote', 'quote' => 'Plain words.', 'source' => 'A website']),
+            $set(['type' => 'punchline', 'text' => 'The closing line.']),
+            $set(['type' => 'beat', 'text' => 'A pause.']),
+            $set(['type' => 'callout', 'heading' => 'Callout heading', 'body' => 'Callout body.']),
+            $set(['type' => 'stats', 'stats' => [['value' => '62%', 'label' => 'Stat label']]]),
+            $set(['type' => 'timeline', 'entries' => [['year' => '2019', 'text' => 'Timeline entry.']], 'end_year' => '2027', 'end_text' => 'Never happened.']),
+            $set(['type' => 'dialogue', 'style' => 'chat', 'lines' => [['speaker' => 'Troy Pavlek', 'line' => 'A chat line.'], ['line' => 'A long silence.']]]),
+            $set(['type' => 'explainer', 'cards' => [['term' => 'A term', 'body' => 'Its definition.']]]),
+        ]]);
+
+        $html = (new PostEmail($post))->html();
+
+        foreach (['A clipping headline', 'Clipped words.', 'Full article at CBC News', 'Bubble words.', 'A Speaker', 'Their title',
+            'Official words.', 'The Final Report', 'Plain words.', 'The closing line.', 'A pause.', 'Callout heading', 'Callout body.',
+            '62%', 'Stat label', 'Timeline entry.', 'Never happened.', 'A chat line.', 'A long silence.', 'A term', 'Its definition.'] as $text) {
+            $this->assertStringContainsString($text, $html);
+        }
+    }
+
     /** Galleries are table rows: one row for `row`, two images per row for `grid`. */
     public function test_galleries_render_their_images_in_table_rows(): void
     {

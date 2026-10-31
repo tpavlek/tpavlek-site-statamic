@@ -20,7 +20,10 @@
 .email a { color: #00807f; text-decoration: underline; }
 .email h2 { font-size: 22px; line-height: 1.3; margin: 32px 0 12px; color: #111827; }
 .email h3 { font-size: 19px; line-height: 1.3; margin: 28px 0 10px; color: #111827; }
-.email blockquote { margin: 0 0 16px; padding: 4px 0 4px 16px; border-left: 4px solid #d1d5db; color: #4b5563; }
+/* A bare Bard blockquote is the author's own pull quote on the site (big, bold, centred),
+   so it is one here too; quotes from other people use the source_quote set (.quote). */
+.email blockquote { font-size: 22px; font-weight: 700; font-style: italic; color: #111827; border: 0; padding: 0; margin: 24px 0; text-align: center; }
+.email blockquote p { font-size: 22px; line-height: 1.4; color: #111827; margin: 0; }
 .email hr { border: 0; border-top: 1px solid #e5e7eb; margin: 28px 0; }
 .email table { border-collapse: collapse; }
 .email td, .email th { font-size: 15px; padding: 6px 8px; border: 1px solid #e5e7eb; text-align: left; }
@@ -58,3 +61,77 @@
 
 .email .cta { text-align: center; margin: 36px 0 8px; }
 .email a.button { display: inline-block; background: #00807f; color: #ffffff; text-decoration: none; font-weight: 700; padding: 12px 22px; border-radius: 8px; }
+
+/* Story sets. The site's versions lean on transforms, pseudo-elements and flexbox; these
+   are the same content as boxes and table rows. */
+.email .quote { font-size: 17px; font-weight: 400; font-style: normal; text-align: left; margin: 0 0 16px; padding: 4px 0 4px 16px; border-left: 4px solid #d1d5db; color: #4b5563; }
+.email .quote p { font-size: 17px; line-height: 1.6; color: #4b5563; margin: 0 0 12px; }
+.email .quote-source { font-size: 14px; color: #6b7280; margin: -8px 0 20px; }
+.email .quote-source a { color: #6b7280; }
+
+.email .clip { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px 18px; margin: 0 0 20px; background: #ffffff; }
+.email .clip-headline { font-family: Georgia, "Times New Roman", serif; font-size: 20px; line-height: 1.3; margin: 0 0 6px; color: #111827; }
+.email .clip-headline a { color: #111827; text-decoration: none; }
+.email .clip-meta { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin: 0 0 12px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+.email .clip-text p { font-size: 16px; margin: 0 0 12px; }
+.email .clip-text strong { background: #fde68a; }
+.email .clip-source { font-size: 14px; font-weight: 700; margin: 0; }
+
+.email .speech { width: 100%; margin: 0 0 20px; }
+.email .speech td { border: 0; padding: 0; }
+.email .speech-photo-cell { width: 56px; padding: 0 8px 0 0; }
+.email .speech-photo { width: 48px; height: 48px; border-radius: 24px; display: block; }
+.email .speech-initial { display: inline-block; width: 36px; height: 36px; line-height: 36px; border-radius: 18px; background: #d1d5db; color: #374151; text-align: center; font-weight: 700; }
+.email .speech-who { font-size: 15px; margin: 0 0 6px; }
+.email .speech-role { color: #6b7280; font-size: 13px; }
+.email .speech-bubble { background: #f3f4f6; border-radius: 12px; padding: 12px 16px; }
+.email .speech-bubble p { font-size: 16px; margin: 0 0 10px; }
+.email .speech-stamp { color: #dc2626; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; border: 2px solid #dc2626; display: inline-block; padding: 2px 8px; }
+.email .speech-source { font-size: 13px; color: #6b7280; margin: 6px 0 0; }
+.email .speech-source a { color: #6b7280; }
+
+/* email_message: a plain card, the label folded into the kind line. */
+.email .mail { border: 1px solid #d1d5db; border-radius: 8px; padding: 16px 18px; margin: 0 0 20px; background: #ffffff; }
+.email .mail-kind { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #1e40af; margin: 0 0 8px; }
+.email .mail-subject { font-size: 17px; font-weight: 700; color: #111827; margin: 0 0 4px; }
+.email .mail-line { font-size: 13px; color: #6b7280; margin: 0 0 2px; }
+.email .mail-body { border-top: 1px solid #e5e7eb; margin-top: 10px; padding-top: 12px; }
+.email .mail-body p { font-size: 16px; margin: 0 0 12px; }
+.email .mail-body strong { background: #fde68a; }
+.email .doc { border: 1px solid #d1d5db; padding: 16px 20px; margin: 0 0 20px; background: #ffffff; font-family: "Times New Roman", Times, serif; }
+.email .doc-source { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
+.email .doc-source a { color: #111827; text-decoration: none; }
+.email .doc-text p { font-family: "Times New Roman", Times, serif; font-size: 17px; margin: 0 0 12px; }
+
+.email .beat { font-style: italic; color: #6b7280; text-align: center; margin: 24px 0; }
+.email .timestamp { font-weight: 700; color: #00807f; border-bottom: 1px solid #e5e7eb; margin: 28px 0 12px; }
+.email .note-title { font-weight: 700; margin: 0 0 6px; }
+.email .aside { font-size: 14px; font-style: italic; color: #6b7280; margin: -10px 0 12px; }
+
+.email .stats { width: 100%; margin: 0 0 20px; }
+.email .stat { border: 0; padding: 8px; text-align: center; vertical-align: top; }
+.email .stat-value { font-size: 28px; font-weight: 800; color: #00807f; margin: 0; }
+.email .stat-label { font-size: 13px; color: #6b7280; margin: 0; }
+
+.email .timeline { width: 100%; margin: 0 0 20px; }
+.email .timeline td { border: 0; border-top: 1px solid #e5e7eb; padding: 10px 8px 0 0; }
+.email .timeline-year { width: 72px; font-weight: 800; color: #00807f; font-size: 17px; }
+.email .timeline-year--never { color: #dc2626; }
+.email .timeline-stat { font-size: 22px; font-weight: 800; margin: 0 0 12px; }
+.email .timeline-mark { font-size: 26px; font-weight: 800; color: #dc2626; margin: 0 0 12px; }
+
+.email .chat { width: 100%; margin: 0 0 20px; }
+.email .chat td { border: 0; padding: 0 0 12px; }
+.email .chat-photo-cell { width: 44px; padding: 0 8px 12px 0; }
+.email .chat-photo { width: 36px; height: 36px; border-radius: 18px; display: block; }
+.email .chat-line { font-size: 16px; margin: 0; }
+.email .chat-escalate { font-size: 16px; font-style: italic; margin: 0; }
+.email .chat-system { font-size: 14px; font-style: italic; color: #6b7280; text-align: center; }
+.email .dialogue { margin: 0 0 20px; }
+.email .dialogue-line { margin: 0 0 10px; }
+
+.email .motion { border: 1px solid #d1d5db; border-radius: 8px; padding: 14px 18px; margin: 0 0 20px; }
+.email .motion-kind { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #6b7280; margin: 0 0 8px; }
+.email .motion-text p { font-size: 16px; margin: 0 0 12px; }
+.email .motion-text del { color: #dc2626; }
+.email .motion-people { font-size: 14px; color: #374151; margin: 0 0 8px; }
