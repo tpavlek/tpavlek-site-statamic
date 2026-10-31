@@ -542,6 +542,28 @@ fields:
                     instructions: 'Markdown, as they wrote it (typos too). **bold** is a highlighter stroke.'
                     validate:
                       - required
+            watch_next:
+              display: 'Watch this video'
+              icon: fieldtype-video
+              instructions: 'A card for a past video worth watching, not just citing: its share card (or cover), title and a play label. Put it after the paragraph that mentions it; keep the inline link as the citation.'
+              fields:
+                -
+                  handle: video
+                  field:
+                    type: entries
+                    display: Video
+                    mode: typeahead
+                    max_items: 1
+                    collections:
+                      - videos
+                    validate:
+                      - required
+                -
+                  handle: note
+                  field:
+                    type: text
+                    display: Note
+                    instructions: 'Optional. One line on why it is worth the watch.'
             motion:
               display: 'Council motion'
               icon: text-quote

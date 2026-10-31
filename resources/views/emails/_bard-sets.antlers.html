@@ -143,6 +143,22 @@
     </div>
 {{ /if }}
 
+{{ if type == "watch_next" }}
+    {{ video }}
+        <table class="watch" role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                {{ if og_image }}<td class="watch-thumb-cell" valign="middle" width="128"><a href="{{ permalink }}"><img src="{{ og_image:permalink }}" alt="" width="120" class="watch-thumb" /></a></td>
+                {{ elseif thumbnail }}<td class="watch-thumb-cell" valign="middle" width="64"><a href="{{ permalink }}"><img src="{{ thumbnail:permalink }}" alt="" width="56" class="watch-thumb" /></a></td>{{ /if }}
+                <td valign="middle">
+                    <p class="watch-label">&#9654; Watch</p>
+                    <p class="watch-title"><a href="{{ permalink }}">{{ title }}</a></p>
+                    {{ if note }}<p class="watch-note">{{ note }}</p>{{ /if }}
+                </td>
+            </tr>
+        </table>
+    {{ /video }}
+{{ /if }}
+
 {{ if type == "facebook_comment" }}
     <div class="fb{{ if reply }} fb-reply{{ /if }}">
         <p class="fb-name">{{ if author }}Troy Pavlek &middot; Author{{ elseif name }}{{ name }}{{ else }}A Facebook commenter{{ /if }}{{ if time }} <span class="fb-time">&middot; {{ time }}</span>{{ /if }}</p>

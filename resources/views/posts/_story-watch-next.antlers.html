@@ -1,0 +1,21 @@
+{{# A past video worth watching, not just citing (the `watch_next` set): its share card,
+    or the 9:16 cover when it has none, beside a play label, the title and an optional line
+    on why. Sits after the paragraph that mentions it; the inline link stays the citation.
+    The title's link is stretched over the whole card. #}}
+{{ video }}
+    <aside class="watch-next{{ unless og_image }} watch-next--cover{{ /unless }}">
+        {{ if og_image }}
+            <img src="{{ og_image:url }}" alt="" class="watch-next__image" loading="lazy">
+        {{ elseif thumbnail }}
+            <img src="{{ thumbnail:url }}" alt="" class="watch-next__image" loading="lazy">
+        {{ /if }}
+        <div class="watch-next__text">
+            <p class="watch-next__label">
+                <svg class="watch-next__play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>
+                Watch
+            </p>
+            <p class="watch-next__title"><a href="{{ url }}" class="watch-next__link">{{ title }}</a></p>
+            {{ if note }}<p class="watch-next__note">{{ note }}</p>{{ /if }}
+        </div>
+    </aside>
+{{ /video }}

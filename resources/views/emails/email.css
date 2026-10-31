@@ -105,6 +105,13 @@
 .email .fb-mention { font-size: 13px; color: #0866ff; margin: 0 0 4px; }
 .email .fb-body p { font-size: 15px; margin: 0 0 10px; }
 .email .fb-body strong { font-weight: 400; background: #fde68a; }
+.email .watch { border: 2px solid #111827; border-radius: 8px; margin: 0 0 20px; }
+.email .watch td { padding: 10px; }
+.email .watch-thumb { display: block; border-radius: 4px; }
+.email .watch-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #dc2626; margin: 0 0 4px; }
+.email .watch-title { font-size: 16px; font-weight: 700; margin: 0; }
+.email .watch-title a { color: #111827; text-decoration: none; }
+.email .watch-note { font-size: 14px; color: #4b5563; margin: 4px 0 0; }
 .email .doc { border: 1px solid #d1d5db; padding: 16px 20px; margin: 0 0 20px; background: #ffffff; font-family: "Times New Roman", Times, serif; }
 .email .doc-source { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
 .email .doc-source a { color: #111827; text-decoration: none; }
