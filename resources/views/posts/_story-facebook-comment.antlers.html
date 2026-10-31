@@ -1,0 +1,29 @@
+{{# A Facebook comment shown as one (the `facebook_comment` set): avatar, name in a grey
+    bubble, the comment, then the time, Reply and any reactions underneath. A blank name is
+    blurred, the way the video blurs commenters. `author` is me, with the Author badge;
+    `reply` indents it under the comment before, so a run of these reads as the thread. #}}
+<figure class="story-fb{{ if reply }} story-fb--reply{{ /if }}">
+    {{ if author }}
+        <img src="/assets/troy-headshot-avatar.png" alt="" width="40" height="40" class="story-fb__avatar" loading="lazy">
+    {{ else }}
+        <span class="story-fb__avatar story-fb__avatar--blank" aria-hidden="true"></span>
+    {{ /if }}
+    <div class="story-fb__main">
+        <div class="story-fb__bubble">
+            <p class="story-fb__name">
+                {{ if author }}Troy Pavlek <span class="story-fb__badge">Author</span>
+                {{ elseif name }}{{ name }}
+                {{ else }}<span class="story-fb__blurred" aria-label="Name hidden">Facebook user</span>{{ /if }}
+            </p>
+            <div class="story-fb__body">
+                {{ if mention }}<span class="story-fb__mention">{{ mention }}</span>{{ /if }}
+                {{ body | markdown }}
+            </div>
+        </div>
+        <p class="story-fb__foot">
+            {{ if time }}<span>{{ time }}</span>{{ /if }}
+            <span class="story-fb__action">Reply</span>
+            {{ if reactions }}<span class="story-fb__reactions">{{ reactions }}</span>{{ /if }}
+        </p>
+    </div>
+</figure>

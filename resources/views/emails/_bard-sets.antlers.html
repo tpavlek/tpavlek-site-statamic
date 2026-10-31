@@ -143,6 +143,14 @@
     </div>
 {{ /if }}
 
+{{ if type == "facebook_comment" }}
+    <div class="fb{{ if reply }} fb-reply{{ /if }}">
+        <p class="fb-name">{{ if author }}Troy Pavlek &middot; Author{{ elseif name }}{{ name }}{{ else }}A Facebook commenter{{ /if }}{{ if time }} <span class="fb-time">&middot; {{ time }}</span>{{ /if }}</p>
+        {{ if mention }}<p class="fb-mention">Replying to {{ mention }}</p>{{ /if }}
+        <div class="fb-body">{{ body | markdown }}</div>
+    </div>
+{{ /if }}
+
 {{ if type == "punchline" }}
     <blockquote class="pull">{{ text }}</blockquote>
 {{ /if }}

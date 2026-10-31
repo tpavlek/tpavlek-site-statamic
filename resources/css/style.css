@@ -1746,6 +1746,95 @@ a.hub-more__head {
     background: linear-gradient(transparent 55%, #fde68a 55%);
 }
 
+/* A Facebook comment (posts/_story-facebook-comment): Facebook's grey bubble, round avatar
+   and small grey Reply line, so a thread reads as a thread. A blank name is blurred like
+   the video blurs it; **bold** is the same highlighter stroke as the clippings. */
+.story-fb {
+    @apply my-6 flex items-start gap-2.5 sm:max-w-xl;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.story-fb + .story-fb {
+    @apply -mt-2;
+}
+
+.story-fb--reply {
+    @apply ml-10 sm:ml-12;
+}
+
+.story-fb__avatar {
+    @apply h-10 w-10 flex-shrink-0 rounded-full object-cover;
+}
+
+.story-fb__avatar--blank {
+    @apply bg-gray-300;
+    filter: blur(1.5px);
+}
+
+.story-fb__main {
+    @apply min-w-0;
+}
+
+.story-fb__bubble {
+    @apply rounded-2xl bg-[#f0f2f5] px-3.5 py-2.5;
+}
+
+.content .story-fb__name {
+    @apply m-0 flex items-center gap-1.5 text-[15px] font-semibold leading-snug text-gray-900;
+}
+
+.story-fb__blurred {
+    @apply select-none text-gray-500;
+    filter: blur(5px);
+}
+
+.story-fb__badge {
+    @apply rounded bg-blue-50 px-1.5 text-xs font-semibold text-[#0866ff];
+}
+
+.story-fb__body {
+    @apply text-[15px] leading-snug text-gray-900;
+}
+
+.content .story-fb__body {
+    @apply mt-0.5;
+}
+
+.content .story-fb__body p {
+    @apply my-0;
+}
+
+.content .story-fb__body p + p {
+    @apply mt-2.5;
+}
+
+.story-fb__mention {
+    @apply mr-1 font-semibold text-[#0866ff];
+}
+
+/* The tag sits inline at the start of the first paragraph, as Facebook writes it. */
+.content .story-fb__body p:first-of-type {
+    @apply inline;
+}
+
+.content .story-fb__body p + p {
+    @apply block;
+}
+
+.content .story-fb__body strong {
+    @apply font-normal;
+    background: linear-gradient(transparent 55%, #fde68a 55%);
+    box-decoration-break: clone;
+}
+
+.content .story-fb__foot {
+    @apply m-0 mt-1 flex items-center gap-3 pl-3 text-xs font-semibold text-gray-500;
+}
+
+.story-fb__reactions {
+    @apply ml-auto rounded-full bg-white px-1.5 font-normal text-gray-600 shadow-sm;
+}
+
 /* A quote clipped from a news story (posts/_story-source-quote with a `headline`): the
    headline in a newspaper serif, the passage under a rule with **bold** as a highlighter
    stroke, and the outlet's logo in the corner. */

@@ -487,6 +487,61 @@ fields:
                     type: textarea
                     display: Body
                     instructions: 'Markdown, so **bold** can mark the part that matters.'
+            facebook_comment:
+              display: 'Facebook comment'
+              icon: social-facebook-logo
+              instructions: 'A comment from a Facebook thread, styled like one. Several in a row read as the thread. Leave the name blank to blur it, like the video does.'
+              fields:
+                -
+                  handle: name
+                  field:
+                    type: text
+                    display: Name
+                    width: 50
+                    instructions: 'Optional. Blank shows a blurred name.'
+                -
+                  handle: time
+                  field:
+                    type: text
+                    display: Time
+                    width: 25
+                    instructions: 'As Facebook showed it, e.g. "1h".'
+                -
+                  handle: author
+                  field:
+                    type: toggle
+                    display: Author
+                    width: 25
+                    instructions: 'My own comment: my photo and the Author badge.'
+                -
+                  handle: mention
+                  field:
+                    type: text
+                    display: 'Replying to'
+                    width: 50
+                    instructions: 'Optional. The name tagged at the start, in blue.'
+                -
+                  handle: reactions
+                  field:
+                    type: text
+                    display: Reactions
+                    width: 25
+                    instructions: 'Optional, e.g. "😆 2".'
+                -
+                  handle: reply
+                  field:
+                    type: toggle
+                    display: Reply
+                    width: 25
+                    instructions: 'Indent it under the comment before.'
+                -
+                  handle: body
+                  field:
+                    type: textarea
+                    display: Comment
+                    instructions: 'Markdown, as they wrote it (typos too). **bold** is a highlighter stroke.'
+                    validate:
+                      - required
             motion:
               display: 'Council motion'
               icon: text-quote
