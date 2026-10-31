@@ -10,4 +10,6 @@ tiktok: '7566760846093782284'
 instagram: DQaIstbk5JP
 publish_date: '2025-10-29'
 thumbnail: videos/covers/vassy-hopecore-cover.png
+og_image: og/kapelos-nicolaides.png
 ---
+Vassy Kapelos asks Demetrios Nicolaides the questions every Alberta teacher wanted asked.
