@@ -2126,6 +2126,12 @@ a.hub-more__head {
     @apply relative mt-6 mb-28 px-4 pt-6;
 }
 
+/* The mb-28 is room for a sticker hanging off the corner. Without one, an image that closes
+   the piece after the punchline would sit a screen-gap below it. */
+.story-punchline:not(:has(.story-punchline__sticker)):has(+ .post-image) {
+    @apply mb-8;
+}
+
 .story-punchline__text {
     @apply m-0 p-0 text-center font-black italic text-3xl leading-tight text-gray-900;
 }
