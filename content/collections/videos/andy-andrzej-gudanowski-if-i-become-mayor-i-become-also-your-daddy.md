@@ -9,4 +9,9 @@ tiktok: '7561968954126748984'
 instagram: DP44SsEgTa-
 publish_date: '2025-10-16'
 thumbnail: videos/covers/andy-daddy-cover.png
+og_image: og/andy-daddy.png
+topics:
+  - meme
+  - municipal-politics
+  - yegvote-2025
 ---
