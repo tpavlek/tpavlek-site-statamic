@@ -425,6 +425,20 @@ fields:
                     display: Document
                     instructions: 'For legislation, orders and other official text: a sheet of paper in a serif face, slightly askew, with the source (linked) as its heading. Ignored on a speech bubble.'
                 -
+                  handle: pdf
+                  field:
+                    type: toggle
+                    display: 'PDF excerpt'
+                    instructions: 'For a report, study or other modern document: an excerpt of a PDF page, with the source (linked) as the file name in a viewer bar. Use Document instead for legislation.'
+                -
+                  handle: page
+                  field:
+                    type: text
+                    display: Page
+                    instructions: 'Optional. The page number the excerpt is from, shown in the viewer bar.'
+                    if:
+                      pdf: 'equals true'
+                -
                   handle: headline
                   field:
                     type: text

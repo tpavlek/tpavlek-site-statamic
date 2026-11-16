@@ -4,7 +4,8 @@
 
     With a speaker and a photo (or `bubble` on, for someone with no photo) it becomes a
     speech bubble from that person instead, for when the point is who said it. The optional stamp is the joke slapped on top.
-    `document` sets legislation and orders on paper instead. A `headline` makes it a
+    `document` sets legislation and orders on paper instead; `pdf` shows a report or study
+    as an excerpt of a PDF page in a viewer bar. A `headline` makes it a
     clipping of a news story, with the outlet's logo when it's one we have. #}}
 {{ if headline }}
     {{ outlet = '' }}
@@ -51,6 +52,16 @@
                 </p>
             {{ /if }}
         </div>
+    </figure>
+{{ elseif pdf }}
+    {{# A modern document (a report, a study): an excerpt of a PDF page under a viewer bar. #}}
+    <figure class="story-pdf">
+        <figcaption class="story-pdf__bar">
+            <span class="story-pdf__badge" aria-hidden="true">PDF</span>
+            <span class="story-pdf__name">{{ if source_url }}<a href="{{ source_url }}">{{ source ?? 'Document' }}</a>{{ else }}{{ source }}{{ /if }}</span>
+            {{ if page }}<span class="story-pdf__page">p. {{ page }}</span>{{ /if }}
+        </figcaption>
+        <blockquote class="story-pdf__text">{{ quote | markdown }}</blockquote>
     </figure>
 {{ elseif document }}
     {{# Official text as a sheet of paper: the source heads it like a document title. #}}

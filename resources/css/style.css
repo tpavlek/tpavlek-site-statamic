@@ -1678,6 +1678,75 @@ a.hub-more__head {
     @apply mt-3;
 }
 
+/* A modern document (posts/_story-source-quote with `pdf`): an excerpt of a PDF page under a
+   viewer bar (red PDF badge, file name linked, page chip). The page sits flat, set in the
+   site's sans, and fades at the top and bottom edge so it reads as cut from a longer page.
+   **bold** is a highlighter stroke. Legislation keeps the Times sheet (`document`). */
+.story-pdf {
+    @apply my-10 mx-auto max-w-[38rem] overflow-hidden rounded-lg bg-white;
+    border: 1px solid #d9dce3;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 14px 32px rgba(15, 23, 42, .14);
+}
+
+.content .story-pdf__bar {
+    @apply m-0 flex items-center gap-3 px-4 py-2.5 text-sm;
+    background: #2b2f38;
+    color: #e5e7eb;
+}
+
+.content .story-pdf__badge {
+    @apply shrink-0 rounded px-1.5 py-0.5 text-[0.7rem] font-bold leading-none tracking-wide text-white;
+    background: #dc2626;
+}
+
+.content .story-pdf__name {
+    @apply min-w-0 flex-1 truncate font-medium;
+}
+
+.content .story-pdf__name a {
+    @apply text-white no-underline hover:underline;
+}
+
+.content .story-pdf__page {
+    @apply shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+    background: rgba(255, 255, 255, .12);
+    color: #f3f4f6;
+}
+
+.post-content .story-pdf__text,
+.content .story-pdf__text {
+    @apply relative m-0 border-0 px-7 py-8 sm:px-10 not-italic font-normal text-gray-800;
+    background: #fff;
+}
+
+/* the cut edges: the page carries on above and below the excerpt */
+.content .story-pdf__text::before,
+.content .story-pdf__text::after {
+    content: '';
+    @apply pointer-events-none absolute inset-x-0 h-6;
+}
+.content .story-pdf__text::before { top: 0; background: linear-gradient(#fff, rgba(255, 255, 255, 0)); }
+.content .story-pdf__text::after { bottom: 0; background: linear-gradient(rgba(255, 255, 255, 0), #fff); }
+
+.content .story-pdf__text p {
+    @apply m-0 text-[1.05rem] leading-relaxed;
+}
+
+.content .story-pdf__text p + p {
+    @apply mt-3;
+}
+
+.content .story-pdf__text strong {
+    font-weight: 600;
+    background: linear-gradient(transparent 55%, #fde68a 55%);
+}
+
+/* **bold** in a document is a highlighter stroke, like the clippings: the line that matters. */
+.content .story-document__text strong {
+    font-weight: 700;
+    background: linear-gradient(transparent 55%, #fde68a 55%);
+}
+
 /* An email (posts/_story-email): a mail-client card with the envelope, a blue label pill,
    the subject in bold over a rule, and the body at reading size. **bold** in the body is a
    highlighter stroke, like the clippings. */

@@ -115,6 +115,12 @@
 .email .doc { border: 1px solid #d1d5db; padding: 16px 20px; margin: 0 0 20px; background: #ffffff; font-family: "Times New Roman", Times, serif; }
 .email .doc-source { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid #111827; }
 .email .doc-source a { color: #111827; text-decoration: none; }
+.email .pdf { border: 1px solid #d9dce3; border-radius: 8px; margin: 24px 0; background: #fff; }
+.email .pdf-bar { margin: 0; padding: 8px 12px; background: #2b2f38; color: #e5e7eb; font-size: 13px; border-radius: 8px 8px 0 0; }
+.email .pdf-bar a { color: #fff; text-decoration: none; }
+.email .pdf-badge { background: #dc2626; color: #fff; font-weight: 700; font-size: 11px; padding: 1px 5px; border-radius: 3px; }
+.email .pdf-text { padding: 14px 18px; }
+.email .pdf-text strong { background: #fde68a; }
 .email .doc-text p { font-family: "Times New Roman", Times, serif; font-size: 17px; margin: 0 0 12px; }
 
 .email .beat { font-style: italic; color: #6b7280; text-align: center; margin: 24px 0; }

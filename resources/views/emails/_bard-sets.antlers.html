@@ -121,6 +121,11 @@
                 </td>
             </tr>
         </table>
+    {{ elseif pdf }}
+        <div class="pdf">
+            <p class="pdf-bar"><span class="pdf-badge">PDF</span> {{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}{{ if page }} &middot; p. {{ page }}{{ /if }}</p>
+            <div class="pdf-text">{{ quote | markdown }}</div>
+        </div>
     {{ elseif document }}
         <div class="doc">
             {{ if source }}<p class="doc-source">{{ if source_url }}<a href="{{ source_url }}">{{ source }}</a>{{ else }}{{ source }}{{ /if }}</p>{{ /if }}
