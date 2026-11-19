@@ -366,5 +366,7 @@ article:
   - type: paragraph
 updated_by: 9c6b6866-e047-4568-b3f4-71623caf17dd
 updated_at: 1794943976
+newsletter_broadcast_id: 27122465
+newsletter_drafted_at: '2026-11-17T13:31:36-07:00'
 ---
 ETS finally launched its merch store. Most of it isn't made in Canada.
