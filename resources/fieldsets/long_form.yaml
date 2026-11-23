@@ -343,7 +343,7 @@ fields:
                   field:
                     type: text
                     display: From
-                    instructions: 'Optional. A first name, or leave empty for "a viewer".'
+                    instructions: 'Optional. A first name (or their handle, for an Instagram comment), or leave empty for "a viewer".'
                 -
                   handle: via
                   field:
@@ -354,6 +354,7 @@ fields:
                       email: Email
                       comment: Comment
                       dm: DM
+                      instagram: 'Instagram comment'
                 -
                   handle: link
                   field:

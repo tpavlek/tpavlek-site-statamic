@@ -63,7 +63,7 @@
 {{ /if }}
 
 {{ if type == "viewer_question" }}
-    <p class="meta">{{ via == 'comment' ? 'A viewer comment' : (via == 'dm' ? 'A viewer DM' : 'A viewer email') }}</p>
+    <p class="meta">{{ via == 'instagram' ? 'An Instagram comment' : (via == 'comment' ? 'A viewer comment' : (via == 'dm' ? 'A viewer DM' : 'A viewer email')) }}</p>
     <blockquote class="pull">{{ question | markdown }}</blockquote>
     <p class="meta">{{ name ?: 'A viewer' }}</p>
 {{ /if }}

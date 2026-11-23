@@ -972,6 +972,11 @@ h1 {
     color: #00706e;
 }
 
+.viewer-question__avatar--instagram {
+    background: linear-gradient(45deg, #f9ce34, #ee2a7b 55%, #6228d7);
+    color: #fff;
+}
+
 .viewer-question__who {
     @apply flex min-w-0 flex-1 flex-col leading-tight;
 }
